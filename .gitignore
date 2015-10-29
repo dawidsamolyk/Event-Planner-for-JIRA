@@ -5,6 +5,7 @@
 *.classpath
 
 */target/*
+*/logs/*
 
 ## Directory-based project format:
 .idea/
