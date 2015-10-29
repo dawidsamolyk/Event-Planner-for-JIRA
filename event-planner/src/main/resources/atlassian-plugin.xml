@@ -50,7 +50,7 @@
         <backgroundIcon location="images/event-organization-plan-project-background.png"/>
 
         <add-project>
-            <hook class="edu.uz.jira.event.planner.MyAddProjectHook"/>
+            <hook class="edu.uz.jira.event.planner.EventOrganizationProjectHook"/>
             <descriptor file="/config/event-planner-config.json"/>
         </add-project>
     </project-blueprint>

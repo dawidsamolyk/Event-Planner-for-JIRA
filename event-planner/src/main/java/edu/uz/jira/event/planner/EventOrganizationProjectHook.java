@@ -6,24 +6,19 @@ import com.atlassian.jira.blueprint.api.ConfigureResponse;
 import com.atlassian.jira.blueprint.api.ValidateData;
 import com.atlassian.jira.blueprint.api.ValidateResponse;
 
-public class MyAddProjectHook implements AddProjectHook
-{
+public class EventOrganizationProjectHook implements AddProjectHook {
     @Override
-    public ValidateResponse validate(final ValidateData validateData)
-    {
+    public ValidateResponse validate(final ValidateData validateData) {
         ValidateResponse validateResponse = ValidateResponse.create();
-        if (validateData.projectKey().equals("TEST"))
-        {
-            validateResponse.addErrorMessage("Invalid Project Key");
-        }
 
         return validateResponse;
     }
 
     @Override
-    public ConfigureResponse configure(final ConfigureData configureData)
-    {
-        ConfigureResponse configureResponse = ConfigureResponse.create().setRedirect("/issues/");
+    public ConfigureResponse configure(final ConfigureData configureData) {
+        String redirect = "/browse/" + configureData.project().getKey() + "#selectedTab=com.atlassian.jira.plugin.system.project%3Asummary-panel";
+
+        ConfigureResponse configureResponse = ConfigureResponse.create().setRedirect(redirect);
 
         return configureResponse;
     }
