@@ -9,27 +9,22 @@
         <param name="plugin-logo">images/pluginLogo.png</param>
     </plugin-info>
 
-    <!-- add our i18n resource -->
     <resource type="i18n" name="i18n" location="event-planner"/>
 
-
-    <!-- publish our component -->
     <component key="myPluginComponent" class="edu.uz.jira.event.planner.MyPluginComponentImpl" public="true">
         <interface>edu.uz.jira.event.planner.MyPluginComponent</interface>
     </component>
 
-    <!-- import from the product container -->
     <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
 
-    <!-- PROJECT TEMPLATE - EVENT ORGANIZATION PLAN -->
-    <web-resource key="event-planner-resources" name="event-planner Web Resources">
+    <web-resource key="event-planner-resources" name="Event Planner Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
 
         <transformation extension="soy">
             <transformer key="soyTransformer"/>
         </transformation>
 
-        <resource type="download" name="MyProjectTemplate.soy.js" location="/soy/MyProjectTemplate.soy"/>
+        <resource type="download" name="EventOrganizationProject.soy.js" location="/soy/EventOrganizationProject.soy"/>
 
         <resource type="download" name="images/" location="/images">
             <param name="content-type" value="image/png; charset=binary"/>
@@ -40,18 +35,18 @@
     </web-resource>
 
     <project-blueprint key="event-planner-project" weight="90">
-        <label key="my.project.template.name"/>
-        <description key="my.project.template.description"/>
-        <longDescription key="my.project.template.description.long"/>
+        <label key="project.name"/>
+        <description key="project.description"/>
+        <longDescription key="project.description.long"/>
 
-        <infoPage soy-template="JIRA.Templates.ProjectTemplates.Tutorial.renderMyProjectTemplateExplanation"/>
+        <infoPage soy-template="edu.uz.jira.event.planner.project.renderEventOrganizationProjectExplanation"/>
 
         <icon location="images/event-organization-plan-project-icon.png"/>
         <backgroundIcon location="images/event-organization-plan-project-background.png"/>
 
         <add-project>
-            <hook class="edu.uz.jira.event.planner.EventOrganizationProjectHook"/>
-            <descriptor file="/config/event-planner-config.json"/>
+            <hook class="edu.uz.jira.event.planner.project.EventOrganizationProjectHook"/>
+            <descriptor file="/config/event-organization-project-config.json"/>
         </add-project>
     </project-blueprint>
 </atlassian-plugin>

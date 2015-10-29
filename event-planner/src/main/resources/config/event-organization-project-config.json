@@ -1,8 +1,8 @@
 {
     "issue-type-scheme":
     {
-        "name": "my.project.template.issuetype.scheme.name",
-        "description": "my.project.template.issuetype.scheme.description",
+        "name": "project.issuetype.scheme.name",
+        "description": "project.issuetype.scheme.description",
         "issue-types": [
             {
                 "key": "issueType1",
@@ -29,18 +29,18 @@
     },
     "workflow-scheme":
     {
-        "name": "my.project.template.workflow.scheme.name",
-        "description": "my.project.template.workflow.scheme.description",
+        "name": "project.workflow.scheme.name",
+        "description": "project.workflow.scheme.description",
         "default-workflow": "wf1",
         "workflows": [
             {
                 "key": "wf1",
-                "name": "my.project.template.workflow.wf1.name",
+                "name": "project.workflow.wf1.name",
                 "workflow-bundle": "/wfb/Issue-Tracking-Workflow.jwb"
             },
             {
                 "key": "wf2",
-                "name": "my.project.template.workflow.wf2.name",
+                "name": "project.workflow.wf2.name",
                 "workflow-bundle": "/wfb/Software-Development-Workflow.jwb"
             }
         ]
