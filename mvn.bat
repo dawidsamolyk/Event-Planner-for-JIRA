@@ -1,2 +1,3 @@
 cd event-planner
-atlas-mvn eclipse:eclipse
+atlas-mvn eclipse:eclipse  2> ../mvn.log
+cd ..

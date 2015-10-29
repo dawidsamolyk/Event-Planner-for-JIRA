@@ -364,11 +364,6 @@
       <attribute value="jar:file:/C:/Users/Dawid/.m2/repository/com/atlassian/analytics/analytics-api/3.53/analytics-api-3.53-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/com/atlassian/jira/plugins/project-templates-api/6.0.1/project-templates-api-6.0.1.jar">
-    <attributes>
-      <attribute value="jar:file:/C:/Users/Dawid/.m2/repository/com/atlassian/jira/plugins/project-templates-api/6.0.1/project-templates-api-6.0.1-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
   <classpathentry kind="var" path="M2_REPO/junit/junit/4.10/junit-4.10.jar" sourcepath="M2_REPO/junit/junit/4.10/junit-4.10-sources.jar">
     <attributes>
       <attribute value="jar:file:/C:/Users/Dawid/.m2/repository/junit/junit/4.10/junit-4.10-javadoc.jar!/" name="javadoc_location"/>
@@ -398,4 +393,5 @@
       <attribute value="jar:file:/C:/Users/Dawid/.m2/repository/com/atlassian/upm/upm-api/2.15/upm-api-2.15-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/org/mockito/mockito-all/1.8.5/mockito-all-1.8.5.jar" sourcepath="M2_REPO/org/mockito/mockito-all/1.8.5/mockito-all-1.8.5-sources.jar"/>
 </classpath>

@@ -1,2 +1,3 @@
 cd event-planner
-atlas-integration-test
+atlas-integration-test  2> ../integration_test.log
+cd ..
