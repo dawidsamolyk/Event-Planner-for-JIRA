@@ -1,31 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
-  <plugin-info>
-    <description>${project.description}</description>
-    <version>${project.version}</version>
-    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
-    <param name="plugin-icon">images/pluginIcon.png</param>
-    <param name="plugin-logo">images/pluginLogo.png</param>
-  </plugin-info>
-  
-  <!-- add our i18n resource -->
-  <resource type="i18n" name="i18n" location="event-planner"/>
-  
-  <!-- add our web resources -->
-  <web-resource key="event-planner-resources" name="event-planner Web Resources">
-    <dependency>com.atlassian.auiplugin:ajs</dependency>
-    <resource type="download" name="event-planner.css" location="/css/event-planner.css"/>
-    <resource type="download" name="event-planner.js" location="/js/event-planner.js"/>
-    <resource type="download" name="images/" location="/images"/>
-    <context>event-planner</context>
-  </web-resource>
-  
-  <!-- publish our component -->
-  <component key="myPluginComponent" class="edu.uz.jira.event.planner.MyPluginComponentImpl" public="true">
-    <interface>edu.uz.jira.event.planner.MyPluginComponent</interface>
-  </component>
-  
-  <!-- import from the product container -->
-  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="event-planner"/>
+
+
+    <!-- publish our component -->
+    <component key="myPluginComponent" class="edu.uz.jira.event.planner.MyPluginComponentImpl" public="true">
+        <interface>edu.uz.jira.event.planner.MyPluginComponent</interface>
+    </component>
+
+    <!-- import from the product container -->
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+
+    <!-- PROJECT TEMPLATE - EVENT ORGANIZATION PLAN -->
+    <web-resource key="event-planner-resources" name="event-planner Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+
+        <transformation extension="soy">
+            <transformer key="soyTransformer"/>
+        </transformation>
+
+        <resource type="download" name="MyProjectTemplate.soy.js" location="/soy/MyProjectTemplate.soy"/>
+
+        <resource type="download" name="images/" location="/images">
+            <param name="content-type" value="image/png; charset=binary"/>
+        </resource>
+
+        <context>atl.general</context>
+        <context>atl.admin</context>
+    </web-resource>
+
+    <project-blueprint key="event-planner-project" weight="90">
+        <label key="my.project.template.name"/>
+        <description key="my.project.template.description"/>
+        <longDescription key="my.project.template.description.long"/>
+
+        <infoPage soy-template="JIRA.Templates.ProjectTemplates.Tutorial.renderMyProjectTemplateExplanation"/>
+
+        <icon location="images/event-organization-plan-project-icon.png"/>
+        <backgroundIcon location="images/event-organization-plan-project-background.png"/>
+
+        <add-project>
+            <hook class="edu.uz.jira.event.planner.MyAddProjectHook"/>
+            <descriptor file="/config/event-planner-config.json"/>
+        </add-project>
+    </project-blueprint>
 </atlassian-plugin>
