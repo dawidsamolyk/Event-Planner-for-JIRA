@@ -1,7 +1,9 @@
 set actualtime=%TIME%
-set timestamp=%actualtime::=_%
-set timestamp=%timestamp:,=_%
+set logfilename=%actualtime::=_%
+set logfilename=%logfilename:,=_%
+set logfilename=%logfilename: =_%
+set logfilename=%DATE%-%logfilename%
 if not exist "logs" mkdir "logs"
 cd event-planner
-atlas-clean > ../logs/clean_%DATE%-%timestamp%.log
+atlas-clean > ../logs/clean_%logfilename%.log
 cd ..

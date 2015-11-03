@@ -1,8 +1,10 @@
 set actualtime=%TIME%
-set timestamp=%actualtime::=_%
-set timestamp=%timestamp:,=_%
+set logfilename=%actualtime::=_%
+set logfilename=%logfilename:,=_%
+set logfilename=%logfilename: =_%
+set logfilename=%DATE%-%logfilename%
 if not exist "logs" mkdir logs
 cd event-planner
-atlas-integration-test  > ../logs/integration_test_%DATE%-%timestamp%.log
+atlas-integration-test  > ../logs/integration_test_%logfilename%.log
 pause
 cd ..

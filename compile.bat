@@ -1,7 +1,9 @@
 set actualtime=%TIME%
-set timestamp=%actualtime::=_%
-set timestamp=%timestamp:,=_%
+set logfilename=%actualtime::=_%
+set logfilename=%logfilename:,=_%
+set logfilename=%logfilename: =_%
+set logfilename=%DATE%-%logfilename%
 if not exist "logs" mkdir logs
 cd event-planner
-atlas-compile > ../logs/compile_%DATE%-%timestamp%.log
+atlas-compile > ../logs/compile_%logfilename%.log
 cd ..
