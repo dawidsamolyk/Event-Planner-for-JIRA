@@ -1,8 +1,36 @@
 {namespace edu.uz.jira.event.planner.project}
 
 /**
- * Render the information page for My Project Template.
+ * Render the information and configuration page for Event Plan Project Template.
  */
 {template .renderEventOrganizationProjectExplanation}
-    <p>{getText('project.info.page.description')}</p>
+    <div class="dialog-page-body template-info">
+        <div class="dialog-panel-body pt-content">
+            <div class="event-organization-plan-info">
+                <div class="event-organization-plan-left-info">
+                    <p class="event-organization-plan-description">{getText('project.info.page.description')}</p>
+
+                    <h3>Issue Types</h3>
+                    <ul class="project-template-issuetype-list">
+                        <li>
+                            <span class="issuetype-list-label">
+                                <span class="issuetype-icon task"></span>
+                                <span class="issuetype-name">Task</span>
+                             </span>
+                        </li>
+                        <li>
+                            <span class="issuetype-list-label">
+                                <span class="issuetype-icon subtask"></span>
+                                <span class="issuetype-name">Sub-task</span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="event-organization-plan-right-info">
+                    <img class="event-organization-tasks-workflow-image" />
+                </div>
+            </div>
+        </div>
+    </div>
+
 {/template}

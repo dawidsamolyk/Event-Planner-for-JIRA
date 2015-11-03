@@ -1,0 +1,22 @@
+.event-organization-tasks-workflow-image {
+    content: url('images/event-organization-tasks-workflow.png');
+}
+.event-organization-plan-right-info {
+    width: 300px;
+    float: right;
+    margin-top: -8px;
+    background-repeat: no-repeat;
+    background-position: top center;
+}
+.event-organization-plan-left-info {
+    width: 370px;
+    float: left;
+    padding-right: 10px;
+    margin-top: -8px;
+    background-repeat: no-repeat;
+    background-position: top center;
+}
+.event-organization-plan-description {
+    text-align: justify;
+    text-justify: inter-word;
+}

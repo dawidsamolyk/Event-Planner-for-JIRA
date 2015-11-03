@@ -25,6 +25,7 @@
         </transformation>
 
         <resource type="download" name="EventOrganizationProject.soy.js" location="/soy/EventOrganizationProject.soy"/>
+        <resource type="download" name="EventOrganizationProject.css" location="/style/EventOrganizationProject.css"/>
 
         <resource type="download" name="images/" location="/images">
             <param name="content-type" value="image/png; charset=binary"/>
@@ -38,11 +39,9 @@
         <label key="project.name"/>
         <description key="project.description"/>
         <longDescription key="project.description.long"/>
+        <icon location="images/event-organization-plan-project-icon.png"/>
 
         <infoPage soy-template="edu.uz.jira.event.planner.project.renderEventOrganizationProjectExplanation"/>
-
-        <icon location="images/event-organization-plan-project-icon.png"/>
-        <backgroundIcon location="images/event-organization-plan-project-background.png"/>
 
         <add-project>
             <hook class="edu.uz.jira.event.planner.project.EventOrganizationProjectHook"/>

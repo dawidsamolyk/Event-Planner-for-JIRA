@@ -5,9 +5,7 @@ import com.atlassian.jira.blueprint.api.ConfigureData;
 import com.atlassian.jira.blueprint.api.ConfigureResponse;
 import com.atlassian.jira.blueprint.api.ValidateData;
 import com.atlassian.jira.blueprint.api.ValidateResponse;
-import com.atlassian.jira.issue.issuetype.IssueType;
-
-import java.util.Map;
+import com.atlassian.jira.project.Project;
 
 public class EventOrganizationProjectHook implements AddProjectHook {
     @Override
@@ -19,11 +17,9 @@ public class EventOrganizationProjectHook implements AddProjectHook {
 
     @Override
     public ConfigureResponse configure(final ConfigureData configureData) {
-        String redirect = "/browse/" + configureData.project().getKey() + "#selectedTab=com.atlassian.jira.plugin.system.project%3Asummary-panel";
+        Project project = configureData.project();
 
-        Map<String, IssueType> createdIssueTypes = configureData.createdIssueTypes();
-        
-
+        String redirect = "/browse/" + project.getKey() + "#selectedTab=com.atlassian.jira.plugin.system.project%3Asummary-panel";
         ConfigureResponse configureResponse = ConfigureResponse.create().setRedirect(redirect);
 
         return configureResponse;

@@ -5,25 +5,19 @@
         "description": "project.issuetype.scheme.description",
         "issue-types": [
             {
-                "key": "issueType1",
-                "name": "New Feature",
-                "description": "A new feature of the product, which has yet to be developed.",
+                "key": "task",
+                "name": "Task",
+                "description": "The task to do.",
                 "icon": "/images/icons/newfeature.png",
-                "workflow": "wf1"
+                "workflow": "event-organization-workflow"
             },
             {
-                "key": "issueType2",
-                "name": "Bug",
-                "description": "A problem which impairs or prevents the functions of the product.",
-                "icon": "/images/icons/bug.png"
-            },
-            {
-                "key": "issueType3",
+                "key": "sub-task",
                 "name": "Sub-Task",
-                "description": "The sub-task of the issue",
+                "description": "The sub-task of the issue.",
                 "icon": "/images/icons/subtask_alternate.png",
                 "sub-task": true,
-                "workflow": "wf2"
+                "workflow": "event-organization-workflow"
             }
         ]
     },
@@ -31,17 +25,12 @@
     {
         "name": "project.workflow.scheme.name",
         "description": "project.workflow.scheme.description",
-        "default-workflow": "wf1",
+        "default-workflow": "event-organization-workflow",
         "workflows": [
             {
-                "key": "wf1",
-                "name": "project.workflow.wf1.name",
-                "workflow-bundle": "/wfb/Issue-Tracking-Workflow.jwb"
-            },
-            {
-                "key": "wf2",
-                "name": "project.workflow.wf2.name",
-                "workflow-bundle": "/wfb/Software-Development-Workflow.jwb"
+                "key": "event-organization-workflow",
+                "name": "project.workflow.name",
+                "workflow-bundle": "/workflow/Event-Organization-Workflow.jwb"
             }
         ]
     }
