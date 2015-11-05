@@ -1,27 +1,27 @@
 package edu.uz.jira.event.planner.project;
 
-import com.atlassian.jira.blueprint.api.AddProjectHook;
-import com.atlassian.jira.blueprint.api.ConfigureData;
-import com.atlassian.jira.blueprint.api.ConfigureResponse;
-import com.atlassian.jira.blueprint.api.ValidateData;
-import com.atlassian.jira.blueprint.api.ValidateResponse;
-import com.atlassian.jira.project.Project;
+import com.atlassian.jira.blueprint.api.*;
+import com.atlassian.jira.workflow.JiraWorkflow;
+import com.atlassian.sal.api.message.I18nResolver;
 
-public class EventOrganizationProjectHook implements AddProjectHook {
+public class EventOrganizationProjectHook implements AddProjectHook  {
+    private final I18nResolver i18nResolver;
+
+    public EventOrganizationProjectHook(I18nResolver i18nResolver){
+        this.i18nResolver = i18nResolver;
+    }
+
     @Override
     public ValidateResponse validate(final ValidateData validateData) {
-        ValidateResponse validateResponse = ValidateResponse.create();
-
-        return validateResponse;
+        return ValidateResponse.create();
     }
 
     @Override
     public ConfigureResponse configure(final ConfigureData configureData) {
-        Project project = configureData.project();
+        JiraWorkflow workflow = configureData.createdWorkflows().get(i18nResolver.getText("project.workflow.name"));
 
-        String redirect = "/browse/" + project.getKey() + "#selectedTab=com.atlassian.jira.plugin.system.project%3Asummary-panel";
-        ConfigureResponse configureResponse = ConfigureResponse.create().setRedirect(redirect);
 
-        return configureResponse;
+        String redirect = "/browse/" + configureData.project().getKey() + "#selectedTab=com.atlassian.jira.plugin.system.project%3Asummary-panel";
+        return ConfigureResponse.create().setRedirect(redirect);
     }
 }

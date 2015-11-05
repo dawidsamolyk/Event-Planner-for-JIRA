@@ -7,16 +7,16 @@
             {
                 "key": "task",
                 "name": "Task",
-                "description": "The task to do.",
-                "icon": "/images/icons/newfeature.png",
+                "description": "A task that needs to be done.",
+                "icon": "images/icons/issuetypes/task.png",
                 "workflow": "event-organization-workflow"
             },
             {
                 "key": "sub-task",
                 "name": "Sub-Task",
                 "description": "The sub-task of the issue.",
-                "icon": "/images/icons/subtask_alternate.png",
                 "sub-task": true,
+                "icon": "images/icons/issuetypes/subtask_alternate.png",
                 "workflow": "event-organization-workflow"
             }
         ]
@@ -30,7 +30,7 @@
             {
                 "key": "event-organization-workflow",
                 "name": "project.workflow.name",
-                "workflow-bundle": "/workflow/Event-Organization-Workflow.jwb"
+                "workflow-bundle": "/workflows/Event-Organization-Workflow.jwb"
             }
         ]
     }

@@ -5,7 +5,7 @@
         <description>${project.description}</description>
         <version>${project.version}</version>
         <vendor name="${project.organization.name}" url="${project.organization.url}"/>
-        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-icon">images/icons/pluginIcon.png</param>
         <param name="plugin-logo">images/pluginLogo.png</param>
     </plugin-info>
 
@@ -16,21 +16,18 @@
     </component>
 
     <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+    <component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver" />
 
     <web-resource key="event-planner-resources" name="Event Planner Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
-
         <transformation extension="soy">
             <transformer key="soyTransformer"/>
         </transformation>
-
         <resource type="download" name="EventOrganizationProject.soy.js" location="/soy/EventOrganizationProject.soy"/>
         <resource type="download" name="EventOrganizationProject.css" location="/style/EventOrganizationProject.css"/>
-
         <resource type="download" name="images/" location="/images">
             <param name="content-type" value="image/png; charset=binary"/>
         </resource>
-
         <context>atl.general</context>
         <context>atl.admin</context>
     </web-resource>
@@ -39,13 +36,22 @@
         <label key="project.name"/>
         <description key="project.description"/>
         <longDescription key="project.description.long"/>
-        <icon location="images/event-organization-plan-project-icon.png"/>
-
+        <icon location="images/icons/projects/event-organization-plan-project-icon.png"/>
         <infoPage soy-template="edu.uz.jira.event.planner.project.renderEventOrganizationProjectExplanation"/>
-
         <add-project>
             <hook class="edu.uz.jira.event.planner.project.EventOrganizationProjectHook"/>
             <descriptor file="/config/event-organization-project-config.json"/>
         </add-project>
     </project-blueprint>
+
+    <workflow-function key="update-due-date-post-function" name="Update Due Date Post Function"
+                       i18n-name-key="update.due.date.post.function.name"
+                       class="edu.uz.jira.event.planner.workflow.UpdateDueDatePostFunctionFactory">
+        <description key="update.due.date.post.function.description">Updates issue due date to current date. No parameters are required.</description>
+        <function-class>edu.uz.jira.event.planner.workflow.UpdateDueDatePostFunction</function-class>
+        <orderable>true</orderable>
+        <unique>true</unique>
+        <deletable>true</deletable>
+        <resource type="velocity" name="view" location="templates/postfunctions/update-due-date-post-function.vm"/>
+    </workflow-function>
 </atlassian-plugin>
