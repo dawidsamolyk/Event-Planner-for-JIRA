@@ -3,7 +3,8 @@ set logfilename=%actualtime::=_%
 set logfilename=%logfilename:,=_%
 set logfilename=%logfilename: =_%
 set logfilename=%DATE%-%logfilename%
-if not exist "logs" mkdir "logs"
+set logfiledir=logs\compilation
+if not exist "%logfiledir%" mkdir %logfiledir%
 cd event-planner
-atlas-clean > ../logs/clean_%logfilename%.log
+atlas-clean > ..\%logfiledir%\clean_%logfilename%.log
 cd ..

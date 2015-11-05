@@ -3,9 +3,9 @@ set logfilename=%actualtime::=_%
 set logfilename=%logfilename:,=_%
 set logfilename=%logfilename: =_%
 set logfilename=%DATE%-%logfilename%
-if not exist "logs" mkdir logs
-if not exist "logs" mkdir logs
+set logfiledir=logs\tests
+if not exist "%logfiledir%" mkdir %logfiledir%
 cd event-planner
-atlas-unit-test > ../logs/unit_test_%logfilename%.log
+atlas-unit-test > ..\%logfiledir%\unit_test_%logfilename%.log
 pause
 cd ..
