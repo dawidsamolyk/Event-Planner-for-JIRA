@@ -8,16 +8,11 @@
         <param name="plugin-icon">images/icons/pluginIcon.png</param>
         <param name="plugin-logo">images/pluginLogo.png</param>
     </plugin-info>
-
     <resource type="i18n" name="i18n" location="event-planner"/>
-
     <component key="myPluginComponent" class="edu.uz.jira.event.planner.MyPluginComponentImpl" public="true">
         <interface>edu.uz.jira.event.planner.MyPluginComponent</interface>
     </component>
-
     <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
-    <component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver" />
-
     <web-resource key="event-planner-resources" name="Event Planner Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <transformation extension="soy">
@@ -31,7 +26,6 @@
         <context>atl.general</context>
         <context>atl.admin</context>
     </web-resource>
-
     <project-blueprint key="event-planner-project" weight="90">
         <label key="project.name"/>
         <description key="project.description"/>
@@ -43,11 +37,12 @@
             <descriptor file="/config/event-organization-project-config.json"/>
         </add-project>
     </project-blueprint>
-
     <workflow-function key="update-due-date-post-function" name="Update Due Date Post Function"
                        i18n-name-key="update.due.date.post.function.name"
                        class="edu.uz.jira.event.planner.workflow.UpdateDueDatePostFunctionFactory">
-        <description key="update.due.date.post.function.description">Updates issue due date to current date. No parameters are required.</description>
+        <description key="update.due.date.post.function.description">Updates issue due date to current date. No
+            parameters are required.
+        </description>
         <function-class>edu.uz.jira.event.planner.workflow.UpdateDueDatePostFunction</function-class>
         <orderable>true</orderable>
         <unique>true</unique>

@@ -25,14 +25,14 @@ public class UpdateDueDatePostFunctionTest {
         final MockIssue mockIssue = new MockIssue();
         Timestamp testTime = new Timestamp(new Date().getTime());
         mockIssue.setDueDate(testTime);
-        ;
+
         UpdateDueDatePostFunction function = new UpdateDueDatePostFunction() {
             protected MutableIssue getIssue(Map transientVars) {
                 return mockIssue;
             }
         };
 
-        function.execute(Mockito.anyMap(), Mockito.anyMap(), null);
+        function.execute(new HashMap(), null, null);
 
         assertFalse(mockIssue.getDueDate().equals(testTime));
     }
