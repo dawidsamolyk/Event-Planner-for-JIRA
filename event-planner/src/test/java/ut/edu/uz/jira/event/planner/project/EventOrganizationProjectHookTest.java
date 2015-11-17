@@ -5,8 +5,11 @@ import com.atlassian.jira.blueprint.api.ConfigureData;
 import com.atlassian.jira.blueprint.api.ConfigureResponse;
 import com.atlassian.jira.blueprint.api.ValidateData;
 import com.atlassian.jira.blueprint.api.ValidateResponse;
+import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.config.FieldConfigScheme;
+import com.atlassian.jira.issue.fields.layout.field.FieldLayoutManager;
 import com.atlassian.jira.issue.issuetype.IssueType;
+import com.atlassian.jira.mock.component.MockComponentWorker;
 import com.atlassian.jira.plugins.workflow.sharing.importer.JiraWorkflowSharingImporter;
 import com.atlassian.jira.plugins.workflow.sharing.importer.SharedWorkflowImportPlan;
 import com.atlassian.jira.plugins.workflow.sharing.importer.component.WorkflowImporterFactoryImpl;
@@ -21,6 +24,7 @@ import edu.uz.jira.event.planner.workflow.UpdateDueDatePostFunction;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import sun.awt.AWTAccessor;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,6 +44,11 @@ public class EventOrganizationProjectHookTest {
 
     @Before
     public void setUp() {
+        new MockComponentWorker()
+                .addMock(ComponentAccessor.class, Mockito.mock(ComponentAccessor.class))
+                .addMock(FieldLayoutManager.class, Mockito.mock(FieldLayoutManager.class))
+                .init();
+
         mockWorkflowTransitionService = Mockito.mock(WorkflowTransitionService.class);
     }
 
