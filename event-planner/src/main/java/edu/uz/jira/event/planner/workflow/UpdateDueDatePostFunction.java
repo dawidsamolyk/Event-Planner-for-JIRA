@@ -5,6 +5,7 @@ import com.atlassian.jira.workflow.function.issue.AbstractJiraFunctionProvider;
 import com.opensymphony.module.propertyset.PropertySet;
 import com.opensymphony.workflow.WorkflowException;
 
+import javax.annotation.Nonnull;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Map;
@@ -15,10 +16,13 @@ import java.util.Map;
  */
 public class UpdateDueDatePostFunction extends AbstractJiraFunctionProvider {
 
-    public void execute(Map transientVars, Map args, PropertySet ps) throws WorkflowException {
+    public void execute(@Nonnull final Map transientVars, Map args, PropertySet ps) throws WorkflowException {
         MutableIssue issue = getIssue(transientVars);
 
         Timestamp currentTime = new Timestamp(new Date().getTime());
-        issue.setDueDate(currentTime);
+
+        if (currentTime.before(issue.getDueDate())) {
+            issue.setDueDate(currentTime);
+        }
     }
 }

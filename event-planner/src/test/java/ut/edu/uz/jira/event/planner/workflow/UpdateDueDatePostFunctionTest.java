@@ -9,23 +9,24 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class UpdateDueDatePostFunctionTest {
 
     @Test
-    public void dueDateShouldBeChangedAfterUpdatePostFunction() throws Exception {
+    public void dueDateShouldBeChangedIfItIsAfterCurrentDay() throws Exception {
         final MockIssue mockIssue = new MockIssue();
-        Timestamp testTime = new Timestamp(new Date().getTime());
-        mockIssue.setDueDate(testTime);
-
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        Date tomorrow = calendar.getTime();
+        Timestamp tomorrowTime = new Timestamp(tomorrow.getTime());
+        mockIssue.setDueDate(tomorrowTime);
         UpdateDueDatePostFunction function = new UpdateDueDatePostFunction() {
             protected MutableIssue getIssue(Map transientVars) {
                 return mockIssue;
@@ -34,7 +35,26 @@ public class UpdateDueDatePostFunctionTest {
 
         function.execute(new HashMap(), null, null);
 
-        assertFalse(mockIssue.getDueDate().equals(testTime));
+        assertTrue(mockIssue.getDueDate().before(tomorrowTime));
+    }
+
+    @Test
+    public void dueDateShouldNotBeChangedWhenDueDateIsBeforeCurrentDay() throws Exception {
+        final MockIssue mockIssue = new MockIssue();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        Date yesterday = calendar.getTime();
+        Timestamp yesterdayTime = new Timestamp(yesterday.getTime());
+        mockIssue.setDueDate(yesterdayTime);
+        UpdateDueDatePostFunction function = new UpdateDueDatePostFunction() {
+            protected MutableIssue getIssue(Map transientVars) {
+                return mockIssue;
+            }
+        };
+
+        function.execute(new HashMap(), null, null);
+
+        assertTrue(mockIssue.getDueDate().equals(yesterdayTime));
     }
 
 }
