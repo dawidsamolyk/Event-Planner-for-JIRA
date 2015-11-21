@@ -7,33 +7,26 @@ import com.atlassian.jira.blueprint.api.ValidateData;
 import com.atlassian.jira.blueprint.api.ValidateResponse;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.config.FieldConfigScheme;
+import com.atlassian.jira.issue.fields.layout.field.EditableDefaultFieldLayout;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutManager;
+import com.atlassian.jira.issue.fields.layout.field.FieldLayoutScheme;
 import com.atlassian.jira.issue.issuetype.IssueType;
 import com.atlassian.jira.mock.component.MockComponentWorker;
-import com.atlassian.jira.plugins.workflow.sharing.importer.JiraWorkflowSharingImporter;
-import com.atlassian.jira.plugins.workflow.sharing.importer.SharedWorkflowImportPlan;
-import com.atlassian.jira.plugins.workflow.sharing.importer.component.WorkflowImporterFactoryImpl;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.scheme.Scheme;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.opensymphony.workflow.loader.ActionDescriptor;
-import com.opensymphony.workflow.loader.FunctionDescriptor;
 import edu.uz.jira.event.planner.project.EventOrganizationProjectHook;
-import edu.uz.jira.event.planner.workflow.UpdateDueDatePostFunction;
+import edu.uz.jira.event.planner.workflow.WorkflowConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import sun.awt.AWTAccessor;
 
-import java.util.Collection;
 import java.util.HashMap;
 
-import static javafx.beans.binding.Bindings.when;
 import static junit.framework.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -44,9 +37,13 @@ public class EventOrganizationProjectHookTest {
 
     @Before
     public void setUp() {
+        FieldLayoutManager mockFieldLayoutManager = Mockito.mock(FieldLayoutManager.class);
+        Mockito.when(mockFieldLayoutManager.getEditableDefaultFieldLayout()).thenReturn(Mockito.mock(EditableDefaultFieldLayout.class));
+        Mockito.when(mockFieldLayoutManager.createFieldLayoutScheme(Mockito.anyString(), Mockito.anyString())).thenReturn(Mockito.mock(FieldLayoutScheme.class));
+
         new MockComponentWorker()
                 .addMock(ComponentAccessor.class, Mockito.mock(ComponentAccessor.class))
-                .addMock(FieldLayoutManager.class, Mockito.mock(FieldLayoutManager.class))
+                .addMock(FieldLayoutManager.class, mockFieldLayoutManager)
                 .init();
 
         mockWorkflowTransitionService = Mockito.mock(WorkflowTransitionService.class);
@@ -73,25 +70,18 @@ public class EventOrganizationProjectHookTest {
         assertNotNull(result);
     }
 
-//    @Test
-//    public void eventOrganizationWorkflowShouldHasAddedUpdateDueDatePostFunction() {
-//        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mockWorkflowTransitionService);
-//
-//        HashMap<String, JiraWorkflow> createdWorkflows = new HashMap<String, JiraWorkflow>();
-//        ConfigureData configureData = ConfigureData.create(mock(Project.class), mock(Scheme.class), createdWorkflows, mock(FieldConfigScheme.class), new HashMap<String, IssueType>());
-//
-//        hook.configure(configureData);
-//
-//        int foundMatchingPostFunctions = 0;
-//        JiraWorkflow eventOrganizationWorkflow = configureData.createdWorkflows().get("EVENT-ORGANIZATION-WORKFLOW");
-//        for (ActionDescriptor eachAction : eventOrganizationWorkflow.getActionsByName("Deadline exceeded")) {
-//            Collection<FunctionDescriptor> postFunctions = eventOrganizationWorkflow.getPostFunctionsForTransition(eachAction);
-//            for (FunctionDescriptor eachDescriptor : postFunctions) {
-//                if (eachDescriptor.getArgs().get("class.name").equals(UpdateDueDatePostFunction.class.getName())) {
-//                    foundMatchingPostFunctions++;
-//                }
-//            }
-//        }
-//        assertEquals(2, foundMatchingPostFunctions);
-//    }
+    @Test
+    public void eventOrganizationWorkflowShouldHasAddedUpdateDueDatePostFunction() {
+        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mockWorkflowTransitionService);
+        JiraWorkflow mockWorkflow = Mockito.mock(JiraWorkflow.class);
+        HashMap<String, JiraWorkflow> createdWorkflows = new HashMap<String, JiraWorkflow>();
+        createdWorkflows.put("EVENT-ORGANIZATION-WORKFLOW", mockWorkflow);
+        ConfigureData configureData = ConfigureData.create(mock(Project.class), mock(Scheme.class), createdWorkflows, mock(FieldConfigScheme.class), new HashMap<String, IssueType>());
+
+        hook.configure(configureData);
+
+        for (ActionDescriptor eachWorkflowAction : mockWorkflow.getActionsByName("Deadline exceeded")) {
+            assertTrue(eachWorkflowAction.getPostFunctions().contains(WorkflowConfigurator.createUpdateDueDatePostFunctionDescriptor()));
+        }
+    }
 }

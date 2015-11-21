@@ -2,20 +2,16 @@ package ut.edu.uz.jira.event.planner.workflow;
 
 import com.atlassian.jira.issue.MutableIssue;
 import com.atlassian.jira.mock.issue.MockIssue;
-import com.opensymphony.module.propertyset.PropertySet;
 import edu.uz.jira.event.planner.workflow.UpdateDueDatePostFunction;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class UpdateDueDatePostFunctionTest {
 
