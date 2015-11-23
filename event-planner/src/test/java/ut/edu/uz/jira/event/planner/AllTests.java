@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import ut.edu.uz.jira.event.planner.project.EventOrganizationProjectHookTest;
 import ut.edu.uz.jira.event.planner.project.issue.DueDateIndicatorTest;
+import ut.edu.uz.jira.event.planner.servlet.EventOrganizationConfigServletTest;
 import ut.edu.uz.jira.event.planner.workflow.UpdateDueDatePostFunctionTest;
 
 /**
@@ -13,7 +14,8 @@ import ut.edu.uz.jira.event.planner.workflow.UpdateDueDatePostFunctionTest;
 @Suite.SuiteClasses({
         EventOrganizationProjectHookTest.class,
         UpdateDueDatePostFunctionTest.class,
-        DueDateIndicatorTest.class
+        DueDateIndicatorTest.class,
+        EventOrganizationConfigServletTest.class
 })
 public class AllTests {
 }

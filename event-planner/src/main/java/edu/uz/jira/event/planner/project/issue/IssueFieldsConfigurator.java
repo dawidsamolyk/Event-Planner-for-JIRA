@@ -56,7 +56,7 @@ public class IssueFieldsConfigurator {
         FIELD_LAYOUT_MANAGER.addSchemeAssociation(project, fieldLayoutScheme.getId());
         FIELD_LAYOUT_MANAGER.removeSchemeAssociation(project, FIELD_LAYOUT_MANAGER.getEditableDefaultFieldLayout().getId());
     }
-    
+
     private FieldLayoutScheme createFieldConfigurationScheme(final Project project) {
         String resultName = "Event organizing Field Configuration Scheme for project " + project.getName();
         String resultDescription = "Field Configuration Scheme for Event organization projects";

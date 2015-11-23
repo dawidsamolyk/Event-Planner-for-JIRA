@@ -32,8 +32,7 @@ public class EventOrganizationProjectHook implements AddProjectHook {
         configureWorkflow(configureData);
         ISSUE_FIELDS_CONFIGURATOR.addFieldConfigurationScheme(configureData);
 
-        String redirect = "/browse/" + configureData.project().getKey() + "#selectedTab=com.atlassian.jira.plugin.system.project%3Asummary-panel";
-        return ConfigureResponse.create().setRedirect(redirect);
+        return ConfigureResponse.create().setRedirect("/plugins/servlet/eventconfig");
     }
 
     private void configureWorkflow(@Nonnull ConfigureData configureData) {

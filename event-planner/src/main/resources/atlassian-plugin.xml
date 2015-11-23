@@ -8,10 +8,12 @@
         <param name="plugin-icon">images/icons/pluginIcon.png</param>
         <param name="plugin-logo">images/pluginLogo.png</param>
     </plugin-info>
-
     <resource type="i18n" name="i18n" location="event-planner"/>
-
     <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+    <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer" filter=""/>
+    <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" filter=""/>
+    <component-import key="loginUriProvider" interface="com.atlassian.sal.api.auth.LoginUriProvider" filter=""/>
+    <component-import key="pageBuilderService" interface="com.atlassian.jira.web.pagebuilder.PageBuilderService" filter=""/>
 
     <web-resource key="event-planner-resources" name="Event Planner Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
@@ -26,7 +28,6 @@
         <context>atl.general</context>
         <context>atl.admin</context>
     </web-resource>
-
     <project-blueprint key="event-planner-project" weight="90">
         <label key="project.name"/>
         <description key="project.description"/>
@@ -40,7 +41,6 @@
         <component-import key="workflow-transition-service"
                           interface="com.atlassian.jira.bc.workflow.WorkflowTransitionService"/>
     </project-blueprint>
-
     <workflow-function key="update-due-date-post-function" name="Update Due Date Post Function"
                        i18n-name-key="update.due.date.post.function.name"
                        class="edu.uz.jira.event.planner.workflow.UpdateDueDatePostFunctionFactory">
@@ -53,7 +53,6 @@
         <deletable>true</deletable>
         <resource type="velocity" name="view" location="templates/postfunctions/update-due-date-post-function.vm"/>
     </workflow-function>
-
     <web-panel name="DueDateIndicator" i18n-name-key="due.date.indicator.name" key="due-date-indicator"
                location="atl.jira.view.issue.right.context" weight="1000">
         <description key="due.date.indicator.description">The Issue Due Date Indicator Plugin</description>
@@ -61,4 +60,11 @@
         <resource name="view" type="velocity" location="templates/issuepage/due-date-indicator.vm"/>
         <label key="due.date.indicator.title"/>
     </web-panel>
+    <servlet name="Event Organization Configuration Servlet" i18n-name-key="event.organization.config.servlet.name"
+             key="event.organization.config.servlet"
+             class="edu.uz.jira.event.planner.project.EventOrganizationConfigServlet">
+        <description key="event.organization.config.servlet.description">The Event Organization Config Servlet Plugin
+        </description>
+        <url-pattern>/eventconfig</url-pattern>
+    </servlet>
 </atlassian-plugin>
