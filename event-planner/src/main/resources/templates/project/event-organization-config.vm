@@ -15,14 +15,6 @@
       <section role="dialog" id="event-config-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
           <header class="aui-dialog2-header">
               <h2 class="aui-dialog2-header-main">Event organization configuration</h2>
-              <div class="aui-dialog2-header-secondary">
-                  <form class="aui" action="#">
-                      <input id="demo-search" class="text" type="search" name="search">
-                  </form>
-              </div>
-              <a class="aui-dialog2-header-close">
-                  <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
-              </a>
           </header>
           <div class="aui-dialog2-content">
               <form class="aui">
@@ -32,30 +24,19 @@
                             <div class="description">Date of an event.</div>
                     </div>
                     <div class="field-group">
-                            <label for="event-type">Event type<span class="aui-icon icon-required">(required)</span></label>
-                            <a href="#event-type-trigger" id="event-type" aria-owns="event-types" aria-haspopup="true" class="aui-button aui-style-default aui-dropdown2-trigger">Select event type</a>
-
-                            <div id="event-types" class="aui-style-default aui-dropdown2">
-                                <div class="aui-dropdown2-section">
-                                    <div class="aui-dropdown2-heading">
-                                        <strong>Development</strong>
-                                    </div>
-                                    <ul>
-                                        <li><a href="?type=dev-first">First presentation for a Client</a></li>
-                                        <li><a href="?type=dev-agile-review">Agile - Review presentation</a></li>
-                                        <li><a href="?type=dev-summary">Summary of a project</a></li>
-                                    </ul>
-                                </div>
-                                <div class="aui-dropdown2-section">
-                                    <div class="aui-dropdown2-heading">
-                                        <strong>Public Relations</strong>
-                                    </div>
-                                    <ul>
-                                        <li><a href="?type=pr-career">Career fair</a></li>
-                                        <li><a href="?type=pr-products">Products expo</a></li>
-                                    </ul>
-                                </div>
-                            </div>
+                            <label for="event-type">Event type</label>
+                            <select class="select" id="event-type" name="eventType" title="Event type">
+                                <option>Undefined</option>
+                                <optgroup label="Development">
+                                    <option>First presentation for Client</option>
+                                    <option>Review</option>
+                                    <option>Summary of the project</option>
+                                </optgroup>
+                                <optgroup label="Marketing">
+                                    <option>Products presentation</option>
+                                    <option>Job fair</option>
+                                </optgroup>
+                            </select>
                             <div class="description">Type of an event.</div>
                     </div>
               </form>
@@ -63,32 +44,6 @@
           <footer class="aui-dialog2-footer">
               <div class="aui-dialog2-footer-actions">
                   <button id="event-config-dialog-submit-button" class="aui-button aui-button-primary">OK</button>
-                  <button id="event-config-dialog-next-button" class="aui-button">Next</button>
-                  <button id="event-config-dialog-close-button" class="aui-button aui-button-link">Close</button>
-              </div>
-          </footer>
-      </section>
-
-      <section role="dialog" id="event-config-second-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
-          <header class="aui-dialog2-header">
-              <h2 class="aui-dialog2-header-main">Event organization configuration</h2>
-              <div class="aui-dialog2-header-secondary">
-                  <form class="aui" action="#">
-                      <input id="demo-search" class="text" type="search" name="search">
-                  </form>
-              </div>
-              <a class="aui-dialog2-header-close">
-                  <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
-              </a>
-          </header>
-          <div class="aui-dialog2-content">
-              <p>Hello World</p>
-          </div>
-          <footer class="aui-dialog2-footer">
-              <div class="aui-dialog2-footer-actions">
-                  <button id="event-config-second-dialog-submit-button" class="aui-button aui-button-primary">OK</button>
-                  <button id="event-config-second-dialog-next-button" class="aui-button">Next</button>
-                  <button id="event-config-second-dialog-close-button" class="aui-button aui-button-link">Close</button>
               </div>
           </footer>
       </section>
@@ -97,15 +52,17 @@
   <script type="text/javascript">
       AJS.dialog2("#event-config-dialog").show();
 
-      AJS.$("#event-config-dialog-close-button").click(function(e) {
+      AJS.$("#event-config-dialog-submit-button").click(function(e) {
             e.preventDefault();
-            AJS.dialog2("#event-config-dialog").remove();
-      });
+            var valid = document.getElementById('event-duedate').value.valueOf() != "".valueOf();
 
-      AJS.$("#event-config-dialog-next-button").click(function(e) {
-            e.preventDefault();
-            AJS.dialog2("#event-config-dialog").hide();
-            AJS.dialog2("#event-config-dialog").show();
+            if(valid) {
+                // read data and configure project
+                AJS.dialog2("#event-config-dialog").remove();
+            } else {
+                //show error - due date not entered
+                console.log("Missing due date!");
+            }
       });
 
   </script>

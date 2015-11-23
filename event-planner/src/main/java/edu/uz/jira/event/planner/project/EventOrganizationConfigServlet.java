@@ -3,7 +3,6 @@ package edu.uz.jira.event.planner.project;
 import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.templaterenderer.TemplateRenderer;
-import com.atlassian.webresource.api.assembler.PageBuilderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,14 +19,12 @@ public class EventOrganizationConfigServlet extends HttpServlet {
     private final TemplateRenderer templateRenderer;
     private final UserManager userManager;
     private final LoginUriProvider loginUriProvider;
-    private final PageBuilderService pageBuilderService;
 
 
-    public EventOrganizationConfigServlet(UserManager userManager, LoginUriProvider loginUriProvider, TemplateRenderer templateRenderer, PageBuilderService pageBuilderService) {
+    public EventOrganizationConfigServlet(UserManager userManager, LoginUriProvider loginUriProvider, TemplateRenderer templateRenderer) {
         this.userManager = userManager;
         this.loginUriProvider = loginUriProvider;
         this.templateRenderer = templateRenderer;
-        this.pageBuilderService = pageBuilderService;
     }
 
     @Override
@@ -38,7 +35,6 @@ public class EventOrganizationConfigServlet extends HttpServlet {
             return;
         }
         response.setContentType("text/html");
-        pageBuilderService.assembler().resources().requireWebResource("com.atlassian.auiplugin:ajs");
         templateRenderer.render("templates/project/event-organization-config.vm", response.getWriter());
     }
 

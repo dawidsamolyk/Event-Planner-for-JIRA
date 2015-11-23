@@ -13,8 +13,6 @@
     <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer" filter=""/>
     <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" filter=""/>
     <component-import key="loginUriProvider" interface="com.atlassian.sal.api.auth.LoginUriProvider" filter=""/>
-    <component-import key="pageBuilderService" interface="com.atlassian.jira.web.pagebuilder.PageBuilderService" filter=""/>
-
     <web-resource key="event-planner-resources" name="Event Planner Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <transformation extension="soy">
