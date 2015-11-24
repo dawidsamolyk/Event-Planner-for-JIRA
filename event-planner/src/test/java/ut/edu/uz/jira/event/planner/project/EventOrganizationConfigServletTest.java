@@ -1,4 +1,4 @@
-package ut.edu.uz.jira.event.planner.servlet;
+package ut.edu.uz.jira.event.planner.project;
 
 import org.junit.Test;
 import org.junit.After;

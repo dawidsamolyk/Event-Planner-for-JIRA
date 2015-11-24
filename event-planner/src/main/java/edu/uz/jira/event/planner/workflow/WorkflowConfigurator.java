@@ -15,6 +15,7 @@ import java.util.Map;
  * Created by Dawid on 2015-11-18.
  */
 public class WorkflowConfigurator {
+    private static FunctionDescriptor updateDueDatePostFunctionDescriptor;
     private final WorkflowTransitionService WORKFLOW_TRANSITION_SERVICE;
 
     public WorkflowConfigurator(@Nonnull WorkflowTransitionService workflowTransitionService) {
@@ -38,13 +39,14 @@ public class WorkflowConfigurator {
     }
 
     public static FunctionDescriptor createUpdateDueDatePostFunctionDescriptor() {
-        FunctionDescriptor postFunctionDescriptor = DescriptorFactory.getFactory().createFunctionDescriptor();
-        postFunctionDescriptor.setType("class");
+        if (updateDueDatePostFunctionDescriptor == null) {
+            updateDueDatePostFunctionDescriptor = DescriptorFactory.getFactory().createFunctionDescriptor();
+            updateDueDatePostFunctionDescriptor.setType("class");
 
-        final Map functionArguments = postFunctionDescriptor.getArgs();
-        functionArguments.put("class.name", UpdateDueDatePostFunction.class.getName());
-
-        return postFunctionDescriptor;
+            final Map functionArguments = updateDueDatePostFunctionDescriptor.getArgs();
+            functionArguments.put("class.name", UpdateDueDatePostFunction.class.getName());
+        }
+        return updateDueDatePostFunctionDescriptor;
     }
 
     public static ConditionDescriptor createSubTaskBlockingConditionDescriptor(List<String> statusesToBlock) {

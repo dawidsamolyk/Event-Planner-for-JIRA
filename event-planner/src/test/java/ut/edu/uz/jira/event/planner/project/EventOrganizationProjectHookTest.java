@@ -17,21 +17,24 @@ import com.atlassian.jira.scheme.Scheme;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.opensymphony.workflow.loader.ActionDescriptor;
+import com.opensymphony.workflow.loader.FunctionDescriptor;
 import edu.uz.jira.event.planner.project.EventOrganizationProjectHook;
 import edu.uz.jira.event.planner.workflow.WorkflowConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-/**
- * Created by Dawid on 2015-11-03.
- */
 public class EventOrganizationProjectHookTest {
     private WorkflowTransitionService mockWorkflowTransitionService;
 
@@ -72,16 +75,42 @@ public class EventOrganizationProjectHookTest {
 
     @Test
     public void eventOrganizationWorkflowShouldHasAddedUpdateDueDatePostFunction() {
-        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mockWorkflowTransitionService);
-        JiraWorkflow mockWorkflow = Mockito.mock(JiraWorkflow.class);
+        final String transitionName = "Deadline exceeded";
+        final FunctionDescriptor postFunctionDescriptor = WorkflowConfigurator.createUpdateDueDatePostFunctionDescriptor();
+
+        final JiraWorkflow mockWorkflow = mock(JiraWorkflow.class);
+
+        ActionDescriptor mockAction = mock(ActionDescriptor.class);
+        Mockito.when(mockAction.getName()).thenReturn(transitionName);
+        final List mockPostFunctions = new ArrayList();
+        Mockito.when(mockAction.getPostFunctions()).thenReturn(mockPostFunctions);
+
+        Collection<ActionDescriptor> mockActionDescriptors = new ArrayList<ActionDescriptor>();
+        mockActionDescriptors.add(mockAction);
+        Mockito.when(mockWorkflow.getActionsByName(transitionName)).thenReturn(mockActionDescriptors);
+
+        Mockito.when(mockWorkflowTransitionService.addPostFunctionToWorkflow(Mockito.eq(transitionName), (FunctionDescriptor) Mockito.anyObject(), (JiraWorkflow) Mockito.anyObject()))
+                .then(new Answer<Object>() {
+                    @Override
+                    public Object answer(InvocationOnMock invocation) throws Throwable {
+                        Object[] arguments = invocation.getArguments();
+                        if (arguments[0].equals(transitionName) && arguments[2].equals(mockWorkflow)) {
+                            mockPostFunctions.add(postFunctionDescriptor);
+                        }
+                        return null;
+                    }
+                });
+
         HashMap<String, JiraWorkflow> createdWorkflows = new HashMap<String, JiraWorkflow>();
         createdWorkflows.put("EVENT-ORGANIZATION-WORKFLOW", mockWorkflow);
         ConfigureData configureData = ConfigureData.create(mock(Project.class), mock(Scheme.class), createdWorkflows, mock(FieldConfigScheme.class), new HashMap<String, IssueType>());
 
+        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mockWorkflowTransitionService);
+
         hook.configure(configureData);
 
-        for (ActionDescriptor eachWorkflowAction : mockWorkflow.getActionsByName("Deadline exceeded")) {
-            assertTrue(eachWorkflowAction.getPostFunctions().contains(WorkflowConfigurator.createUpdateDueDatePostFunctionDescriptor()));
+        for (ActionDescriptor eachWorkflowAction : mockWorkflow.getActionsByName(transitionName)) {
+            assertTrue(eachWorkflowAction.getPostFunctions().contains(postFunctionDescriptor));
         }
     }
 }

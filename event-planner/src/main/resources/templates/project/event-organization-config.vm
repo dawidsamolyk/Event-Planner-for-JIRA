@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Event organization configuration</title>
-    <meta name="decorator" content="alt.general">
+    <meta name="decorator" content="alt.admin">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/sinon.js/1.15.4/sinon.js"></script>
@@ -17,15 +17,15 @@
               <h2 class="aui-dialog2-header-main">Event organization configuration</h2>
           </header>
           <div class="aui-dialog2-content">
-              <form class="aui">
-                    <div class="field-group">
-                            <label for="event-duedate">Due date<span class="aui-icon icon-required">(required)</span></label>
-                            <input class="aui-date-picker" id="event-duedate" type="date" />
-                            <div class="description">Date of an event.</div>
+              <form class="aui" id="event-configuration" action="#" method="post">
+                    <div class="field-group" id="event-duedate-group">
+                            <label for="event-duedate">Event date<span class="aui-icon icon-required">(required)</span></label>
+                            <input class="aui-date-picker" id="event-duedate" name="event-duedate" type="date" />
+                            <div class="description" id="event-duedate-description">Date of an event.</div>
                     </div>
                     <div class="field-group">
                             <label for="event-type">Event type</label>
-                            <select class="select" id="event-type" name="eventType" title="Event type">
+                            <select class="select" id="event-type" name="event-type" type="text" title="Event type">
                                 <option>Undefined</option>
                                 <optgroup label="Development">
                                     <option>First presentation for Client</option>
@@ -43,25 +43,37 @@
           </div>
           <footer class="aui-dialog2-footer">
               <div class="aui-dialog2-footer-actions">
-                  <button id="event-config-dialog-submit-button" class="aui-button aui-button-primary">OK</button>
+                  <button id="event-config-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save</button>
               </div>
           </footer>
       </section>
   </body>
 
   <script type="text/javascript">
+      function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+      }
+
+      function isDueDateEmpty() {
+            var dueDate = document.getElementById('event-duedate').value;
+            return dueDate.valueOf() == "".valueOf();
+      }
+
       AJS.dialog2("#event-config-dialog").show();
 
-      AJS.$("#event-config-dialog-submit-button").click(function(e) {
+      AJS.$("#event-config-dialog-save-button").click(function(e) {
             e.preventDefault();
-            var valid = document.getElementById('event-duedate').value.valueOf() != "".valueOf();
 
-            if(valid) {
-                // read data and configure project
+            if(!isDueDateEmpty()) {
                 AJS.dialog2("#event-config-dialog").remove();
+
+
+
+                //window.location.replace("/jira/projects/" + getParameterByName("projectkey"));
             } else {
-                //show error - due date not entered
-                console.log("Missing due date!");
+                $('#event-duedate-description').html('<div class="error" data-field="event-duedate">You must specify a date of the event.</div>');
             }
       });
 
