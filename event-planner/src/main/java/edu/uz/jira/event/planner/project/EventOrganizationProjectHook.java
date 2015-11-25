@@ -32,7 +32,8 @@ public class EventOrganizationProjectHook implements AddProjectHook {
         configureWorkflow(configureData);
         ISSUE_FIELDS_CONFIGURATOR.addFieldConfigurationScheme(configureData);
 
-        return ConfigureResponse.create().setRedirect("/plugins/servlet/eventconfig");
+        String redirect = String.format("/plugins/servlet/eventconfig?project-key=", configureData.project().getKey());
+        return ConfigureResponse.create().setRedirect(redirect);
     }
 
     private void configureWorkflow(@Nonnull ConfigureData configureData) {

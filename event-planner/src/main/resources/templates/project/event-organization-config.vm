@@ -61,17 +61,31 @@
             return dueDate.valueOf() == "".valueOf();
       }
 
+      function sendPostRequestWithFormData() {
+            var projectKey = getParameterByName("project-key");
+            var dueDate = document.getElementById('event-duedate').value;
+            var eventType = document.getElementById('event-type').value;
+            var params = "project-key=" + projectKey + "&event-duedate=" + dueDate + "&event-type=" + eventType;
+
+            var request = new XMLHttpRequest();
+            request.open("POST", "eventconfig", true);
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            request.onreadystatechange = function() {
+                if(http.readyState == 4 && http.status == 200) {
+                    alert(http.responseText);
+                }
+            }
+            request.send(params);
+      }
+
       AJS.dialog2("#event-config-dialog").show();
 
       AJS.$("#event-config-dialog-save-button").click(function(e) {
             e.preventDefault();
 
             if(!isDueDateEmpty()) {
+                sendPostRequestWithFormData();
                 AJS.dialog2("#event-config-dialog").remove();
-
-
-
-                //window.location.replace("/jira/projects/" + getParameterByName("projectkey"));
             } else {
                 $('#event-duedate-description').html('<div class="error" data-field="event-duedate">You must specify a date of the event.</div>');
             }

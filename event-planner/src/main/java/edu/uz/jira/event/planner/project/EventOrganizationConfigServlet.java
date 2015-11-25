@@ -1,5 +1,7 @@
 package edu.uz.jira.event.planner.project;
 
+import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.project.Project;
 import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
@@ -40,8 +42,15 @@ public class EventOrganizationConfigServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String projectKey = request.getParameter("project-key");
         String eventType = request.getParameter("event-type");
         String eventDueDate = request.getParameter("event-duedate");
+
+        Project project = ComponentAccessor.getProjectManager().getProjectObjByKeyIgnoreCase(projectKey);
+        if(project != null) {
+            //TODO zastosuj konfigurację
+        }
+
         super.doPost(request, response);
     }
 
