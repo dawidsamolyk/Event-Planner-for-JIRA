@@ -1,0 +1,19 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/sinon.js/1.15.4/sinon.js"></script>
+<script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui.js"></script>
+<script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-experimental.js"></script>
+<script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-datepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui.css"/>
+<link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui-experimental.css"/>
+<script type="text/javascript">
+    var url = document.location.protocol +"//"+ document.location.hostname + document.location.pathname;
+
+    var myFlag = AJS.flag({
+    type: 'error',
+    title: 'Error while configuring Event organization project.',
+    body: '<ul class="aui-nav-actions-list">' +
+            '<li><a href="' + url + '">Try again</a></li>' +
+          '</ul>'
+});
+</script>

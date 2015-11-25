@@ -58,11 +58,20 @@
         <resource name="view" type="velocity" location="templates/issuepage/due-date-indicator.vm"/>
         <label key="due.date.indicator.title"/>
     </web-panel>
-    <servlet name="Event Organization Configuration Servlet" i18n-name-key="event.organization.config.servlet.name"
-             key="event.organization.config.servlet"
-             class="edu.uz.jira.event.planner.project.EventOrganizationConfigServlet">
-        <description key="event.organization.config.servlet.description">The Event Organization Config Servlet Plugin
+    <webwork1 key="event-organization-config-webwork" name="EventOrganizationConfigWebwork"
+              i18n-name-key="event-organization-config-webwork.name">
+        <description key="event-organization-config-webwork-description">The Event Organization Configuration Webwork
+            Plugin
         </description>
-        <url-pattern>/eventconfig</url-pattern>
-    </servlet>
+        <actions>
+            <action name="com.atlassian.jira.web.action.JiraWebActionSupport"
+                    alias="EventOrganizationConfiguration">
+                <view name="success">/templates/event-organization-config-webwork/success.vm</view>
+                <view name="input">/templates/event-organization-config-webwork/input.vm</view>
+                <view name="error">/templates/event-organization-config-webwork/error.vm</view>
+            </action>
+        </actions>
+        <resource type="download" name="input-script"
+                  location="/templates/event-organization-config-webwork/input.js"></resource>
+    </webwork1>
 </atlassian-plugin>
