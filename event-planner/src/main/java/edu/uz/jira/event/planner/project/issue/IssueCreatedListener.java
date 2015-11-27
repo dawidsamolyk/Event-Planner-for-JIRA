@@ -1,74 +1,72 @@
 package edu.uz.jira.event.planner.project.issue;
 
-import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.event.api.EventListener;
 import com.atlassian.event.api.EventPublisher;
-import com.atlassian.jira.bc.issue.IssueService;
-import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.event.issue.IssueEvent;
 import com.atlassian.jira.event.type.EventType;
 import com.atlassian.jira.issue.Issue;
-import com.atlassian.jira.issue.IssueInputParameters;
+import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.version.Version;
+import com.atlassian.jira.user.ApplicationUser;
+import com.atlassian.jira.user.ApplicationUsers;
 import com.atlassian.sal.api.message.I18nResolver;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
-public class IssueCreatedListener implements InitializingBean, DisposableBean {
-    private IssueService ISSUE_SERVICE = ComponentAccessor.getIssueService();
-    private final EventPublisher eventPublisher;
-    private final String projectVersionName;
+import javax.annotation.Nonnull;
 
-    public IssueCreatedListener(EventPublisher eventPublisher, I18nResolver i18n) {
-        this.projectVersionName = i18n.getText("project.version.name");
-        this.eventPublisher = eventPublisher;
+public class IssueCreatedListener implements InitializingBean, DisposableBean {
+    private final EventPublisher EVENT_PUBLISHER;
+    private final String PROJECT_VERSION_NAME;
+
+    public IssueCreatedListener(@Nonnull final EventPublisher eventPublisher, @Nonnull final I18nResolver i18n) {
+        this.PROJECT_VERSION_NAME = i18n.getText("project.version.name");
+        this.EVENT_PUBLISHER = eventPublisher;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        eventPublisher.register(this);
+        EVENT_PUBLISHER.register(this);
     }
 
     @Override
     public void destroy() throws Exception {
-        eventPublisher.unregister(this);
+        EVENT_PUBLISHER.unregister(this);
     }
 
     @EventListener
-    public void onIssueEvent(IssueEvent issueEvent) throws Exception {
-        if (issueEvent.getEventTypeId().equals(EventType.ISSUE_CREATED_ID)) {
-            Issue issue = issueEvent.getIssue();
-            Version version = getEventDueDateVersion(issue);
-            if (version != null) {
-                setEventDueDateVersion(issue.getId(), issueEvent.getUser(), version.getId());
-            }
+    public void onIssueEvent(@Nonnull final IssueEvent issueEvent) throws Exception {
+        if (issueCreated(issueEvent)) {
+            updateIssueVersion(issueEvent);
         }
     }
 
-    private Version getEventDueDateVersion(Issue issue) {
-        for (Version eachVersion : issue.getProjectObject().getVersions()) {
-            if (eachVersion.getName().equals(projectVersionName)) {
+    private boolean issueCreated(@Nonnull final IssueEvent issueEvent) {
+        return issueEvent.getEventTypeId().equals(EventType.ISSUE_CREATED_ID);
+    }
+
+    private void updateIssueVersion(@Nonnull final IssueEvent issueEvent) {
+        Version version = getEventDueDateVersion(issueEvent.getProject());
+
+        if (version != null) {
+            ApplicationUser applicationUser = ApplicationUsers.from(issueEvent.getUser());
+            Issue issue = issueEvent.getIssue();
+
+            IssueVersionUpdater updater = new IssueVersionUpdater();
+            updater.updateIssueVersion(applicationUser, issue.getId(), version.getId());
+        }
+    }
+
+    private Version getEventDueDateVersion(@Nonnull final Project project) {
+        for (Version eachVersion : project.getVersions()) {
+            if (eachVersion.getName().equals(PROJECT_VERSION_NAME)) {
                 return eachVersion;
             }
         }
         return null;
     }
 
-    private void setEventDueDateVersion(Long issueId, User user, Long versionId) throws Exception {
-        IssueInputParameters versionValues = ISSUE_SERVICE.newIssueInputParameters();
-        versionValues.setAffectedVersionIds(versionId);
 
-        IssueService.UpdateValidationResult validateVersionUpdate = ISSUE_SERVICE.validateUpdate(user, issueId, versionValues);
-
-        if (!validateVersionUpdate.isValid()) {
-            throw new Exception();
-        }
-
-        IssueService.IssueResult versionResult = ISSUE_SERVICE.update(user, validateVersionUpdate);
-        if (!versionResult.isValid()) {
-            throw new Exception();
-        }
-    }
 }
 
 
