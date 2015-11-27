@@ -8,8 +8,4 @@
         <param name="plugin-icon">images/pluginIcon.png</param>
         <param name="plugin-logo">images/pluginLogo.png</param>
     </plugin-info>
-
-    <component-import key="myComponent" interface="edu.uz.jira.event.planner.MyPluginComponent"/>
-    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
-    
 </atlassian-plugin>

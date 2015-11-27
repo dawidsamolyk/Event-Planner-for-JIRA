@@ -1,28 +1,37 @@
 package edu.uz.jira.event.planner.workflow;
 
 import com.atlassian.jira.bc.workflow.WorkflowTransitionService;
+import com.atlassian.jira.issue.status.Status;
+import com.atlassian.jira.issue.status.category.StatusCategory;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.jira.workflow.condition.SubTaskBlockingCondition;
 import com.opensymphony.workflow.loader.ConditionDescriptor;
 import com.opensymphony.workflow.loader.DescriptorFactory;
 import com.opensymphony.workflow.loader.FunctionDescriptor;
+import edu.uz.jira.event.planner.exceptions.NullArgumentException;
+import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Dawid on 2015-11-18.
- */
 public class WorkflowConfigurator {
-    private static FunctionDescriptor updateDueDatePostFunctionDescriptor;
+    private static FunctionDescriptor updateDueDatePostFunction;
     private final WorkflowTransitionService WORKFLOW_TRANSITION_SERVICE;
 
-    public WorkflowConfigurator(@Nonnull WorkflowTransitionService workflowTransitionService) {
+    public WorkflowConfigurator(@Nonnull final WorkflowTransitionService workflowTransitionService) throws NullArgumentException {
+        this.checkNullArguments(workflowTransitionService);
         this.WORKFLOW_TRANSITION_SERVICE = workflowTransitionService;
     }
 
-    public void addSubTaskBlockingCondition(@Nonnull JiraWorkflow workflow, @Nonnull List<String> statusesWhichBlocks, @Nonnull String... transitionsNames) {
+    private void checkNullArguments(WorkflowTransitionService workflowTransitionService) throws NullArgumentException {
+        if (workflowTransitionService == null) {
+            throw new NullArgumentException(WorkflowTransitionService.class.getName());
+        }
+    }
+
+    public void addSubTaskBlockingCondition(@Nonnull final JiraWorkflow workflow, @Nonnull final List<String> statusesWhichBlocks, @Nonnull final String... transitionsNames) {
         ConditionDescriptor conditionDescriptor = createSubTaskBlockingConditionDescriptor(statusesWhichBlocks);
 
         for (String eachTransitionName : transitionsNames) {
@@ -30,7 +39,7 @@ public class WorkflowConfigurator {
         }
     }
 
-    public void addUpdateDueDatePostFunction(@Nonnull JiraWorkflow workflow, @Nonnull String... transitionsNames) {
+    public void addUpdateDueDatePostFunctionToTransitions(@Nonnull final JiraWorkflow workflow, @Nonnull final String... transitionsNames) {
         FunctionDescriptor postFunctionDescriptor = createUpdateDueDatePostFunctionDescriptor();
 
         for (String eachTransitionName : transitionsNames) {
@@ -39,34 +48,41 @@ public class WorkflowConfigurator {
     }
 
     public static FunctionDescriptor createUpdateDueDatePostFunctionDescriptor() {
-        if (updateDueDatePostFunctionDescriptor == null) {
-            updateDueDatePostFunctionDescriptor = DescriptorFactory.getFactory().createFunctionDescriptor();
-            updateDueDatePostFunctionDescriptor.setType("class");
+        if (updateDueDatePostFunction == null) {
+            updateDueDatePostFunction = DescriptorFactory.getFactory().createFunctionDescriptor();
+            updateDueDatePostFunction.setType("class");
 
-            final Map functionArguments = updateDueDatePostFunctionDescriptor.getArgs();
+            Map functionArguments = updateDueDatePostFunction.getArgs();
             functionArguments.put("class.name", UpdateDueDatePostFunction.class.getName());
         }
-        return updateDueDatePostFunctionDescriptor;
+        return updateDueDatePostFunction;
     }
 
-    public static ConditionDescriptor createSubTaskBlockingConditionDescriptor(List<String> statusesToBlock) {
-        ConditionDescriptor conditionDescriptor = DescriptorFactory.getFactory().createConditionDescriptor();
-        conditionDescriptor.setType("class");
+    public static ConditionDescriptor createSubTaskBlockingConditionDescriptor(@Nonnull final List<String> statusesToBlock) {
+        ConditionDescriptor result = DescriptorFactory.getFactory().createConditionDescriptor();
+        result.setType("class");
 
-        final Map functionArguments = conditionDescriptor.getArgs();
+        Map functionArguments = result.getArgs();
         functionArguments.put("class.name", SubTaskBlockingCondition.class.getName());
+        functionArguments.put("statuses", StringUtils.join(statusesToBlock, ','));
 
-        StringBuilder statusesToBlockAsText = new StringBuilder();
-        for (String eachStatus : statusesToBlock) {
-            statusesToBlockAsText.append(eachStatus).append(",");
+        return result;
+    }
+
+    public List<String> getStatusesFromCategory(@Nonnull final JiraWorkflow workflow, @Nonnull final String statusCategoryName) {
+        List<String> result = new ArrayList<String>();
+
+        if (workflow == null || statusCategoryName == null) {
+            return result;
         }
-        int lastCharIndex = statusesToBlockAsText.length() - 1;
-        if (lastCharIndex > 0) {
-            statusesToBlockAsText.deleteCharAt(lastCharIndex);
+
+        for (Status eachStatus : workflow.getLinkedStatusObjects()) {
+            StatusCategory statusCategory = eachStatus.getStatusCategory();
+            if (statusCategory.getName().equals(statusCategoryName)) {
+                result.add(eachStatus.getId());
+            }
         }
 
-        functionArguments.put("statuses", statusesToBlockAsText);
-
-        return conditionDescriptor;
+        return result;
     }
 }

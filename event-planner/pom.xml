@@ -32,12 +32,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.atlassian.templaterenderer</groupId>
-            <artifactId>atlassian-template-renderer-api</artifactId>
-            <version>${template.renderer.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.atlassian.plugins</groupId>
             <artifactId>atlassian-plugins-osgi-testrunner</artifactId>
             <version>${plugin.testrunner.version}</version>
@@ -77,6 +71,12 @@
             <artifactId>mockito-all</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>2.5.6.SEC02</version>
+            <scope>provided</scope>
         </dependency>
         <!-- Uncomment to use TestKit in your projects. Details at https://bitbucket.org/atlassian/jira-testkit -->
         <!-- You can read more about TestKit at https://developer.atlassian.com/display/JIRADEV/Plugin+Tutorial+-+Smarter+integration+testing+with+TestKit -->
@@ -149,7 +149,6 @@
         <httpcomponents.version>4.1.1</httpcomponents.version>
         <jsr311.api.version>1.1.1</jsr311.api.version>
         <jira.tests.version>7.1.0-QR20151029214859</jira.tests.version>
-        <template.renderer.version>3.0.0</template.renderer.version>
         <plugin.project.templates.api.version>2.42</plugin.project.templates.api.version>
         <plugin.jira.workflow.sharing.version>2.0.2</plugin.jira.workflow.sharing.version>
         <plugin.testrunner.version>1.2.3</plugin.testrunner.version>

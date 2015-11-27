@@ -1,5 +1,13 @@
 var DUE_DATE = 'event-duedate';
 var EVENT_TYPE = 'event-type';
+var PROJECT_KEY = 'project-key';
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
 function isDueDateEmpty() {
     var dueDate = document.getElementById(DUE_DATE).value;
@@ -14,7 +22,9 @@ function sendPostRequest() {
                                         "?" +
                                         DUE_DATE + "=" + dueDateValue +
                                         "&" +
-                                        EVENT_TYPE + "=" + eventTypeValue);
+                                        EVENT_TYPE + "=" + eventTypeValue +
+                                        "&" +
+                                        PROJECT_KEY + "=" + getParameterByName(PROJECT_KEY));
 }
 
 AJS.dialog2("#event-config-dialog").show();

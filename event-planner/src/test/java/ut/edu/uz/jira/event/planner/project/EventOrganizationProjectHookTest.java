@@ -18,6 +18,7 @@ import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.opensymphony.workflow.loader.ActionDescriptor;
 import com.opensymphony.workflow.loader.FunctionDescriptor;
+import edu.uz.jira.event.planner.exceptions.NullArgumentException;
 import edu.uz.jira.event.planner.project.EventOrganizationProjectHook;
 import edu.uz.jira.event.planner.workflow.WorkflowConfigurator;
 import org.junit.Before;
@@ -53,10 +54,9 @@ public class EventOrganizationProjectHookTest {
     }
 
     @Test
-    public void validateResponseShouldNotBeNull() {
+    public void validateResponseShouldNotBeNull() throws NullArgumentException {
         EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mockWorkflowTransitionService);
-        ApplicationUser user = mock(ApplicationUser.class);
-        ValidateData validateData = new ValidateData("EVENT PLAN", "EVENT", user);
+        ValidateData validateData = new ValidateData("EVENT PLAN", "EVENT", mock(ApplicationUser.class));
 
         ValidateResponse result = hook.validate(validateData);
 
@@ -64,7 +64,7 @@ public class EventOrganizationProjectHookTest {
     }
 
     @Test
-    public void configureResponseShouldNotBeNull() {
+    public void configureResponseShouldNotBeNull() throws NullArgumentException {
         EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mockWorkflowTransitionService);
         ConfigureData configureData = ConfigureData.create(mock(Project.class), mock(Scheme.class), new HashMap<String, JiraWorkflow>(), mock(FieldConfigScheme.class), new HashMap<String, IssueType>());
 
@@ -74,7 +74,7 @@ public class EventOrganizationProjectHookTest {
     }
 
     @Test
-    public void eventOrganizationWorkflowShouldHasAddedUpdateDueDatePostFunction() {
+    public void eventOrganizationWorkflowShouldHasAddedUpdateDueDatePostFunction() throws NullArgumentException {
         final String transitionName = "Deadline exceeded";
         final FunctionDescriptor postFunctionDescriptor = WorkflowConfigurator.createUpdateDueDatePostFunctionDescriptor();
 
@@ -112,5 +112,10 @@ public class EventOrganizationProjectHookTest {
         for (ActionDescriptor eachWorkflowAction : mockWorkflow.getActionsByName(transitionName)) {
             assertTrue(eachWorkflowAction.getPostFunctions().contains(postFunctionDescriptor));
         }
+    }
+
+    @Test
+    public void dueDateForIssuesShouldBeRequiredInTheEventOrganizationProject() {
+        // TODO implement
     }
 }

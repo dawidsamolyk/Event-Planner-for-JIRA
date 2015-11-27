@@ -1,6 +1,5 @@
 package edu.uz.jira.event.planner.project.issue;
 
-import com.atlassian.jira.blueprint.api.ConfigureData;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.OrderableField;
 import com.atlassian.jira.issue.fields.layout.field.*;
@@ -49,9 +48,7 @@ public class IssueFieldsConfigurator {
         return result;
     }
 
-    public void addFieldConfigurationScheme(ConfigureData configureData) {
-        Project project = configureData.project();
-
+    public void addFieldConfigurationScheme(Project project) {
         FieldLayoutScheme fieldLayoutScheme = createFieldConfigurationScheme(project);
         FIELD_LAYOUT_MANAGER.addSchemeAssociation(project, fieldLayoutScheme.getId());
         FIELD_LAYOUT_MANAGER.removeSchemeAssociation(project, FIELD_LAYOUT_MANAGER.getEditableDefaultFieldLayout().getId());

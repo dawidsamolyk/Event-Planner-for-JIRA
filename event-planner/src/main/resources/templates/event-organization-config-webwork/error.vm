@@ -1,3 +1,4 @@
+<meta name="decorator" content="dialog">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/sinon.js/1.15.4/sinon.js"></script>
@@ -10,10 +11,11 @@
     var url = document.location.protocol +"//"+ document.location.hostname + document.location.pathname;
 
     var myFlag = AJS.flag({
-    type: 'error',
-    title: 'Error while configuring Event organization project.',
-    body: '<ul class="aui-nav-actions-list">' +
-            '<li><a href="' + url + '">Try again</a></li>' +
-          '</ul>'
+        type: 'error',
+        title: 'Error while configuring Event organization project.',
+        body: '<ul class="aui-nav-actions-list">' +
+                '<li><a href="' + url + '">Try again</a></li>' +
+                '<li><a href="' + AJS.Meta.get("context-path") + '">Back to JIRA main page</a></li>' +
+              '</ul>'
 });
 </script>
