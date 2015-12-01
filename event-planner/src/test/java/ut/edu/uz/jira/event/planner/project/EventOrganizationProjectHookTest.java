@@ -13,6 +13,7 @@ import com.atlassian.jira.issue.fields.layout.field.FieldLayoutScheme;
 import com.atlassian.jira.issue.issuetype.IssueType;
 import com.atlassian.jira.mock.component.MockComponentWorker;
 import com.atlassian.jira.project.Project;
+import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.scheme.Scheme;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.workflow.JiraWorkflow;
@@ -21,6 +22,7 @@ import com.opensymphony.workflow.loader.ActionDescriptor;
 import com.opensymphony.workflow.loader.FunctionDescriptor;
 import edu.uz.jira.event.planner.exceptions.NullArgumentException;
 import edu.uz.jira.event.planner.project.EventOrganizationProjectHook;
+import edu.uz.jira.event.planner.project.issue.fields.FieldLayoutBuilder;
 import edu.uz.jira.event.planner.workflow.WorkflowConfigurator;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,13 +52,14 @@ public class EventOrganizationProjectHookTest {
         new MockComponentWorker()
                 .addMock(ComponentAccessor.class, Mockito.mock(ComponentAccessor.class))
                 .addMock(FieldLayoutManager.class, mockFieldLayoutManager)
+                .addMock(ProjectManager.class, Mockito.mock(ProjectManager.class))
                 .init();
 
         mockWorkflowTransitionService = Mockito.mock(WorkflowTransitionService.class);
 
         mocki18n = mock(I18nResolver.class);
-        Mockito.when(mocki18n.getText("project.fields.configuration.name")).thenReturn("Event organization Field Configuration");
-        Mockito.when(mocki18n.getText("project.fields.configuration.description")).thenReturn("Field Configuration for the Event organization Issues");
+        Mockito.when(mocki18n.getText(FieldLayoutBuilder.PROJECT_FIELDS_CONFIGURATION_NAME)).thenReturn("Event organization Field Configuration");
+        Mockito.when(mocki18n.getText(FieldLayoutBuilder.PROJECT_FIELDS_CONFIGURATION_DESCRIPTION)).thenReturn("Field Configuration for the Event organization Issues");
     }
 
     @Test

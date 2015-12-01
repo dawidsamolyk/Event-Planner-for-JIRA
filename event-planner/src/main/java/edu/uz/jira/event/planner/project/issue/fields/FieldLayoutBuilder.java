@@ -16,6 +16,8 @@ import java.util.List;
  * Builder of the Issue Field Layout.
  */
 public class FieldLayoutBuilder {
+    public static final String PROJECT_FIELDS_CONFIGURATION_NAME = "project.fields.configuration.name";
+    public static final String PROJECT_FIELDS_CONFIGURATION_DESCRIPTION = "project.fields.configuration.description";
     private final I18nResolver i18n;
 
     /**
@@ -41,10 +43,14 @@ public class FieldLayoutBuilder {
         }
 
         EditableFieldLayoutImpl result = new EditableFieldLayoutImpl(null, resultFieldLayoutItems);
-        result.setName(i18n.getText("project.fields.configuration.name"));
-        result.setDescription(i18n.getText("project.fields.configuration.description"));
+        result.setName(getInternationalized(PROJECT_FIELDS_CONFIGURATION_NAME));
+        result.setDescription(getInternationalized(PROJECT_FIELDS_CONFIGURATION_DESCRIPTION));
 
         return result;
+    }
+
+    private String getInternationalized(@Nonnull final String key) {
+        return i18n.getText(key);
     }
 
     /**

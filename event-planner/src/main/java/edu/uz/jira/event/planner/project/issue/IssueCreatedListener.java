@@ -10,7 +10,6 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.version.Version;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.ApplicationUsers;
-import com.atlassian.sal.api.message.I18nResolver;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -20,15 +19,13 @@ import javax.annotation.Nonnull;
  * Listener for Issue creation. Setting Event Date Version to all created issues.
  */
 public class IssueCreatedListener implements InitializingBean, DisposableBean {
+    public static final String PROJECT_VERSION_NAME = "Event Due Date";
     private final EventPublisher EVENT_PUBLISHER;
-    private final String PROJECT_VERSION_NAME;
 
     /**
      * @param eventPublisher Event publisher.
-     * @param i18nResolver   Internationalization resolver.
      */
-    public IssueCreatedListener(@Nonnull final EventPublisher eventPublisher, @Nonnull final I18nResolver i18nResolver) {
-        this.PROJECT_VERSION_NAME = i18nResolver.getText("project.version.name");
+    public IssueCreatedListener(@Nonnull final EventPublisher eventPublisher) {
         this.EVENT_PUBLISHER = eventPublisher;
     }
 
@@ -55,7 +52,7 @@ public class IssueCreatedListener implements InitializingBean, DisposableBean {
     @EventListener
     public void onIssueEvent(@Nonnull final IssueEvent issueEvent) throws Exception {
         if (issueCreated(issueEvent)) {
-            updateIssueVersion(issueEvent);
+            updateIssueFixVersion(issueEvent);
         }
     }
 
@@ -71,15 +68,15 @@ public class IssueCreatedListener implements InitializingBean, DisposableBean {
      * @param issueEvent Issue event.
      * @throws UpdateException Thrown when issue version updating failed.
      */
-    private void updateIssueVersion(@Nonnull final IssueEvent issueEvent) throws UpdateException {
+    private void updateIssueFixVersion(@Nonnull final IssueEvent issueEvent) throws UpdateException {
         Version version = getEventDueDateVersion(issueEvent.getProject());
 
         if (version != null) {
             ApplicationUser applicationUser = ApplicationUsers.from(issueEvent.getUser());
             Issue issue = issueEvent.getIssue();
 
-            IssueVersionUpdater updater = new IssueVersionUpdater();
-            updater.updateIssueVersion(applicationUser, issue.getId(), version.getId());
+            IssueFixVersionUpdater updater = new IssueFixVersionUpdater();
+            updater.updateIssueFixVersion(applicationUser, issue.getId(), version.getId());
         }
     }
 

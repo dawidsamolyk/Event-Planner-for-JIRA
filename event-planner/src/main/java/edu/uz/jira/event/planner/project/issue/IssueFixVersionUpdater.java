@@ -13,7 +13,7 @@ import java.util.Collection;
 /**
  * Updates version of the Issue.
  */
-public class IssueVersionUpdater {
+public class IssueFixVersionUpdater {
     private final static IssueService ISSUE_SERVICE = ComponentAccessor.getIssueService();
 
     /**
@@ -22,11 +22,11 @@ public class IssueVersionUpdater {
      * @param versionId ID of the Version which should be applied to Issue.
      * @throws UpdateException Thrown when Issue Version update failed.
      */
-    public void updateIssueVersion(@Nonnull final ApplicationUser user, @Nonnull final Long issueId, @Nonnull final Long versionId) throws UpdateException {
+    public void updateIssueFixVersion(@Nonnull final ApplicationUser user, @Nonnull final Long issueId, @Nonnull final Long versionId) throws UpdateException {
         IssueInputParameters versionValues = ISSUE_SERVICE.newIssueInputParameters();
-        versionValues.setAffectedVersionIds(versionId);
+        versionValues.setFixVersionIds(versionId);
 
-        IssueService.UpdateValidationResult versionUpdateValidationResult = validateVersionUpdate(user, issueId, versionValues);
+        IssueService.UpdateValidationResult versionUpdateValidationResult = validateFixVersionUpdate(user, issueId, versionValues);
 
         IssueService.IssueResult versionResult = ISSUE_SERVICE.update(user, versionUpdateValidationResult);
         if (!versionResult.isValid()) {
@@ -41,7 +41,7 @@ public class IssueVersionUpdater {
      * @return Result of the Issue Version update validation.
      * @throws UpdateException Thrown when Issue Version update validation failed.
      */
-    private IssueService.UpdateValidationResult validateVersionUpdate(@Nonnull ApplicationUser user, @Nonnull Long issueId, IssueInputParameters versionValues) throws UpdateException {
+    private IssueService.UpdateValidationResult validateFixVersionUpdate(@Nonnull ApplicationUser user, @Nonnull Long issueId, IssueInputParameters versionValues) throws UpdateException {
         IssueService.UpdateValidationResult versionUpdateValidationResult = ISSUE_SERVICE.validateUpdate(user, issueId, versionValues);
 
         if (!versionUpdateValidationResult.isValid()) {
