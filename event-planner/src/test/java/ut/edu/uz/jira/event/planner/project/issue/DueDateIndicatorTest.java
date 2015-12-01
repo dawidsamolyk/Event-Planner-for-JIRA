@@ -27,7 +27,7 @@ public class DueDateIndicatorTest {
         Map contextMap = indicator.getContextMap(null, mockJiraHelper);
 
         int daysAwayFromDueDate = (Integer) contextMap.get("daysAwayFromDueDate");
-        assertEquals(1, daysAwayFromDueDate);
+        assertEquals(2, daysAwayFromDueDate);
     }
 
     @Test
@@ -38,7 +38,7 @@ public class DueDateIndicatorTest {
         Map contextMap = indicator.getContextMap(null, mockJiraHelper);
 
         int daysAwayFromDueDate = (Integer) contextMap.get("daysAwayFromDueDate");
-        assertEquals(-1, daysAwayFromDueDate);
+        assertEquals(0, daysAwayFromDueDate);
     }
 
     private JiraHelper getMockJiraHelperWithIssueWithDueDate(int numberOfDaysFromToday) {

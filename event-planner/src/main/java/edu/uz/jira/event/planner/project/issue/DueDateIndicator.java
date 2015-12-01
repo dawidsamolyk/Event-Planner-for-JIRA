@@ -29,7 +29,7 @@ public class DueDateIndicator extends AbstractJiraContextProvider {
         if (dueDate != null) {
             int currentTimeInDays = (int) (System.currentTimeMillis() / MILLIS_IN_DAY);
             int dueDateTimeInDays = (int) (dueDate.getTime() / MILLIS_IN_DAY);
-            int daysAwayFromDueDateCalc = dueDateTimeInDays - currentTimeInDays;
+            int daysAwayFromDueDateCalc = dueDateTimeInDays - currentTimeInDays + 1;
 
             contextMap.put("daysAwayFromDueDate", daysAwayFromDueDateCalc);
         }

@@ -1,6 +1,5 @@
 var DUE_DATE = 'event-duedate';
 var EVENT_TYPE = 'event-type';
-var PROJECT_KEY = 'project-key';
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -19,12 +18,10 @@ function sendPostRequest() {
     var eventTypeValue = document.getElementById(EVENT_TYPE).value;
 
     window.location.replace(document.URL +
-                                        "?" +
+                                        "&" +
                                         DUE_DATE + "=" + dueDateValue +
                                         "&" +
-                                        EVENT_TYPE + "=" + eventTypeValue +
-                                        "&" +
-                                        PROJECT_KEY + "=" + getParameterByName(PROJECT_KEY));
+                                        EVENT_TYPE + "=" + eventTypeValue);
 }
 
 AJS.dialog2("#event-config-dialog").show();

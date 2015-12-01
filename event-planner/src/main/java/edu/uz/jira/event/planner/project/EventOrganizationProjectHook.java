@@ -28,9 +28,9 @@ public class EventOrganizationProjectHook implements AddProjectHook {
      * @param i18n                      Internationalization helper.
      * @throws NullArgumentException Thrown when any input argument is null.
      */
-    public EventOrganizationProjectHook(@Nonnull final WorkflowTransitionService workflowTransitionService, @Nonnull final I18nResolver i18n) throws NullArgumentException {
+    public EventOrganizationProjectHook(@Nonnull final WorkflowTransitionService workflowTransitionService, @Nonnull final I18nResolver i18nResolver) throws NullArgumentException {
         WORKFLOW_CONFIGURATOR = new WorkflowConfigurator(workflowTransitionService);
-        ISSUE_FIELDS_CONFIGURATOR = new IssueFieldsConfigurator(i18n);
+        ISSUE_FIELDS_CONFIGURATOR = new IssueFieldsConfigurator(i18nResolver);
     }
 
     /**

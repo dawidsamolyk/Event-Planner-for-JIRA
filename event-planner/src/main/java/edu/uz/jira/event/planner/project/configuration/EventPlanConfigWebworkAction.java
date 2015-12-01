@@ -20,13 +20,13 @@ import java.util.Date;
  */
 public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
     public static final VersionManager VERSION_MANAGER = ComponentAccessor.getVersionManager();
-    private final I18nResolver i18n;
+    private final I18nResolver i18nResolver;
 
     /**
-     * @param i18n Internationalization resolver.
+     * @param i18nResolver Internationalization resolver.
      */
-    public EventPlanConfigWebworkAction(@Nonnull final I18nResolver i18n) {
-        this.i18n = i18n;
+    public EventPlanConfigWebworkAction(@Nonnull final I18nResolver i18nResolver) {
+        this.i18nResolver = i18nResolver;
     }
 
     /**
@@ -61,10 +61,10 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
      * @throws CreateException Thrown when cannot create Project Version.
      */
     private void setDueDateAsProjectVersion(@Nonnull final Project project, @Nonnull final String eventDueDate) throws ParseException, CreateException {
-        String versionName = i18n.getText("project.version.name");
-        String versionDescription = i18n.getText("project.version.description");
+        String versionName = i18nResolver.getText("project.version.name");
+        String versionDescription = i18nResolver.getText("project.version.description");
         Date startDate = new Date();
-        DateFormat format = new SimpleDateFormat("yyyy-mm-dd", getLocale());
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", getLocale());
         Date releaseDate = format.parse(eventDueDate);
         Long projectId = project.getId();
 

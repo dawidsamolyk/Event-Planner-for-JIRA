@@ -25,10 +25,10 @@ public class IssueCreatedListener implements InitializingBean, DisposableBean {
 
     /**
      * @param eventPublisher Event publisher.
-     * @param i18n           Internationalization resolver.
+     * @param i18nResolver   Internationalization resolver.
      */
-    public IssueCreatedListener(@Nonnull final EventPublisher eventPublisher, @Nonnull final I18nResolver i18n) {
-        this.PROJECT_VERSION_NAME = i18n.getText("project.version.name");
+    public IssueCreatedListener(@Nonnull final EventPublisher eventPublisher, @Nonnull final I18nResolver i18nResolver) {
+        this.PROJECT_VERSION_NAME = i18nResolver.getText("project.version.name");
         this.EVENT_PUBLISHER = eventPublisher;
     }
 
