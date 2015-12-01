@@ -16,6 +16,7 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.scheme.Scheme;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.workflow.JiraWorkflow;
+import com.atlassian.sal.api.message.I18nResolver;
 import com.opensymphony.workflow.loader.ActionDescriptor;
 import com.opensymphony.workflow.loader.FunctionDescriptor;
 import edu.uz.jira.event.planner.exceptions.NullArgumentException;
@@ -38,6 +39,7 @@ import static org.mockito.Mockito.mock;
 
 public class EventOrganizationProjectHookTest {
     private WorkflowTransitionService mockWorkflowTransitionService;
+    private I18nResolver mocki18n;
 
     @Before
     public void setUp() {
@@ -51,11 +53,15 @@ public class EventOrganizationProjectHookTest {
                 .init();
 
         mockWorkflowTransitionService = Mockito.mock(WorkflowTransitionService.class);
+
+        mocki18n = mock(I18nResolver.class);
+        Mockito.when(mocki18n.getText("project.fields.configuration.name")).thenReturn("Event organization Field Configuration");
+        Mockito.when(mocki18n.getText("project.fields.configuration.description")).thenReturn("Field Configuration for the Event organization Issues");
     }
 
     @Test
     public void validateResponseShouldNotBeNull() throws NullArgumentException {
-        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mockWorkflowTransitionService);
+        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mockWorkflowTransitionService, mocki18n);
         ValidateData validateData = new ValidateData("EVENT PLAN", "EVENT", mock(ApplicationUser.class));
 
         ValidateResponse result = hook.validate(validateData);
@@ -65,7 +71,7 @@ public class EventOrganizationProjectHookTest {
 
     @Test
     public void configureResponseShouldNotBeNull() throws NullArgumentException {
-        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mockWorkflowTransitionService);
+        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mockWorkflowTransitionService, mocki18n);
         ConfigureData configureData = ConfigureData.create(mock(Project.class), mock(Scheme.class), new HashMap<String, JiraWorkflow>(), mock(FieldConfigScheme.class), new HashMap<String, IssueType>());
 
         ConfigureResponse result = hook.configure(configureData);
@@ -82,7 +88,7 @@ public class EventOrganizationProjectHookTest {
 
         ActionDescriptor mockAction = mock(ActionDescriptor.class);
         Mockito.when(mockAction.getName()).thenReturn(transitionName);
-        final List mockPostFunctions = new ArrayList();
+        final List<FunctionDescriptor> mockPostFunctions = new ArrayList<FunctionDescriptor>();
         Mockito.when(mockAction.getPostFunctions()).thenReturn(mockPostFunctions);
 
         Collection<ActionDescriptor> mockActionDescriptors = new ArrayList<ActionDescriptor>();
@@ -105,7 +111,7 @@ public class EventOrganizationProjectHookTest {
         createdWorkflows.put("EVENT-ORGANIZATION-WORKFLOW", mockWorkflow);
         ConfigureData configureData = ConfigureData.create(mock(Project.class), mock(Scheme.class), createdWorkflows, mock(FieldConfigScheme.class), new HashMap<String, IssueType>());
 
-        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mockWorkflowTransitionService);
+        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mockWorkflowTransitionService, mocki18n);
 
         hook.configure(configureData);
 

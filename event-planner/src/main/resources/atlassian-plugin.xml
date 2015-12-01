@@ -15,7 +15,11 @@
     <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
     <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" filter=""/>
     <component-import key="loginUriProvider" interface="com.atlassian.sal.api.auth.LoginUriProvider" filter=""/>
+    <component-import key="eventPublisher" interface="com.atlassian.event.api.EventPublisher"/>
 
+    <component key="issue-created-listener" class="edu.uz.jira.event.planner.project.issue.IssueCreatedListener">
+        <description>Class that processes the incoming JIRA issue events.</description>
+    </component>
 
     <web-resource key="event-planner-resources" name="Event Planner Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
@@ -68,9 +72,7 @@
 
     <webwork1 key="event-organization-config-webwork" name="EventPlanConfigWebwork"
               i18n-name-key="event.organization.config.webwork.name">
-        <description key="event-organization-config-webwork-description">The Event Organization Configuration Webwork
-            Plugin
-        </description>
+        <description key="event-organization-config-webwork-description">The Event Organization Configuration Webwork Plugin</description>
         <actions>
             <action name="edu.uz.jira.event.planner.project.configuration.EventPlanConfigWebworkAction"
                     alias="EventOrganizationPlanConfiguration">

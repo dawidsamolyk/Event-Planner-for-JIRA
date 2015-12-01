@@ -15,14 +15,24 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Webwork action for configuring Event Plan Organization project.
+ */
 public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
     public static final VersionManager VERSION_MANAGER = ComponentAccessor.getVersionManager();
     private final I18nResolver i18n;
 
+    /**
+     * @param i18n Internationalization resolver.
+     */
     public EventPlanConfigWebworkAction(@Nonnull final I18nResolver i18n) {
         this.i18n = i18n;
     }
 
+    /**
+     * @return Restul view to show.
+     * @throws Exception Thrown when any error occurs.
+     */
     @Override
     public String execute() throws Exception {
         EventPlanConfiguration config = new EventPlanConfiguration(getHttpRequest());
@@ -30,7 +40,7 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
         String eventDueDate = config.getEventDueDate();
         String eventType = config.getEventType();
 
-        if (ConfigValidator.canShowError(project)) {
+        if (ConfigValidator.isInvalid(project)) {
             return Action.ERROR;
 
         } else if (ConfigValidator.canInputProjectConfiguration(project, eventType, eventDueDate)) {
@@ -44,6 +54,12 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
         return Action.ERROR;
     }
 
+    /**
+     * @param project      Project.
+     * @param eventDueDate Event date.
+     * @throws ParseException  Thrown when cannot parse event date.
+     * @throws CreateException Thrown when cannot create Project Version.
+     */
     private void setDueDateAsProjectVersion(@Nonnull final Project project, @Nonnull final String eventDueDate) throws ParseException, CreateException {
         String versionName = i18n.getText("project.version.name");
         String versionDescription = i18n.getText("project.version.description");

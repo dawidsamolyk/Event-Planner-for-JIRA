@@ -10,9 +10,18 @@ import org.apache.commons.lang.StringUtils;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
+/**
+ * Updates version of the Issue.
+ */
 public class IssueVersionUpdater {
     private final static IssueService ISSUE_SERVICE = ComponentAccessor.getIssueService();
 
+    /**
+     * @param user      JIRA User.
+     * @param issueId   ID of the Issue which should be updated.
+     * @param versionId ID of the Version which should be applied to Issue.
+     * @throws UpdateException Thrown when Issue Version update failed.
+     */
     public void updateIssueVersion(@Nonnull final ApplicationUser user, @Nonnull final Long issueId, @Nonnull final Long versionId) throws UpdateException {
         IssueInputParameters versionValues = ISSUE_SERVICE.newIssueInputParameters();
         versionValues.setAffectedVersionIds(versionId);
@@ -25,6 +34,13 @@ public class IssueVersionUpdater {
         }
     }
 
+    /**
+     * @param user          JIRA User.
+     * @param issueId       ID of the Issue which should be updated.
+     * @param versionValues ID of the Version which should be applied to Issue.
+     * @return Result of the Issue Version update validation.
+     * @throws UpdateException Thrown when Issue Version update validation failed.
+     */
     private IssueService.UpdateValidationResult validateVersionUpdate(@Nonnull ApplicationUser user, @Nonnull Long issueId, IssueInputParameters versionValues) throws UpdateException {
         IssueService.UpdateValidationResult versionUpdateValidationResult = ISSUE_SERVICE.validateUpdate(user, issueId, versionValues);
 

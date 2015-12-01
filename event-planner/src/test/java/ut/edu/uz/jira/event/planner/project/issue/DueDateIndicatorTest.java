@@ -27,7 +27,7 @@ public class DueDateIndicatorTest {
         Map contextMap = indicator.getContextMap(null, mockJiraHelper);
 
         int daysAwayFromDueDate = (Integer) contextMap.get("daysAwayFromDueDate");
-        assertEquals(1 + 1, daysAwayFromDueDate);
+        assertEquals(1, daysAwayFromDueDate);
     }
 
     @Test
@@ -38,22 +38,24 @@ public class DueDateIndicatorTest {
         Map contextMap = indicator.getContextMap(null, mockJiraHelper);
 
         int daysAwayFromDueDate = (Integer) contextMap.get("daysAwayFromDueDate");
-        assertEquals(-1 + 1, daysAwayFromDueDate);
+        assertEquals(-1, daysAwayFromDueDate);
     }
 
     private JiraHelper getMockJiraHelperWithIssueWithDueDate(int numberOfDaysFromToday) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, numberOfDaysFromToday);
-        Date tomorrow = calendar.getTime();
-        Timestamp issueDueDateIsTommorow = new Timestamp(tomorrow.getTime());
+        Date date = calendar.getTime();
+        Timestamp timestamp = new Timestamp(date.getTime());
 
         Issue mockIssue = mock(Issue.class);
-        Mockito.when(mockIssue.getDueDate()).thenReturn(issueDueDateIsTommorow);
+        Mockito.when(mockIssue.getDueDate()).thenReturn(timestamp);
 
         Map<String, Object> mockContextParams = new HashMap<String, Object>();
         mockContextParams.put("issue", mockIssue);
-        JiraHelper mockJiraHelper = mock(JiraHelper.class);
-        Mockito.when(mockJiraHelper.getContextParams()).thenReturn(mockContextParams);
-        return mockJiraHelper;
+
+        JiraHelper result = mock(JiraHelper.class);
+        Mockito.when(result.getContextParams()).thenReturn(mockContextParams);
+
+        return result;
     }
 }
