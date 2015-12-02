@@ -33,13 +33,18 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 public class EventPlanConfigWebworkActionTest {
-    private HttpServletVariables mockHttpVariables = mock(HttpServletVariables.class);
-    private I18nResolver mocki18n = mock(I18nResolver.class);
-    private ProjectManager mockProjectManager = mock(ProjectManager.class);
-    private VersionManager mockVersionManager = mock(VersionManager.class);
+    private HttpServletVariables mockHttpVariables;
+    private I18nResolver mocki18n;
+    private ProjectManager mockProjectManager;
+    private VersionManager mockVersionManager;
 
     @Before
     public void setUp() throws CreateException {
+        mockVersionManager = mock(VersionManager.class);
+        mockProjectManager = mock(ProjectManager.class);
+        mocki18n = mock(I18nResolver.class);
+        mockHttpVariables = mock(HttpServletVariables.class);
+
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockHttpVariables.getHttpRequest()).thenReturn(mockRequest);
 
@@ -96,26 +101,26 @@ public class EventPlanConfigWebworkActionTest {
     public void eventDueDateShouldBeConfiguredAsProjectVersion() throws Exception {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getParameter("event-type")).thenReturn("Undefined");
-        Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("02-12-2015 23:00");
+        Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("09-12-2015 23:00");
         Mockito.when(mockRequest.getParameter("project-key")).thenReturn("ABC");
         Mockito.when(mockHttpVariables.getHttpRequest()).thenReturn(mockRequest);
         final MockProject mockProject = new MockProject();
         Mockito.when(mockProjectManager.getProjectObjByKey("ABC")).thenReturn(mockProject);
-        Mockito.when(mockVersionManager.createVersion(Mockito.anyString(), (Date) Mockito.anyObject(), (Date) Mockito.anyObject(), Mockito.anyString(), Mockito.anyLong(), Mockito.anyLong())).
-                then(new Answer<Object>() {
-                    @Override
-                    public Object answer(InvocationOnMock invocation) throws Throwable {
-                        Date releaseDate = (Date) invocation.getArguments()[2];
+        Mockito.doAnswer(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Date releaseDate = (Date) invocation.getArguments()[2];
 
-                        Collection<Version> versions = new ArrayList<Version>();
-                        Version mockVersion = mock(Version.class);
-                        Mockito.when(mockVersion.getReleaseDate()).thenReturn(releaseDate);
-                        versions.add(mockVersion);
+                Collection<Version> versions = new ArrayList<Version>();
+                Version mockVersion = mock(Version.class);
+                Mockito.when(mockVersion.getReleaseDate()).thenReturn(releaseDate);
+                versions.add(mockVersion);
 
-                        mockProject.setVersions(versions);
-                        return mockVersion;
-                    }
-                });
+                mockProject.setVersions(versions);
+                return mockVersion;
+            }
+        }).when(mockVersionManager)
+                .createVersion(Mockito.anyString(), (Date) Mockito.anyObject(), (Date) Mockito.anyObject(), Mockito.anyString(), Mockito.anyLong(), Mockito.anyLong());
         EventPlanConfigWebworkAction fixture = new EventPlanConfigWebworkAction(mocki18n);
 
         fixture.execute();
@@ -123,7 +128,7 @@ public class EventPlanConfigWebworkActionTest {
         Collection<Version> versions = mockProject.getVersions();
         Version version = versions.iterator().next();
         DateFormat format = new SimpleDateFormat(EventPlanConfigWebworkAction.DUE_DATE_FORMAT, fixture.getLocale());
-        Date releaseDate = format.parse("02-12-2015 23:00");
+        Date releaseDate = format.parse("09-12-2015 23:00");
         assertEquals(releaseDate, version.getReleaseDate());
     }
 

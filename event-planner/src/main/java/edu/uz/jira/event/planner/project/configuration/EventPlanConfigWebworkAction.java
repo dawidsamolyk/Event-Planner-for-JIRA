@@ -66,7 +66,7 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
         String name = getInternationalized(PROJECT_VERSION_NAME_KEY);
         String description = getInternationalized(PROJECT_VERSION_DESCRIPTION_KEY);
         Date startDate = new Date();
-        DateFormat format = new SimpleDateFormat(DUE_DATE_FORMAT, getLocale());
+        DateFormat format = new SimpleDateFormat(DUE_DATE_FORMAT);
         Date releaseDate = format.parse(eventDueDate);
         Long projectId = project.getId();
 

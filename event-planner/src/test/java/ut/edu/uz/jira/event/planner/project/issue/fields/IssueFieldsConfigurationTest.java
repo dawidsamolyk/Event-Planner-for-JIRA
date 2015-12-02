@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class IssueFieldsConfigurationTest {
-    private I18nResolver mocki18n = mock(I18nResolver.class);
+    private I18nResolver mocki18n;
 
     @Before
     public void setUp() {
@@ -26,8 +26,9 @@ public class IssueFieldsConfigurationTest {
                 .addMock(FieldLayoutManager.class, mock(FieldLayoutManager.class))
                 .init();
 
-        Mockito.when(mocki18n.getText("project.fields.configuration.name")).thenReturn("Event organization Field Configuration");
-        Mockito.when(mocki18n.getText("project.fields.configuration.description")).thenReturn("Field Configuration for the Event organization Issues");
+        mocki18n = mock(I18nResolver.class);
+        Mockito.when(mocki18n.getText(IssueFieldsConfigurator.PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME_KEY)).thenReturn("Event organization Field Configuration");
+        Mockito.when(mocki18n.getText(IssueFieldsConfigurator.PROJECT_FIELDS_CONFIGURATION_SCHEME_DESCRIPTION_KEY)).thenReturn("Field Configuration for the Event organization Issues");
     }
 
     @Test

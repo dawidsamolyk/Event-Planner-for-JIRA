@@ -9,6 +9,7 @@ import com.atlassian.jira.issue.fields.renderer.HackyFieldRendererRegistry;
 import com.atlassian.jira.mock.component.MockComponentWorker;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.project.issue.fields.FieldLayoutBuilder;
+import edu.uz.jira.event.planner.project.issue.fields.IssueFieldsConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -21,18 +22,20 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class FieldLayoutBuilderTest {
-    private I18nResolver mocki18n = mock(I18nResolver.class);
+    private I18nResolver mocki18n;
 
     @Before
     public void setUp() {
+        mocki18n = mock(I18nResolver.class);
+
         new MockComponentWorker()
                 .addMock(ComponentAccessor.class, mock(ComponentAccessor.class))
                 .addMock(FieldLayoutManager.class, mock(FieldLayoutManager.class))
                 .addMock(HackyFieldRendererRegistry.class, mock(HackyFieldRendererRegistry.class))
                 .init();
 
-        Mockito.when(mocki18n.getText("project.fields.configuration.name")).thenReturn("Event organization Field Configuration");
-        Mockito.when(mocki18n.getText("project.fields.configuration.description")).thenReturn("Field Configuration for the Event organization Issues");
+        Mockito.when(mocki18n.getText(IssueFieldsConfigurator.PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME_KEY)).thenReturn("Event organization Field Configuration");
+        Mockito.when(mocki18n.getText(IssueFieldsConfigurator.PROJECT_FIELDS_CONFIGURATION_SCHEME_DESCRIPTION_KEY)).thenReturn("Field Configuration for the Event organization Issues");
     }
 
     @Test
