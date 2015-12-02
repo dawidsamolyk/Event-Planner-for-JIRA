@@ -67,7 +67,9 @@
 
     <webwork1 key="event-organization-config-webwork" name="EventPlanConfigWebwork"
               i18n-name-key="event.organization.config.webwork.name">
-        <description key="event-organization-config-webwork-description">The Event Organization Configuration Webwork Plugin</description>
+        <description key="event-organization-config-webwork-description">The Event Organization Configuration Webwork
+            Plugin
+        </description>
         <actions>
             <action name="edu.uz.jira.event.planner.project.configuration.EventPlanConfigWebworkAction"
                     alias="EventOrganizationPlanConfiguration">
@@ -78,6 +80,12 @@
         </actions>
         <resource type="download" name="input-script"
                   location="/templates/event-organization-config-webwork/input.js"></resource>
+        <resource type="download" name="jquery.datetimepicker.full.min.js"
+                  location="/libs/js/jquery.datetimepicker.full.min.js"></resource>
+        <resource type="download" name="jquery.js"
+                  location="/libs/js/jquery.js"></resource>
+        <resource type="download" name="jquery.datetimepicker.css"
+                  location="/style/jquery.datetimepicker.css"></resource>
     </webwork1>
 
 </atlassian-plugin>

@@ -3,7 +3,6 @@ package edu.uz.jira.event.planner.project.configuration;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.exception.CreateException;
 import com.atlassian.jira.project.Project;
-import com.atlassian.jira.project.version.Version;
 import com.atlassian.jira.project.version.VersionManager;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.sal.api.message.I18nResolver;
@@ -19,7 +18,10 @@ import java.util.Date;
  * Webwork action for configuring Event Plan Organization project.
  */
 public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
-    public static final VersionManager VERSION_MANAGER = ComponentAccessor.getVersionManager();
+    public static final String DUE_DATE_FORMAT = "dd-MM-yyyy HH:mm";
+    public static final String PROJECT_VERSION_NAME_KEY = "project.version.name";
+    public static final String PROJECT_VERSION_DESCRIPTION_KEY = "project.version.description";
+    private static final VersionManager VERSION_MANAGER = ComponentAccessor.getVersionManager();
     private final I18nResolver i18nResolver;
 
     /**
@@ -30,7 +32,7 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
     }
 
     /**
-     * @return Restul view to show.
+     * @return Result view to show.
      * @throws Exception Thrown when any error occurs.
      */
     @Override
@@ -61,13 +63,17 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
      * @throws CreateException Thrown when cannot create Project Version.
      */
     private void setDueDateAsProjectVersion(@Nonnull final Project project, @Nonnull final String eventDueDate) throws ParseException, CreateException {
-        String versionName = i18nResolver.getText("project.version.name");
-        String versionDescription = i18nResolver.getText("project.version.description");
+        String name = getInternationalized(PROJECT_VERSION_NAME_KEY);
+        String description = getInternationalized(PROJECT_VERSION_DESCRIPTION_KEY);
         Date startDate = new Date();
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", getLocale());
+        DateFormat format = new SimpleDateFormat(DUE_DATE_FORMAT, getLocale());
         Date releaseDate = format.parse(eventDueDate);
         Long projectId = project.getId();
 
-        Version version = VERSION_MANAGER.createVersion(versionName, startDate, releaseDate, versionDescription, projectId, null);
+        VERSION_MANAGER.createVersion(name, startDate, releaseDate, description, projectId, null);
+    }
+
+    private String getInternationalized(String key) {
+        return i18nResolver.getText(key);
     }
 }

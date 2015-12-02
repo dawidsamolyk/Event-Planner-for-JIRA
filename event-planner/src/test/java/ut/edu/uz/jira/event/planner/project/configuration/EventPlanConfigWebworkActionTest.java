@@ -1,7 +1,9 @@
 package ut.edu.uz.jira.event.planner.project.configuration;
 
 import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.exception.CreateException;
 import com.atlassian.jira.mock.component.MockComponentWorker;
+import com.atlassian.jira.project.MockProject;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.project.version.Version;
@@ -15,11 +17,16 @@ import org.apache.commons.collections.ListUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import webwork.action.Action;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
@@ -29,9 +36,10 @@ public class EventPlanConfigWebworkActionTest {
     private HttpServletVariables mockHttpVariables = mock(HttpServletVariables.class);
     private I18nResolver mocki18n = mock(I18nResolver.class);
     private ProjectManager mockProjectManager = mock(ProjectManager.class);
+    private VersionManager mockVersionManager = mock(VersionManager.class);
 
     @Before
-    public void setUp() {
+    public void setUp() throws CreateException {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockHttpVariables.getHttpRequest()).thenReturn(mockRequest);
 
@@ -45,11 +53,11 @@ public class EventPlanConfigWebworkActionTest {
                 .addMock(HttpServletVariables.class, mockHttpVariables)
                 .addMock(ProjectManager.class, mockProjectManager)
                 .addMock(JiraAuthenticationContext.class, mockAuthCtx)
-                .addMock(VersionManager.class, mock(VersionManager.class))
+                .addMock(VersionManager.class, mockVersionManager)
                 .init();
 
-        Mockito.when(mocki18n.getText("project.version.name")).thenReturn("Event Due Date");
-        Mockito.when(mocki18n.getText("project.version.description")).thenReturn("Date of an event");
+        Mockito.when(mocki18n.getText(EventPlanConfigWebworkAction.PROJECT_VERSION_NAME_KEY)).thenReturn("Event Due Date");
+        Mockito.when(mocki18n.getText(EventPlanConfigWebworkAction.PROJECT_VERSION_DESCRIPTION_KEY)).thenReturn("Date of an event");
     }
 
     @Test
@@ -67,12 +75,11 @@ public class EventPlanConfigWebworkActionTest {
         assertEquals(Action.INPUT, result);
     }
 
-
     @Test
     public void successStatusShouldBeReturnedWhenAllRequiredParametersAreNotEmpty() throws Exception {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getParameter("event-type")).thenReturn("Undefined");
-        Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("2000-01-01");
+        Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("02-12-2015 07:00");
         Mockito.when(mockRequest.getParameter("project-key")).thenReturn("ABC");
         Mockito.when(mockHttpVariables.getHttpRequest()).thenReturn(mockRequest);
         Project mockProject = mock(Project.class);
@@ -83,6 +90,41 @@ public class EventPlanConfigWebworkActionTest {
         String result = fixture.execute();
 
         assertEquals(Action.SUCCESS, result);
+    }
+
+    @Test
+    public void eventDueDateShouldBeConfiguredAsProjectVersion() throws Exception {
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        Mockito.when(mockRequest.getParameter("event-type")).thenReturn("Undefined");
+        Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("02-12-2015 23:00");
+        Mockito.when(mockRequest.getParameter("project-key")).thenReturn("ABC");
+        Mockito.when(mockHttpVariables.getHttpRequest()).thenReturn(mockRequest);
+        final MockProject mockProject = new MockProject();
+        Mockito.when(mockProjectManager.getProjectObjByKey("ABC")).thenReturn(mockProject);
+        Mockito.when(mockVersionManager.createVersion(Mockito.anyString(), (Date) Mockito.anyObject(), (Date) Mockito.anyObject(), Mockito.anyString(), Mockito.anyLong(), Mockito.anyLong())).
+                then(new Answer<Object>() {
+                    @Override
+                    public Object answer(InvocationOnMock invocation) throws Throwable {
+                        Date releaseDate = (Date) invocation.getArguments()[2];
+
+                        Collection<Version> versions = new ArrayList<Version>();
+                        Version mockVersion = mock(Version.class);
+                        Mockito.when(mockVersion.getReleaseDate()).thenReturn(releaseDate);
+                        versions.add(mockVersion);
+
+                        mockProject.setVersions(versions);
+                        return mockVersion;
+                    }
+                });
+        EventPlanConfigWebworkAction fixture = new EventPlanConfigWebworkAction(mocki18n);
+
+        fixture.execute();
+
+        Collection<Version> versions = mockProject.getVersions();
+        Version version = versions.iterator().next();
+        DateFormat format = new SimpleDateFormat(EventPlanConfigWebworkAction.DUE_DATE_FORMAT, fixture.getLocale());
+        Date releaseDate = format.parse("02-12-2015 23:00");
+        assertEquals(releaseDate, version.getReleaseDate());
     }
 
     @Test
@@ -107,7 +149,7 @@ public class EventPlanConfigWebworkActionTest {
     public void errorStatusShouldBeReturnedWhenEventTypeIsEmptyAndTheRestAreFilled() throws Exception {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getParameter("event-type")).thenReturn(null);
-        Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("1999-09-09");
+        Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("02-12-2015 23:00");
         Mockito.when(mockRequest.getParameter("project-key")).thenReturn("ABC");
         Mockito.when(mockHttpVariables.getHttpRequest()).thenReturn(mockRequest);
         Mockito.when(mockProjectManager.getProjectObjByKey("ABC")).thenReturn(mock(Project.class));
@@ -125,7 +167,7 @@ public class EventPlanConfigWebworkActionTest {
     public void errorStatusShouldBeReturnedIfProjectNotFound() throws Exception {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getParameter("event-type")).thenReturn("Undefined");
-        Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("1923-09-09");
+        Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("02-12-2015 23:00");
         Mockito.when(mockRequest.getParameter("project-key")).thenReturn(null);
         Mockito.when(mockHttpVariables.getHttpRequest()).thenReturn(mockRequest);
         Mockito.when(mockProjectManager.getProjectObjByKey(null)).thenReturn(null);
@@ -140,7 +182,7 @@ public class EventPlanConfigWebworkActionTest {
     public void errorStatusShouldBeReturnedIfProjectContainsAnyVersion() throws Exception {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getParameter("event-type")).thenReturn("Undefined");
-        Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("1923-09-09");
+        Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("02-12-2015 23:00");
         Mockito.when(mockRequest.getParameter("project-key")).thenReturn("ABC");
         Mockito.when(mockHttpVariables.getHttpRequest()).thenReturn(mockRequest);
         Project mockProject = mock(Project.class);
