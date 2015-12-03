@@ -1,6 +1,7 @@
 package ut.edu.uz.jira.event.planner.project.issue.fields;
 
 import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.issue.fields.layout.field.EditableFieldLayout;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayout;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutManager;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutScheme;
@@ -13,32 +14,25 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class IssueFieldsConfigurationTest {
     private I18nResolver mocki18n;
+    private FieldLayoutManager mockFieldLayoutManager;
 
     @Before
     public void setUp() {
-        new MockComponentWorker()
-                .addMock(ComponentAccessor.class, mock(ComponentAccessor.class))
-                .addMock(FieldLayoutManager.class, mock(FieldLayoutManager.class))
-                .init();
+        mockFieldLayoutManager = mock(FieldLayoutManager.class);
 
         mocki18n = mock(I18nResolver.class);
         Mockito.when(mocki18n.getText(IssueFieldsConfigurator.PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME_KEY)).thenReturn("Event organization Field Configuration");
         Mockito.when(mocki18n.getText(IssueFieldsConfigurator.PROJECT_FIELDS_CONFIGURATION_SCHEME_DESCRIPTION_KEY)).thenReturn("Field Configuration for the Event organization Issues");
-    }
 
-    @Test
-    public void shouldCreateOnlyOneInstanceOfEventOrganizationFieldLayout() {
-        IssueFieldsConfigurator fixture = new IssueFieldsConfigurator(mocki18n);
+        new MockComponentWorker()
+                .addMock(ComponentAccessor.class, mock(ComponentAccessor.class))
+                .addMock(FieldLayoutManager.class, mockFieldLayoutManager)
+                .init();
 
-        FieldLayout first = fixture.getEventOrganizationFieldLayout();
-        FieldLayout second = fixture.getEventOrganizationFieldLayout();
-
-        assertTrue(first == second);
     }
 
     @Test
@@ -54,7 +48,7 @@ public class IssueFieldsConfigurationTest {
     public void shouldCreateInstanceOfFieldConfigurationScheme() {
         IssueFieldsConfigurator fixture = new IssueFieldsConfigurator(mocki18n);
         Project mockProject = mock(Project.class);
-        FieldLayout mockLayout = mock(FieldLayout.class);
+        EditableFieldLayout mockLayout = mock(EditableFieldLayout.class);
 
         FieldLayoutScheme result = fixture.createFieldConfigurationScheme(mockProject, mockLayout);
 
@@ -65,7 +59,7 @@ public class IssueFieldsConfigurationTest {
     public void createdFieldConfigurationSchemeShouldHas() {
         IssueFieldsConfigurator fixture = new IssueFieldsConfigurator(mocki18n);
         Project mockProject = mock(Project.class);
-        FieldLayout mockLayout = mock(FieldLayout.class);
+        EditableFieldLayout mockLayout = mock(EditableFieldLayout.class);
 
         FieldLayoutScheme result = fixture.createFieldConfigurationScheme(mockProject, mockLayout);
 

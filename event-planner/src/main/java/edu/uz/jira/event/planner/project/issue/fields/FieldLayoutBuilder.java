@@ -1,10 +1,7 @@
 package edu.uz.jira.event.planner.project.issue.fields;
 
 import com.atlassian.jira.issue.fields.OrderableField;
-import com.atlassian.jira.issue.fields.layout.field.EditableFieldLayoutImpl;
-import com.atlassian.jira.issue.fields.layout.field.FieldLayout;
-import com.atlassian.jira.issue.fields.layout.field.FieldLayoutItem;
-import com.atlassian.jira.issue.fields.layout.field.FieldLayoutItemImpl;
+import com.atlassian.jira.issue.fields.layout.field.*;
 import com.atlassian.sal.api.message.I18nResolver;
 
 import javax.annotation.Nonnull;
@@ -32,19 +29,22 @@ public class FieldLayoutBuilder {
      * @param requiredFieldsIds IDs of fields which should be required in result Field Layout.
      * @return Modified Field Layout with required fields (if typed).
      */
-    public FieldLayout copyWithMakeRequired(@Nonnull final FieldLayout toCopy, @Nonnull final String... requiredFieldsIds) {
+    public EditableFieldLayout copyWithMakeRequired(@Nonnull final FieldLayout toCopy, @Nonnull final String... requiredFieldsIds) {
+        String name = getInternationalized(PROJECT_FIELDS_CONFIGURATION_NAME);
+        String description = getInternationalized(PROJECT_FIELDS_CONFIGURATION_DESCRIPTION);
+
         List<FieldLayoutItem> toCopyItems = toCopy.getFieldLayoutItems();
         List<FieldLayoutItem> resultFieldLayoutItems = new ArrayList<FieldLayoutItem>(toCopyItems.size());
         List<String> requiredFieldsIdsList = Arrays.asList(requiredFieldsIds);
 
         for (FieldLayoutItem eachItem : toCopyItems) {
-            FieldLayoutItemImpl item = createFieldLayoutItem(eachItem, requiredFieldsIdsList);
+            FieldLayoutItem item = createFieldLayoutItem(eachItem, requiredFieldsIdsList);
             resultFieldLayoutItems.add(item);
         }
 
         EditableFieldLayoutImpl result = new EditableFieldLayoutImpl(null, resultFieldLayoutItems);
-        result.setName(getInternationalized(PROJECT_FIELDS_CONFIGURATION_NAME));
-        result.setDescription(getInternationalized(PROJECT_FIELDS_CONFIGURATION_DESCRIPTION));
+        result.setName(name);
+        result.setDescription(description);
 
         return result;
     }
@@ -58,7 +58,7 @@ public class FieldLayoutBuilder {
      * @param requiredFieldsIdsList IDs of fields which should be required in result Field Layout.
      * @return Result item (with required flag if ID was on input list).
      */
-    private FieldLayoutItemImpl createFieldLayoutItem(@Nonnull final FieldLayoutItem item, @Nonnull final List<String> requiredFieldsIdsList) {
+    private FieldLayoutItem createFieldLayoutItem(@Nonnull final FieldLayoutItem item, @Nonnull final List<String> requiredFieldsIdsList) {
         boolean required = isRequired(requiredFieldsIdsList, item);
 
         return new FieldLayoutItemImpl.Builder().

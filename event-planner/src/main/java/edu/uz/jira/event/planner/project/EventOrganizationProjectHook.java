@@ -2,7 +2,7 @@ package edu.uz.jira.event.planner.project;
 
 import com.atlassian.jira.bc.workflow.WorkflowTransitionService;
 import com.atlassian.jira.blueprint.api.*;
-import com.atlassian.jira.issue.fields.layout.field.FieldLayout;
+import com.atlassian.jira.issue.fields.layout.field.EditableFieldLayout;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutScheme;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectCategory;
@@ -19,7 +19,10 @@ import java.util.List;
  * Validates and configures all created Event Organization Plan Projects.
  */
 public class EventOrganizationProjectHook implements AddProjectHook {
-    private static final String EVENT_ORGANIZATION_WORKFLOW_KEY = "EVENT-ORGANIZATION-WORKFLOW";
+    public static final String POST_FUNCTION_TRANSITION_NAME = "Deadline exceeded";
+    public static final String COMPLETE_STATUS_CATEGORY_NAME = "Complete";
+    public static final String DONE_STATUS_NAME = "Done";
+    public static final String EVENT_ORGANIZATION_WORKFLOW_KEY = "EVENT-ORGANIZATION-WORKFLOW";
     private static final String REDIRECT_URL = "/secure/EventOrganizationPlanConfiguration.jspa?project-key=";
     private final IssueFieldsConfigurator ISSUE_FIELDS_CONFIGURATOR;
     private final WorkflowConfigurator WORKFLOW_CONFIGURATOR;
@@ -52,11 +55,10 @@ public class EventOrganizationProjectHook implements AddProjectHook {
     @Override
     public ConfigureResponse configure(@Nonnull final ConfigureData configureData) {
         Project project = configureData.project();
-        configureProjectCategory(project);
-
-        configureFieldLayout(project);
-
         JiraWorkflow workflow = configureData.createdWorkflows().get(EVENT_ORGANIZATION_WORKFLOW_KEY);
+
+        configureProjectCategory(project);
+        configureFieldLayout(project);
         configureWorkflow(workflow);
 
         return ConfigureResponse.create().setRedirect(REDIRECT_URL + project.getKey());
@@ -68,19 +70,19 @@ public class EventOrganizationProjectHook implements AddProjectHook {
     }
 
     private void configureFieldLayout(@Nonnull final Project project) {
-        FieldLayout fieldLayout = ISSUE_FIELDS_CONFIGURATOR.getEventOrganizationFieldLayout();
-        ISSUE_FIELDS_CONFIGURATOR.storeEventOrganizationFieldLayout(fieldLayout);
+        EditableFieldLayout fieldLayout = ISSUE_FIELDS_CONFIGURATOR.getEventOrganizationFieldLayout();
+        fieldLayout = ISSUE_FIELDS_CONFIGURATOR.storeAndReturnEventOrganizationFieldLayout(fieldLayout);
 
         FieldLayoutScheme fieldConfigurationScheme = ISSUE_FIELDS_CONFIGURATOR.createFieldConfigurationScheme(project, fieldLayout);
         ISSUE_FIELDS_CONFIGURATOR.storeFieldConfigurationScheme(project, fieldConfigurationScheme);
     }
 
-    private void configureWorkflow(@Nonnull final JiraWorkflow workflow) {
+    private void configureWorkflow(final JiraWorkflow workflow) {
         if (workflow != null) {
-            WORKFLOW_CONFIGURATOR.addUpdateDueDatePostFunctionToTransitions(workflow, "Deadline exceeded");
+            WORKFLOW_CONFIGURATOR.addUpdateDueDatePostFunctionToTransitions(workflow, POST_FUNCTION_TRANSITION_NAME);
 
-            List<String> statusesWhichBlocks = WORKFLOW_CONFIGURATOR.getStatusesFromCategory(workflow, "Complete");
-            WORKFLOW_CONFIGURATOR.addSubTaskBlockingCondition(workflow, statusesWhichBlocks, "Done");
+            List<String> statusesWhichBlocks = WORKFLOW_CONFIGURATOR.getStatusesFromCategory(workflow, COMPLETE_STATUS_CATEGORY_NAME);
+            WORKFLOW_CONFIGURATOR.addSubTaskBlockingCondition(workflow, statusesWhichBlocks, DONE_STATUS_NAME);
         }
     }
 }
