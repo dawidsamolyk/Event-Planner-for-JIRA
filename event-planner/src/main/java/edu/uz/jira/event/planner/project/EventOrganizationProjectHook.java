@@ -1,6 +1,5 @@
 package edu.uz.jira.event.planner.project;
 
-import com.atlassian.jira.bc.workflow.WorkflowTransitionService;
 import com.atlassian.jira.blueprint.api.*;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.layout.field.EditableFieldLayout;
@@ -23,6 +22,7 @@ public class EventOrganizationProjectHook implements AddProjectHook {
     public static final String POST_FUNCTION_TRANSITION_NAME = "Deadline exceeded";
     public static final String COMPLETE_STATUS_CATEGORY_NAME = "Complete";
     public static final String DONE_STATUS_NAME = "Done";
+    public static final String CREATED_WORKFLOW_ACTION_NAME = "Created";
     public static final String EVENT_ORGANIZATION_WORKFLOW_KEY = "EVENT-ORGANIZATION-WORKFLOW";
     private static final String REDIRECT_URL = "/secure/EventOrganizationPlanConfiguration.jspa?project-key=";
     private final IssueFieldsConfigurator ISSUE_FIELDS_CONFIGURATOR;
@@ -30,12 +30,11 @@ public class EventOrganizationProjectHook implements AddProjectHook {
     private final ProjectCategoryConfigurator PROJECT_CATEGORY_CONFIGURATOR;
 
     /**
-     * @param workflowTransitionService Service which manages workflows.
      * @param i18nResolver              Internationalization helper.
      * @throws NullArgumentException Thrown when any input argument is null.
      */
-    public EventOrganizationProjectHook(@Nonnull final WorkflowTransitionService workflowTransitionService, @Nonnull final I18nResolver i18nResolver) throws NullArgumentException {
-        WORKFLOW_CONFIGURATOR = new WorkflowConfigurator(workflowTransitionService);
+    public EventOrganizationProjectHook(@Nonnull final I18nResolver i18nResolver) throws NullArgumentException {
+        WORKFLOW_CONFIGURATOR = new WorkflowConfigurator();
         ISSUE_FIELDS_CONFIGURATOR = new IssueFieldsConfigurator(i18nResolver);
         PROJECT_CATEGORY_CONFIGURATOR = new ProjectCategoryConfigurator(i18nResolver);
     }
@@ -80,7 +79,7 @@ public class EventOrganizationProjectHook implements AddProjectHook {
 
     private void configureWorkflow(final JiraWorkflow workflow) {
         if (workflow != null) {
-            WORKFLOW_CONFIGURATOR.addIssueDueDateValidator(workflow);
+            WORKFLOW_CONFIGURATOR.addIssueDueDateValidator(workflow, CREATED_WORKFLOW_ACTION_NAME);
             WORKFLOW_CONFIGURATOR.addUpdateDueDatePostFunctionToTransitions(workflow, POST_FUNCTION_TRANSITION_NAME);
 
             List<String> statusesWhichBlocks = WORKFLOW_CONFIGURATOR.getStatusesFromCategory(workflow, COMPLETE_STATUS_CATEGORY_NAME);

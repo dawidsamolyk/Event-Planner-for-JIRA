@@ -1,14 +1,11 @@
 package ut.edu.uz.jira.event.planner.workflow;
 
-import com.atlassian.jira.bc.workflow.WorkflowTransitionService;
 import com.atlassian.jira.issue.status.Status;
 import com.atlassian.jira.issue.status.category.StatusCategory;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.opensymphony.workflow.loader.ConditionDescriptor;
-import com.opensymphony.workflow.loader.FunctionDescriptor;
 import edu.uz.jira.event.planner.exceptions.NullArgumentException;
 import edu.uz.jira.event.planner.workflow.WorkflowConfigurator;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -19,24 +16,10 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class WorkflowConfiguratorTest {
-    private WorkflowTransitionService mockWorkflowTransitionService;
-
-    @Before
-    public void setUp() {
-        mockWorkflowTransitionService = mock(WorkflowTransitionService.class);
-    }
-
-    @Test
-    public void updateDueDatePostFunctionShouldBeCreatedOnlyOnce() {
-        FunctionDescriptor first = WorkflowConfigurator.createUpdateDueDatePostFunctionDescriptor();
-        FunctionDescriptor second = WorkflowConfigurator.createUpdateDueDatePostFunctionDescriptor();
-
-        assertTrue(first == second);
-    }
 
     @Test
     public void shouldReturnValidWorkflowStatusesIdsFromSelectedCategory() throws NullArgumentException {
-        WorkflowConfigurator fixture = new WorkflowConfigurator(mockWorkflowTransitionService);
+        WorkflowConfigurator fixture = new WorkflowConfigurator();
         String testCategoryName = "Completed";
         List<String> expectedResult = new ArrayList<String>(2);
         expectedResult.add("1209");
@@ -57,7 +40,7 @@ public class WorkflowConfiguratorTest {
 
     @Test
     public void shouldReturnEmptyStatusesListWhenWorkflowIsNull() throws NullArgumentException {
-        WorkflowConfigurator fixture = new WorkflowConfigurator(mockWorkflowTransitionService);
+        WorkflowConfigurator fixture = new WorkflowConfigurator();
         String testCategoryName = "Completed";
 
         List<String> result = fixture.getStatusesFromCategory(null, testCategoryName);
@@ -67,7 +50,7 @@ public class WorkflowConfiguratorTest {
 
     @Test
     public void shouldReturnEmptyStatusesListWhenCategoryNameIsNull() throws NullArgumentException {
-        WorkflowConfigurator fixture = new WorkflowConfigurator(mockWorkflowTransitionService);
+        WorkflowConfigurator fixture = new WorkflowConfigurator();
         JiraWorkflow mockWorkflow = mock(JiraWorkflow.class);
         List<Status> mockStatuses = new ArrayList<Status>(5);
         mockStatuses.add(getMockStatus("To Do", "1"));

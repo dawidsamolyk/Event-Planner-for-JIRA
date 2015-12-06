@@ -11,6 +11,7 @@ import edu.uz.jira.event.planner.project.configuration.EventPlanConfigWebworkAct
 
 import javax.annotation.Nonnull;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Map;
 
 public class IssueDueDateValidator implements Validator {
@@ -51,7 +52,11 @@ public class IssueDueDateValidator implements Validator {
         if (projectDueDateVersion == null) {
             throw new InvalidInputException("Project hasn't Due Date Version!");
         }
-        if (!issueDueDate.before(projectDueDateVersion.getReleaseDate())) {
+        Date projectReleaseDate = projectDueDateVersion.getReleaseDate();
+        if (projectReleaseDate == null) {
+            throw new InvalidInputException("Project Due Date Version hasn't release date!");
+        }
+        if (issueDueDate.after(projectReleaseDate)) {
             throw new InvalidInputException("Issue Due Date cannot be after Project Due Date!");
         }
     }

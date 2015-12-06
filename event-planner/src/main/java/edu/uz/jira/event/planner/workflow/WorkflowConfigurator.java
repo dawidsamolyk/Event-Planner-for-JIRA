@@ -1,12 +1,10 @@
 package edu.uz.jira.event.planner.workflow;
 
-import com.atlassian.jira.bc.workflow.WorkflowTransitionService;
 import com.atlassian.jira.issue.status.Status;
 import com.atlassian.jira.issue.status.category.StatusCategory;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.jira.workflow.condition.SubTaskBlockingCondition;
 import com.opensymphony.workflow.loader.*;
-import edu.uz.jira.event.planner.exceptions.NullArgumentException;
 import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -19,29 +17,18 @@ import java.util.Map;
  */
 public class WorkflowConfigurator {
     private static FunctionDescriptor updateDueDatePostFunction;
-    private final WorkflowTransitionService WORKFLOW_TRANSITION_SERVICE;
-
-    /**
-     * @param workflowTransitionService Service which manages JIRA workflows.
-     * @throws NullArgumentException Thrown when any of input argument is null.
-     */
-    public WorkflowConfigurator(@Nonnull final WorkflowTransitionService workflowTransitionService) throws NullArgumentException {
-        this.checkNullArguments(workflowTransitionService);
-        this.WORKFLOW_TRANSITION_SERVICE = workflowTransitionService;
-    }
 
     /**
      * @return Update Due Date Workflow Post Function.
      */
     public static FunctionDescriptor createUpdateDueDatePostFunctionDescriptor() {
-        if (updateDueDatePostFunction == null) {
-            updateDueDatePostFunction = DescriptorFactory.getFactory().createFunctionDescriptor();
-            updateDueDatePostFunction.setType("class");
+        FunctionDescriptor result = DescriptorFactory.getFactory().createFunctionDescriptor();
+        result.setType("class");
 
-            Map functionArguments = updateDueDatePostFunction.getArgs();
-            functionArguments.put("class.name", UpdateDueDatePostFunction.class.getName());
-        }
-        return updateDueDatePostFunction;
+        Map functionArguments = result.getArgs();
+        functionArguments.put("class.name", UpdateDueDatePostFunction.class.getName());
+
+        return result;
     }
 
     /**
@@ -72,12 +59,6 @@ public class WorkflowConfigurator {
         return result;
     }
 
-    private void checkNullArguments(WorkflowTransitionService workflowTransitionService) throws NullArgumentException {
-        if (workflowTransitionService == null) {
-            throw new NullArgumentException(WorkflowTransitionService.class.getName());
-        }
-    }
-
     /**
      * @param workflow            Workflow to configure.
      * @param statusesWhichBlocks Statuses which will block Sub-Tasks.
@@ -87,18 +68,23 @@ public class WorkflowConfigurator {
         ConditionDescriptor conditionDescriptor = createSubTaskBlockingConditionDescriptor(statusesWhichBlocks);
 
         for (String eachTransitionName : transitionsNames) {
-            WORKFLOW_TRANSITION_SERVICE.addConditionToWorkflow(eachTransitionName, conditionDescriptor, workflow);
+            for (ActionDescriptor eachAction : workflow.getActionsByName(eachTransitionName)) {
+                eachAction.getPostFunctions().add(conditionDescriptor);
+            }
         }
     }
 
     /**
-     * @param workflow Workflow to configure.
+     * @param workflow         Workflow to configure.
+     * @param transitionsNames Names of the transitions to which validator should be added.
      */
-    public void addIssueDueDateValidator(@Nonnull final JiraWorkflow workflow) {
+    public void addIssueDueDateValidator(@Nonnull final JiraWorkflow workflow, @Nonnull final String... transitionsNames) {
         ValidatorDescriptor validatorDescriptor = createIssueDueDateValidatorDescriptor();
 
-        for(ActionDescriptor eachAction : workflow.getActionsByName("Create")) {
-            eachAction.getValidators().add(validatorDescriptor);
+        for (String eachTransitionName : transitionsNames) {
+            for (ActionDescriptor eachAction : workflow.getActionsByName(eachTransitionName)) {
+                eachAction.getValidators().add(validatorDescriptor);
+            }
         }
     }
 
@@ -110,7 +96,10 @@ public class WorkflowConfigurator {
         FunctionDescriptor postFunctionDescriptor = createUpdateDueDatePostFunctionDescriptor();
 
         for (String eachTransitionName : transitionsNames) {
-            WORKFLOW_TRANSITION_SERVICE.addPostFunctionToWorkflow(eachTransitionName, postFunctionDescriptor, workflow);
+            for (ActionDescriptor eachAction : workflow.getActionsByName(eachTransitionName)) {
+                List postFunctions = eachAction.getPostFunctions();
+                postFunctions.add(postFunctionDescriptor);
+            }
         }
     }
 
@@ -135,6 +124,4 @@ public class WorkflowConfigurator {
 
         return result;
     }
-
-
 }
