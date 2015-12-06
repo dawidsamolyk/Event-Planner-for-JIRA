@@ -40,24 +40,10 @@ public class IssueFieldsConfigurator {
 
     /**
      * @param fieldLayout Pre-configured Event Organization Plan Field Layout which will be stored on JIRA.
-     * @return Stored (or not if exists) field layout.
+     * @return Stored field layout.
      */
     public EditableFieldLayout storeAndReturnEventOrganizationFieldLayout(@Nonnull final EditableFieldLayout fieldLayout) {
-        if (exists(fieldLayout)) {
-            return fieldLayout;
-        }
         return FIELD_LAYOUT_MANAGER.storeAndReturnEditableFieldLayout(fieldLayout);
-    }
-
-    private boolean exists(@Nonnull final EditableFieldLayout fieldLayout) {
-        for (EditableFieldLayout each : FIELD_LAYOUT_MANAGER.getEditableFieldLayouts()) {
-            String eachName = each.getName();
-
-            if (eachName != null && eachName.equals(fieldLayout.getName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
