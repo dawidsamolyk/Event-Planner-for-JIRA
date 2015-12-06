@@ -1,8 +1,11 @@
 package edu.uz.jira.event.planner.project.issue.fields;
 
+import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.OrderableField;
 import com.atlassian.jira.issue.fields.layout.field.*;
 import com.atlassian.sal.api.message.I18nResolver;
+import org.apache.commons.collections.MapUtils;
+import org.ofbiz.core.entity.GenericValue;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -32,7 +35,10 @@ public class FieldLayoutBuilder {
     public EditableFieldLayout copyWithMakeRequired(@Nonnull final FieldLayout toCopy, @Nonnull final String... requiredFieldsIds) {
         String name = getInternationalized(PROJECT_FIELDS_CONFIGURATION_NAME);
         String description = getInternationalized(PROJECT_FIELDS_CONFIGURATION_DESCRIPTION);
-
+        GenericValue genericValue = ComponentAccessor.getOfBizDelegator().createValue("FieldLayout", MapUtils.EMPTY_MAP);
+        genericValue.setString("name", name);
+        genericValue.setString("description", description);
+        
         List<FieldLayoutItem> toCopyItems = toCopy.getFieldLayoutItems();
         List<FieldLayoutItem> resultFieldLayoutItems = new ArrayList<FieldLayoutItem>(toCopyItems.size());
         List<String> requiredFieldsIdsList = Arrays.asList(requiredFieldsIds);
@@ -42,7 +48,7 @@ public class FieldLayoutBuilder {
             resultFieldLayoutItems.add(item);
         }
 
-        EditableFieldLayoutImpl result = new EditableFieldLayoutImpl(null, resultFieldLayoutItems);
+        EditableFieldLayoutImpl result = new EditableFieldLayoutImpl(genericValue, resultFieldLayoutItems);
         result.setName(name);
         result.setDescription(description);
 

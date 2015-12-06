@@ -49,9 +49,11 @@ public class IssueFieldsConfigurator {
         return FIELD_LAYOUT_MANAGER.storeAndReturnEditableFieldLayout(fieldLayout);
     }
 
-    private boolean exists(EditableFieldLayout fieldLayout) {
+    private boolean exists(@Nonnull final EditableFieldLayout fieldLayout) {
         for (EditableFieldLayout each : FIELD_LAYOUT_MANAGER.getEditableFieldLayouts()) {
-            if (each.getName().equals(fieldLayout.getName())) {
+            String eachName = each.getName();
+
+            if (eachName != null && eachName.equals(fieldLayout.getName())) {
                 return true;
             }
         }

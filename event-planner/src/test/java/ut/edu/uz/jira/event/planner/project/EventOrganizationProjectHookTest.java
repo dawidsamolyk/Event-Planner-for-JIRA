@@ -8,10 +8,13 @@ import com.atlassian.jira.blueprint.api.ValidateResponse;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.config.FieldConfigScheme;
 import com.atlassian.jira.issue.fields.layout.field.EditableDefaultFieldLayout;
+import com.atlassian.jira.issue.fields.layout.field.EditableFieldLayout;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutManager;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutScheme;
 import com.atlassian.jira.issue.issuetype.IssueType;
 import com.atlassian.jira.mock.component.MockComponentWorker;
+import com.atlassian.jira.mock.ofbiz.MockOfBizDelegator;
+import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.scheme.Scheme;
@@ -48,11 +51,19 @@ public class EventOrganizationProjectHookTest {
         FieldLayoutManager mockFieldLayoutManager = Mockito.mock(FieldLayoutManager.class);
         Mockito.when(mockFieldLayoutManager.getEditableDefaultFieldLayout()).thenReturn(Mockito.mock(EditableDefaultFieldLayout.class));
         Mockito.when(mockFieldLayoutManager.createFieldLayoutScheme(Mockito.anyString(), Mockito.anyString())).thenReturn(Mockito.mock(FieldLayoutScheme.class));
+        Mockito.when(mockFieldLayoutManager.storeAndReturnEditableFieldLayout(Mockito.any(EditableFieldLayout.class))).then(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                EditableFieldLayout layout = (EditableFieldLayout) invocation.getArguments()[0];
+                return layout;
+            }
+        });
 
         new MockComponentWorker()
                 .addMock(ComponentAccessor.class, Mockito.mock(ComponentAccessor.class))
                 .addMock(FieldLayoutManager.class, mockFieldLayoutManager)
                 .addMock(ProjectManager.class, Mockito.mock(ProjectManager.class))
+                .addMock(OfBizDelegator.class, new MockOfBizDelegator())
                 .init();
 
         mockWorkflowTransitionService = Mockito.mock(WorkflowTransitionService.class);

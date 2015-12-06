@@ -6,6 +6,8 @@ import com.atlassian.jira.issue.fields.layout.field.FieldLayout;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutManager;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutScheme;
 import com.atlassian.jira.mock.component.MockComponentWorker;
+import com.atlassian.jira.mock.ofbiz.MockOfBizDelegator;
+import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.jira.project.Project;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.project.issue.fields.IssueFieldsConfigurator;
@@ -31,6 +33,7 @@ public class IssueFieldsConfigurationTest {
         new MockComponentWorker()
                 .addMock(ComponentAccessor.class, mock(ComponentAccessor.class))
                 .addMock(FieldLayoutManager.class, mockFieldLayoutManager)
+                .addMock(OfBizDelegator.class, new MockOfBizDelegator())
                 .init();
 
     }

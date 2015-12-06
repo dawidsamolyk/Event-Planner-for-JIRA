@@ -7,6 +7,8 @@ import com.atlassian.jira.issue.fields.layout.field.FieldLayoutItem;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutManager;
 import com.atlassian.jira.issue.fields.renderer.HackyFieldRendererRegistry;
 import com.atlassian.jira.mock.component.MockComponentWorker;
+import com.atlassian.jira.mock.ofbiz.MockOfBizDelegator;
+import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.project.issue.fields.FieldLayoutBuilder;
 import edu.uz.jira.event.planner.project.issue.fields.IssueFieldsConfigurator;
@@ -32,6 +34,7 @@ public class FieldLayoutBuilderTest {
                 .addMock(ComponentAccessor.class, mock(ComponentAccessor.class))
                 .addMock(FieldLayoutManager.class, mock(FieldLayoutManager.class))
                 .addMock(HackyFieldRendererRegistry.class, mock(HackyFieldRendererRegistry.class))
+                .addMock(OfBizDelegator.class, new MockOfBizDelegator())
                 .init();
 
         Mockito.when(mocki18n.getText(IssueFieldsConfigurator.PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME_KEY)).thenReturn("Event organization Field Configuration");
