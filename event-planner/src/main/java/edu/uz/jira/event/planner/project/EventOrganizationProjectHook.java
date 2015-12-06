@@ -2,6 +2,7 @@ package edu.uz.jira.event.planner.project;
 
 import com.atlassian.jira.bc.workflow.WorkflowTransitionService;
 import com.atlassian.jira.blueprint.api.*;
+import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.layout.field.EditableFieldLayout;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutScheme;
 import com.atlassian.jira.project.Project;
@@ -84,6 +85,8 @@ public class EventOrganizationProjectHook implements AddProjectHook {
 
             List<String> statusesWhichBlocks = WORKFLOW_CONFIGURATOR.getStatusesFromCategory(workflow, COMPLETE_STATUS_CATEGORY_NAME);
             WORKFLOW_CONFIGURATOR.addSubTaskBlockingCondition(workflow, statusesWhichBlocks, DONE_STATUS_NAME);
+
+            ComponentAccessor.getWorkflowManager().saveWorkflowWithoutAudit(workflow);
         }
     }
 }

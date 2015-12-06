@@ -14,12 +14,16 @@ import com.atlassian.jira.issue.fields.layout.field.FieldLayoutScheme;
 import com.atlassian.jira.issue.issuetype.IssueType;
 import com.atlassian.jira.mock.component.MockComponentWorker;
 import com.atlassian.jira.mock.ofbiz.MockOfBizDelegator;
+import com.atlassian.jira.mock.security.MockAuthenticationContext;
 import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.scheme.Scheme;
+import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
+import com.atlassian.jira.user.MockApplicationUser;
 import com.atlassian.jira.workflow.JiraWorkflow;
+import com.atlassian.jira.workflow.WorkflowManager;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.opensymphony.workflow.loader.ActionDescriptor;
 import com.opensymphony.workflow.loader.FunctionDescriptor;
@@ -59,18 +63,20 @@ public class EventOrganizationProjectHookTest {
             }
         });
 
-        new MockComponentWorker()
-                .addMock(ComponentAccessor.class, Mockito.mock(ComponentAccessor.class))
-                .addMock(FieldLayoutManager.class, mockFieldLayoutManager)
-                .addMock(ProjectManager.class, Mockito.mock(ProjectManager.class))
-                .addMock(OfBizDelegator.class, new MockOfBizDelegator())
-                .init();
-
         mockWorkflowTransitionService = Mockito.mock(WorkflowTransitionService.class);
 
         mocki18n = mock(I18nResolver.class);
         Mockito.when(mocki18n.getText(FieldLayoutBuilder.PROJECT_FIELDS_CONFIGURATION_NAME)).thenReturn("Event organization Field Configuration");
         Mockito.when(mocki18n.getText(FieldLayoutBuilder.PROJECT_FIELDS_CONFIGURATION_DESCRIPTION)).thenReturn("Field Configuration for the Event organization Issues");
+
+        new MockComponentWorker()
+                .addMock(ComponentAccessor.class, Mockito.mock(ComponentAccessor.class))
+                .addMock(FieldLayoutManager.class, mockFieldLayoutManager)
+                .addMock(ProjectManager.class, Mockito.mock(ProjectManager.class))
+                .addMock(OfBizDelegator.class, new MockOfBizDelegator())
+                .addMock(WorkflowManager.class, mock(WorkflowManager.class))
+                .addMock(JiraAuthenticationContext.class, new MockAuthenticationContext(new MockApplicationUser("test")))
+                .init();
     }
 
     @Test
