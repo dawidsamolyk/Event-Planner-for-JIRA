@@ -44,19 +44,6 @@
                           interface="com.atlassian.jira.bc.workflow.WorkflowTransitionService"/>
     </project-blueprint>
 
-    <workflow-function key="update-due-date-post-function" name="Update Due Date Post Function"
-                       i18n-name-key="update.due.date.post.function.name"
-                       class="com.atlassian.jira.plugin.workflow.WorkflowNoInputPluginFactory">
-        <description key="update.due.date.post.function.description">Updates issue due date to current date. No
-            parameters are required.
-        </description>
-        <function-class>edu.uz.jira.event.planner.workflow.UpdateDueDatePostFunction</function-class>
-        <orderable>true</orderable>
-        <unique>true</unique>
-        <deletable>true</deletable>
-        <resource type="velocity" name="view" location="templates/postfunctions/update-due-date-post-function.vm"/>
-    </workflow-function>
-
     <web-panel name="DueDateIndicator" i18n-name-key="due.date.indicator.name" key="due-date-indicator"
                location="atl.jira.view.issue.right.context" weight="1000">
         <description key="due.date.indicator.description">The Issue Due Date Indicator Plugin</description>
@@ -78,14 +65,33 @@
                 <view name="error">/templates/event-organization-config-webwork/error.vm</view>
             </action>
         </actions>
-        <resource type="download" name="input-script"
-                  location="/templates/event-organization-config-webwork/input.js"></resource>
+        <resource type="download" name="input-script" location="/templates/event-organization-config-webwork/input.js"/>
         <resource type="download" name="jquery.datetimepicker.full.min.js"
-                  location="/libs/js/jquery.datetimepicker.full.min.js"></resource>
-        <resource type="download" name="jquery.js"
-                  location="/libs/js/jquery.js"></resource>
-        <resource type="download" name="jquery.datetimepicker.css"
-                  location="/style/jquery.datetimepicker.css"></resource>
+                  location="/libs/js/jquery.datetimepicker.full.min.js"/>
+        <resource type="download" name="jquery.js" location="/libs/js/jquery.js"/>
+        <resource type="download" name="jquery.datetimepicker.css" location="/style/jquery.datetimepicker.css"/>
     </webwork1>
 
+    <workflow-function key="update-due-date-post-function" name="Update Due Date Post Function"
+                       i18n-name-key="update.due.date.post.function.name"
+                       class="com.atlassian.jira.plugin.workflow.WorkflowNoInputPluginFactory">
+        <description key="update.due.date.post.function.description">Updates issue due date to current date. No
+            parameters are required.
+        </description>
+        <function-class>edu.uz.jira.event.planner.workflow.UpdateDueDatePostFunction</function-class>
+        <orderable>true</orderable>
+        <unique>true</unique>
+        <deletable>true</deletable>
+        <resource type="velocity" name="view" location="templates/postfunctions/update-due-date-post-function.vm"/>
+    </workflow-function>
+ 
+    <workflow-validator key="issue-due-date-validator" name="Issue Due Date Validator"
+                        i18n-name-key="issue.due.date.validator.name"
+                        class="edu.uz.jira.event.planner.workflow.WorkflowNoInputValidatorFactory">
+        <description key="issue.due.date.validator.description">Validates that Issue Due Date is not after Project Due
+            Date. No parameters are required.
+        </description>
+        <validator-class>edu.uz.jira.event.planner.workflow.IssueDueDateValidator</validator-class>
+        <resource type="velocity" name="view" location="templates/validators/issue-due-date-validator.vm"/>
+    </workflow-validator>
 </atlassian-plugin>

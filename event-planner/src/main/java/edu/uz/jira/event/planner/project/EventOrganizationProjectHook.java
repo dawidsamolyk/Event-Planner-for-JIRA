@@ -79,6 +79,7 @@ public class EventOrganizationProjectHook implements AddProjectHook {
 
     private void configureWorkflow(final JiraWorkflow workflow) {
         if (workflow != null) {
+            WORKFLOW_CONFIGURATOR.addIssueDueDateValidator(workflow);
             WORKFLOW_CONFIGURATOR.addUpdateDueDatePostFunctionToTransitions(workflow, POST_FUNCTION_TRANSITION_NAME);
 
             List<String> statusesWhichBlocks = WORKFLOW_CONFIGURATOR.getStatusesFromCategory(workflow, COMPLETE_STATUS_CATEGORY_NAME);

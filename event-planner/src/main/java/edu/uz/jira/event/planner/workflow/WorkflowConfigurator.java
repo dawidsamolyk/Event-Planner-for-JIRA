@@ -5,9 +5,7 @@ import com.atlassian.jira.issue.status.Status;
 import com.atlassian.jira.issue.status.category.StatusCategory;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.jira.workflow.condition.SubTaskBlockingCondition;
-import com.opensymphony.workflow.loader.ConditionDescriptor;
-import com.opensymphony.workflow.loader.DescriptorFactory;
-import com.opensymphony.workflow.loader.FunctionDescriptor;
+import com.opensymphony.workflow.loader.*;
 import edu.uz.jira.event.planner.exceptions.NullArgumentException;
 import org.apache.commons.lang.StringUtils;
 
@@ -61,6 +59,19 @@ public class WorkflowConfigurator {
         return result;
     }
 
+    /**
+     * @return Issue Due Date Workflow Validator.
+     */
+    public static ValidatorDescriptor createIssueDueDateValidatorDescriptor() {
+        ValidatorDescriptor result = DescriptorFactory.getFactory().createValidatorDescriptor();
+        result.setType("class");
+
+        Map functionArguments = result.getArgs();
+        functionArguments.put("class.name", IssueDueDateValidator.class.getName());
+
+        return result;
+    }
+
     private void checkNullArguments(WorkflowTransitionService workflowTransitionService) throws NullArgumentException {
         if (workflowTransitionService == null) {
             throw new NullArgumentException(WorkflowTransitionService.class.getName());
@@ -77,6 +88,17 @@ public class WorkflowConfigurator {
 
         for (String eachTransitionName : transitionsNames) {
             WORKFLOW_TRANSITION_SERVICE.addConditionToWorkflow(eachTransitionName, conditionDescriptor, workflow);
+        }
+    }
+
+    /**
+     * @param workflow Workflow to configure.
+     */
+    public void addIssueDueDateValidator(@Nonnull final JiraWorkflow workflow) {
+        ValidatorDescriptor validatorDescriptor = createIssueDueDateValidatorDescriptor();
+
+        for(ActionDescriptor eachAction : workflow.getActionsByName("Create")) {
+            eachAction.getValidators().add(validatorDescriptor);
         }
     }
 
@@ -113,4 +135,6 @@ public class WorkflowConfigurator {
 
         return result;
     }
+
+
 }
