@@ -8,6 +8,7 @@ import com.atlassian.jira.issue.fields.layout.field.FieldLayoutSchemeEntity;
 import com.atlassian.jira.issue.issuetype.IssueType;
 import com.atlassian.jira.project.Project;
 import com.atlassian.sal.api.message.I18nResolver;
+import edu.uz.jira.event.planner.utils.InternationalizationKeys;
 
 import javax.annotation.Nonnull;
 
@@ -15,8 +16,6 @@ import javax.annotation.Nonnull;
  * Configurator of Issue Fields Layout.
  */
 public class IssueFieldsConfigurator {
-    public static final String PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME_KEY = "project.fields.configuration.scheme.name";
-    public static final String PROJECT_FIELDS_CONFIGURATION_SCHEME_DESCRIPTION_KEY = "project.fields.configuration.scheme.description";
     private static final String DUE_DATE_FIELD_ID = "duedate";
     private static final FieldLayoutManager FIELD_LAYOUT_MANAGER = ComponentAccessor.getFieldLayoutManager();
     private final I18nResolver i18n;
@@ -52,8 +51,8 @@ public class IssueFieldsConfigurator {
      * @return Field Layout Scheme associated with input project's issues types.
      */
     public FieldLayoutScheme createFieldConfigurationScheme(@Nonnull final Project project, @Nonnull final EditableFieldLayout fieldLayout) {
-        String name = getInternationalized(PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME_KEY) + " " + project.getName();
-        String description = getInternationalized(PROJECT_FIELDS_CONFIGURATION_SCHEME_DESCRIPTION_KEY);
+        String name = getInternationalized(InternationalizationKeys.PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME) + " " + project.getName();
+        String description = getInternationalized(InternationalizationKeys.PROJECT_FIELDS_CONFIGURATION_SCHEME_DESCRIPTION);
         Long fieldLayoutId = fieldLayout.getId();
 
         FieldLayoutScheme result = FIELD_LAYOUT_MANAGER.createFieldLayoutScheme(name, description);

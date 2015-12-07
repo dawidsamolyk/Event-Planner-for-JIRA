@@ -3,23 +3,23 @@ package ut.edu.uz.jira.event.planner.workflow;
 import com.atlassian.jira.issue.status.Status;
 import com.atlassian.jira.issue.status.category.StatusCategory;
 import com.atlassian.jira.workflow.JiraWorkflow;
-import com.opensymphony.workflow.loader.ConditionDescriptor;
 import edu.uz.jira.event.planner.exceptions.NullArgumentException;
-import edu.uz.jira.event.planner.workflow.WorkflowConfigurator;
+import edu.uz.jira.event.planner.workflow.WorkflowUtils;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-public class WorkflowConfiguratorTest {
+public class WorkflowUtilsTest {
 
     @Test
     public void shouldReturnValidWorkflowStatusesIdsFromSelectedCategory() throws NullArgumentException {
-        WorkflowConfigurator fixture = new WorkflowConfigurator();
+        WorkflowUtils fixture = new WorkflowUtils();
         String testCategoryName = "Completed";
         List<String> expectedResult = new ArrayList<String>(2);
         expectedResult.add("1209");
@@ -40,7 +40,7 @@ public class WorkflowConfiguratorTest {
 
     @Test
     public void shouldReturnEmptyStatusesListWhenWorkflowIsNull() throws NullArgumentException {
-        WorkflowConfigurator fixture = new WorkflowConfigurator();
+        WorkflowUtils fixture = new WorkflowUtils();
         String testCategoryName = "Completed";
 
         List<String> result = fixture.getStatusesFromCategory(null, testCategoryName);
@@ -50,7 +50,7 @@ public class WorkflowConfiguratorTest {
 
     @Test
     public void shouldReturnEmptyStatusesListWhenCategoryNameIsNull() throws NullArgumentException {
-        WorkflowConfigurator fixture = new WorkflowConfigurator();
+        WorkflowUtils fixture = new WorkflowUtils();
         JiraWorkflow mockWorkflow = mock(JiraWorkflow.class);
         List<Status> mockStatuses = new ArrayList<Status>(5);
         mockStatuses.add(getMockStatus("To Do", "1"));
@@ -61,26 +61,6 @@ public class WorkflowConfiguratorTest {
         List<String> result = fixture.getStatusesFromCategory(mockWorkflow, null);
 
         assertTrue(result.isEmpty());
-    }
-
-    @Test
-    public void subTaskBlockingConditionDescriptorShouldContainsStatusesSeparatedByComma() {
-        String expectedResult = "1203,90,123";
-        List<String> statusesToBlock = new ArrayList<String>(3);
-        statusesToBlock.add("1203");
-        statusesToBlock.add("90");
-        statusesToBlock.add("123");
-
-        ConditionDescriptor result = WorkflowConfigurator.createSubTaskBlockingConditionDescriptor(statusesToBlock);
-
-        assertEquals(expectedResult, result.getArgs().get("statuses"));
-    }
-
-    @Test
-    public void subTaskBlockingConditionDescriptorNeverShouldBeNull() {
-        ConditionDescriptor result = WorkflowConfigurator.createSubTaskBlockingConditionDescriptor(null);
-
-        assertNotNull(result);
     }
 
     private Status getMockStatus(String categoryName, String id) {

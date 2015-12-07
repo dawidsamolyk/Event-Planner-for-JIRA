@@ -12,6 +12,7 @@ import com.atlassian.jira.util.I18nHelper;
 import com.atlassian.jira.web.HttpServletVariables;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.project.configuration.EventPlanConfigWebworkAction;
+import edu.uz.jira.event.planner.utils.InternationalizationKeys;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -38,8 +39,8 @@ public class EventPlanConfigWebworkActionTest {
         mockProjectManager = mock(ProjectManager.class);
 
         mocki18n = mock(I18nResolver.class);
-        Mockito.when(mocki18n.getText(EventPlanConfigWebworkAction.PROJECT_VERSION_NAME_KEY)).thenReturn("Event Due Date");
-        Mockito.when(mocki18n.getText(EventPlanConfigWebworkAction.PROJECT_VERSION_DESCRIPTION_KEY)).thenReturn("Date of an event");
+        Mockito.when(mocki18n.getText(InternationalizationKeys.PROJECT_VERSION_NAME)).thenReturn("Event Due Date");
+        Mockito.when(mocki18n.getText(InternationalizationKeys.PROJECT_VERSION_DESCRIPTION)).thenReturn("Date of an event");
 
         mockHttpVariables = mock(HttpServletVariables.class);
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
@@ -62,8 +63,8 @@ public class EventPlanConfigWebworkActionTest {
     @Test
     public void inputStatusShouldBeReturnedWhenAllRequiredParametersAreEmpty() throws Exception {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
-        Mockito.when(mockRequest.getParameter("event-type")).thenReturn(null);
-        Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn(null);
+        Mockito.when(mockRequest.getParameter("event-type")).thenReturn("");
+        Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("");
         Mockito.when(mockRequest.getParameter("project-key")).thenReturn("ABC");
         Mockito.when(mockHttpVariables.getHttpRequest()).thenReturn(mockRequest);
         Mockito.when(mockProjectManager.getProjectObjByKey("ABC")).thenReturn(mock(Project.class));

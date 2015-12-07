@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Validator of Event Plan Organization configuration.
  */
-public class ConfigValidator {
+public class EventPlanConfigurationValidator {
     /**
      * @param project Project.
      * @return Indicates that project contains any Version. If project is null then return false.

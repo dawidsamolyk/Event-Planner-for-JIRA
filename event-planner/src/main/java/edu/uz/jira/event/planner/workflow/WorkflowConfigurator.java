@@ -1,127 +1,107 @@
 package edu.uz.jira.event.planner.workflow;
 
-import com.atlassian.jira.issue.status.Status;
-import com.atlassian.jira.issue.status.category.StatusCategory;
+import com.atlassian.jira.JiraException;
+import com.atlassian.jira.bc.JiraServiceContextImpl;
+import com.atlassian.jira.bc.workflow.WorkflowService;
+import com.atlassian.jira.bc.workflow.WorkflowTransitionService;
+import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.security.JiraAuthenticationContext;
+import com.atlassian.jira.util.ErrorCollection;
 import com.atlassian.jira.workflow.JiraWorkflow;
-import com.atlassian.jira.workflow.condition.SubTaskBlockingCondition;
-import com.opensymphony.workflow.loader.*;
+import com.opensymphony.workflow.loader.ActionDescriptor;
+import com.opensymphony.workflow.loader.ConditionDescriptor;
+import com.opensymphony.workflow.loader.FunctionDescriptor;
+import com.opensymphony.workflow.loader.ValidatorDescriptor;
 import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Configures workflow.
  */
 public class WorkflowConfigurator {
-    private static FunctionDescriptor updateDueDatePostFunction;
+    private static final WorkflowService WORKFLOW_SERVICE = ComponentAccessor.getComponentOfType(WorkflowService.class);
+    private static final JiraAuthenticationContext AUTHENTICATION_CONTEXT = ComponentAccessor.getJiraAuthenticationContext();
+    private final WorkflowTransitionService WORKFLOW_TRANSITION_SERVICE;
 
     /**
-     * @return Update Due Date Workflow Post Function.
+     * @param workflowTransitionService Service which manages JIRA workflows.
      */
-    public static FunctionDescriptor createUpdateDueDatePostFunctionDescriptor() {
-        FunctionDescriptor result = DescriptorFactory.getFactory().createFunctionDescriptor();
-        result.setType("class");
-
-        Map functionArguments = result.getArgs();
-        functionArguments.put("class.name", UpdateDueDatePostFunction.class.getName());
-
-        return result;
+    public WorkflowConfigurator(@Nonnull final WorkflowTransitionService workflowTransitionService) {
+        this.WORKFLOW_TRANSITION_SERVICE = workflowTransitionService;
     }
 
     /**
-     * @param statusesToBlock Workflow statuses to block condition.
-     * @return Sub-Task Blocking Workflow Condition.
+     * @param workflow         Worflow to configure.
+     * @param condition        Condition to add.
+     * @param transitionsNames Names of the transitions to which condition should be added.
      */
-    public static ConditionDescriptor createSubTaskBlockingConditionDescriptor(@Nonnull final List<String> statusesToBlock) {
-        ConditionDescriptor result = DescriptorFactory.getFactory().createConditionDescriptor();
-        result.setType("class");
-
-        Map functionArguments = result.getArgs();
-        functionArguments.put("class.name", SubTaskBlockingCondition.class.getName());
-        functionArguments.put("statuses", StringUtils.join(statusesToBlock, ','));
-
-        return result;
-    }
-
-    /**
-     * @return Issue Due Date Workflow Validator.
-     */
-    public static ValidatorDescriptor createIssueDueDateValidatorDescriptor() {
-        ValidatorDescriptor result = DescriptorFactory.getFactory().createValidatorDescriptor();
-        result.setType("class");
-
-        Map functionArguments = result.getArgs();
-        functionArguments.put("class.name", IssueDueDateValidator.class.getName());
-
-        return result;
-    }
-
-    /**
-     * @param workflow            Workflow to configure.
-     * @param statusesWhichBlocks Statuses which will block Sub-Tasks.
-     * @param transitionsNames    Names of the transitions to which condition should be added.
-     */
-    public void addSubTaskBlockingCondition(@Nonnull final JiraWorkflow workflow, @Nonnull final List<String> statusesWhichBlocks, @Nonnull final String... transitionsNames) {
-        ConditionDescriptor conditionDescriptor = createSubTaskBlockingConditionDescriptor(statusesWhichBlocks);
-
+    public void addToDraft(@Nonnull final JiraWorkflow workflow, @Nonnull final ConditionDescriptor condition, @Nonnull final String... transitionsNames) throws JiraException {
         for (String eachTransitionName : transitionsNames) {
-            for (ActionDescriptor eachAction : workflow.getActionsByName(eachTransitionName)) {
-                eachAction.getPostFunctions().add(conditionDescriptor);
-            }
-        }
-    }
+            ErrorCollection errors = WORKFLOW_TRANSITION_SERVICE.addConditionToWorkflow(eachTransitionName, condition, workflow);
 
-    /**
-     * @param workflow         Workflow to configure.
-     * @param transitionsNames Names of the transitions to which validator should be added.
-     */
-    public void addIssueDueDateValidator(@Nonnull final JiraWorkflow workflow, @Nonnull final String... transitionsNames) {
-        ValidatorDescriptor validatorDescriptor = createIssueDueDateValidatorDescriptor();
-
-        for (String eachTransitionName : transitionsNames) {
-            for (ActionDescriptor eachAction : workflow.getActionsByName(eachTransitionName)) {
-                eachAction.getValidators().add(validatorDescriptor);
+            if (errors.hasAnyErrors()) {
+                throw new JiraException(StringUtils.join(errors.getErrorMessages(), ' '));
             }
         }
     }
 
     /**
      * @param workflow         Worflow to configure.
-     * @param transitionsNames Names of the transitions to which condition should be added.
+     * @param validator        Validator to add.
+     * @param transitionsNames Names of the transitions to which validator should be added.
      */
-    public void addUpdateDueDatePostFunctionToTransitions(@Nonnull final JiraWorkflow workflow, @Nonnull final String... transitionsNames) {
-        FunctionDescriptor postFunctionDescriptor = createUpdateDueDatePostFunctionDescriptor();
+    public void addToDraft(@Nonnull final JiraWorkflow workflow, @Nonnull final ValidatorDescriptor validator, @Nonnull final String... transitionsNames) {
+        JiraWorkflow draft = getDraft(workflow);
 
         for (String eachTransitionName : transitionsNames) {
-            for (ActionDescriptor eachAction : workflow.getActionsByName(eachTransitionName)) {
-                List postFunctions = eachAction.getPostFunctions();
-                postFunctions.add(postFunctionDescriptor);
+            for (ActionDescriptor eachAction : draft.getActionsByName(eachTransitionName)) {
+                eachAction.getValidators().add(0, validator);
+            }
+        }
+
+        update(draft);
+    }
+
+    private JiraWorkflow getDraft(@Nonnull final JiraWorkflow workflow) {
+        JiraServiceContextImpl jiraServiceContext = getJiraServiceContext();
+        String workflowName = workflow.getName();
+
+        JiraWorkflow draft = WORKFLOW_SERVICE.getDraftWorkflow(jiraServiceContext, workflowName);
+
+        if (draft == null) {
+            draft = WORKFLOW_SERVICE.createDraftWorkflow(jiraServiceContext, workflowName);
+        }
+        return draft;
+    }
+
+    private void update(@Nonnull final JiraWorkflow workflow) {
+        WORKFLOW_SERVICE.updateWorkflow(getJiraServiceContext(), workflow);
+    }
+
+    private JiraServiceContextImpl getJiraServiceContext() {
+        return new JiraServiceContextImpl(AUTHENTICATION_CONTEXT.getUser());
+    }
+
+    /**
+     * @param workflow         Worflow to configure.
+     * @param postFunction     Post-function to add.
+     * @param transitionsNames Names of the transitions to which post-function should be added.
+     */
+    public void addToDraft(@Nonnull final JiraWorkflow workflow, @Nonnull final FunctionDescriptor postFunction, @Nonnull final String... transitionsNames) throws JiraException {
+        for (String eachTransitionName : transitionsNames) {
+            ErrorCollection errors = WORKFLOW_TRANSITION_SERVICE.addPostFunctionToWorkflow(eachTransitionName, postFunction, workflow);
+
+            if (errors.hasAnyErrors()) {
+                throw new JiraException(StringUtils.join(errors.getErrorMessages(), ' '));
             }
         }
     }
 
     /**
-     * @param workflow           Source Worflow.
-     * @param statusCategoryName Category names of the Workflow Statuses to return.
-     * @return Workflow statuses with specified category name.
+     * @param workflow Workflow to publish.
      */
-    public List<String> getStatusesFromCategory(@Nonnull final JiraWorkflow workflow, @Nonnull final String statusCategoryName) {
-        List<String> result = new ArrayList<String>();
-
-        if (workflow == null || statusCategoryName == null) {
-            return result;
-        }
-
-        for (Status eachStatus : workflow.getLinkedStatusObjects()) {
-            StatusCategory statusCategory = eachStatus.getStatusCategory();
-            if (statusCategory.getName().equals(statusCategoryName)) {
-                result.add(eachStatus.getId());
-            }
-        }
-
-        return result;
+    public void publishDraft(@Nonnull final JiraWorkflow workflow) {
+        ComponentAccessor.getWorkflowManager().overwriteActiveWorkflow(workflow.getUpdateAuthor(), workflow.getName());
     }
 }

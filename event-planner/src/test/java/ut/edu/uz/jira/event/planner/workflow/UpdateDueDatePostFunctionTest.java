@@ -8,7 +8,7 @@ import com.atlassian.jira.mock.issue.MockIssue;
 import com.atlassian.jira.workflow.DefaultWorkflowSchemeManager;
 import com.atlassian.jira.workflow.WorkflowManager;
 import com.atlassian.jira.workflow.WorkflowSchemeManager;
-import edu.uz.jira.event.planner.workflow.UpdateDueDatePostFunction;
+import edu.uz.jira.event.planner.workflow.postfunctions.UpdateDueDatePostFunction;
 import org.junit.Before;
 import org.junit.Test;
 

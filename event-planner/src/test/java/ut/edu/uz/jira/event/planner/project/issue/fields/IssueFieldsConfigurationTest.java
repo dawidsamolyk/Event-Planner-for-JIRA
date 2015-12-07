@@ -11,6 +11,7 @@ import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.jira.project.Project;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.project.issue.fields.IssueFieldsConfigurator;
+import edu.uz.jira.event.planner.utils.InternationalizationKeys;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -27,8 +28,8 @@ public class IssueFieldsConfigurationTest {
         mockFieldLayoutManager = mock(FieldLayoutManager.class);
 
         mocki18n = mock(I18nResolver.class);
-        Mockito.when(mocki18n.getText(IssueFieldsConfigurator.PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME_KEY)).thenReturn("Event organization Field Configuration");
-        Mockito.when(mocki18n.getText(IssueFieldsConfigurator.PROJECT_FIELDS_CONFIGURATION_SCHEME_DESCRIPTION_KEY)).thenReturn("Field Configuration for the Event organization Issues");
+        Mockito.when(mocki18n.getText(InternationalizationKeys.PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME)).thenReturn("Event organization Field Configuration");
+        Mockito.when(mocki18n.getText(InternationalizationKeys.PROJECT_FIELDS_CONFIGURATION_SCHEME_DESCRIPTION)).thenReturn("Field Configuration for the Event organization Issues");
 
         new MockComponentWorker()
                 .addMock(ComponentAccessor.class, mock(ComponentAccessor.class))

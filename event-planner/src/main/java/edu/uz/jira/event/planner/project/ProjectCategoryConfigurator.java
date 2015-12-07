@@ -5,6 +5,7 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectCategory;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.sal.api.message.I18nResolver;
+import edu.uz.jira.event.planner.utils.InternationalizationKeys;
 
 import javax.annotation.Nonnull;
 
@@ -12,8 +13,6 @@ import javax.annotation.Nonnull;
  * Creates and assigns project category to specified project.F
  */
 public class ProjectCategoryConfigurator {
-    public static final String PROJECT_CATEGORY_NAME = "project.category.name";
-    public static final String PROJECT_CATEGORY_DESCRIPTION = "project.category.description";
     private final ProjectManager PROJECT_MANAGER;
     private final I18nResolver INTERNATIONALIZATION;
 
@@ -29,8 +28,8 @@ public class ProjectCategoryConfigurator {
      * @return Project Category.
      */
     public ProjectCategory createProjectCategory() {
-        String name = getInternalized(PROJECT_CATEGORY_NAME);
-        String description = getInternalized(PROJECT_CATEGORY_DESCRIPTION);
+        String name = getInternalized(InternationalizationKeys.PROJECT_CATEGORY_NAME);
+        String description = getInternalized(InternationalizationKeys.PROJECT_CATEGORY_DESCRIPTION);
 
         ProjectCategory result = PROJECT_MANAGER.getProjectCategoryObjectByName(name);
 

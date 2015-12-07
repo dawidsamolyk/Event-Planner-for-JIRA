@@ -4,6 +4,7 @@ import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.OrderableField;
 import com.atlassian.jira.issue.fields.layout.field.*;
 import com.atlassian.sal.api.message.I18nResolver;
+import edu.uz.jira.event.planner.utils.InternationalizationKeys;
 import org.apache.commons.collections.MapUtils;
 import org.ofbiz.core.entity.GenericValue;
 
@@ -16,8 +17,6 @@ import java.util.List;
  * Builder of the Issue Field Layout.
  */
 public class FieldLayoutBuilder {
-    public static final String PROJECT_FIELDS_CONFIGURATION_NAME = "project.fields.configuration.name";
-    public static final String PROJECT_FIELDS_CONFIGURATION_DESCRIPTION = "project.fields.configuration.description";
     private final I18nResolver i18n;
 
     /**
@@ -33,12 +32,12 @@ public class FieldLayoutBuilder {
      * @return Modified Field Layout with required fields (if typed).
      */
     public EditableFieldLayout copyWithMakeRequired(@Nonnull final FieldLayout toCopy, @Nonnull final String... requiredFieldsIds) {
-        String name = getInternationalized(PROJECT_FIELDS_CONFIGURATION_NAME);
-        String description = getInternationalized(PROJECT_FIELDS_CONFIGURATION_DESCRIPTION);
+        String name = getInternationalized(InternationalizationKeys.PROJECT_FIELDS_CONFIGURATION_NAME);
+        String description = getInternationalized(InternationalizationKeys.PROJECT_FIELDS_CONFIGURATION_DESCRIPTION);
         GenericValue genericValue = ComponentAccessor.getOfBizDelegator().createValue("FieldLayout", MapUtils.EMPTY_MAP);
         genericValue.setString("name", name);
         genericValue.setString("description", description);
-        
+
         List<FieldLayoutItem> toCopyItems = toCopy.getFieldLayoutItems();
         List<FieldLayoutItem> resultFieldLayoutItems = new ArrayList<FieldLayoutItem>(toCopyItems.size());
         List<String> requiredFieldsIdsList = Arrays.asList(requiredFieldsIds);

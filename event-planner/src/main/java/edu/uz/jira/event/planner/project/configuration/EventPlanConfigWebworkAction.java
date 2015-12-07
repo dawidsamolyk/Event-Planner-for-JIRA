@@ -6,6 +6,8 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.version.VersionManager;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.sal.api.message.I18nResolver;
+import edu.uz.jira.event.planner.exceptions.NullArgumentException;
+import edu.uz.jira.event.planner.utils.InternationalizationKeys;
 import webwork.action.Action;
 
 import javax.annotation.Nonnull;
@@ -19,8 +21,6 @@ import java.util.Date;
  */
 public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
     public static final String DUE_DATE_FORMAT = "dd-MM-yyyy HH:mm";
-    public static final String PROJECT_VERSION_NAME_KEY = "project.version.name";
-    public static final String PROJECT_VERSION_DESCRIPTION_KEY = "project.version.description";
     private static final VersionManager VERSION_MANAGER = ComponentAccessor.getVersionManager();
     private final I18nResolver i18nResolver;
 
@@ -37,20 +37,25 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
      */
     @Override
     public String execute() throws Exception {
-        EventPlanConfiguration config = new EventPlanConfiguration(getHttpRequest());
+        EventPlanConfiguration config;
+        try {
+            config = new EventPlanConfiguration(getHttpRequest());
+        } catch (NullArgumentException e) {
+            return Action.ERROR;
+        }
+
         Project project = config.getProject();
         String eventDueDate = config.getEventDueDate();
         String eventType = config.getEventType();
 
-        if (ConfigValidator.isInvalid(project)) {
+        if (EventPlanConfigurationValidator.isInvalid(project)) {
             return Action.ERROR;
 
-        } else if (ConfigValidator.canInputProjectConfiguration(project, eventType, eventDueDate)) {
+        } else if (EventPlanConfigurationValidator.canInputProjectConfiguration(project, eventType, eventDueDate)) {
             return Action.INPUT;
 
-        } else if (ConfigValidator.canConfigureProject(project, eventType, eventDueDate)) {
+        } else if (EventPlanConfigurationValidator.canConfigureProject(project, eventType, eventDueDate)) {
             setDueDateAsProjectVersion(project, eventDueDate);
-
             return Action.SUCCESS;
         }
         return Action.ERROR;
@@ -63,8 +68,8 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
      * @throws CreateException Thrown when cannot create Project Version.
      */
     private void setDueDateAsProjectVersion(@Nonnull final Project project, @Nonnull final String eventDueDate) throws ParseException, CreateException {
-        String name = getInternationalized(PROJECT_VERSION_NAME_KEY);
-        String description = getInternationalized(PROJECT_VERSION_DESCRIPTION_KEY);
+        String name = getInternationalized(InternationalizationKeys.PROJECT_VERSION_NAME);
+        String description = getInternationalized(InternationalizationKeys.PROJECT_VERSION_DESCRIPTION);
         Date startDate = new Date();
         DateFormat format = new SimpleDateFormat(DUE_DATE_FORMAT);
         Date releaseDate = format.parse(eventDueDate);

@@ -1,4 +1,4 @@
-package edu.uz.jira.event.planner.workflow;
+package edu.uz.jira.event.planner.workflow.postfunctions;
 
 import com.atlassian.jira.issue.MutableIssue;
 import com.atlassian.jira.workflow.function.issue.AbstractJiraFunctionProvider;

@@ -1,16 +1,23 @@
 package edu.uz.jira.event.planner.project;
 
+import com.atlassian.jira.JiraException;
+import com.atlassian.jira.bc.workflow.WorkflowTransitionService;
 import com.atlassian.jira.blueprint.api.*;
-import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.layout.field.EditableFieldLayout;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutScheme;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectCategory;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.sal.api.message.I18nResolver;
+import com.opensymphony.workflow.loader.ConditionDescriptor;
+import com.opensymphony.workflow.loader.FunctionDescriptor;
+import com.opensymphony.workflow.loader.ValidatorDescriptor;
 import edu.uz.jira.event.planner.exceptions.NullArgumentException;
 import edu.uz.jira.event.planner.project.issue.fields.IssueFieldsConfigurator;
 import edu.uz.jira.event.planner.workflow.WorkflowConfigurator;
+import edu.uz.jira.event.planner.workflow.WorkflowConstants;
+import edu.uz.jira.event.planner.workflow.WorkflowDescriptorsFactory;
+import edu.uz.jira.event.planner.workflow.WorkflowUtils;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -19,22 +26,19 @@ import java.util.List;
  * Validates and configures all created Event Organization Plan Projects.
  */
 public class EventOrganizationProjectHook implements AddProjectHook {
-    public static final String POST_FUNCTION_TRANSITION_NAME = "Deadline exceeded";
-    public static final String COMPLETE_STATUS_CATEGORY_NAME = "Complete";
-    public static final String DONE_STATUS_NAME = "Done";
-    public static final String CREATED_WORKFLOW_ACTION_NAME = "Created";
-    public static final String EVENT_ORGANIZATION_WORKFLOW_KEY = "EVENT-ORGANIZATION-WORKFLOW";
     private static final String REDIRECT_URL = "/secure/EventOrganizationPlanConfiguration.jspa?project-key=";
     private final IssueFieldsConfigurator ISSUE_FIELDS_CONFIGURATOR;
     private final WorkflowConfigurator WORKFLOW_CONFIGURATOR;
+    private final WorkflowDescriptorsFactory WORKFLOW_DESCRIPTORS_FACTORY;
     private final ProjectCategoryConfigurator PROJECT_CATEGORY_CONFIGURATOR;
 
     /**
-     * @param i18nResolver              Internationalization helper.
+     * @param i18nResolver Internationalization helper.
      * @throws NullArgumentException Thrown when any input argument is null.
      */
-    public EventOrganizationProjectHook(@Nonnull final I18nResolver i18nResolver) throws NullArgumentException {
-        WORKFLOW_CONFIGURATOR = new WorkflowConfigurator();
+    public EventOrganizationProjectHook(@Nonnull final I18nResolver i18nResolver, @Nonnull final WorkflowTransitionService workflowTransitionService) throws NullArgumentException {
+        WORKFLOW_CONFIGURATOR = new WorkflowConfigurator(workflowTransitionService);
+        WORKFLOW_DESCRIPTORS_FACTORY = new WorkflowDescriptorsFactory();
         ISSUE_FIELDS_CONFIGURATOR = new IssueFieldsConfigurator(i18nResolver);
         PROJECT_CATEGORY_CONFIGURATOR = new ProjectCategoryConfigurator(i18nResolver);
     }
@@ -55,11 +59,15 @@ public class EventOrganizationProjectHook implements AddProjectHook {
     @Override
     public ConfigureResponse configure(@Nonnull final ConfigureData configureData) {
         Project project = configureData.project();
-        JiraWorkflow workflow = configureData.createdWorkflows().get(EVENT_ORGANIZATION_WORKFLOW_KEY);
+        JiraWorkflow workflow = configureData.createdWorkflows().get(WorkflowConstants.EVENT_ORGANIZATION_WORKFLOW_KEY);
 
-        configureProjectCategory(project);
-        configureFieldLayout(project);
-        configureWorkflow(workflow);
+        try {
+            configureProjectCategory(project);
+            configureFieldLayout(project);
+            configureWorkflow(workflow);
+        } catch (JiraException e) {
+            return ConfigureResponse.create();
+        }
 
         return ConfigureResponse.create().setRedirect(REDIRECT_URL + project.getKey());
     }
@@ -77,15 +85,19 @@ public class EventOrganizationProjectHook implements AddProjectHook {
         ISSUE_FIELDS_CONFIGURATOR.storeFieldConfigurationScheme(project, fieldConfigurationScheme);
     }
 
-    private void configureWorkflow(final JiraWorkflow workflow) {
+    private void configureWorkflow(final JiraWorkflow workflow) throws JiraException {
         if (workflow != null) {
-            WORKFLOW_CONFIGURATOR.addIssueDueDateValidator(workflow, CREATED_WORKFLOW_ACTION_NAME);
-            WORKFLOW_CONFIGURATOR.addUpdateDueDatePostFunctionToTransitions(workflow, POST_FUNCTION_TRANSITION_NAME);
+            ValidatorDescriptor validator = WORKFLOW_DESCRIPTORS_FACTORY.createIssueDueDateValidatorDescriptor();
+            WORKFLOW_CONFIGURATOR.addToDraft(workflow, validator, WorkflowConstants.CREATE_WORKFLOW_ACTION_NAME);
 
-            List<String> statusesWhichBlocks = WORKFLOW_CONFIGURATOR.getStatusesFromCategory(workflow, COMPLETE_STATUS_CATEGORY_NAME);
-            WORKFLOW_CONFIGURATOR.addSubTaskBlockingCondition(workflow, statusesWhichBlocks, DONE_STATUS_NAME);
+            FunctionDescriptor postFunction = WORKFLOW_DESCRIPTORS_FACTORY.createUpdateDueDatePostFunctionDescriptor();
+            WORKFLOW_CONFIGURATOR.addToDraft(workflow, postFunction, WorkflowConstants.POST_FUNCTION_TRANSITION_NAME);
 
-            ComponentAccessor.getWorkflowManager().saveWorkflowWithoutAudit(workflow);
+            List<String> statusesWhichBlocks = WorkflowUtils.getStatusesFromCategory(workflow, WorkflowConstants.COMPLETE_STATUS_CATEGORY_NAME);
+            ConditionDescriptor condition = WORKFLOW_DESCRIPTORS_FACTORY.createSubTaskBlockingConditionDescriptor(statusesWhichBlocks);
+            WORKFLOW_CONFIGURATOR.addToDraft(workflow, condition, WorkflowConstants.DONE_STATUS_NAME);
+
+            WORKFLOW_CONFIGURATOR.publishDraft(workflow);
         }
     }
 }

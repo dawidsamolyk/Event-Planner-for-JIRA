@@ -3,6 +3,7 @@ package edu.uz.jira.event.planner.project.configuration;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.project.Project;
 import edu.uz.jira.event.planner.exceptions.NullArgumentException;
+import edu.uz.jira.event.planner.utils.Validator;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
@@ -20,25 +21,13 @@ public class EventPlanConfiguration {
      * @throws NullArgumentException
      */
     public EventPlanConfiguration(@Nonnull final HttpServletRequest request) throws NullArgumentException {
-        checkArguments(request);
+        Validator.check(request);
 
         EVENT_TYPE = request.getParameter("event-type");
         EVENT_DUE_DATE = request.getParameter("event-duedate");
-
         String projectKey = request.getParameter("project-key");
-        PROJECT = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
-    }
 
-    /**
-     * Checking that all arguments are not null.
-     *
-     * @param request Http request.
-     * @throws NullArgumentException
-     */
-    private void checkArguments(final HttpServletRequest request) throws NullArgumentException {
-        if (request == null) {
-            throw new NullArgumentException(HttpServletRequest.class.getName());
-        }
+        PROJECT = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
     }
 
     /**

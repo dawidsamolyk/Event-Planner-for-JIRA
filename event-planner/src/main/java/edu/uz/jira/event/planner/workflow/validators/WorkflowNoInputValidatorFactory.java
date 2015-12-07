@@ -1,4 +1,4 @@
-package edu.uz.jira.event.planner.workflow;
+package edu.uz.jira.event.planner.workflow.validators;
 
 import com.atlassian.jira.plugin.workflow.AbstractWorkflowPluginFactory;
 import com.opensymphony.workflow.loader.AbstractDescriptor;

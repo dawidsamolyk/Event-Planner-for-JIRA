@@ -12,9 +12,6 @@
     <resource type="i18n" name="i18n" location="event-planner"/>
 
     <component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>
-    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
-    <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" filter=""/>
-    <component-import key="loginUriProvider" interface="com.atlassian.sal.api.auth.LoginUriProvider" filter=""/>
 
     <web-resource key="event-planner-resources" name="Event Planner Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
@@ -78,7 +75,7 @@
         <description key="update.due.date.post.function.description">Updates issue due date to current date. No
             parameters are required.
         </description>
-        <function-class>edu.uz.jira.event.planner.workflow.UpdateDueDatePostFunction</function-class>
+        <function-class>edu.uz.jira.event.planner.workflow.postfunctions.UpdateDueDatePostFunction</function-class>
         <orderable>true</orderable>
         <unique>true</unique>
         <deletable>true</deletable>
@@ -87,11 +84,11 @@
  
     <workflow-validator key="issue-due-date-validator" name="Issue Due Date Validator"
                         i18n-name-key="issue.due.date.validator.name"
-                        class="edu.uz.jira.event.planner.workflow.WorkflowNoInputValidatorFactory">
+                        class="edu.uz.jira.event.planner.workflow.validators.WorkflowNoInputValidatorFactory">
         <description key="issue.due.date.validator.description">Validates that Issue Due Date is not after Project Due
             Date. No parameters are required.
         </description>
-        <validator-class>edu.uz.jira.event.planner.workflow.IssueDueDateValidator</validator-class>
+        <validator-class>edu.uz.jira.event.planner.workflow.validators.IssueDueDateValidator</validator-class>
         <resource type="velocity" name="view" location="templates/validators/issue-due-date-validator.vm"/>
     </workflow-validator>
 </atlassian-plugin>

@@ -7,6 +7,7 @@ import com.atlassian.jira.project.ProjectCategory;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.project.ProjectCategoryConfigurator;
+import edu.uz.jira.event.planner.utils.InternationalizationKeys;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -26,8 +27,8 @@ public class ProjectCategoryConfiguratorTest {
                 .init();
 
         mocki18n = mock(I18nResolver.class);
-        Mockito.when(mocki18n.getText(ProjectCategoryConfigurator.PROJECT_CATEGORY_NAME)).thenReturn("Test name");
-        Mockito.when(mocki18n.getText(ProjectCategoryConfigurator.PROJECT_CATEGORY_DESCRIPTION)).thenReturn("Test description");
+        Mockito.when(mocki18n.getText(InternationalizationKeys.PROJECT_CATEGORY_NAME)).thenReturn("Test name");
+        Mockito.when(mocki18n.getText(InternationalizationKeys.PROJECT_CATEGORY_DESCRIPTION)).thenReturn("Test description");
     }
 
     @Test

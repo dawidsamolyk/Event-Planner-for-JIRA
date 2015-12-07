@@ -5,8 +5,8 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.version.Version;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.opensymphony.workflow.InvalidInputException;
-import edu.uz.jira.event.planner.project.configuration.EventPlanConfigWebworkAction;
-import edu.uz.jira.event.planner.workflow.IssueDueDateValidator;
+import edu.uz.jira.event.planner.utils.InternationalizationKeys;
+import edu.uz.jira.event.planner.workflow.validators.IssueDueDateValidator;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class IssueDueDateValidatorTest {
     @Before
     public void setUp() {
         mocki18n = mock(I18nResolver.class);
-        Mockito.when(mocki18n.getText(EventPlanConfigWebworkAction.PROJECT_VERSION_NAME_KEY)).thenReturn(TEST_PROJECT_VERSION_NAME);
+        Mockito.when(mocki18n.getText(InternationalizationKeys.PROJECT_VERSION_NAME)).thenReturn(TEST_PROJECT_VERSION_NAME);
     }
 
     @Test

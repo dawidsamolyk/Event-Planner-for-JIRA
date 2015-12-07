@@ -1,4 +1,4 @@
-package edu.uz.jira.event.planner.workflow;
+package edu.uz.jira.event.planner.workflow.validators;
 
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.project.Project;
@@ -7,7 +7,7 @@ import com.atlassian.sal.api.message.I18nResolver;
 import com.opensymphony.module.propertyset.PropertySet;
 import com.opensymphony.workflow.InvalidInputException;
 import com.opensymphony.workflow.Validator;
-import edu.uz.jira.event.planner.project.configuration.EventPlanConfigWebworkAction;
+import edu.uz.jira.event.planner.utils.InternationalizationKeys;
 
 import javax.annotation.Nonnull;
 import java.sql.Timestamp;
@@ -23,11 +23,11 @@ public class IssueDueDateValidator implements Validator {
 
     private Version getDueDateVersion(@Nonnull final Project project) {
         Version result = null;
-        String dueDateVersionName = getInternationalized(EventPlanConfigWebworkAction.PROJECT_VERSION_NAME_KEY);
+        String dueDateVersionName = getInternationalized(InternationalizationKeys.PROJECT_VERSION_NAME);
 
         for (Version each : project.getVersions()) {
             if (each.getName().equals(dueDateVersionName)) {
-                return each;
+                result = each;
             }
         }
 
