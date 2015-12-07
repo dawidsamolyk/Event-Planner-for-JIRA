@@ -3,7 +3,8 @@ package edu.uz.jira.event.planner.workflow;
 /**
  * Constant values for Project Organization Plan workflows.
  */
-public abstract class WorkflowConstants {
+public enum WorkflowConstants {
+    ;
     public static final String POST_FUNCTION_TRANSITION_NAME = "Deadline exceeded";
     public static final String COMPLETE_STATUS_CATEGORY_NAME = "Complete";
     public static final String DONE_STATUS_NAME = "Done";

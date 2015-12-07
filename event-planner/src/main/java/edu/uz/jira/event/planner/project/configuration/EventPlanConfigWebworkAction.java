@@ -3,6 +3,7 @@ package edu.uz.jira.event.planner.project.configuration;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.exception.CreateException;
 import com.atlassian.jira.project.Project;
+import com.atlassian.jira.project.version.Version;
 import com.atlassian.jira.project.version.VersionManager;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.sal.api.message.I18nResolver;
@@ -75,7 +76,7 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
         Date releaseDate = format.parse(eventDueDate);
         Long projectId = project.getId();
 
-        VERSION_MANAGER.createVersion(name, startDate, releaseDate, description, projectId, null);
+        Version version = VERSION_MANAGER.createVersion(name, startDate, releaseDate, description, projectId, null);
     }
 
     private String getInternationalized(String key) {

@@ -18,7 +18,7 @@ public class WorkflowUtils {
      * @param statusCategoryName Category names of the Workflow Statuses to return.
      * @return Workflow statuses with specified category name.
      */
-    public static List<String> getStatusesFromCategory(@Nonnull final JiraWorkflow workflow, @Nonnull final String statusCategoryName) {
+    public List<String> getStatusesFromCategory(@Nonnull final JiraWorkflow workflow, @Nonnull final String statusCategoryName) {
         List<String> result = new ArrayList<String>();
 
         if (workflow == null || statusCategoryName == null) {

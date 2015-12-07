@@ -17,7 +17,6 @@ import java.util.Map;
  * Provides descriptors for specified workflow events.
  */
 public class WorkflowDescriptorsFactory {
-
     public static final String CLASS_NAME_KEY = "class.name";
     public static final String STATUSES_KEY = "statuses";
     public static final String TYPE_NAME = "class";

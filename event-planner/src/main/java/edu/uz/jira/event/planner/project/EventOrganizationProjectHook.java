@@ -31,6 +31,7 @@ public class EventOrganizationProjectHook implements AddProjectHook {
     private final WorkflowConfigurator WORKFLOW_CONFIGURATOR;
     private final WorkflowDescriptorsFactory WORKFLOW_DESCRIPTORS_FACTORY;
     private final ProjectCategoryConfigurator PROJECT_CATEGORY_CONFIGURATOR;
+    private final WorkflowUtils utils;
 
     /**
      * @param i18nResolver Internationalization helper.
@@ -41,6 +42,7 @@ public class EventOrganizationProjectHook implements AddProjectHook {
         WORKFLOW_DESCRIPTORS_FACTORY = new WorkflowDescriptorsFactory();
         ISSUE_FIELDS_CONFIGURATOR = new IssueFieldsConfigurator(i18nResolver);
         PROJECT_CATEGORY_CONFIGURATOR = new ProjectCategoryConfigurator(i18nResolver);
+        utils = new WorkflowUtils();
     }
 
     /**
@@ -93,7 +95,7 @@ public class EventOrganizationProjectHook implements AddProjectHook {
             FunctionDescriptor postFunction = WORKFLOW_DESCRIPTORS_FACTORY.createUpdateDueDatePostFunctionDescriptor();
             WORKFLOW_CONFIGURATOR.addToDraft(workflow, postFunction, WorkflowConstants.POST_FUNCTION_TRANSITION_NAME);
 
-            List<String> statusesWhichBlocks = WorkflowUtils.getStatusesFromCategory(workflow, WorkflowConstants.COMPLETE_STATUS_CATEGORY_NAME);
+            List<String> statusesWhichBlocks = utils.getStatusesFromCategory(workflow, WorkflowConstants.COMPLETE_STATUS_CATEGORY_NAME);
             ConditionDescriptor condition = WORKFLOW_DESCRIPTORS_FACTORY.createSubTaskBlockingConditionDescriptor(statusesWhichBlocks);
             WORKFLOW_CONFIGURATOR.addToDraft(workflow, condition, WorkflowConstants.DONE_STATUS_NAME);
 

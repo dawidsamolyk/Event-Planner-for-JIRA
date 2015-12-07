@@ -3,7 +3,8 @@ package edu.uz.jira.event.planner.utils;
 /**
  * Keys for internationalization texts.
  */
-public abstract class InternationalizationKeys {
+public enum InternationalizationKeys {
+    ;
     public static final String PROJECT_CATEGORY_NAME = "project.category.name";
     public static final String PROJECT_CATEGORY_DESCRIPTION = "project.category.description";
     public static final String PROJECT_VERSION_NAME = "project.version.name";
