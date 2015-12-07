@@ -33,6 +33,21 @@ public class WorkflowConfigurator {
 
     /**
      * @param workflow         Worflow to configure.
+     * @param postFunction     Post-function to add.
+     * @param transitionsNames Names of the transitions to which post-function should be added.
+     */
+    public void addToDraft(@Nonnull final JiraWorkflow workflow, @Nonnull final FunctionDescriptor postFunction, @Nonnull final String... transitionsNames) throws JiraException {
+        for (String eachTransitionName : transitionsNames) {
+            ErrorCollection errors = WORKFLOW_TRANSITION_SERVICE.addPostFunctionToWorkflow(eachTransitionName, postFunction, workflow);
+
+            if (errors.hasAnyErrors()) {
+                throw new JiraException(getJoined(errors));
+            }
+        }
+    }
+
+    /**
+     * @param workflow         Worflow to configure.
      * @param condition        Condition to add.
      * @param transitionsNames Names of the transitions to which condition should be added.
      */
@@ -41,9 +56,13 @@ public class WorkflowConfigurator {
             ErrorCollection errors = WORKFLOW_TRANSITION_SERVICE.addConditionToWorkflow(eachTransitionName, condition, workflow);
 
             if (errors.hasAnyErrors()) {
-                throw new JiraException(StringUtils.join(errors.getErrorMessages(), ' '));
+                throw new JiraException(getJoined(errors));
             }
         }
+    }
+
+    private String getJoined(@Nonnull final ErrorCollection errors) {
+        return StringUtils.join(errors.getErrorMessages(), ' ');
     }
 
     /**
@@ -54,13 +73,15 @@ public class WorkflowConfigurator {
     public void addToDraft(@Nonnull final JiraWorkflow workflow, @Nonnull final ValidatorDescriptor validator, @Nonnull final String... transitionsNames) {
         JiraWorkflow draft = getDraft(workflow);
 
-        for (String eachTransitionName : transitionsNames) {
-            for (ActionDescriptor eachAction : draft.getActionsByName(eachTransitionName)) {
-                eachAction.getValidators().add(0, validator);
+        if (draft != null) {
+            for (String eachTransitionName : transitionsNames) {
+                for (ActionDescriptor eachAction : draft.getActionsByName(eachTransitionName)) {
+                    eachAction.getValidators().add(0, validator);
+                }
             }
-        }
 
-        update(draft);
+            update(draft);
+        }
     }
 
     private JiraWorkflow getDraft(@Nonnull final JiraWorkflow workflow) {
@@ -81,21 +102,6 @@ public class WorkflowConfigurator {
 
     private JiraServiceContextImpl getJiraServiceContext() {
         return new JiraServiceContextImpl(AUTHENTICATION_CONTEXT.getUser());
-    }
-
-    /**
-     * @param workflow         Worflow to configure.
-     * @param postFunction     Post-function to add.
-     * @param transitionsNames Names of the transitions to which post-function should be added.
-     */
-    public void addToDraft(@Nonnull final JiraWorkflow workflow, @Nonnull final FunctionDescriptor postFunction, @Nonnull final String... transitionsNames) throws JiraException {
-        for (String eachTransitionName : transitionsNames) {
-            ErrorCollection errors = WORKFLOW_TRANSITION_SERVICE.addPostFunctionToWorkflow(eachTransitionName, postFunction, workflow);
-
-            if (errors.hasAnyErrors()) {
-                throw new JiraException(StringUtils.join(errors.getErrorMessages(), ' '));
-            }
-        }
     }
 
     /**
