@@ -203,4 +203,19 @@ public class EventPlanConfigWebworkActionTest {
         assertEquals(Action.ERROR, result);
     }
 
+    @Test
+    public void errorStatusShouldBeReturnedIfHttpRequestIsNull() throws Exception {
+        Mockito.when(mockHttpVariables.getHttpRequest()).thenReturn(null);
+        Project mockProject = mock(Project.class);
+        Collection<Version> mockVersions = new ArrayList<Version>(1);
+        mockVersions.add(mock(Version.class));
+        Mockito.when(mockProject.getVersions()).thenReturn(mockVersions);
+        Mockito.when(mockProjectManager.getProjectObjByKey("ABC")).thenReturn(mockProject);
+        EventPlanConfigWebworkAction fixture = new EventPlanConfigWebworkAction(mocki18n);
+
+        String result = fixture.execute();
+
+        assertEquals(Action.ERROR, result);
+    }
+
 }
