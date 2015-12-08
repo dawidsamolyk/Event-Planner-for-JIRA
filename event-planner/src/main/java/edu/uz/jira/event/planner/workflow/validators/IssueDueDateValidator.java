@@ -57,7 +57,7 @@ public class IssueDueDateValidator implements Validator {
      */
     public void validate(@Nonnull final Issue issue) throws InvalidInputException, NullArgumentException {
         if (issue == null) {
-            return;
+            throw new NullArgumentException(Issue.class.getName());
         }
         Project project = issue.getProjectObject();
         Version projectDueDateVersion = PROJECT_UTILS.getDueDateVersion(project);

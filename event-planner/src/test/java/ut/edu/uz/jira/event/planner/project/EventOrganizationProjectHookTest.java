@@ -34,6 +34,7 @@ import com.opensymphony.workflow.loader.FunctionDescriptor;
 import edu.uz.jira.event.planner.exceptions.NullArgumentException;
 import edu.uz.jira.event.planner.project.EventOrganizationProjectHook;
 import edu.uz.jira.event.planner.utils.Internationalization;
+import org.apache.commons.collections.MapUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -46,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 
@@ -164,7 +166,12 @@ public class EventOrganizationProjectHookTest {
     }
 
     @Test
-    public void dueDateForIssuesShouldBeRequiredInTheEventOrganizationProject() {
-        // TODO implement
+    public void shouldReturnRedirectWithoutArgumentsWhenErrorOccursDuringProjectConfiguration() throws NullArgumentException {
+        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService);
+        ConfigureData configureData = ConfigureData.create(mock(Project.class), mock(Scheme.class), MapUtils.EMPTY_MAP, mock(FieldConfigScheme.class), new HashMap<String, IssueType>());
+
+        ConfigureResponse response = hook.configure(configureData);
+
+        assertEquals(EventOrganizationProjectHook.REDIRECT_URL, response.getRedirect());
     }
 }

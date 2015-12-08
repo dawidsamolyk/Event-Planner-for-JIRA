@@ -1,4 +1,4 @@
-package ut.edu.uz.jira.event.planner.workflow;
+package ut.edu.uz.jira.event.planner.workflow.validators;
 
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.project.Project;
@@ -28,6 +28,16 @@ public class IssueDueDateValidatorTest {
     public void setUp() {
         mocki18n = mock(I18nResolver.class);
         Mockito.when(mocki18n.getText(Internationalization.PROJECT_VERSION_NAME)).thenReturn(TEST_PROJECT_VERSION_NAME);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenIssueIsNull() throws InvalidInputException {
+        IssueDueDateValidator fixture = new IssueDueDateValidator(mocki18n);
+        Map transientVars = new HashMap();
+        transientVars.put("issue", null);
+
+        exception.expect(InvalidInputException.class);
+        fixture.validate(transientVars, null, null);
     }
 
     @Test

@@ -23,6 +23,7 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
     public static final String DUE_DATE_FORMAT = "dd-MM-yyyy HH:mm";
     private final VersionManager VERSION_MANAGER;
     private final I18nResolver INTERNATIONALIZATION;
+    private final EventPlanConfigurationValidator validator;
 
     /**
      * Constructor.
@@ -30,8 +31,9 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
      * @param i18nResolver Injected {@code I18nResolver} implementation.
      */
     public EventPlanConfigWebworkAction(@Nonnull final I18nResolver i18nResolver) {
-        this.INTERNATIONALIZATION = i18nResolver;
+        INTERNATIONALIZATION = i18nResolver;
         VERSION_MANAGER = ComponentAccessor.getVersionManager();
+        validator = new EventPlanConfigurationValidator();
     }
 
     /**
@@ -51,13 +53,13 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
         String eventDueDate = config.getEventDueDate();
         String eventType = config.getEventType();
 
-        if (EventPlanConfigurationValidator.isInvalid(project)) {
+        if (validator.isInvalid(project)) {
             return Action.ERROR;
 
-        } else if (EventPlanConfigurationValidator.canInputProjectConfiguration(project, eventType, eventDueDate)) {
+        } else if (validator.canInputProjectConfiguration(project, eventType, eventDueDate)) {
             return Action.INPUT;
 
-        } else if (EventPlanConfigurationValidator.canConfigureProject(project, eventType, eventDueDate)) {
+        } else if (validator.canConfigureProject(project, eventType, eventDueDate)) {
             setDueDateAsProjectVersion(project, eventDueDate);
             return Action.SUCCESS;
         }

@@ -2,6 +2,8 @@ package ut.edu.uz.jira.event.planner.project.issue.fields;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.layout.field.*;
+import com.atlassian.jira.issue.issuetype.IssueType;
+import com.atlassian.jira.issue.issuetype.MockIssueType;
 import com.atlassian.jira.mock.component.MockComponentWorker;
 import com.atlassian.jira.mock.ofbiz.MockOfBizDelegator;
 import com.atlassian.jira.ofbiz.OfBizDelegator;
@@ -12,7 +14,13 @@ import edu.uz.jira.event.planner.utils.Internationalization;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
@@ -21,11 +29,19 @@ public class IssueFieldsConfigurationTest {
 
     @Before
     public void setUp() {
-        FieldLayoutManager  mockFieldLayoutManager = mock(FieldLayoutManager.class);
+        FieldLayoutManager mockFieldLayoutManager = mock(FieldLayoutManager.class);
         EditableDefaultFieldLayout mockDefaultLayout = mock(EditableDefaultFieldLayout.class);
         Mockito.when(mockFieldLayoutManager.getEditableDefaultFieldLayout()).thenReturn(mockDefaultLayout);
-        FieldLayoutScheme mockScheme = mock(FieldLayoutScheme.class);
-        Mockito.when(mockFieldLayoutManager.createFieldLayoutScheme(Mockito.anyString(),Mockito.anyString())).thenReturn(mockScheme);
+        final FieldLayoutScheme mockScheme = mock(FieldLayoutScheme.class);
+        final Collection<FieldLayoutSchemeEntity> entities = new ArrayList<FieldLayoutSchemeEntity>();
+        Mockito.when(mockScheme.getEntities()).thenReturn(entities);
+        Mockito.when(mockFieldLayoutManager.createFieldLayoutScheme(Mockito.anyString(), Mockito.anyString())).thenAnswer(new Answer<FieldLayoutScheme>() {
+            @Override
+            public FieldLayoutScheme answer(InvocationOnMock invocation) throws Throwable {
+                entities.add(mock(FieldLayoutSchemeEntity.class));
+                return mockScheme;
+            }
+        });
 
         mocki18n = mock(I18nResolver.class);
         Mockito.when(mocki18n.getText(Internationalization.PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME)).thenReturn("Event organization Field Configuration");
@@ -67,5 +83,20 @@ public class IssueFieldsConfigurationTest {
         FieldLayoutScheme result = fixture.createFieldConfigurationScheme(mockProject, mockLayout);
 
         assertNotNull(result);
+    }
+
+    @Test
+    public void shouldCreateConfiguredFieldConfigurationScheme() {
+        IssueFieldsConfigurator fixture = new IssueFieldsConfigurator(mocki18n);
+        Project mockProject = mock(Project.class);
+        Collection<IssueType> issueTypes = new ArrayList<IssueType>();
+        issueTypes.add(new MockIssueType("1", "Task"));
+        issueTypes.add(new MockIssueType("1", "Sub-Task", true));
+        Mockito.when(mockProject.getIssueTypes()).thenReturn(issueTypes);
+        EditableFieldLayout mockLayout = mock(EditableFieldLayout.class);
+
+        FieldLayoutScheme result = fixture.createFieldConfigurationScheme(mockProject, mockLayout);
+
+        assertFalse(result.getEntities().isEmpty());
     }
 }

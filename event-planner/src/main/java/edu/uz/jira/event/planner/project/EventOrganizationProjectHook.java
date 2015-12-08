@@ -104,6 +104,8 @@ public class EventOrganizationProjectHook implements AddProjectHook {
             WORKFLOW_CONFIGURATOR.addToDraft(workflow, condition, WorkflowConstants.DONE_STATUS_NAME);
 
             WORKFLOW_CONFIGURATOR.publishDraft(workflow);
+        } else {
+            throw new JiraException();
         }
     }
 }

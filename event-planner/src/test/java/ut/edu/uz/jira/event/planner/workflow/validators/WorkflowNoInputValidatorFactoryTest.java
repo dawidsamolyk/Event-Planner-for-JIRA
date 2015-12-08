@@ -1,4 +1,4 @@
-package ut.edu.uz.jira.event.planner.workflow;
+package ut.edu.uz.jira.event.planner.workflow.validators;
 
 import edu.uz.jira.event.planner.workflow.validators.WorkflowNoInputValidatorFactory;
 import org.junit.Test;

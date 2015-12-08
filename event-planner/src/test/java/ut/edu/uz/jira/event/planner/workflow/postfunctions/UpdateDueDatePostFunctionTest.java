@@ -1,4 +1,4 @@
-package ut.edu.uz.jira.event.planner.workflow;
+package ut.edu.uz.jira.event.planner.workflow.postfunctions;
 
 import com.atlassian.jira.bc.issue.IssueService;
 import com.atlassian.jira.component.ComponentAccessor;
