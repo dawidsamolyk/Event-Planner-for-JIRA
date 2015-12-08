@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
  * Configuration of the Event Plan Organization.
  */
 public class EventPlanConfiguration {
+    private final static Validator validator = new Validator();
     private final Project PROJECT;
     private final String EVENT_TYPE;
     private final String EVENT_DUE_DATE;
@@ -23,7 +24,7 @@ public class EventPlanConfiguration {
      * @throws NullArgumentException Thrown when any required argument is null.
      */
     public EventPlanConfiguration(@Nonnull final HttpServletRequest request) throws NullArgumentException {
-        Validator.check(request);
+        validator.check(request);
 
         EVENT_TYPE = request.getParameter("event-type");
         EVENT_DUE_DATE = request.getParameter("event-duedate");

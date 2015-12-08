@@ -15,7 +15,7 @@ public class Validator {
      * @param request Http request.
      * @throws NullArgumentException
      */
-    public static void check(final HttpServletRequest request) throws NullArgumentException {
+    public void check(final HttpServletRequest request) throws NullArgumentException {
         if (request == null) {
             throw new NullArgumentException(HttpServletRequest.class.getName());
         }

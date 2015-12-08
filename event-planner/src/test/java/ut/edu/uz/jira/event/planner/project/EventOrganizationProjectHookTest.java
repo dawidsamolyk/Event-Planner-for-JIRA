@@ -53,6 +53,7 @@ public class EventOrganizationProjectHookTest {
     private I18nResolver mocki18n;
     private WorkflowTransitionService mockWorkflowTransitionService;
     private WorkflowService mockWorkflowService;
+    private WorkflowManager mockWorkflowManager;
 
     @Before
     public void setUp() {
@@ -71,6 +72,12 @@ public class EventOrganizationProjectHookTest {
         Mockito.when(mocki18n.getText(Internationalization.PROJECT_FIELDS_CONFIGURATION_NAME)).thenReturn("Event organization Field Configuration");
         Mockito.when(mocki18n.getText(Internationalization.PROJECT_FIELDS_CONFIGURATION_DESCRIPTION)).thenReturn("Field Configuration for the Event organization Issues");
 
+        final JiraWorkflow mockDraft = mock(JiraWorkflow.class);
+        Collection<ActionDescriptor> actions = new ArrayList<ActionDescriptor>();
+        Mockito.when(mockDraft.getActionsByName(Mockito.anyString())).thenReturn(actions);
+        mockWorkflowManager = mock(WorkflowManager.class);
+        Mockito.when(mockWorkflowManager.getDraftWorkflow(Mockito.anyString())).thenReturn(mockDraft);
+
         mockWorkflowTransitionService = mock(WorkflowTransitionService.class);
         mockWorkflowService = Mockito.mock(WorkflowService.class);
 
@@ -80,7 +87,7 @@ public class EventOrganizationProjectHookTest {
                 .addMock(ProjectManager.class, Mockito.mock(ProjectManager.class))
                 .addMock(WorkflowService.class, mockWorkflowService)
                 .addMock(OfBizDelegator.class, new MockOfBizDelegator())
-                .addMock(WorkflowManager.class, mock(WorkflowManager.class))
+                .addMock(WorkflowManager.class, mockWorkflowManager)
                 .addMock(JiraAuthenticationContext.class, new MockAuthenticationContext(new MockApplicationUser("test")))
                 .init();
     }

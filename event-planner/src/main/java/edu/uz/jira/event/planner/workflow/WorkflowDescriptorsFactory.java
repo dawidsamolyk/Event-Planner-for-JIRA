@@ -45,7 +45,7 @@ public class WorkflowDescriptorsFactory {
 
         Map functionArguments = result.getArgs();
         functionArguments.put(CLASS_NAME_KEY, SubTaskBlockingCondition.class.getName());
-        functionArguments.put(STATUSES_KEY, UTILS.getJoined(statusesToBlock, ","));
+        functionArguments.put(STATUSES_KEY, UTILS.getJoined(statusesToBlock, ','));
 
         return result;
     }

@@ -68,7 +68,7 @@ public class WorkflowConfigurator {
     }
 
     private String getJoined(@Nonnull final ErrorCollection errors) {
-        return TEXT_UTILS.getJoined(errors.getErrorMessages(), " ");
+        return TEXT_UTILS.getJoined(errors.getErrorMessages(), ' ');
     }
 
     /**
@@ -76,7 +76,7 @@ public class WorkflowConfigurator {
      * @param validator        Validator to add.
      * @param transitionsNames Names of the transitions to which validator should be added.
      */
-    public void addToDraft(@Nonnull final JiraWorkflow workflow, @Nonnull final ValidatorDescriptor validator, @Nonnull final String... transitionsNames) {
+    public void addToDraft(@Nonnull final JiraWorkflow workflow, @Nonnull final ValidatorDescriptor validator, @Nonnull final String... transitionsNames) throws JiraException {
         JiraWorkflow draft = getDraft(workflow);
 
         if (draft != null) {
@@ -85,8 +85,10 @@ public class WorkflowConfigurator {
                     eachAction.getValidators().add(0, validator);
                 }
             }
-
             update(draft);
+        } else {
+            String message = ComponentAccessor.getJiraAuthenticationContext().getI18nHelper().getText("admin.workflowtransitions.service.error.null.workflow");
+            throw new JiraException(message);
         }
     }
 

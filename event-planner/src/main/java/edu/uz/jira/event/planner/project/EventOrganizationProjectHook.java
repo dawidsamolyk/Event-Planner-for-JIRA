@@ -26,7 +26,8 @@ import java.util.List;
  * Validates and configures all created Event Organization Plan Projects.
  */
 public class EventOrganizationProjectHook implements AddProjectHook {
-    private static final String REDIRECT_URL = "/secure/EventOrganizationPlanConfiguration.jspa?project-key=";
+    public static final String REDIRECT_URL = "/secure/EventOrganizationPlanConfiguration.jspa";
+    public static final String REDIRECT_URL_ARGUMENTS = "?project-key=%s";
     private final IssueFieldsConfigurator ISSUE_FIELDS_CONFIGURATOR;
     private final WorkflowConfigurator WORKFLOW_CONFIGURATOR;
     private final WorkflowDescriptorsFactory WORKFLOW_DESCRIPTORS_FACTORY;
@@ -71,10 +72,10 @@ public class EventOrganizationProjectHook implements AddProjectHook {
             configureFieldLayout(project);
             configureWorkflow(workflow);
         } catch (JiraException e) {
-            return ConfigureResponse.create();
+            return ConfigureResponse.create().setRedirect(REDIRECT_URL);
         }
 
-        return ConfigureResponse.create().setRedirect(REDIRECT_URL + project.getKey());
+        return ConfigureResponse.create().setRedirect(REDIRECT_URL + String.format(REDIRECT_URL_ARGUMENTS, project.getKey()));
     }
 
     private void configureProjectCategory(@Nonnull final Project project) {
