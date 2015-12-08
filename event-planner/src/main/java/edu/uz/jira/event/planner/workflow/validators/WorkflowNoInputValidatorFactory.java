@@ -10,8 +10,6 @@ import java.util.Map;
  * Fabryka parametrów wejściowych validatora workflow, który nie przyjmuje żadnych argumentów.
  */
 public class WorkflowNoInputValidatorFactory extends AbstractWorkflowPluginFactory implements com.atlassian.jira.plugin.workflow.WorkflowPluginValidatorFactory {
-    public WorkflowNoInputValidatorFactory() {
-    }
 
     protected void getVelocityParamsForInput(Map velocityParams) {
     }
@@ -22,6 +20,9 @@ public class WorkflowNoInputValidatorFactory extends AbstractWorkflowPluginFacto
     protected void getVelocityParamsForView(Map velocityParams, AbstractDescriptor descriptor) {
     }
 
+    /**
+     * @see {@link com.atlassian.jira.plugin.workflow.WorkflowPluginValidatorFactory#getDescriptorParams(Map)}
+     */
     public Map getDescriptorParams(Map conditionParams) {
         return Collections.EMPTY_MAP;
     }

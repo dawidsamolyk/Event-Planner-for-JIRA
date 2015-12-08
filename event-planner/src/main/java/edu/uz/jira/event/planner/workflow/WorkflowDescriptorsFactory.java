@@ -5,9 +5,9 @@ import com.opensymphony.workflow.loader.ConditionDescriptor;
 import com.opensymphony.workflow.loader.DescriptorFactory;
 import com.opensymphony.workflow.loader.FunctionDescriptor;
 import com.opensymphony.workflow.loader.ValidatorDescriptor;
+import edu.uz.jira.event.planner.utils.TextUtils;
 import edu.uz.jira.event.planner.workflow.postfunctions.UpdateDueDatePostFunction;
 import edu.uz.jira.event.planner.workflow.validators.IssueDueDateValidator;
-import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -20,6 +20,7 @@ public class WorkflowDescriptorsFactory {
     public static final String CLASS_NAME_KEY = "class.name";
     public static final String STATUSES_KEY = "statuses";
     public static final String TYPE_NAME = "class";
+    public final TextUtils UTILS = new TextUtils();
 
     /**
      * @return Update Due Date Workflow Post Function.
@@ -44,7 +45,7 @@ public class WorkflowDescriptorsFactory {
 
         Map functionArguments = result.getArgs();
         functionArguments.put(CLASS_NAME_KEY, SubTaskBlockingCondition.class.getName());
-        functionArguments.put(STATUSES_KEY, StringUtils.join(statusesToBlock, ','));
+        functionArguments.put(STATUSES_KEY, UTILS.getJoined(statusesToBlock, ","));
 
         return result;
     }

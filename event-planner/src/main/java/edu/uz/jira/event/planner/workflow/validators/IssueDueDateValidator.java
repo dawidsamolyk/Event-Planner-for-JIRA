@@ -7,56 +7,70 @@ import com.atlassian.sal.api.message.I18nResolver;
 import com.opensymphony.module.propertyset.PropertySet;
 import com.opensymphony.workflow.InvalidInputException;
 import com.opensymphony.workflow.Validator;
-import edu.uz.jira.event.planner.utils.InternationalizationKeys;
+import edu.uz.jira.event.planner.exceptions.NullArgumentException;
+import edu.uz.jira.event.planner.project.ProjectUtils;
 
 import javax.annotation.Nonnull;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * Validator for JIRA Workflow. Validates Issue Due Date.
+ */
 public class IssueDueDateValidator implements Validator {
-    private final I18nResolver i18nResolver;
+    private final ProjectUtils PROJECT_UTILS;
 
+    /**
+     * Constructor.
+     *
+     * @param i18nResolver Injected {@code I18nResolver} implementation.
+     */
     public IssueDueDateValidator(@Nonnull final I18nResolver i18nResolver) {
-        this.i18nResolver = i18nResolver;
+        PROJECT_UTILS = new ProjectUtils(i18nResolver);
     }
 
-    private Version getDueDateVersion(@Nonnull final Project project) {
-        Version result = null;
-        String dueDateVersionName = getInternationalized(InternationalizationKeys.PROJECT_VERSION_NAME);
-
-        for (Version each : project.getVersions()) {
-            if (each.getName().equals(dueDateVersionName)) {
-                result = each;
-            }
-        }
-
-        return result;
-    }
-
-    private String getInternationalized(String key) {
-        return i18nResolver.getText(key);
-    }
-
+    /**
+     * Validates Issue Due Date.
+     *
+     * @param transientVars
+     * @param args
+     * @param ps
+     * @throws InvalidInputException Thrown when issue's due date is empty or issue's project hasn't Due Date Version or project Due Date Version hasn't release date or issue Due Date is after project Due Date.
+     */
     @Override
-    public void validate(Map transientVars, Map args, PropertySet ps) throws InvalidInputException {
+    public void validate(final Map transientVars, final Map args, final PropertySet ps) throws InvalidInputException {
         Issue issue = (Issue) transientVars.get("issue");
+
+        try {
+            validate(issue);
+        } catch (NullArgumentException e) {
+            throw new InvalidInputException(e.getMessage());
+        }
+    }
+
+    /**
+     * Validates Issue Due Date.
+     *
+     * @param issue Issue to validate.
+     * @throws InvalidInputException Thrown when issue's due date is empty or issue's project hasn't Due Date Version or project Due Date Version hasn't release date or issue Due Date is after project Due Date.
+     */
+    public void validate(@Nonnull final Issue issue) throws InvalidInputException, NullArgumentException {
+        if (issue == null) {
+            return;
+        }
         Project project = issue.getProjectObject();
+        Version projectDueDateVersion = PROJECT_UTILS.getDueDateVersion(project);
+        Date projectReleaseDate = projectDueDateVersion.getReleaseDate();
 
-        Version projectDueDateVersion = getDueDateVersion(project);
-        Timestamp issueDueDate = issue.getDueDate();
+        validate(issue.getDueDate(), projectReleaseDate);
+    }
 
-        if (issue.getDueDate() == null) {
+    public void validate(final Timestamp issueDueDate, final Date projectReleaseDate) throws InvalidInputException {
+        if (issueDueDate == null) {
             throw new InvalidInputException("Issue Due Date cannot be empty!");
         }
-        if (projectDueDateVersion == null) {
-            throw new InvalidInputException("Project hasn't Due Date Version!");
-        }
-        Date projectReleaseDate = projectDueDateVersion.getReleaseDate();
-        if (projectReleaseDate == null) {
-            throw new InvalidInputException("Project Due Date Version hasn't release date!");
-        }
-        if (issueDueDate.after(projectReleaseDate)) {
+        if (projectReleaseDate != null && issueDueDate != null && issueDueDate.after(projectReleaseDate)) {
             throw new InvalidInputException("Issue Due Date cannot be after Project Due Date!");
         }
     }

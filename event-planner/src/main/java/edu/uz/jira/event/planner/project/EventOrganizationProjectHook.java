@@ -31,10 +31,13 @@ public class EventOrganizationProjectHook implements AddProjectHook {
     private final WorkflowConfigurator WORKFLOW_CONFIGURATOR;
     private final WorkflowDescriptorsFactory WORKFLOW_DESCRIPTORS_FACTORY;
     private final ProjectCategoryConfigurator PROJECT_CATEGORY_CONFIGURATOR;
-    private final WorkflowUtils utils;
+    private final WorkflowUtils UTILS;
 
     /**
-     * @param i18nResolver Internationalization helper.
+     * Constructor.
+     *
+     * @param i18nResolver              Injected {@code I18nResolver} implementation.
+     * @param workflowTransitionService Injected {@code WorkflowTransitionService} implementation.
      * @throws NullArgumentException Thrown when any input argument is null.
      */
     public EventOrganizationProjectHook(@Nonnull final I18nResolver i18nResolver, @Nonnull final WorkflowTransitionService workflowTransitionService) throws NullArgumentException {
@@ -42,7 +45,7 @@ public class EventOrganizationProjectHook implements AddProjectHook {
         WORKFLOW_DESCRIPTORS_FACTORY = new WorkflowDescriptorsFactory();
         ISSUE_FIELDS_CONFIGURATOR = new IssueFieldsConfigurator(i18nResolver);
         PROJECT_CATEGORY_CONFIGURATOR = new ProjectCategoryConfigurator(i18nResolver);
-        utils = new WorkflowUtils();
+        UTILS = new WorkflowUtils();
     }
 
     /**
@@ -95,7 +98,7 @@ public class EventOrganizationProjectHook implements AddProjectHook {
             FunctionDescriptor postFunction = WORKFLOW_DESCRIPTORS_FACTORY.createUpdateDueDatePostFunctionDescriptor();
             WORKFLOW_CONFIGURATOR.addToDraft(workflow, postFunction, WorkflowConstants.POST_FUNCTION_TRANSITION_NAME);
 
-            List<String> statusesWhichBlocks = utils.getStatusesFromCategory(workflow, WorkflowConstants.COMPLETE_STATUS_CATEGORY_NAME);
+            List<String> statusesWhichBlocks = UTILS.getStatusesFromCategory(workflow, WorkflowConstants.COMPLETE_STATUS_CATEGORY_NAME);
             ConditionDescriptor condition = WORKFLOW_DESCRIPTORS_FACTORY.createSubTaskBlockingConditionDescriptor(statusesWhichBlocks);
             WORKFLOW_CONFIGURATOR.addToDraft(workflow, condition, WorkflowConstants.DONE_STATUS_NAME);
 

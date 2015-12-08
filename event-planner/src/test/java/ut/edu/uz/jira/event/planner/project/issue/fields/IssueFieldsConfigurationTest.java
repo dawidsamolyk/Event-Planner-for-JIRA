@@ -1,17 +1,14 @@
 package ut.edu.uz.jira.event.planner.project.issue.fields;
 
 import com.atlassian.jira.component.ComponentAccessor;
-import com.atlassian.jira.issue.fields.layout.field.EditableFieldLayout;
-import com.atlassian.jira.issue.fields.layout.field.FieldLayout;
-import com.atlassian.jira.issue.fields.layout.field.FieldLayoutManager;
-import com.atlassian.jira.issue.fields.layout.field.FieldLayoutScheme;
+import com.atlassian.jira.issue.fields.layout.field.*;
 import com.atlassian.jira.mock.component.MockComponentWorker;
 import com.atlassian.jira.mock.ofbiz.MockOfBizDelegator;
 import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.jira.project.Project;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.project.issue.fields.IssueFieldsConfigurator;
-import edu.uz.jira.event.planner.utils.InternationalizationKeys;
+import edu.uz.jira.event.planner.utils.Internationalization;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -21,22 +18,24 @@ import static org.mockito.Mockito.mock;
 
 public class IssueFieldsConfigurationTest {
     private I18nResolver mocki18n;
-    private FieldLayoutManager mockFieldLayoutManager;
 
     @Before
     public void setUp() {
-        mockFieldLayoutManager = mock(FieldLayoutManager.class);
+        FieldLayoutManager  mockFieldLayoutManager = mock(FieldLayoutManager.class);
+        EditableDefaultFieldLayout mockDefaultLayout = mock(EditableDefaultFieldLayout.class);
+        Mockito.when(mockFieldLayoutManager.getEditableDefaultFieldLayout()).thenReturn(mockDefaultLayout);
+        FieldLayoutScheme mockScheme = mock(FieldLayoutScheme.class);
+        Mockito.when(mockFieldLayoutManager.createFieldLayoutScheme(Mockito.anyString(),Mockito.anyString())).thenReturn(mockScheme);
 
         mocki18n = mock(I18nResolver.class);
-        Mockito.when(mocki18n.getText(InternationalizationKeys.PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME)).thenReturn("Event organization Field Configuration");
-        Mockito.when(mocki18n.getText(InternationalizationKeys.PROJECT_FIELDS_CONFIGURATION_SCHEME_DESCRIPTION)).thenReturn("Field Configuration for the Event organization Issues");
+        Mockito.when(mocki18n.getText(Internationalization.PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME)).thenReturn("Event organization Field Configuration");
+        Mockito.when(mocki18n.getText(Internationalization.PROJECT_FIELDS_CONFIGURATION_SCHEME_DESCRIPTION)).thenReturn("Field Configuration for the Event organization Issues");
 
         new MockComponentWorker()
                 .addMock(ComponentAccessor.class, mock(ComponentAccessor.class))
                 .addMock(FieldLayoutManager.class, mockFieldLayoutManager)
                 .addMock(OfBizDelegator.class, new MockOfBizDelegator())
                 .init();
-
     }
 
     @Test

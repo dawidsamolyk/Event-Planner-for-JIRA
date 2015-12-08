@@ -1,18 +1,18 @@
 package edu.uz.jira.event.planner.workflow;
 
 import com.atlassian.jira.JiraException;
-import com.atlassian.jira.bc.JiraServiceContextImpl;
-import com.atlassian.jira.bc.workflow.WorkflowService;
 import com.atlassian.jira.bc.workflow.WorkflowTransitionService;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.security.JiraAuthenticationContext;
+import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.util.ErrorCollection;
 import com.atlassian.jira.workflow.JiraWorkflow;
+import com.atlassian.jira.workflow.WorkflowManager;
 import com.opensymphony.workflow.loader.ActionDescriptor;
 import com.opensymphony.workflow.loader.ConditionDescriptor;
 import com.opensymphony.workflow.loader.FunctionDescriptor;
 import com.opensymphony.workflow.loader.ValidatorDescriptor;
-import org.apache.commons.lang.StringUtils;
+import edu.uz.jira.event.planner.utils.TextUtils;
 
 import javax.annotation.Nonnull;
 
@@ -20,15 +20,21 @@ import javax.annotation.Nonnull;
  * Configures workflow.
  */
 public class WorkflowConfigurator {
-    private static final WorkflowService WORKFLOW_SERVICE = ComponentAccessor.getComponentOfType(WorkflowService.class);
-    private static final JiraAuthenticationContext AUTHENTICATION_CONTEXT = ComponentAccessor.getJiraAuthenticationContext();
+    private final JiraAuthenticationContext AUTHENTICATION_CONTEXT;
     private final WorkflowTransitionService WORKFLOW_TRANSITION_SERVICE;
+    private final WorkflowManager WORKFLOW_MANAGER;
+    private final TextUtils TEXT_UTILS;
 
     /**
-     * @param workflowTransitionService Service which manages JIRA workflows.
+     * Constructor.
+     *
+     * @param workflowTransitionService Injected {@code WorkflowTransitionService} implementation.
      */
     public WorkflowConfigurator(@Nonnull final WorkflowTransitionService workflowTransitionService) {
+        this.AUTHENTICATION_CONTEXT = ComponentAccessor.getJiraAuthenticationContext();
         this.WORKFLOW_TRANSITION_SERVICE = workflowTransitionService;
+        this.WORKFLOW_MANAGER = ComponentAccessor.getWorkflowManager();
+        this.TEXT_UTILS = new TextUtils();
     }
 
     /**
@@ -62,7 +68,7 @@ public class WorkflowConfigurator {
     }
 
     private String getJoined(@Nonnull final ErrorCollection errors) {
-        return StringUtils.join(errors.getErrorMessages(), ' ');
+        return TEXT_UTILS.getJoined(errors.getErrorMessages(), " ");
     }
 
     /**
@@ -85,29 +91,25 @@ public class WorkflowConfigurator {
     }
 
     private JiraWorkflow getDraft(@Nonnull final JiraWorkflow workflow) {
-        JiraServiceContextImpl jiraServiceContext = getJiraServiceContext();
+        ApplicationUser user = AUTHENTICATION_CONTEXT.getUser();
         String workflowName = workflow.getName();
 
-        JiraWorkflow draft = WORKFLOW_SERVICE.getDraftWorkflow(jiraServiceContext, workflowName);
+        JiraWorkflow draft = WORKFLOW_MANAGER.getDraftWorkflow(workflowName);
 
         if (draft == null) {
-            draft = WORKFLOW_SERVICE.createDraftWorkflow(jiraServiceContext, workflowName);
+            draft = WORKFLOW_MANAGER.createDraftWorkflow(user, workflowName);
         }
         return draft;
     }
 
     private void update(@Nonnull final JiraWorkflow workflow) {
-        WORKFLOW_SERVICE.updateWorkflow(getJiraServiceContext(), workflow);
-    }
-
-    private JiraServiceContextImpl getJiraServiceContext() {
-        return new JiraServiceContextImpl(AUTHENTICATION_CONTEXT.getUser());
+        WORKFLOW_MANAGER.updateWorkflow(AUTHENTICATION_CONTEXT.getUser(), workflow);
     }
 
     /**
      * @param workflow Workflow to publish.
      */
     public void publishDraft(@Nonnull final JiraWorkflow workflow) {
-        ComponentAccessor.getWorkflowManager().overwriteActiveWorkflow(workflow.getUpdateAuthor(), workflow.getName());
+        WORKFLOW_MANAGER.overwriteActiveWorkflow(workflow.getUpdateAuthor(), workflow.getName());
     }
 }

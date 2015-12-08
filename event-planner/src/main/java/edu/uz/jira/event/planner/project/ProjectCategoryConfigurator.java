@@ -5,7 +5,7 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectCategory;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.sal.api.message.I18nResolver;
-import edu.uz.jira.event.planner.utils.InternationalizationKeys;
+import edu.uz.jira.event.planner.utils.Internationalization;
 
 import javax.annotation.Nonnull;
 
@@ -17,7 +17,9 @@ public class ProjectCategoryConfigurator {
     private final I18nResolver INTERNATIONALIZATION;
 
     /**
-     * @param i18nResolver Internationalization resolver.
+     * Constructor.
+     *
+     * @param i18nResolver Injected {@code I18nResolver} implementation.
      */
     public ProjectCategoryConfigurator(@Nonnull final I18nResolver i18nResolver) {
         this.PROJECT_MANAGER = ComponentAccessor.getProjectManager();
@@ -28,8 +30,8 @@ public class ProjectCategoryConfigurator {
      * @return Project Category.
      */
     public ProjectCategory createProjectCategory() {
-        String name = getInternalized(InternationalizationKeys.PROJECT_CATEGORY_NAME);
-        String description = getInternalized(InternationalizationKeys.PROJECT_CATEGORY_DESCRIPTION);
+        String name = getInternalized(Internationalization.PROJECT_CATEGORY_NAME);
+        String description = getInternalized(Internationalization.PROJECT_CATEGORY_DESCRIPTION);
 
         ProjectCategory result = PROJECT_MANAGER.getProjectCategoryObjectByName(name);
 

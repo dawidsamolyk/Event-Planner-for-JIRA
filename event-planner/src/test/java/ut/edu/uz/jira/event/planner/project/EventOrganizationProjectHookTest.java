@@ -33,7 +33,7 @@ import com.opensymphony.workflow.loader.ConditionDescriptor;
 import com.opensymphony.workflow.loader.FunctionDescriptor;
 import edu.uz.jira.event.planner.exceptions.NullArgumentException;
 import edu.uz.jira.event.planner.project.EventOrganizationProjectHook;
-import edu.uz.jira.event.planner.utils.InternationalizationKeys;
+import edu.uz.jira.event.planner.utils.Internationalization;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -68,8 +68,8 @@ public class EventOrganizationProjectHookTest {
         });
 
         mocki18n = mock(I18nResolver.class);
-        Mockito.when(mocki18n.getText(InternationalizationKeys.PROJECT_FIELDS_CONFIGURATION_NAME)).thenReturn("Event organization Field Configuration");
-        Mockito.when(mocki18n.getText(InternationalizationKeys.PROJECT_FIELDS_CONFIGURATION_DESCRIPTION)).thenReturn("Field Configuration for the Event organization Issues");
+        Mockito.when(mocki18n.getText(Internationalization.PROJECT_FIELDS_CONFIGURATION_NAME)).thenReturn("Event organization Field Configuration");
+        Mockito.when(mocki18n.getText(Internationalization.PROJECT_FIELDS_CONFIGURATION_DESCRIPTION)).thenReturn("Field Configuration for the Event organization Issues");
 
         mockWorkflowTransitionService = mock(WorkflowTransitionService.class);
         mockWorkflowService = Mockito.mock(WorkflowService.class);

@@ -3,12 +3,11 @@ package edu.uz.jira.event.planner.project.configuration;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.exception.CreateException;
 import com.atlassian.jira.project.Project;
-import com.atlassian.jira.project.version.Version;
 import com.atlassian.jira.project.version.VersionManager;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.exceptions.NullArgumentException;
-import edu.uz.jira.event.planner.utils.InternationalizationKeys;
+import edu.uz.jira.event.planner.utils.Internationalization;
 import webwork.action.Action;
 
 import javax.annotation.Nonnull;
@@ -22,14 +21,17 @@ import java.util.Date;
  */
 public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
     public static final String DUE_DATE_FORMAT = "dd-MM-yyyy HH:mm";
-    private static final VersionManager VERSION_MANAGER = ComponentAccessor.getVersionManager();
-    private final I18nResolver i18nResolver;
+    private final VersionManager VERSION_MANAGER;
+    private final I18nResolver INTERNATIONALIZATION;
 
     /**
-     * @param i18nResolver Internationalization resolver.
+     * Constructor.
+     *
+     * @param i18nResolver Injected {@code I18nResolver} implementation.
      */
     public EventPlanConfigWebworkAction(@Nonnull final I18nResolver i18nResolver) {
-        this.i18nResolver = i18nResolver;
+        this.INTERNATIONALIZATION = i18nResolver;
+        VERSION_MANAGER = ComponentAccessor.getVersionManager();
     }
 
     /**
@@ -69,17 +71,17 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
      * @throws CreateException Thrown when cannot create Project Version.
      */
     private void setDueDateAsProjectVersion(@Nonnull final Project project, @Nonnull final String eventDueDate) throws ParseException, CreateException {
-        String name = getInternationalized(InternationalizationKeys.PROJECT_VERSION_NAME);
-        String description = getInternationalized(InternationalizationKeys.PROJECT_VERSION_DESCRIPTION);
+        String name = getInternationalized(Internationalization.PROJECT_VERSION_NAME);
+        String description = getInternationalized(Internationalization.PROJECT_VERSION_DESCRIPTION);
         Date startDate = new Date();
         DateFormat format = new SimpleDateFormat(DUE_DATE_FORMAT);
         Date releaseDate = format.parse(eventDueDate);
         Long projectId = project.getId();
 
-        Version version = VERSION_MANAGER.createVersion(name, startDate, releaseDate, description, projectId, null);
+        VERSION_MANAGER.createVersion(name, startDate, releaseDate, description, projectId, null);
     }
 
     private String getInternationalized(String key) {
-        return i18nResolver.getText(key);
+        return INTERNATIONALIZATION.getText(key);
     }
 }

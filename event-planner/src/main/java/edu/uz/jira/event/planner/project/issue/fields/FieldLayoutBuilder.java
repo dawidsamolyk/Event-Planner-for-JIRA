@@ -3,8 +3,9 @@ package edu.uz.jira.event.planner.project.issue.fields;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.fields.OrderableField;
 import com.atlassian.jira.issue.fields.layout.field.*;
+import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.sal.api.message.I18nResolver;
-import edu.uz.jira.event.planner.utils.InternationalizationKeys;
+import edu.uz.jira.event.planner.utils.Internationalization;
 import org.apache.commons.collections.MapUtils;
 import org.ofbiz.core.entity.GenericValue;
 
@@ -17,13 +18,17 @@ import java.util.List;
  * Builder of the Issue Field Layout.
  */
 public class FieldLayoutBuilder {
-    private final I18nResolver i18n;
+    private final I18nResolver INTERNATIONALIZATION;
+    private final OfBizDelegator OF_BIZ_DELEGATOR;
 
     /**
-     * @param i18n Internationalization resolver.
+     * Constructor.
+     *
+     * @param i18n Injected {@code I18nResolver} implementation.
      */
     public FieldLayoutBuilder(@Nonnull final I18nResolver i18n) {
-        this.i18n = i18n;
+        this.INTERNATIONALIZATION = i18n;
+        this.OF_BIZ_DELEGATOR = ComponentAccessor.getOfBizDelegator();
     }
 
     /**
@@ -32,11 +37,9 @@ public class FieldLayoutBuilder {
      * @return Modified Field Layout with required fields (if typed).
      */
     public EditableFieldLayout copyWithMakeRequired(@Nonnull final FieldLayout toCopy, @Nonnull final String... requiredFieldsIds) {
-        String name = getInternationalized(InternationalizationKeys.PROJECT_FIELDS_CONFIGURATION_NAME);
-        String description = getInternationalized(InternationalizationKeys.PROJECT_FIELDS_CONFIGURATION_DESCRIPTION);
-        GenericValue genericValue = ComponentAccessor.getOfBizDelegator().createValue("FieldLayout", MapUtils.EMPTY_MAP);
-        genericValue.setString("name", name);
-        genericValue.setString("description", description);
+        String name = getInternationalized(Internationalization.PROJECT_FIELDS_CONFIGURATION_NAME);
+        String description = getInternationalized(Internationalization.PROJECT_FIELDS_CONFIGURATION_DESCRIPTION);
+        GenericValue genericValue = getGenericValue(name, description);
 
         List<FieldLayoutItem> toCopyItems = toCopy.getFieldLayoutItems();
         List<FieldLayoutItem> resultFieldLayoutItems = new ArrayList<FieldLayoutItem>(toCopyItems.size());
@@ -54,8 +57,15 @@ public class FieldLayoutBuilder {
         return result;
     }
 
+    private GenericValue getGenericValue(String name, String description) {
+        GenericValue genericValue = OF_BIZ_DELEGATOR.createValue("FieldLayout", MapUtils.EMPTY_MAP);
+        genericValue.setString("name", name);
+        genericValue.setString("description", description);
+        return genericValue;
+    }
+
     private String getInternationalized(@Nonnull final String key) {
-        return i18n.getText(key);
+        return INTERNATIONALIZATION.getText(key);
     }
 
     /**

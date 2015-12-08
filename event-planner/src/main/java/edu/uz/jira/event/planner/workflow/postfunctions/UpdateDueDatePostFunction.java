@@ -14,6 +14,7 @@ import java.util.Map;
  * Post function executed after specified workflow transition. It updates Issue Due Date field to current day (when task was called).
  */
 public class UpdateDueDatePostFunction extends AbstractJiraFunctionProvider {
+
     /**
      * @param transientVars Variables for restoration of the Issue structure.
      * @param args          Arguments
@@ -24,8 +25,9 @@ public class UpdateDueDatePostFunction extends AbstractJiraFunctionProvider {
         MutableIssue issue = getIssue(transientVars);
 
         Timestamp currentTime = new Timestamp(new Date().getTime());
+        Timestamp issueDueDate = issue.getDueDate();
 
-        if (currentTime.before(issue.getDueDate())) {
+        if (currentTime.before(issueDueDate)) {
             issue.setDueDate(currentTime);
         }
     }

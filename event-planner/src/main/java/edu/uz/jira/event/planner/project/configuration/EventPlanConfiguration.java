@@ -17,8 +17,10 @@ public class EventPlanConfiguration {
     private final String EVENT_DUE_DATE;
 
     /**
+     * Constructor.
+     *
      * @param request Http request.
-     * @throws NullArgumentException
+     * @throws NullArgumentException Thrown when any required argument is null.
      */
     public EventPlanConfiguration(@Nonnull final HttpServletRequest request) throws NullArgumentException {
         Validator.check(request);

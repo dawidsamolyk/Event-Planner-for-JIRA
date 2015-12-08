@@ -5,7 +5,7 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.version.Version;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.opensymphony.workflow.InvalidInputException;
-import edu.uz.jira.event.planner.utils.InternationalizationKeys;
+import edu.uz.jira.event.planner.utils.Internationalization;
 import edu.uz.jira.event.planner.workflow.validators.IssueDueDateValidator;
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,7 +27,7 @@ public class IssueDueDateValidatorTest {
     @Before
     public void setUp() {
         mocki18n = mock(I18nResolver.class);
-        Mockito.when(mocki18n.getText(InternationalizationKeys.PROJECT_VERSION_NAME)).thenReturn(TEST_PROJECT_VERSION_NAME);
+        Mockito.when(mocki18n.getText(Internationalization.PROJECT_VERSION_NAME)).thenReturn(TEST_PROJECT_VERSION_NAME);
     }
 
     @Test
@@ -48,33 +48,6 @@ public class IssueDueDateValidatorTest {
         Long time = new Date().getTime();
         Project mockProject = getMockProjectWithVersionDueDate(time);
         Issue mockIssue = getMockIssueWithDueDate(mockProject, null);
-        IssueDueDateValidator fixture = new IssueDueDateValidator(mocki18n);
-        Map transientVars = new HashMap();
-        transientVars.put("issue", mockIssue);
-
-        exception.expect(InvalidInputException.class);
-        fixture.validate(transientVars, null, null);
-    }
-
-    @Test
-    public void shouldThrowExceptionWhenProjectDueDateReleaseDateIsEmpty() throws InvalidInputException {
-        Long time = new Date().getTime();
-        Project mockProject = getMockProjectWithVersionDueDate(null);
-        Issue mockIssue = getMockIssueWithDueDate(mockProject, time);
-        IssueDueDateValidator fixture = new IssueDueDateValidator(mocki18n);
-        Map transientVars = new HashMap();
-        transientVars.put("issue", mockIssue);
-
-        exception.expect(InvalidInputException.class);
-        fixture.validate(transientVars, null, null);
-    }
-
-    @Test
-    public void shouldThrowExceptionWhenCannotFindProjectDueDate() throws InvalidInputException {
-        Long time = new Date().getTime();
-        Project mockProject = mock(Project.class);
-        Mockito.when(mockProject.getVersions()).thenReturn(new ArrayList<Version>());
-        Issue mockIssue = getMockIssueWithDueDate(mockProject, time);
         IssueDueDateValidator fixture = new IssueDueDateValidator(mocki18n);
         Map transientVars = new HashMap();
         transientVars.put("issue", mockIssue);
