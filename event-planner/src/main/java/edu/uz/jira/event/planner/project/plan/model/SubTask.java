@@ -1,7 +1,6 @@
 package edu.uz.jira.event.planner.project.plan.model;
 
 import net.java.ao.Entity;
-import net.java.ao.schema.NotNull;
 import net.java.ao.schema.Table;
 
 /**
@@ -20,7 +19,6 @@ import net.java.ao.schema.Table;
  */
 @Table("EventTask")
 public interface SubTask extends Entity {
-    @NotNull
     String getName();
 
     void setName(String name);
@@ -29,12 +27,10 @@ public interface SubTask extends Entity {
 
     void setDescription(String description);
 
-    @NotNull
     long getEstimatedTimeToComplete();
 
     void setEstimatedTimeToComplete(long time);
 
-    @NotNull
     Task getParentTask();
 
     void setParentTask(Task task);

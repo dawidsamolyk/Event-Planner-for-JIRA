@@ -2,7 +2,6 @@ package edu.uz.jira.event.planner.project.plan.model;
 
 import net.java.ao.Entity;
 import net.java.ao.OneToMany;
-import net.java.ao.schema.NotNull;
 import net.java.ao.schema.Table;
 
 /**
@@ -21,7 +20,6 @@ import net.java.ao.schema.Table;
  */
 @Table("EventPlan")
 public interface Domain extends Entity {
-    @NotNull
     String getName();
 
     void setName(String name);
@@ -30,7 +28,6 @@ public interface Domain extends Entity {
 
     void setDescription(String description);
 
-    @NotNull
     @OneToMany
     Plan[] getEventOrganizationPlans();
 }

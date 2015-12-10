@@ -3,7 +3,6 @@ package edu.uz.jira.event.planner.project.plan.model;
 import net.java.ao.Entity;
 import net.java.ao.ManyToMany;
 import net.java.ao.OneToMany;
-import net.java.ao.schema.NotNull;
 import net.java.ao.schema.Table;
 
 /**
@@ -22,7 +21,6 @@ import net.java.ao.schema.Table;
  */
 @Table("EventTask")
 public interface Task extends Entity {
-    @NotNull
     String getName();
 
     void setName(String name);
@@ -31,7 +29,6 @@ public interface Task extends Entity {
 
     void setDescription(String description);
 
-    @NotNull
     long getEstimatedTimeToComplete();
 
     void setEstimatedTimeToComplete(long time);
@@ -40,7 +37,6 @@ public interface Task extends Entity {
 
     void setComponent(Component component);
 
-    @NotNull
     @ManyToMany(value = PlanToTaskRelation.class)
     Plan[] getRelatedEventPlans();
 

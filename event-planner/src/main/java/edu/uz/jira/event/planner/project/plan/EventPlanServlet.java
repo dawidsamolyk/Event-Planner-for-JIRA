@@ -43,8 +43,8 @@ public final class EventPlanServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         final String name = req.getParameter("name");
-        eventPlanService.add(name);
+        eventPlanService.addPlanNamed(name);
 
-        res.sendRedirect(req.getContextPath() + "/plugins/servlet/testServlet");
+        res.sendRedirect(req.getContextPath() + "/plugins/servlet/eventPlans/configuration");
     }
 }

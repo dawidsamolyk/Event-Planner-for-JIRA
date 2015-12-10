@@ -14,5 +14,5 @@ public interface PlanToTaskRelation extends Entity {
 
     Task getEventTask();
 
-    void setEventTask(Task tadk);
+    void setEventTask(Task task);
 }

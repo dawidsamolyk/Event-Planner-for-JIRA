@@ -2,15 +2,13 @@ package edu.uz.jira.event.planner.project.plan;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.tx.Transactional;
+import edu.uz.jira.event.planner.project.plan.model.Domain;
 import edu.uz.jira.event.planner.project.plan.model.Plan;
 import edu.uz.jira.event.planner.project.plan.model.PlanToTaskRelation;
 import edu.uz.jira.event.planner.project.plan.model.Task;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -49,7 +47,7 @@ public class EventOrganizationPlanService {
      * @param name Name of the new Event Organization Plan.
      * @return Newly created and added to database Event Organization Plan.
      */
-    public Plan add(@Nonnull final String name) {
+    public Plan addPlanNamed(@Nonnull final String name) {
         Plan result = activeObjectsService.create(Plan.class);
         result.setName(name);
         result.save();
@@ -73,16 +71,16 @@ public class EventOrganizationPlanService {
     public Map<String, List<String>> getEventPlans() {
         Map<String, List<String>> result = new HashMap<String, List<String>>();
 
-        List<String> list = new ArrayList<String>();
-        list.add("Sub-item1");
-        list.add("Sub-item2");
-        list.add("Sub-item3");
-        result.put("Test", list);
-        List<String> list2 = new ArrayList<String>();
-        list.add("Sub-item8");
-        list.add("Sub-item9");
-        list.add("Sub-item10");
-        result.put("Test2", list2);
+        for (Domain eachDomain : newArrayList(activeObjectsService.find(Domain.class))) {
+            List<Plan> plans = Arrays.asList(eachDomain.getEventOrganizationPlans());
+            List<String> plansNames = new ArrayList<String>(plans.size());
+
+            for (Plan eachPlan : plans) {
+                plansNames.add(eachPlan.getName());
+            }
+
+            result.put(eachDomain.getName(), plansNames);
+        }
 
         return result;
     }
