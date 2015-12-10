@@ -21,6 +21,7 @@
     </ao>
 
     <component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>
+    <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
     <component-import key="activeObjectsService" interface="com.atlassian.activeobjects.external.ActiveObjects"/>
 
     <component key="transaction" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor"/>
@@ -29,6 +30,7 @@
     <servlet name="Event Plans Configuration" class="edu.uz.jira.event.planner.project.plan.EventPlanServlet"
              key="event-plans-configuration">
         <url-pattern>/eventPlans/configuration</url-pattern>
+        <resource name="view" type="velocity" location="/templates/admin/event-types.vm"/>
     </servlet>
 
     <web-resource key="event-planner-resources" name="Event Planner Web Resources">
@@ -75,9 +77,9 @@
         <actions>
             <action name="edu.uz.jira.event.planner.project.configuration.EventPlanConfigWebworkAction"
                     alias="EventOrganizationPlanConfiguration">
-                <view name="success">/templates/event-organization-config-webwork/success.vm</view>
-                <view name="input">/templates/event-organization-config-webwork/input.vm</view>
-                <view name="error">/templates/event-organization-config-webwork/error.vm</view>
+                <view name="success">/templates/webworks/eventConfig/success.vm</view>
+                <view name="input">/templates/webworks/eventConfig/input.vm</view>
+                <view name="error">/templates/webworks/eventConfig/error.vm</view>
             </action>
         </actions>
         <resource type="download" name="input-script" location="/templates/event-organization-config-webwork/input.js"/>

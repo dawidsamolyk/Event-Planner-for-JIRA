@@ -1,7 +1,8 @@
 <html>
 <head>
     <title>Event Organization Plan Configuration</title>
-    <meta name="decorator" content="atl.popup"/>
+    <meta name="admin.active.section" content="admin_issues_menu/element_options_section/fields_section">
+    <meta name="admin.active.tab" content="field_configuration">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/sinon.js/1.15.4/sinon.js"></script>
@@ -13,26 +14,15 @@
 </head>
 <body>
     <script type="text/javascript">
-        function getParameterByName(name) {
-            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-            results = regex.exec(location.search);
-            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-        }
-
-        var projectKey = getParameterByName("project-key");
-        var contextPath = AJS.Meta.get("context-path");
-
         var myFlag = AJS.flag({
-            type: 'success',
-            title: 'Event organization project configured successfully.',
+            type: 'error',
+            title: 'Error while configuring Event organization project.',
             body: '<ul class="aui-nav-actions-list">' +
-                    '<li><a href="' + contextPath + '/projects/' + projectKey + '">Show project summary</a></li>' +
-                    '<li><a href="' + contextPath + '/projects/' + projectKey + '/issues">Show project issues</a></li>' +
-                    '<li><a href="' + contextPath + '/plugins/servlet/project-config/' + projectKey + '">Move to project administration</a></li>' +
+                    '<li><a href="' + document.location + '">Try again</a></li>' +
+                    '<li><a href="' + AJS.Meta.get("context-path") + '">Back to JIRA main page</a></li>' +
                   '</ul>'
         });
-
     </script>
 </body>
 </html>
+
