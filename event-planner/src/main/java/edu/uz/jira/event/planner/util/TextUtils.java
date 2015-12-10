@@ -1,4 +1,4 @@
-package edu.uz.jira.event.planner.utils;
+package edu.uz.jira.event.planner.util;
 
 import org.apache.commons.lang.StringUtils;
 

@@ -1,6 +1,6 @@
-package ut.edu.uz.jira.event.planner.utils;
+package ut.edu.uz.jira.event.planner.util;
 
-import edu.uz.jira.event.planner.utils.TextUtils;
+import edu.uz.jira.event.planner.util.TextUtils;
 import org.apache.commons.collections.ListUtils;
 import org.junit.Test;
 

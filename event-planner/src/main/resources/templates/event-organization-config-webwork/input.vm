@@ -597,15 +597,14 @@
                 <label for="event-type">Event type</label>
                 <select class="select" id="event-type" name="event-type" title="Event type">
                     <option>Undefined</option>
-                    <optgroup label="Development">
-                        <option>First presentation for Client</option>
-                        <option>Review</option>
-                        <option>Summary of the project</option>
-                    </optgroup>
-                    <optgroup label="Marketing">
-                        <option>Products presentation</option>
-                        <option>Job fair</option>
-                    </optgroup>
+                    #set ($eventPlans = $action.getEventPlans() )
+                    #foreach($key in $eventPlans.keySet() )
+                        <optgroup label=$key>
+                            #foreach($value in $eventPlans.get($key) )
+                                <option>$value</option>
+                            #end
+                        </optgroup>
+                    #end
                 </select>
 
                 <div class="description">Type of an event.</div>

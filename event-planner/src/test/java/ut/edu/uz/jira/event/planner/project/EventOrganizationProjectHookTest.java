@@ -33,7 +33,7 @@ import com.opensymphony.workflow.loader.ConditionDescriptor;
 import com.opensymphony.workflow.loader.FunctionDescriptor;
 import edu.uz.jira.event.planner.exceptions.NullArgumentException;
 import edu.uz.jira.event.planner.project.EventOrganizationProjectHook;
-import edu.uz.jira.event.planner.utils.Internationalization;
+import edu.uz.jira.event.planner.util.Internationalization;
 import org.apache.commons.collections.MapUtils;
 import org.junit.Before;
 import org.junit.Test;

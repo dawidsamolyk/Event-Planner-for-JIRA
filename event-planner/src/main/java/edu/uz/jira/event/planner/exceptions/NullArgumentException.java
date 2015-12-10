@@ -1,6 +1,6 @@
 package edu.uz.jira.event.planner.exceptions;
 
-import edu.uz.jira.event.planner.utils.TextUtils;
+import edu.uz.jira.event.planner.util.TextUtils;
 
 import javax.annotation.Nonnull;
 

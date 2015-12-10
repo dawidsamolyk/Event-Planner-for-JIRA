@@ -12,6 +12,18 @@
     <resource type="i18n" name="i18n" location="event-planner"/>
 
     <component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>
+    <component-import key="activeObjectsService" interface="com.atlassian.activeobjects.external.ActiveObjects"/>
+
+    <component key="transaction" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor"/>
+    <component key="event-plan-service" class="edu.uz.jira.event.planner.project.plan.EventOrganizationPlanService"/>
+    <ao key="active-objects">
+        <entity>edu.uz.jira.event.planner.project.plan.EventOrganizationModel.Plan</entity>
+    </ao>
+
+    <servlet name="Event Plans Configuration" class="edu.uz.jira.event.planner.project.plan.EventPlanServlet"
+             key="event-plans-configuration">
+        <url-pattern>/eventPlans/configuration</url-pattern>
+    </servlet>
 
     <web-resource key="event-planner-resources" name="Event Planner Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
@@ -81,7 +93,7 @@
         <deletable>true</deletable>
         <resource type="velocity" name="view" location="templates/postfunctions/update-due-date-post-function.vm"/>
     </workflow-function>
- 
+
     <workflow-validator key="issue-due-date-validator" name="Issue Due Date Validator"
                         i18n-name-key="issue.due.date.validator.name"
                         class="edu.uz.jira.event.planner.workflow.validators.WorkflowNoInputValidatorFactory">

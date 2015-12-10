@@ -7,7 +7,8 @@ import com.atlassian.jira.project.version.VersionManager;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.exceptions.NullArgumentException;
-import edu.uz.jira.event.planner.utils.Internationalization;
+import edu.uz.jira.event.planner.project.plan.EventOrganizationPlanService;
+import edu.uz.jira.event.planner.util.Internationalization;
 import webwork.action.Action;
 
 import javax.annotation.Nonnull;
@@ -15,24 +16,28 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Webwork action for configuring Event Plan Organization project.
  */
 public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
     public static final String DUE_DATE_FORMAT = "dd-MM-yyyy HH:mm";
-    private final VersionManager VERSION_MANAGER;
-    private final I18nResolver INTERNATIONALIZATION;
+    private final VersionManager versionManager;
+    private final I18nResolver internationalization;
     private final EventPlanConfigurationValidator validator;
+    private final EventOrganizationPlanService eventPlanService;
 
     /**
      * Constructor.
      *
      * @param i18nResolver Injected {@code I18nResolver} implementation.
      */
-    public EventPlanConfigWebworkAction(@Nonnull final I18nResolver i18nResolver) {
-        INTERNATIONALIZATION = i18nResolver;
-        VERSION_MANAGER = ComponentAccessor.getVersionManager();
+    public EventPlanConfigWebworkAction(@Nonnull final I18nResolver i18nResolver, @Nonnull final EventOrganizationPlanService eventPlanService) {
+        internationalization = i18nResolver;
+        this.eventPlanService = eventPlanService;
+        versionManager = ComponentAccessor.getVersionManager();
         validator = new EventPlanConfigurationValidator();
     }
 
@@ -80,10 +85,18 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
         Date releaseDate = format.parse(eventDueDate);
         Long projectId = project.getId();
 
-        VERSION_MANAGER.createVersion(name, startDate, releaseDate, description, projectId, null);
+        versionManager.createVersion(name, startDate, releaseDate, description, projectId, null);
     }
 
     private String getInternationalized(String key) {
-        return INTERNATIONALIZATION.getText(key);
+        return internationalization.getText(key);
+    }
+
+    /**
+     *
+     * @return Event Plans with Event Organization Domain name as key (eg. Development), and Event Organization Plan name
+     */
+    public Map<String, List<String>> getEventPlans() {
+        return eventPlanService.getEventPlans();
     }
 }

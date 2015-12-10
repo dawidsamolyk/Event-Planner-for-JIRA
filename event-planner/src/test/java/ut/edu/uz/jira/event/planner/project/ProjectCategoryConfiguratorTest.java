@@ -7,7 +7,7 @@ import com.atlassian.jira.project.ProjectCategory;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.project.ProjectCategoryConfigurator;
-import edu.uz.jira.event.planner.utils.Internationalization;
+import edu.uz.jira.event.planner.util.Internationalization;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

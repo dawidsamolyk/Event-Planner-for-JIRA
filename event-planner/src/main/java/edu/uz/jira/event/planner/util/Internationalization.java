@@ -1,4 +1,4 @@
-package edu.uz.jira.event.planner.utils;
+package edu.uz.jira.event.planner.util;
 
 /**
  * Keys for internationalization texts.

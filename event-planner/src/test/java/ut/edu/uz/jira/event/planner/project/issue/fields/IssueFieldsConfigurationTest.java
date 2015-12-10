@@ -10,7 +10,7 @@ import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.jira.project.Project;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.project.issue.fields.IssueFieldsConfigurator;
-import edu.uz.jira.event.planner.utils.Internationalization;
+import edu.uz.jira.event.planner.util.Internationalization;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

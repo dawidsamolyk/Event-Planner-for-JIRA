@@ -1,7 +1,10 @@
 package ut.edu.uz.jira.event.planner.project.issue.fields;
 
 import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.issue.fields.FieldManager;
+import com.atlassian.jira.issue.fields.MockFieldManager;
 import com.atlassian.jira.issue.fields.OrderableField;
+import com.atlassian.jira.issue.fields.layout.field.FieldDescriptionHelper;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayout;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutItem;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutManager;
@@ -11,7 +14,7 @@ import com.atlassian.jira.mock.ofbiz.MockOfBizDelegator;
 import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.project.issue.fields.FieldLayoutBuilder;
-import edu.uz.jira.event.planner.utils.Internationalization;
+import edu.uz.jira.event.planner.util.Internationalization;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -35,6 +38,8 @@ public class FieldLayoutBuilderTest {
                 .addMock(FieldLayoutManager.class, mock(FieldLayoutManager.class))
                 .addMock(HackyFieldRendererRegistry.class, mock(HackyFieldRendererRegistry.class))
                 .addMock(OfBizDelegator.class, new MockOfBizDelegator())
+                .addMock(FieldManager.class, new MockFieldManager())
+                .addMock(FieldDescriptionHelper.class, mock(FieldDescriptionHelper.class))
                 .init();
 
         Mockito.when(mocki18n.getText(Internationalization.PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME)).thenReturn("Event organization Field Configuration");
