@@ -86,6 +86,18 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>${hsqldb.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.activeobjects</groupId>
+            <artifactId>activeobjects-test</artifactId>
+            <version>${ao.test.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -128,7 +140,8 @@
         <hsqldb.version>1.8.0.10</hsqldb.version>
         <gson.version>2.2.2-atlassian-1</gson.version>
         <google.collections.version>1.0</google.collections.version>
-        <ao.version>1.1.5</ao.version>
+        <ao.version>1.1.5-af85210</ao.version>
+        <ao.test.version>1.0.1</ao.test.version>
         <servlet.api.version>2.4</servlet.api.version>
         <jsr311.api.version>1.1.1</jsr311.api.version>
         <jira.tests.version>7.1.0-QR20151029214859</jira.tests.version>

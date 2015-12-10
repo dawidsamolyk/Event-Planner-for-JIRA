@@ -2,6 +2,9 @@ package edu.uz.jira.event.planner.project.plan;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.tx.Transactional;
+import edu.uz.jira.event.planner.project.plan.model.Plan;
+import edu.uz.jira.event.planner.project.plan.model.PlanToTaskRelation;
+import edu.uz.jira.event.planner.project.plan.model.Task;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -10,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static edu.uz.jira.event.planner.project.plan.EventOrganizationModel.*;
 
 /**
  * Service for transactional managing Event Organization Plan entities.

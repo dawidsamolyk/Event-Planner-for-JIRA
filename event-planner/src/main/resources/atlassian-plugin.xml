@@ -11,14 +11,20 @@
 
     <resource type="i18n" name="i18n" location="event-planner"/>
 
+    <ao key="active-objects">
+        <entity>edu.uz.jira.event.planner.project.plan.model.Plan</entity>
+        <entity>edu.uz.jira.event.planner.project.plan.model.Task</entity>
+        <entity>edu.uz.jira.event.planner.project.plan.model.SubTask</entity>
+        <entity>edu.uz.jira.event.planner.project.plan.model.Domain</entity>
+        <entity>edu.uz.jira.event.planner.project.plan.model.Component</entity>
+        <entity>edu.uz.jira.event.planner.project.plan.model.PlanToTaskRelation</entity>
+    </ao>
+
     <component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>
     <component-import key="activeObjectsService" interface="com.atlassian.activeobjects.external.ActiveObjects"/>
 
     <component key="transaction" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor"/>
     <component key="event-plan-service" class="edu.uz.jira.event.planner.project.plan.EventOrganizationPlanService"/>
-    <ao key="active-objects">
-        <entity>edu.uz.jira.event.planner.project.plan.EventOrganizationModel.Plan</entity>
-    </ao>
 
     <servlet name="Event Plans Configuration" class="edu.uz.jira.event.planner.project.plan.EventPlanServlet"
              key="event-plans-configuration">

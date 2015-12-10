@@ -1,5 +1,7 @@
 package edu.uz.jira.event.planner.project.plan;
 
+import edu.uz.jira.event.planner.project.plan.model.Plan;
+
 import javax.annotation.Nonnull;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -7,8 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-
-import static edu.uz.jira.event.planner.project.plan.EventOrganizationModel.Plan;
 
 public final class EventPlanServlet extends HttpServlet {
     private final EventOrganizationPlanService eventPlanService;
