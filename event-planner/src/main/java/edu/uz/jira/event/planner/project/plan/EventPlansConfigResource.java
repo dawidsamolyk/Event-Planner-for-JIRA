@@ -25,7 +25,8 @@ public class EventPlansConfigResource {
     private final PluginSettingsFactory pluginSettingsFactory;
     private final TransactionTemplate transactionTemplate;
 
-    public EventPlansConfigResource(@Nonnull final UserManager userManager, @Nonnull final PluginSettingsFactory pluginSettings,
+    public EventPlansConfigResource(@Nonnull final UserManager userManager,
+                                    @Nonnull final PluginSettingsFactory pluginSettings,
                                     @Nonnull final TransactionTemplate transactionTemplate) {
         this.userManager = userManager;
         this.pluginSettingsFactory = pluginSettings;

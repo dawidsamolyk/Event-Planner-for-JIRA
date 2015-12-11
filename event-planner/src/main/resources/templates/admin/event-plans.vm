@@ -4,97 +4,54 @@
     <meta name="decorator" content="atl.admin">
     <meta name="admin.active.section" content="admin_project_menu/project_section"/>
     <meta name="admin.active.tab" content="event_plans"/>
-    $webResourceManager.requireResource("edu.uz.jira.event.planner.event-planner:resources")
 </head>
 <body>
-<section class="aui-page-panel-content">
-
-    <header class="aui-page-header">
-        <div class="aui-page-header-inner">
-            <div class="aui-page-header-main">
-                <h2>View Event Organization Plans Configurations</h2>
-            </div>
-            <div class="aui-page-header-actions">
-                <div class="aui-buttons">
-                    <a id="add-plan" class="aui-button trigger-dialog" href="AddFieldConfiguration!default.jspa">
-                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                        Add Event Organization Plan
-                    </a>
-                </div>
-
-                <span class="aui-icon aui-icon-small aui-iconfont-help">Get help!</span>
-            </div>
+    <form id="admin" class="aui">
+        <div class="field-group">
+            <label for="name">Name:</label>
+            <input class="text medium-field" type="text" id="name" name="name" class="text">
         </div>
-    </header>
+        <div class="field-group">
+            <label for="time">Time:</label>
+            <input class="text medium-field" type="text" id="time" name="time" class="text">
+        </div>
+        <div class="field-group">
+            <input type="submit" value="Save" class="button">
+        </div>
+    </form>
+    <script type="text/javascript">
+        function fillConfig() {
+            var url = AJS.contextPath() + "/rest/event-plans/1.0/";
 
-    <div class="aui-message info">
-        <span class="aui-icon icon-info"></span>
+            jQuery(document).ready(function() {
+                    jQuery.ajax({
+                        url: url,
+                        dataType: "json"
+                    }).done(function(config) {
+                        AJS.$("#name").val(config.name);
+                        AJS.$("#time").val(config.time);
+                    });
+            });
+        }
 
-        <p>Opis...</p>
-    </div>
+        function updateConfig() {
+          var url = AJS.contextPath() + "/rest/event-plans/1.0/";
 
-    <table id="plans-table" class="aui aui-table-rowhover">
-        <thead>
-        <tr>
-            <th>
-                Domain
-            </th>
-            <th>
-                Name
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-                Estimated time to complete
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Początek pętli -->
-        <tr>
-            <!-- Domain -->
-            <td>
-                <a href="/jira/secure/" title="See Event Organization domain">[VALUE] Domain name</a>
-            </td>
-            <!-- Name -->
-            <td>
-                <span data-scheme-field="name" class="field-name">
-                    <a href="/jira/secure/" title="Edit Event Organization Plan properties">[VALUE] Name</a>
-                </span>
-            </td>
-            <!-- Description -->
-            <td>
-                [VALUE] Description
-            </td>
-            <!-- Estimated time to complete -->
-            <td>
-                [VALUE] Estimated time to complete
-            </td>
-            <!-- Operations -->
-            <td>
-                <ul class="operations-list">
-                    <li>
-                        <a id="configure-"
-                           href="/jira/secure/admin/ViewIssueFields.jspa"
-                           title="Configure Event Organization Plan">Configure</a>
-                    </li>
-                    <li>
-                        <a id="copy-"
-                           href="/jira/secure/admin/CopyFieldLayout!default.jspa?id=10000"
-                           title="Copy Event Organization Plan">Copy</a>
-                    </li>
-                    <li>
-                        <a id="delete-"
-                           href="/jira/secure/admin/ViewIssueFields.jspa"
-                           title="Delete Event Organization Plan">Delete</a>
-                    </li>
-                </ul>
-            </td>
-        </tr>
-        <!-- Koniec pętli -->
-        </tbody>
-    </table>
-</section>
+          jQuery.ajax({
+            url: url,
+            type: "PUT",
+            contentType: "application/json",
+            data: '{ "name": "' + AJS.$("#name").attr("value") + '", "time": ' +  AJS.$("#time").attr("value") + ' }',
+            processData: false
+          });
+        }
+
+        AJS.$("#admin").submit(function(e) {
+                e.preventDefault();
+                updateConfig();
+        });
+
+        fillConfig();
+    </script>
 </body>
 </html>

@@ -1,8 +1,7 @@
 <html>
 <head>
     <title>Event Organization Plan Configuration</title>
-    <meta name="admin.active.section" content="admin_issues_menu/element_options_section/fields_section">
-    <meta name="admin.active.tab" content="field_configuration">
+    <meta name="decorator" content="atl.popup">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/sinon.js/1.15.4/sinon.js"></script>
@@ -631,8 +630,7 @@
 <script type="text/javascript">
         #include("libs/js/jquery.js")
         #include("libs/js/jquery.datetimepicker.full.min.js")
-        #include("templates/event-organization-config-webwork/input.js")
-
+        #include("templates/webworks/eventConfig/input.js")
 </script>
 </body>
 </html>

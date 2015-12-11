@@ -6,12 +6,12 @@ import com.atlassian.sal.api.user.UserProfile;
 import com.atlassian.templaterenderer.TemplateRenderer;
 
 import javax.annotation.Nonnull;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Map;
 
 public final class EventPlanServlet extends HttpServlet {
     private final EventOrganizationPlanService eventPlanService;
@@ -28,23 +28,17 @@ public final class EventPlanServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         UserProfile user = userManager.getRemoteUser(request);
         if (user == null || !userManager.isSystemAdmin(user.getUserKey())) {
             redirectToLogin(request, response);
             return;
         }
 
+        Map params = request.getParameterMap();
+
         response.setContentType("text/html;charset=utf-8");
         templateRenderer.render("/templates/admin/event-plans.vm", response.getWriter());
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        //final String name = req.getParameter("name");
-        //eventPlanService.addPlanNamed(name);
-
-        res.sendRedirect(req.getContextPath() + "/plugins/servlet/eventPlans/configuration");
     }
 
     private void redirectToLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {

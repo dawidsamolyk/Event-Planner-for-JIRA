@@ -31,14 +31,14 @@
     <component key="transaction" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor"/>
     <component key="event-plan-service" class="edu.uz.jira.event.planner.project.plan.EventOrganizationPlanService"/>
 
-    <rest key="rest" path="/event-types" version="1.0">
+    <rest key="rest" path="/event-plans" version="1.0">
         <description>Provides REST resources for the Event Organization Plans admin UI.</description>
     </rest>
 
     <servlet name="Event Plans Configuration" class="edu.uz.jira.event.planner.project.plan.EventPlanServlet"
              key="event-plans-configuration">
         <url-pattern>/eventPlans/configuration</url-pattern>
-        <resource name="view" type="velocity" location="/templates/admin/event-types.vm"/>
+        <resource name="view" type="velocity" location="/templates/admin/event-plans.vm"/>
     </servlet>
 
     <web-item key="event_plans" name="Event Organization Plans Link"
@@ -56,7 +56,6 @@
         <transformation extension="soy">
             <transformer key="soyTransformer"/>
         </transformation>
-        <resource type="download" name="event-plans.js" location="/templates/admin/event-plans.js"/>
         <resource type="download" name="EventOrganizationProject.soy.js" location="/soy/EventOrganizationProject.soy"/>
         <resource type="download" name="EventOrganizationProject.css" location="/style/EventOrganizationProject.css"/>
         <resource type="download" name="images/" location="/images">
@@ -101,7 +100,7 @@
                 <view name="error">/templates/webworks/eventConfig/error.vm</view>
             </action>
         </actions>
-        <resource type="download" name="input-script" location="/templates/event-organization-config-webwork/input.js"/>
+        <resource type="download" name="input-script" location="/templates/webworks/eventConfig/input.js"/>
         <resource type="download" name="jquery.datetimepicker.full.min.js"
                   location="/libs/js/jquery.datetimepicker.full.min.js"/>
         <resource type="download" name="jquery.js" location="/libs/js/jquery.js"/>
