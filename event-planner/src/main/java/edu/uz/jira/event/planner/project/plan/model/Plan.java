@@ -4,6 +4,8 @@ import net.java.ao.Entity;
 import net.java.ao.ManyToMany;
 import net.java.ao.schema.Table;
 
+import java.io.Serializable;
+
 /**
  * Plan of the Event Organization.
  * <ul>Best practices for developing with Active Objects (from Atlassian):</ul>
@@ -19,7 +21,7 @@ import net.java.ao.schema.Table;
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
 @Table("EventPlan")
-public interface Plan extends Entity {
+public interface Plan extends Entity, Serializable {
     String getName();
 
     void setName(String name);
@@ -32,9 +34,9 @@ public interface Plan extends Entity {
 
     void setDomain(Domain domain);
 
-//    long getEstimatedTimeToComplete();
-//
-//    void setEstimatedTimeToComplete(long time);
+    long getEstimatedTimeToComplete();
+
+    void setEstimatedTimeToComplete(long time);
 
     @ManyToMany(value = PlanToTaskRelation.class)
     Task[] getTasksToDo();

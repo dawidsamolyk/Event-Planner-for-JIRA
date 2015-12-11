@@ -4,6 +4,8 @@ import net.java.ao.Entity;
 import net.java.ao.OneToMany;
 import net.java.ao.schema.Table;
 
+import java.io.Serializable;
+
 /**
  * Component of the Event Organization Project.
  * <ul>Best practices for developing with Active Objects (from Atlassian):</ul>
@@ -19,7 +21,7 @@ import net.java.ao.schema.Table;
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
 @Table("EventTask")
-public interface Component extends Entity {
+public interface Component extends Entity, Serializable {
     String getName();
 
     void setName(String name);

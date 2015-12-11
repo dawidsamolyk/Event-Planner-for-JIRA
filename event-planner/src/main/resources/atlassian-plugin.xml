@@ -23,9 +23,17 @@
     <component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>
     <component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer"/>
     <component-import key="activeObjectsService" interface="com.atlassian.activeobjects.external.ActiveObjects"/>
+    <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager"/>
+    <component-import key="loginUriProvider" interface="com.atlassian.sal.api.auth.LoginUriProvider"/>
+    <component-import key="pluginSettings" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>
+    <component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/>
 
     <component key="transaction" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor"/>
     <component key="event-plan-service" class="edu.uz.jira.event.planner.project.plan.EventOrganizationPlanService"/>
+
+    <rest key="rest" path="/event-types" version="1.0">
+        <description>Provides REST resources for the Event Organization Plans admin UI.</description>
+    </rest>
 
     <servlet name="Event Plans Configuration" class="edu.uz.jira.event.planner.project.plan.EventPlanServlet"
              key="event-plans-configuration">
@@ -33,11 +41,22 @@
         <resource name="view" type="velocity" location="/templates/admin/event-types.vm"/>
     </servlet>
 
-    <web-resource key="event-planner-resources" name="Event Planner Web Resources">
+    <web-item key="event_plans" name="Event Organization Plans Link"
+              i18n-name-key="event.plans.admin.name"
+              section="admin_project_menu/project_section"
+              weight="40">
+        <description>Link to Event Organiation Plans Configuration page.</description>
+        <label key="event.plans.admin.label"/>
+        <link linkId="event_plans">/plugins/servlet/eventPlans/configuration</link>
+        <condition class="com.atlassian.jira.plugin.webfragment.conditions.UserIsAdminCondition"/>
+    </web-item>
+
+    <web-resource key="resources" name="Event Planner Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <transformation extension="soy">
             <transformer key="soyTransformer"/>
         </transformation>
+        <resource type="download" name="event-plans.js" location="/templates/admin/event-plans.js"/>
         <resource type="download" name="EventOrganizationProject.soy.js" location="/soy/EventOrganizationProject.soy"/>
         <resource type="download" name="EventOrganizationProject.css" location="/style/EventOrganizationProject.css"/>
         <resource type="download" name="images/" location="/images">
