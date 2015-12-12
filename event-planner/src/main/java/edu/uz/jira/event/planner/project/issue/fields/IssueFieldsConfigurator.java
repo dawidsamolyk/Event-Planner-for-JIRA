@@ -17,8 +17,8 @@ import javax.annotation.Nonnull;
  */
 public class IssueFieldsConfigurator {
     private static final String DUE_DATE_FIELD_ID = "duedate";
-    private final FieldLayoutManager FIELD_LAYOUT_MANAGER;
-    private final I18nResolver INTERNATIONALIZATION;
+    private final FieldLayoutManager fieldLayoutManager;
+    private final I18nResolver internationalization;
     private final FieldLayoutBuilder fieldLayoutBuilder;
 
     /**
@@ -27,16 +27,16 @@ public class IssueFieldsConfigurator {
      * @param i18n Injected {@code I18nResolver} implementation.
      */
     public IssueFieldsConfigurator(@Nonnull final I18nResolver i18n) {
-        this.INTERNATIONALIZATION = i18n;
+        this.internationalization = i18n;
         this.fieldLayoutBuilder = new FieldLayoutBuilder(i18n);
-        this.FIELD_LAYOUT_MANAGER = ComponentAccessor.getFieldLayoutManager();
+        this.fieldLayoutManager = ComponentAccessor.getFieldLayoutManager();
     }
 
     /**
      * @return Pre-configured Event Organization Plan Field Layout.
      */
     public EditableFieldLayout getEventOrganizationFieldLayout() {
-        EditableFieldLayout defaultFieldLayout = FIELD_LAYOUT_MANAGER.getEditableDefaultFieldLayout();
+        EditableFieldLayout defaultFieldLayout = fieldLayoutManager.getEditableDefaultFieldLayout();
         return fieldLayoutBuilder.copyWithMakeRequired(defaultFieldLayout, DUE_DATE_FIELD_ID);
     }
 
@@ -45,7 +45,7 @@ public class IssueFieldsConfigurator {
      * @return Stored field layout.
      */
     public EditableFieldLayout storeAndReturnEventOrganizationFieldLayout(@Nonnull final EditableFieldLayout fieldLayout) {
-        return FIELD_LAYOUT_MANAGER.storeAndReturnEditableFieldLayout(fieldLayout);
+        return fieldLayoutManager.storeAndReturnEditableFieldLayout(fieldLayout);
     }
 
     /**
@@ -58,11 +58,11 @@ public class IssueFieldsConfigurator {
         String description = getInternationalized(Internationalization.PROJECT_FIELDS_CONFIGURATION_SCHEME_DESCRIPTION);
         Long fieldLayoutId = fieldLayout.getId();
 
-        FieldLayoutScheme result = FIELD_LAYOUT_MANAGER.createFieldLayoutScheme(name, description);
+        FieldLayoutScheme result = fieldLayoutManager.createFieldLayoutScheme(name, description);
 
         for (IssueType eachIssueType : project.getIssueTypes()) {
             String eachIssueTypeId = eachIssueType.getId();
-            FieldLayoutSchemeEntity entity = FIELD_LAYOUT_MANAGER.createFieldLayoutSchemeEntity(result, eachIssueTypeId, fieldLayoutId);
+            FieldLayoutSchemeEntity entity = fieldLayoutManager.createFieldLayoutSchemeEntity(result, eachIssueTypeId, fieldLayoutId);
 
             result.addEntity(entity);
         }
@@ -71,7 +71,7 @@ public class IssueFieldsConfigurator {
     }
 
     private String getInternationalized(@Nonnull final String key) {
-        return INTERNATIONALIZATION.getText(key);
+        return internationalization.getText(key);
     }
 
     /**
@@ -81,6 +81,6 @@ public class IssueFieldsConfigurator {
      * @param fieldLayoutScheme Field Layout Scheme which will be associated with input project.
      */
     public void storeFieldConfigurationScheme(@Nonnull final Project project, @Nonnull final FieldLayoutScheme fieldLayoutScheme) {
-        FIELD_LAYOUT_MANAGER.addSchemeAssociation(project, fieldLayoutScheme.getId());
+        fieldLayoutManager.addSchemeAssociation(project, fieldLayoutScheme.getId());
     }
 }

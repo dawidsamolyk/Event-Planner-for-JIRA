@@ -13,8 +13,8 @@ import javax.annotation.Nonnull;
  * Creates and assigns project category to specified project.F
  */
 public class ProjectCategoryConfigurator {
-    private final ProjectManager PROJECT_MANAGER;
-    private final I18nResolver INTERNATIONALIZATION;
+    private final ProjectManager projectManager;
+    private final I18nResolver internationalization;
 
     /**
      * Constructor.
@@ -22,8 +22,8 @@ public class ProjectCategoryConfigurator {
      * @param i18nResolver Injected {@code I18nResolver} implementation.
      */
     public ProjectCategoryConfigurator(@Nonnull final I18nResolver i18nResolver) {
-        this.PROJECT_MANAGER = ComponentAccessor.getProjectManager();
-        this.INTERNATIONALIZATION = i18nResolver;
+        this.projectManager = ComponentAccessor.getProjectManager();
+        this.internationalization = i18nResolver;
     }
 
     /**
@@ -33,16 +33,16 @@ public class ProjectCategoryConfigurator {
         String name = getInternalized(Internationalization.PROJECT_CATEGORY_NAME);
         String description = getInternalized(Internationalization.PROJECT_CATEGORY_DESCRIPTION);
 
-        ProjectCategory result = PROJECT_MANAGER.getProjectCategoryObjectByName(name);
+        ProjectCategory result = projectManager.getProjectCategoryObjectByName(name);
 
         if (result == null) {
-            result = PROJECT_MANAGER.createProjectCategory(name, description);
+            result = projectManager.createProjectCategory(name, description);
         }
         return result;
     }
 
     private String getInternalized(String key) {
-        return INTERNATIONALIZATION.getText(key);
+        return internationalization.getText(key);
     }
 
     /**
@@ -50,6 +50,6 @@ public class ProjectCategoryConfigurator {
      * @param project         Project.
      */
     public void assign(@Nonnull final ProjectCategory projectCategory, @Nonnull final Project project) {
-        PROJECT_MANAGER.setProjectCategory(project, projectCategory);
+        projectManager.setProjectCategory(project, projectCategory);
     }
 }

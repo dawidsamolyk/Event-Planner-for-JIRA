@@ -1,6 +1,5 @@
 package edu.uz.jira.event.planner.project.plan;
 
-import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
@@ -24,27 +23,32 @@ public class EventPlansConfigResource {
     private final UserManager userManager;
     private final PluginSettingsFactory pluginSettingsFactory;
     private final TransactionTemplate transactionTemplate;
+    private final EventOrganizationPlanService eventPlanService;
 
     public EventPlansConfigResource(@Nonnull final UserManager userManager,
                                     @Nonnull final PluginSettingsFactory pluginSettings,
-                                    @Nonnull final TransactionTemplate transactionTemplate) {
+                                    @Nonnull final TransactionTemplate transactionTemplate,
+                                    @Nonnull final EventOrganizationPlanService eventPlanService) {
         this.userManager = userManager;
         this.pluginSettingsFactory = pluginSettings;
         this.transactionTemplate = transactionTemplate;
+        this.eventPlanService = eventPlanService;
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(final Configuration config, @Context final HttpServletRequest request) {
-        if (isAdminUser(userManager.getRemoteUser(request))) return Response.status(Status.UNAUTHORIZED).build();
+    public Response put(final ResourceConfiguration resource, @Context final HttpServletRequest request) {
+        if (!isAdminUser(userManager.getRemoteUser(request))) return Response.status(Status.UNAUTHORIZED).build();
 
         transactionTemplate.execute(new TransactionCallback() {
             public Object doInTransaction() {
-                PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
-                pluginSettings.put(Configuration.class.getName() + ".name", config.getName());
-                pluginSettings.put(Configuration.class.getName() + ".description", config.getDescription());
-                pluginSettings.put(Configuration.class.getName() + ".time", config.getTime());
-                pluginSettings.put(Configuration.class.getName() + ".domain", config.getDomain());
+                if (resource.getType().equals("DOMAIN")) {
+                    eventPlanService.addDomain(resource);
+
+                } else if (resource.getType().equals("PLAN")) {
+                    eventPlanService.addPlan(resource);
+                }
+
                 return null;
             }
         });
@@ -54,33 +58,27 @@ public class EventPlansConfigResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response get(@Context final HttpServletRequest request) {
-        if (isAdminUser(userManager.getRemoteUser(request))) return Response.status(Status.UNAUTHORIZED).build();
+        if (!isAdminUser(userManager.getRemoteUser(request))) return Response.status(Status.UNAUTHORIZED).build();
 
         return Response.ok(transactionTemplate.execute(new TransactionCallback() {
             public Object doInTransaction() {
-                PluginSettings settings = pluginSettingsFactory.createGlobalSettings();
-                Configuration config = new Configuration();
+                ResourceConfiguration config = new ResourceConfiguration();
 
-                config.setName((String) settings.get(Configuration.class.getName() + ".name"));
-                config.setDescription((String) settings.get(Configuration.class.getName() + ".description"));
-                config.setTime((String) settings.get(Configuration.class.getName() + ".time"));
-                config.setDomain((String) settings.get(Configuration.class.getName() + ".domain"));
 
                 return config;
             }
         })).build();
     }
 
-    private boolean isAdminUser(UserProfile user) {
-        if (user == null || !userManager.isSystemAdmin(user.getUserKey())) {
-            return true;
-        }
-        return false;
+    private boolean isAdminUser(final UserProfile user) {
+        return user != null && userManager.isSystemAdmin(user.getUserKey());
     }
 
     @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
-    public static final class Configuration {
+    public static final class ResourceConfiguration {
+        @XmlElement
+        private String type;
         @XmlElement
         private String name;
         @XmlElement
@@ -89,6 +87,14 @@ public class EventPlansConfigResource {
         private String time;
         @XmlElement
         private String domain;
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
 
         public String getName() {
             return name;

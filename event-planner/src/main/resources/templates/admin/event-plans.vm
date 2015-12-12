@@ -38,64 +38,62 @@
 
     <table id="plans-table" class="aui aui-table-rowhover">
         <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-                Domain
-            </th>
-            <th>
-                Estimated time to complete
-            </th>
-        </tr>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Domain
+                </th>
+                <th>
+                    Estimated time to complete
+                </th>
+                <th>
+                    Operations
+                </th>
+            </tr>
         </thead>
         <tbody>
-        <!-- Początek pętli -->
-        <tr>
-            <!-- Name -->
-            <td>
-                <span data-scheme-field="name" class="field-name">
-                    <a href="/jira/secure/" title="Edit Event Organization Plan properties">[VALUE] Name</a>
-                </span>
-            </td>
-            <!-- Description -->
-            <td>
-                [VALUE] Description
-            </td>
-            <!-- Domain -->
-            <td>
-                <a href="/jira/secure/" title="See Event Organization domain">[VALUE] Domain name</a>
-            </td>
-            <!-- Estimated time to complete -->
-            <td>
-                [VALUE] Estimated time to complete
-            </td>
-            <!-- Operations -->
-            <td>
-                <ul class="operations-list">
-                    <li>
-                        <a id="configure-"
-                           href="/jira/secure/admin/ViewIssueFields.jspa"
-                           title="Configure Event Organization Plan">Configure</a>
-                    </li>
-                    <li>
-                        <a id="copy-"
-                           href="/jira/secure/admin/CopyFieldLayout!default.jspa?id=10000"
-                           title="Copy Event Organization Plan">Copy</a>
-                    </li>
-                    <li>
-                        <a id="delete-"
-                           href="/jira/secure/admin/ViewIssueFields.jspa"
-                           title="Delete Event Organization Plan">Delete</a>
-                    </li>
-                </ul>
-            </td>
-        </tr>
-        <!-- Koniec pętli -->
+        #foreach($eachPlan in $PLANS)
+            <tr>
+                <td>
+                    <span data-scheme-field="name" class="field-name">
+                        <a href="/jira/secure/" title="Edit Event Organization Plan properties">$eachPlan.getName()</a>
+                    </span>
+                </td>
+                <td>
+                    $eachPlan.getDescription()
+                </td>
+                <td>
+                    <a href="/jira/secure/" title="See Event Organization domain">$eachPlan.getDomain().getName()</a>
+                </td>
+                <td>
+                    $eachPlan.getEstimatedTimeToComplete()
+                </td>
+                <td>
+                    <ul class="operations-list">
+                        <li>
+                            <a id="configure-"
+                               href="/jira/secure/admin/ViewIssueFields.jspa"
+                               title="Configure Event Organization Plan">Configure</a>
+                        </li>
+                        <li>
+                            <a id="copy-"
+                               href="/jira/secure/admin/CopyFieldLayout!default.jspa?id=10000"
+                               title="Copy Event Organization Plan">Copy</a>
+                        </li>
+                        <li>
+                            <a id="delete-"
+                               href="/jira/secure/admin/ViewIssueFields.jspa"
+                               title="Delete Event Organization Plan">Delete</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        #end
         </tbody>
     </table>
 </section>
@@ -129,8 +127,7 @@
                 <label for="plan-domain">Domain of the event<span
                         class="aui-icon icon-required">(required)</span></label>
                 <select class="select" id="plan-domain" name="plan-domain" title="Domain">
-                    #set ($domains = $servlet.getDomains())
-                    #foreach($eachDomain in $domains)
+                    #foreach($eachDomain in $DOMAINS_NAMES)
                     <option>$eachDomain</option>
                     #end
                 </select>
@@ -149,7 +146,7 @@
     <footer class="aui-dialog2-footer">
         <div class="aui-dialog2-footer-actions">
             <button id="event-plan-dialog-cancel-button" class="aui-button">Cancel</button>
-            <button id="event-plan-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save</button>
+            <button id="event-plan-dialog-next-button" class="aui-button aui-button-primary" type="submit">Next</button>
         </div>
     </footer>
 </section>
@@ -186,10 +183,28 @@
 <script type="text/javascript">
         AJS.$("#add-plan-button").click(function(e) {
             e.preventDefault();
+
+            document.getElementById("plan-name").value = "";
+            document.getElementById("plan-description").value = "";
+            document.getElementById("plan-time").value = "";
+            document.getElementById("plan-domain").value = "";
+
             AJS.dialog2("#event-plan-dialog").show();
         });
 
-        AJS.$("#event-plan-dialog-save-button").click(function(e) {
+        function saveEventPlan() {
+            var url = AJS.contextPath() + "/rest/event-plans/1.0/";
+
+            jQuery.ajax({
+                url: url,
+                type: "PUT",
+                contentType: "application/json",
+                data: '{ "type" : "PLAN" , "name": "' + AJS.$("#plan-name").attr("value") + '", "description": "' +  AJS.$("#plan-description").attr("value") + '", "time": "' +  AJS.$("#plan-time").attr("value") + '", "domain": "' +  AJS.$("#plan-domain").attr("value") + '" }',
+                processData: false
+            });
+        }
+
+        AJS.$("#event-plan-dialog-next-button").click(function(e) {
             e.preventDefault();
 
             var planName = document.getElementById("plan-name").value;
@@ -211,7 +226,11 @@
             }
 
             if(valid) {
-                // TODO zapisz Domain do bazy
+                // TODO Przejdź do kolejnej strony z listą zadań do wykonania
+
+                // TODO Sprawdź czy obiekt Plan o tej nazwie już istnieje
+                saveEventPlan();
+
                 AJS.dialog2("#event-domain-dialog").hide();
                 AJS.dialog2("#event-plan-dialog").hide();
             }
@@ -225,9 +244,25 @@
 
         AJS.$("#add-domain").click(function(e) {
             e.preventDefault();
+
+            document.getElementById("domain-name").value = "";
+            document.getElementById("domain-description").value = "";
+
             AJS.dialog2("#event-plan-dialog").hide();
             AJS.dialog2("#event-domain-dialog").show();
         });
+
+        function saveEventDomain() {
+            var url = AJS.contextPath() + "/rest/event-plans/1.0/";
+
+            jQuery.ajax({
+                url: url,
+                type: "PUT",
+                contentType: "application/json",
+                data: '{ "type" : "DOMAIN" , "name": "' + AJS.$("#domain-name").attr("value") + '", "description": "' +  AJS.$("#domain-description").attr("value") + '" }',
+                processData: false
+            });
+        }
 
         AJS.$("#event-domain-dialog-save-button").click(function(e) {
             e.preventDefault();
@@ -237,16 +272,20 @@
             if(domainName.valueOf() == "".valueOf()) {
                 AJS.$('#domain-name-description').html('<div class="error" data-field="domain-name">You must specify a name of the event Domain.</div>');
             } else {
-                // TODO zapisz Domain do bazy
+                // TODO Sprawdź czy obiekt Domain o tej nazwie już istnieje
+
+                saveEventDomain();
+
                 AJS.dialog2("#event-domain-dialog").hide();
                 AJS.dialog2("#event-plan-dialog").show();
+
+                location.reload();
             }
         });
 
         AJS.$("#event-domain-dialog-cancel-button").click(function(e) {
             e.preventDefault();
-            // TODO walidacja danych formularza
-            // TODO zapisz Domain do bazy
+
             AJS.dialog2("#event-domain-dialog").hide();
             AJS.dialog2("#event-plan-dialog").show();
         });

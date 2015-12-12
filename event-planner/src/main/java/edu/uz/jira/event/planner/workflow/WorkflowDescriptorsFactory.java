@@ -20,7 +20,7 @@ public class WorkflowDescriptorsFactory {
     public static final String CLASS_NAME_KEY = "class.name";
     public static final String STATUSES_KEY = "statuses";
     public static final String TYPE_NAME = "class";
-    public final TextUtils UTILS = new TextUtils();
+    public final TextUtils utils = new TextUtils();
 
     /**
      * @return Update Due Date Workflow Post Function.
@@ -45,7 +45,7 @@ public class WorkflowDescriptorsFactory {
 
         Map functionArguments = result.getArgs();
         functionArguments.put(CLASS_NAME_KEY, SubTaskBlockingCondition.class.getName());
-        functionArguments.put(STATUSES_KEY, UTILS.getJoined(statusesToBlock, ','));
+        functionArguments.put(STATUSES_KEY, utils.getJoined(statusesToBlock, ','));
 
         return result;
     }

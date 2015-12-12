@@ -4,6 +4,7 @@ import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import com.atlassian.templaterenderer.TemplateRenderer;
+import edu.uz.jira.event.planner.project.plan.model.Plan;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServlet;
@@ -11,8 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public final class EventPlanServlet extends HttpServlet {
     private final EventOrganizationPlanService eventPlanService;
@@ -20,8 +23,10 @@ public final class EventPlanServlet extends HttpServlet {
     private final UserManager userManager;
     private final LoginUriProvider loginUriProvider;
 
-    public EventPlanServlet(@Nonnull final EventOrganizationPlanService eventPlanService, @Nonnull final TemplateRenderer templateRenderer,
-                            @Nonnull final UserManager userManager, @Nonnull final LoginUriProvider loginUriProvider) {
+    public EventPlanServlet(@Nonnull final EventOrganizationPlanService eventPlanService,
+                            @Nonnull final TemplateRenderer templateRenderer,
+                            @Nonnull final UserManager userManager,
+                            @Nonnull final LoginUriProvider loginUriProvider) {
         this.eventPlanService = eventPlanService;
         this.templateRenderer = templateRenderer;
         this.userManager = userManager;
@@ -31,17 +36,17 @@ public final class EventPlanServlet extends HttpServlet {
     /**
      * @return Event Organization Domain names (eg. Development).
      */
-    public List<String> getDomains() {
-        List<String> result = new ArrayList<String>();
-
-        result.add("Domain 2");
-        result.add("Domain 123");
-        result.add("Domain 15124");
-
-        //return eventPlanService.getEventPlans().keySet();
-
-        return result;
+    private Set<String> getAvailableDomainNames() {
+        return eventPlanService.getEventPlansSortedByDomain().keySet();
     }
+
+    /**
+     * @return Event Organization Plans.
+     */
+    private List<Plan> getAllEventOrganziationPlans() {
+        return eventPlanService.getPlans();
+    }
+
 
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
@@ -51,8 +56,12 @@ public final class EventPlanServlet extends HttpServlet {
             return;
         }
 
+        Map<String, Object> context = new HashMap<String, Object>();
+        context.put("DOMAINS_NAMES", getAvailableDomainNames());
+        context.put("PLANS", getAllEventOrganziationPlans());
+
         response.setContentType("text/html;charset=utf-8");
-        templateRenderer.render("/templates/admin/event-plans.vm", response.getWriter());
+        templateRenderer.render("/templates/admin/event-plans.vm", context, response.getWriter());
     }
 
     private void redirectToLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {

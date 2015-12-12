@@ -18,8 +18,8 @@ import java.util.List;
  * Builder of the Issue Field Layout.
  */
 public class FieldLayoutBuilder {
-    private final I18nResolver INTERNATIONALIZATION;
-    private final OfBizDelegator OF_BIZ_DELEGATOR;
+    private final I18nResolver internationalization;
+    private final OfBizDelegator ofBizDelegator;
 
     /**
      * Constructor.
@@ -27,8 +27,8 @@ public class FieldLayoutBuilder {
      * @param i18n Injected {@code I18nResolver} implementation.
      */
     public FieldLayoutBuilder(@Nonnull final I18nResolver i18n) {
-        this.INTERNATIONALIZATION = i18n;
-        this.OF_BIZ_DELEGATOR = ComponentAccessor.getOfBizDelegator();
+        this.internationalization = i18n;
+        this.ofBizDelegator = ComponentAccessor.getOfBizDelegator();
     }
 
     /**
@@ -58,14 +58,14 @@ public class FieldLayoutBuilder {
     }
 
     private GenericValue getGenericValue(String name, String description) {
-        GenericValue genericValue = OF_BIZ_DELEGATOR.createValue("FieldLayout", MapUtils.EMPTY_MAP);
+        GenericValue genericValue = ofBizDelegator.createValue("FieldLayout", MapUtils.EMPTY_MAP);
         genericValue.setString("name", name);
         genericValue.setString("description", description);
         return genericValue;
     }
 
     private String getInternationalized(@Nonnull final String key) {
-        return INTERNATIONALIZATION.getText(key);
+        return internationalization.getText(key);
     }
 
     /**

@@ -20,10 +20,10 @@ import javax.annotation.Nonnull;
  * Configures workflow.
  */
 public class WorkflowConfigurator {
-    private final JiraAuthenticationContext AUTHENTICATION_CONTEXT;
-    private final WorkflowTransitionService WORKFLOW_TRANSITION_SERVICE;
-    private final WorkflowManager WORKFLOW_MANAGER;
-    private final TextUtils TEXT_UTILS;
+    private final JiraAuthenticationContext jiraAuthenticationContext;
+    private final WorkflowTransitionService workflowTransitionService;
+    private final WorkflowManager workflowManager;
+    private final TextUtils textUtils;
 
     /**
      * Constructor.
@@ -31,20 +31,20 @@ public class WorkflowConfigurator {
      * @param workflowTransitionService Injected {@code WorkflowTransitionService} implementation.
      */
     public WorkflowConfigurator(@Nonnull final WorkflowTransitionService workflowTransitionService) {
-        this.AUTHENTICATION_CONTEXT = ComponentAccessor.getJiraAuthenticationContext();
-        this.WORKFLOW_TRANSITION_SERVICE = workflowTransitionService;
-        this.WORKFLOW_MANAGER = ComponentAccessor.getWorkflowManager();
-        this.TEXT_UTILS = new TextUtils();
+        this.jiraAuthenticationContext = ComponentAccessor.getJiraAuthenticationContext();
+        this.workflowTransitionService = workflowTransitionService;
+        this.workflowManager = ComponentAccessor.getWorkflowManager();
+        this.textUtils = new TextUtils();
     }
 
     /**
      * @param workflow         Worflow to configure.
-     * @param postFunction     Post-function to addPlanNamed.
+     * @param postFunction     Post-function to addPlan.
      * @param transitionsNames Names of the transitions to which post-function should be added.
      */
     public void addToDraft(@Nonnull final JiraWorkflow workflow, @Nonnull final FunctionDescriptor postFunction, @Nonnull final String... transitionsNames) throws JiraException {
         for (String eachTransitionName : transitionsNames) {
-            ErrorCollection errors = WORKFLOW_TRANSITION_SERVICE.addPostFunctionToWorkflow(eachTransitionName, postFunction, workflow);
+            ErrorCollection errors = workflowTransitionService.addPostFunctionToWorkflow(eachTransitionName, postFunction, workflow);
 
             if (errors.hasAnyErrors()) {
                 throw new JiraException(getJoined(errors));
@@ -54,12 +54,12 @@ public class WorkflowConfigurator {
 
     /**
      * @param workflow         Worflow to configure.
-     * @param condition        Condition to addPlanNamed.
+     * @param condition        Condition.
      * @param transitionsNames Names of the transitions to which condition should be added.
      */
     public void addToDraft(@Nonnull final JiraWorkflow workflow, @Nonnull final ConditionDescriptor condition, @Nonnull final String... transitionsNames) throws JiraException {
         for (String eachTransitionName : transitionsNames) {
-            ErrorCollection errors = WORKFLOW_TRANSITION_SERVICE.addConditionToWorkflow(eachTransitionName, condition, workflow);
+            ErrorCollection errors = workflowTransitionService.addConditionToWorkflow(eachTransitionName, condition, workflow);
 
             if (errors.hasAnyErrors()) {
                 throw new JiraException(getJoined(errors));
@@ -68,12 +68,12 @@ public class WorkflowConfigurator {
     }
 
     private String getJoined(@Nonnull final ErrorCollection errors) {
-        return TEXT_UTILS.getJoined(errors.getErrorMessages(), ' ');
+        return textUtils.getJoined(errors.getErrorMessages(), ' ');
     }
 
     /**
      * @param workflow         Worflow to configure.
-     * @param validator        Validator to addPlanNamed.
+     * @param validator        Validator to addPlan.
      * @param transitionsNames Names of the transitions to which validator should be added.
      */
     public void addToDraft(@Nonnull final JiraWorkflow workflow, @Nonnull final ValidatorDescriptor validator, @Nonnull final String... transitionsNames) throws JiraException {
@@ -93,25 +93,25 @@ public class WorkflowConfigurator {
     }
 
     private JiraWorkflow getDraft(@Nonnull final JiraWorkflow workflow) {
-        ApplicationUser user = AUTHENTICATION_CONTEXT.getUser();
+        ApplicationUser user = jiraAuthenticationContext.getUser();
         String workflowName = workflow.getName();
 
-        JiraWorkflow draft = WORKFLOW_MANAGER.getDraftWorkflow(workflowName);
+        JiraWorkflow draft = workflowManager.getDraftWorkflow(workflowName);
 
         if (draft == null) {
-            draft = WORKFLOW_MANAGER.createDraftWorkflow(user, workflowName);
+            draft = workflowManager.createDraftWorkflow(user, workflowName);
         }
         return draft;
     }
 
     private void update(@Nonnull final JiraWorkflow workflow) {
-        WORKFLOW_MANAGER.updateWorkflow(AUTHENTICATION_CONTEXT.getUser(), workflow);
+        workflowManager.updateWorkflow(jiraAuthenticationContext.getUser(), workflow);
     }
 
     /**
      * @param workflow Workflow to publish.
      */
     public void publishDraft(@Nonnull final JiraWorkflow workflow) {
-        WORKFLOW_MANAGER.overwriteActiveWorkflow(workflow.getUpdateAuthor(), workflow.getName());
+        workflowManager.overwriteActiveWorkflow(workflow.getUpdateAuthor(), workflow.getName());
     }
 }

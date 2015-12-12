@@ -2,12 +2,15 @@ package edu.uz.jira.event.planner.project.plan.model;
 
 import net.java.ao.Entity;
 import net.java.ao.OneToMany;
+import net.java.ao.Preload;
 import net.java.ao.schema.Table;
 
 import java.io.Serializable;
 
 /**
  * Domain of the Event Organization Plan.
+ *
+ * @Preload annotation tells Active Objects to load all the fields of the entity eagerly.
  * <ul>Best practices for developing with Active Objects (from Atlassian):</ul>
  * <li>The Active Objects framework does not know about renaming.
  * So if you change the name of an entity, it will remove the other entity and create a new one.
@@ -21,6 +24,7 @@ import java.io.Serializable;
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
 @Table("EventPlan")
+@Preload
 public interface Domain extends Entity, Serializable {
     String getName();
 

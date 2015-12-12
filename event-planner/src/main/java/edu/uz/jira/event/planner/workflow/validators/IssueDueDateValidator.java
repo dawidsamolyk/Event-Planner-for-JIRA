@@ -19,7 +19,7 @@ import java.util.Map;
  * Validator for JIRA Workflow. Validates Issue Due Date.
  */
 public class IssueDueDateValidator implements Validator {
-    private final ProjectUtils PROJECT_UTILS;
+    private final ProjectUtils projectUtils;
 
     /**
      * Constructor.
@@ -27,7 +27,7 @@ public class IssueDueDateValidator implements Validator {
      * @param i18nResolver Injected {@code I18nResolver} implementation.
      */
     public IssueDueDateValidator(@Nonnull final I18nResolver i18nResolver) {
-        PROJECT_UTILS = new ProjectUtils(i18nResolver);
+        projectUtils = new ProjectUtils(i18nResolver);
     }
 
     /**
@@ -60,7 +60,7 @@ public class IssueDueDateValidator implements Validator {
             throw new NullArgumentException(Issue.class.getName());
         }
         Project project = issue.getProjectObject();
-        Version projectDueDateVersion = PROJECT_UTILS.getDueDateVersion(project);
+        Version projectDueDateVersion = projectUtils.getDueDateVersion(project);
         Date projectReleaseDate = projectDueDateVersion.getReleaseDate();
 
         validate(issue.getDueDate(), projectReleaseDate);

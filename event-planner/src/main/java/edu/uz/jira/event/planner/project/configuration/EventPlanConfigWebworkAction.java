@@ -97,6 +97,6 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
      * @return Event Plans with Event Organization Domain name as key (eg. Development), and Event Organization Plan name
      */
     public Map<String, List<String>> getEventPlans() {
-        return eventPlanService.getEventPlans();
+        return eventPlanService.getEventPlansSortedByDomain();
     }
 }

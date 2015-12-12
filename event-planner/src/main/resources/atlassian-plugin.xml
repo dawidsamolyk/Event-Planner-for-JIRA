@@ -13,9 +13,9 @@
 
     <ao key="active-objects">
         <entity>edu.uz.jira.event.planner.project.plan.model.Plan</entity>
+        <entity>edu.uz.jira.event.planner.project.plan.model.Domain</entity>
         <entity>edu.uz.jira.event.planner.project.plan.model.Task</entity>
         <entity>edu.uz.jira.event.planner.project.plan.model.SubTask</entity>
-        <entity>edu.uz.jira.event.planner.project.plan.model.Domain</entity>
         <entity>edu.uz.jira.event.planner.project.plan.model.Component</entity>
         <entity>edu.uz.jira.event.planner.project.plan.model.PlanToTaskRelation</entity>
     </ao>

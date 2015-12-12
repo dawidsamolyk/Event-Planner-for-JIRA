@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
  * Helpers for working with Projects.
  */
 public class ProjectUtils {
-    private final I18nResolver INTERNATIONALIZATION;
+    private final I18nResolver internationalization;
 
     /**
      * Constructor.
@@ -20,7 +20,7 @@ public class ProjectUtils {
      * @param i18nResolver Injected {@code I18nResolver} implementation.
      */
     public ProjectUtils(@Nonnull final I18nResolver i18nResolver) {
-        this.INTERNATIONALIZATION = i18nResolver;
+        this.internationalization = i18nResolver;
     }
 
     /**
@@ -43,6 +43,6 @@ public class ProjectUtils {
     }
 
     private String getInternationalized(String key) {
-        return INTERNATIONALIZATION.getText(key);
+        return internationalization.getText(key);
     }
 }

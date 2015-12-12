@@ -6,6 +6,7 @@ import edu.uz.jira.event.planner.project.plan.model.Domain;
 import edu.uz.jira.event.planner.project.plan.model.Plan;
 import edu.uz.jira.event.planner.project.plan.model.PlanToTaskRelation;
 import edu.uz.jira.event.planner.project.plan.model.Task;
+import net.java.ao.Query;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -28,14 +29,7 @@ public class EventOrganizationPlanService {
         this.activeObjectsService = activeObjectsService;
     }
 
-    /**
-     * Associates Event Organization Task with Event Organiation Plan.
-     *
-     * @param task Event Organization Task.
-     * @param plan Event Organiation Plan.
-     * @return Relation object.
-     */
-    public PlanToTaskRelation associateEventTaskToPlan(@Nonnull final Task task, @Nonnull final Plan plan) {
+    private PlanToTaskRelation associateEventTaskWithPlan(@Nonnull final Task task, @Nonnull final Plan plan) {
         PlanToTaskRelation postToLabel = activeObjectsService.create(PlanToTaskRelation.class);
         postToLabel.setEventTask(task);
         postToLabel.setEventPlan(plan);
@@ -43,13 +37,43 @@ public class EventOrganizationPlanService {
         return postToLabel;
     }
 
+    private void associatePlanWithDomain(@Nonnull final Plan plan, @Nonnull final String domainName) {
+        Domain[] domains = null;
+
+        if (domainName != null) {
+            domains = activeObjectsService.find(Domain.class, Query.select().where("NAME = ?", domainName));
+        }
+        if (domains != null && domains.length == 1 && plan != null && domains[0] != null) {
+            plan.setDomain(domains[0]);
+        }
+    }
+
     /**
-     * @param name Name of the new Event Organization Plan.
+     * @param resource Configuration of Event Organization Plan.
      * @return Newly created and added to database Event Organization Plan.
      */
-    public Plan addPlanNamed(@Nonnull final String name) {
+    public Plan addPlan(@Nonnull final EventPlansConfigResource.ResourceConfiguration resource) {
         Plan result = activeObjectsService.create(Plan.class);
-        result.setName(name);
+
+        result.setName(resource.getName());
+        result.setDescription(resource.getDescription());
+        result.setEstimatedTimeToComplete(resource.getTime());
+        associatePlanWithDomain(result, resource.getDomain());
+
+        result.save();
+        return result;
+    }
+
+    /**
+     * @param resource Configuration of Event Organization Domain.
+     * @return Newly created and added to database Event Organization Domain.
+     */
+    public Domain addDomain(@Nonnull final EventPlansConfigResource.ResourceConfiguration resource) {
+        Domain result = activeObjectsService.create(Domain.class);
+
+        result.setName(resource.getName());
+        result.setDescription(resource.getDescription());
+
         result.save();
         return result;
     }
@@ -57,7 +81,7 @@ public class EventOrganizationPlanService {
     /**
      * @return All Event Organization Plans.
      */
-    public List<Plan> getAllPlans() {
+    public List<Plan> getPlans() {
         return newArrayList(activeObjectsService.find(Plan.class));
     }
 
@@ -68,10 +92,14 @@ public class EventOrganizationPlanService {
         return newArrayList(activeObjectsService.find(Task.class));
     }
 
-    public Map<String, List<String>> getEventPlans() {
+    private ArrayList<Domain> getDomains() {
+        return newArrayList(activeObjectsService.find(Domain.class));
+    }
+
+    public Map<String, List<String>> getEventPlansSortedByDomain() {
         Map<String, List<String>> result = new HashMap<String, List<String>>();
 
-        for (Domain eachDomain : newArrayList(activeObjectsService.find(Domain.class))) {
+        for (Domain eachDomain : getDomains()) {
             List<Plan> plans = Arrays.asList(eachDomain.getEventOrganizationPlans());
             List<String> plansNames = new ArrayList<String>(plans.size());
 
@@ -84,4 +112,5 @@ public class EventOrganizationPlanService {
 
         return result;
     }
+
 }
