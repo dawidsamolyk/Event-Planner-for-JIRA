@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class EventPlanServlet extends HttpServlet {
     private final EventOrganizationPlanService eventPlanService;
@@ -27,6 +28,21 @@ public final class EventPlanServlet extends HttpServlet {
         this.loginUriProvider = loginUriProvider;
     }
 
+    /**
+     * @return Event Organization Domain names (eg. Development).
+     */
+    public List<String> getDomains() {
+        List<String> result = new ArrayList<String>();
+
+        result.add("Domain 2");
+        result.add("Domain 123");
+        result.add("Domain 15124");
+
+        //return eventPlanService.getEventPlans().keySet();
+
+        return result;
+    }
+
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         UserProfile user = userManager.getRemoteUser(request);
@@ -34,8 +50,6 @@ public final class EventPlanServlet extends HttpServlet {
             redirectToLogin(request, response);
             return;
         }
-
-        Map params = request.getParameterMap();
 
         response.setContentType("text/html;charset=utf-8");
         templateRenderer.render("/templates/admin/event-plans.vm", response.getWriter());

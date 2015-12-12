@@ -4,54 +4,252 @@
     <meta name="decorator" content="atl.admin">
     <meta name="admin.active.section" content="admin_project_menu/project_section"/>
     <meta name="admin.active.tab" content="event_plans"/>
+    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui.js"></script>
+    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-experimental.js"></script>
+    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-datepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui-experimental.css"/>
 </head>
 <body>
-    <form id="admin" class="aui">
-        <div class="field-group">
-            <label for="name">Name:</label>
-            <input class="text medium-field" type="text" id="name" name="name" class="text">
+<section class="aui-page-panel-content">
+    <header class="aui-page-header">
+        <div class="aui-page-header-inner">
+            <div class="aui-page-header-main">
+                <h2>View Event Organization Plans</h2>
+            </div>
+            <div class="aui-page-header-actions">
+                <div class="aui-buttons">
+                    <button id="add-plan-button" class="aui-button trigger-dialog">
+                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                        Add Event Organization Plan
+                    </button>
+                </div>
+
+                <span class="aui-icon aui-icon-small aui-iconfont-help">Get help!</span>
+            </div>
         </div>
-        <div class="field-group">
-            <label for="time">Time:</label>
-            <input class="text medium-field" type="text" id="time" name="time" class="text">
+    </header>
+
+    <div class="aui-message info">
+        <span class="aui-icon icon-info"></span>
+
+        <p>Opis...</p>
+    </div>
+
+    <table id="plans-table" class="aui aui-table-rowhover">
+        <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Domain
+            </th>
+            <th>
+                Estimated time to complete
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Początek pętli -->
+        <tr>
+            <!-- Name -->
+            <td>
+                <span data-scheme-field="name" class="field-name">
+                    <a href="/jira/secure/" title="Edit Event Organization Plan properties">[VALUE] Name</a>
+                </span>
+            </td>
+            <!-- Description -->
+            <td>
+                [VALUE] Description
+            </td>
+            <!-- Domain -->
+            <td>
+                <a href="/jira/secure/" title="See Event Organization domain">[VALUE] Domain name</a>
+            </td>
+            <!-- Estimated time to complete -->
+            <td>
+                [VALUE] Estimated time to complete
+            </td>
+            <!-- Operations -->
+            <td>
+                <ul class="operations-list">
+                    <li>
+                        <a id="configure-"
+                           href="/jira/secure/admin/ViewIssueFields.jspa"
+                           title="Configure Event Organization Plan">Configure</a>
+                    </li>
+                    <li>
+                        <a id="copy-"
+                           href="/jira/secure/admin/CopyFieldLayout!default.jspa?id=10000"
+                           title="Copy Event Organization Plan">Copy</a>
+                    </li>
+                    <li>
+                        <a id="delete-"
+                           href="/jira/secure/admin/ViewIssueFields.jspa"
+                           title="Delete Event Organization Plan">Delete</a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <!-- Koniec pętli -->
+        </tbody>
+    </table>
+</section>
+
+<section role="dialog" id="event-plan-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <header class="aui-dialog2-header">
+        <h2 class="aui-dialog2-header-main">Event Organization Plan Configuration</h2>
+    </header>
+    <div class="aui-dialog2-content">
+        <form class="aui" id="event-plan-configuration" action="#" method="post">
+            <div class="field-group" id="event-name-group">
+                <label for="plan-name">Name<span class="aui-icon icon-required">(required)</span></label>
+                <input id="plan-name" name="plan-name" type="text">
+
+                <div class="description" id="plan-name-description">Name of the plan.</div>
+            </div>
+            <div class="field-group" id="event-description-group">
+                <label for="plan-description">Description</label>
+                <input id="plan-description" name="plan-description" type="text">
+
+                <div class="description" id="plan-description-description">Description of the plan.</div>
+            </div>
+            <div class="field-group" id="event-time-group">
+                <label for="plan-time">Time to completion
+                    <span class="aui-icon icon-required">(required)</span></label>
+                <input id="plan-time" name="plan-time" type="text">
+
+                <div class="description" id="plan-time-description">Estimated time for event organization.</div>
+            </div>
+            <div class="field-group">
+                <label for="plan-domain">Domain of the event<span
+                        class="aui-icon icon-required">(required)</span></label>
+                <select class="select" id="plan-domain" name="plan-domain" title="Domain">
+                    #set ($domains = $servlet.getDomains())
+                    #foreach($eachDomain in $domains)
+                    <option>$eachDomain</option>
+                    #end
+                </select>
+
+                <div class="aui-buttons">
+                    <button id="add-domain" class="aui-button trigger-dialog">
+                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                        Add new Domain
+                    </button>
+                </div>
+
+                <div class="description" id="plan-domain-description">Domain of an event.</div>
+            </div>
+        </form>
+    </div>
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button id="event-plan-dialog-cancel-button" class="aui-button">Cancel</button>
+            <button id="event-plan-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save</button>
         </div>
-        <div class="field-group">
-            <input type="submit" value="Save" class="button">
+    </footer>
+</section>
+
+<section role="dialog" id="event-domain-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <header class="aui-dialog2-header">
+        <h2 class="aui-dialog2-header-main">Event Domain Configuration</h2>
+    </header>
+    <div class="aui-dialog2-content">
+        <form class="aui" id="event-domain-configuration" action="#" method="post">
+            <div class="field-group" id="domain-name-group">
+                <label for="domain-name">Name<span class="aui-icon icon-required">(required)</span></label>
+                <input id="domain-name" name="domain-name" type="text">
+
+                <div class="description" id="domain-name-description">Name of the Domain.</div>
+            </div>
+            <div class="field-group" id="domain-description-group">
+                <label for="domain-description">Description</label>
+                <input id="domain-description" name="domain-description" type="text">
+
+                <div class="description" id="domain-description-description">Description of the Domain.</div>
+            </div>
+        </form>
+    </div>
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button id="event-domain-dialog-cancel-button" class="aui-button">Cancel</button>
+            <button id="event-domain-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save
+            </button>
         </div>
-    </form>
-    <script type="text/javascript">
-        function fillConfig() {
-            var url = AJS.contextPath() + "/rest/event-plans/1.0/";
+    </footer>
+</section>
 
-            jQuery(document).ready(function() {
-                    jQuery.ajax({
-                        url: url,
-                        dataType: "json"
-                    }).done(function(config) {
-                        AJS.$("#name").val(config.name);
-                        AJS.$("#time").val(config.time);
-                    });
-            });
-        }
-
-        function updateConfig() {
-          var url = AJS.contextPath() + "/rest/event-plans/1.0/";
-
-          jQuery.ajax({
-            url: url,
-            type: "PUT",
-            contentType: "application/json",
-            data: '{ "name": "' + AJS.$("#name").attr("value") + '", "time": ' +  AJS.$("#time").attr("value") + ' }',
-            processData: false
-          });
-        }
-
-        AJS.$("#admin").submit(function(e) {
-                e.preventDefault();
-                updateConfig();
+<script type="text/javascript">
+        AJS.$("#add-plan-button").click(function(e) {
+            e.preventDefault();
+            AJS.dialog2("#event-plan-dialog").show();
         });
 
-        fillConfig();
-    </script>
+        AJS.$("#event-plan-dialog-save-button").click(function(e) {
+            e.preventDefault();
+
+            var planName = document.getElementById("plan-name").value;
+            var planTime = document.getElementById("plan-time").value;
+            var domainName = document.getElementById("plan-domain").value;
+            var valid = true;
+
+            if(planName.valueOf() == "".valueOf()) {
+                AJS.$('#plan-name-description').html('<div class="error" data-field="plan-name">You must specify a name of event Plan.</div>');
+                valid = false;
+            }
+            if(planTime.valueOf() == "".valueOf()) {
+                AJS.$('#plan-time-description').html('<div class="error" data-field="plan-time">You must specify estimated tine for this kind of event Plan.</div>');
+                valid = false;
+            }
+            if(domainName.valueOf() == "".valueOf()) {
+                AJS.$('#plan-domain-description').html('<div class="error" data-field="plan-domain">You must specify a Domain of event Plan.</div>');
+                valid = false;
+            }
+
+            if(valid) {
+                // TODO zapisz Domain do bazy
+                AJS.dialog2("#event-domain-dialog").hide();
+                AJS.dialog2("#event-plan-dialog").hide();
+            }
+        });
+
+        AJS.$("#event-plan-dialog-cancel-button").click(function(e) {
+            e.preventDefault();
+            AJS.dialog2("#event-plan-dialog").hide();
+            AJS.dialog2("#event-domain-dialog").hide();
+        });
+
+        AJS.$("#add-domain").click(function(e) {
+            e.preventDefault();
+            AJS.dialog2("#event-plan-dialog").hide();
+            AJS.dialog2("#event-domain-dialog").show();
+        });
+
+        AJS.$("#event-domain-dialog-save-button").click(function(e) {
+            e.preventDefault();
+
+            var domainName = document.getElementById("domain-name").value;
+
+            if(domainName.valueOf() == "".valueOf()) {
+                AJS.$('#domain-name-description').html('<div class="error" data-field="domain-name">You must specify a name of the event Domain.</div>');
+            } else {
+                // TODO zapisz Domain do bazy
+                AJS.dialog2("#event-domain-dialog").hide();
+                AJS.dialog2("#event-plan-dialog").show();
+            }
+        });
+
+        AJS.$("#event-domain-dialog-cancel-button").click(function(e) {
+            e.preventDefault();
+            // TODO walidacja danych formularza
+            // TODO zapisz Domain do bazy
+            AJS.dialog2("#event-domain-dialog").hide();
+            AJS.dialog2("#event-plan-dialog").show();
+        });
+</script>
 </body>
 </html>

@@ -35,14 +35,16 @@ public class EventPlansConfigResource {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(final Configuration config, @Context HttpServletRequest request) {
+    public Response put(final Configuration config, @Context final HttpServletRequest request) {
         if (isAdminUser(userManager.getRemoteUser(request))) return Response.status(Status.UNAUTHORIZED).build();
 
         transactionTemplate.execute(new TransactionCallback() {
             public Object doInTransaction() {
                 PluginSettings pluginSettings = pluginSettingsFactory.createGlobalSettings();
                 pluginSettings.put(Configuration.class.getName() + ".name", config.getName());
-                pluginSettings.put(Configuration.class.getName() + ".time", Integer.toString(config.getTime()));
+                pluginSettings.put(Configuration.class.getName() + ".description", config.getDescription());
+                pluginSettings.put(Configuration.class.getName() + ".time", config.getTime());
+                pluginSettings.put(Configuration.class.getName() + ".domain", config.getDomain());
                 return null;
             }
         });
@@ -51,19 +53,19 @@ public class EventPlansConfigResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@Context HttpServletRequest request) {
+    public Response get(@Context final HttpServletRequest request) {
         if (isAdminUser(userManager.getRemoteUser(request))) return Response.status(Status.UNAUTHORIZED).build();
 
         return Response.ok(transactionTemplate.execute(new TransactionCallback() {
             public Object doInTransaction() {
                 PluginSettings settings = pluginSettingsFactory.createGlobalSettings();
                 Configuration config = new Configuration();
-                config.setName((String) settings.get(Configuration.class.getName() + ".name"));
 
-                String time = (String) settings.get(Configuration.class.getName() + ".time");
-                if (time != null) {
-                    config.setTime(Integer.parseInt(time));
-                }
+                config.setName((String) settings.get(Configuration.class.getName() + ".name"));
+                config.setDescription((String) settings.get(Configuration.class.getName() + ".description"));
+                config.setTime((String) settings.get(Configuration.class.getName() + ".time"));
+                config.setDomain((String) settings.get(Configuration.class.getName() + ".domain"));
+
                 return config;
             }
         })).build();
@@ -82,7 +84,11 @@ public class EventPlansConfigResource {
         @XmlElement
         private String name;
         @XmlElement
-        private int time;
+        private String description;
+        @XmlElement
+        private String time;
+        @XmlElement
+        private String domain;
 
         public String getName() {
             return name;
@@ -92,12 +98,28 @@ public class EventPlansConfigResource {
             this.name = name;
         }
 
-        public int getTime() {
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getTime() {
             return time;
         }
 
-        public void setTime(int time) {
+        public void setTime(String time) {
             this.time = time;
+        }
+
+        public String getDomain() {
+            return domain;
+        }
+
+        public void setDomain(String domain) {
+            this.domain = domain;
         }
     }
 }
