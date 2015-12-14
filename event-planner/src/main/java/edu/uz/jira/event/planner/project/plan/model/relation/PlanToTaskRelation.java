@@ -1,11 +1,12 @@
-package edu.uz.jira.event.planner.project.plan.model;
+package edu.uz.jira.event.planner.project.plan.model.relation;
 
+import edu.uz.jira.event.planner.project.plan.model.Plan;
+import edu.uz.jira.event.planner.project.plan.model.Task;
 import net.java.ao.Entity;
 import net.java.ao.schema.Table;
 
 /**
  * Relation between Event Organization Plan and Event Organization Task.
- * @Preload annotation tells Active Objects to load all the fields of the entity eagerly.
  */
 @Table("PlanToTask")
 public interface PlanToTaskRelation extends Entity {

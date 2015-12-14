@@ -3,8 +3,10 @@ package edu.uz.jira.event.planner.project.plan;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.tx.Transactional;
 import edu.uz.jira.event.planner.project.plan.model.*;
-import edu.uz.jira.event.planner.project.plan.rest.EventDomainRestManager;
-import edu.uz.jira.event.planner.project.plan.rest.EventPlanRestManager;
+import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.PlanToTaskRelation;
+import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
+import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
 import net.java.ao.Query;
 import net.java.ao.RawEntity;
 
@@ -22,10 +24,10 @@ import static com.google.common.collect.Lists.newArrayList;
  * AO does not support cascading.</li>
  */
 @Transactional
-public class EventOrganizationPlanService {
+public class EventPlanService {
     private final ActiveObjects activeObjectsService;
 
-    public EventOrganizationPlanService(@Nonnull final ActiveObjects activeObjectsService) {
+    public EventPlanService(@Nonnull final ActiveObjects activeObjectsService) {
         this.activeObjectsService = activeObjectsService;
     }
 
@@ -41,7 +43,7 @@ public class EventOrganizationPlanService {
         Domain[] domains = null;
 
         if (domainName != null) {
-            domains = activeObjectsService.find(Domain.class, Query.select().where("NAME = ?", domainName));
+            domains = activeObjectsService.find(Domain.class, Query.select().where(Domain.NAME + " = ?", domainName));
         }
         if (domains != null && domains.length == 1 && plan != null && domains[0] != null) {
             return associateEventPlanWithDomain(plan, domains[0]);
@@ -62,7 +64,7 @@ public class EventOrganizationPlanService {
      * @return Newly created and added to database Event Organization Plan.
      */
     public Plan addFrom(@Nonnull final EventPlanRestManager.EventPlanConfig resource) {
-        if (resource == null) {
+        if (resource == null || !resource.isFullfilled()) {
             return null;
         }
         Plan result = activeObjectsService.create(Plan.class);
@@ -79,7 +81,7 @@ public class EventOrganizationPlanService {
      * @return Newly created and added to database Event Organization Domain.
      */
     public Domain addFrom(@Nonnull final EventDomainRestManager.EventDomainConfig resource) {
-        if (resource == null) {
+        if (resource == null || !resource.isFullfilled()) {
             return null;
         }
         Domain result = activeObjectsService.create(Domain.class);

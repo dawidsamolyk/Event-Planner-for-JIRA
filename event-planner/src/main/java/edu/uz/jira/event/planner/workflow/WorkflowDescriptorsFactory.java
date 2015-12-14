@@ -5,7 +5,7 @@ import com.opensymphony.workflow.loader.ConditionDescriptor;
 import com.opensymphony.workflow.loader.DescriptorFactory;
 import com.opensymphony.workflow.loader.FunctionDescriptor;
 import com.opensymphony.workflow.loader.ValidatorDescriptor;
-import edu.uz.jira.event.planner.util.TextUtils;
+import edu.uz.jira.event.planner.util.text.TextUtils;
 import edu.uz.jira.event.planner.workflow.postfunctions.UpdateDueDatePostFunction;
 import edu.uz.jira.event.planner.workflow.validators.IssueDueDateValidator;
 

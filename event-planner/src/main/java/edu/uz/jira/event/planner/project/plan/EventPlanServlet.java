@@ -18,12 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 public final class EventPlanServlet extends HttpServlet {
-    private final EventOrganizationPlanService eventPlanService;
+    private final EventPlanService eventPlanService;
     private final TemplateRenderer templateRenderer;
     private final UserManager userManager;
     private final LoginUriProvider loginUriProvider;
 
-    public EventPlanServlet(@Nonnull final EventOrganizationPlanService eventPlanService,
+    public EventPlanServlet(@Nonnull final EventPlanService eventPlanService,
                             @Nonnull final TemplateRenderer templateRenderer,
                             @Nonnull final UserManager userManager,
                             @Nonnull final LoginUriProvider loginUriProvider) {

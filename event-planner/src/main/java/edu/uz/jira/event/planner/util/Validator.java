@@ -1,6 +1,6 @@
 package edu.uz.jira.event.planner.util;
 
-import edu.uz.jira.event.planner.exceptions.NullArgumentException;
+import edu.uz.jira.event.planner.exception.NullArgumentException;
 
 import javax.servlet.http.HttpServletRequest;
 

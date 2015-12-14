@@ -3,8 +3,8 @@ package edu.uz.jira.event.planner.project;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.version.Version;
 import com.atlassian.sal.api.message.I18nResolver;
-import edu.uz.jira.event.planner.exceptions.NullArgumentException;
-import edu.uz.jira.event.planner.util.Internationalization;
+import edu.uz.jira.event.planner.exception.NullArgumentException;
+import edu.uz.jira.event.planner.util.text.Internationalization;
 
 import javax.annotation.Nonnull;
 

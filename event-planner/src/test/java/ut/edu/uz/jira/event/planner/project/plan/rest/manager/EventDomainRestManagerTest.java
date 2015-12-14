@@ -1,4 +1,4 @@
-package ut.edu.uz.jira.event.planner.project.plan;
+package ut.edu.uz.jira.event.planner.project.plan.rest.manager;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.jira.mock.servlet.MockHttpServletRequest;
@@ -7,11 +7,10 @@ import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
-import edu.uz.jira.event.planner.project.plan.EventOrganizationPlanService;
+import edu.uz.jira.event.planner.project.plan.EventPlanService;
 import edu.uz.jira.event.planner.project.plan.model.Domain;
-import edu.uz.jira.event.planner.project.plan.model.Plan;
-import edu.uz.jira.event.planner.project.plan.rest.EventDomainRestManager;
-import edu.uz.jira.event.planner.project.plan.rest.EventPlanRestManager;
+import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
+import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -25,21 +24,18 @@ import java.sql.SQLException;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
-public class EventPlanRestManagerTest {
+public class EventDomainRestManagerTest {
     private UserManager mockUserManager;
     private TransactionTemplate mockTransactionTemplate;
-    private EventOrganizationPlanService planService;
+    private EventPlanService planService;
     private ActiveObjects mockActiveObjects;
     private Object transactionResult;
 
-    public static Plan getMockPlanWithOneDomain(int id, String planName, String planDescription, String planTime, String domainName) {
-        Plan result = mock(Plan.class);
+    public static Domain getMockDomain(int id, String name, String description) {
+        Domain result = mock(Domain.class);
         Mockito.when(result.getID()).thenReturn(id);
-        Mockito.when(result.getName()).thenReturn(planName);
-        Mockito.when(result.getDescription()).thenReturn(planDescription);
-        Mockito.when(result.getTimeToComplete()).thenReturn(planTime);
-        Domain mockDomain = EventDomainRestManagerTest.getMockDomain(2, domainName, "");
-        Mockito.when(result.getRelatedDomains()).thenReturn(new Domain[]{mockDomain});
+        Mockito.when(result.getName()).thenReturn(name);
+        Mockito.when(result.getDescription()).thenReturn(description);
         return result;
     }
 
@@ -60,10 +56,10 @@ public class EventPlanRestManagerTest {
         });
 
         mockActiveObjects = mock(ActiveObjects.class);
-        Mockito.when(mockActiveObjects.create(Plan.class)).thenAnswer(new Answer<Plan>() {
+        Mockito.when(mockActiveObjects.create(Domain.class)).thenAnswer(new Answer<Domain>() {
             @Override
-            public Plan answer(InvocationOnMock invocation) throws Throwable {
-                final Plan resultMock = mock(Plan.class);
+            public Domain answer(InvocationOnMock invocation) throws Throwable {
+                final Domain resultMock = mock(Domain.class);
 
                 Mockito.doAnswer(new Answer() {
                     @Override
@@ -81,27 +77,19 @@ public class EventPlanRestManagerTest {
                     }
                 }).when(resultMock).setDescription(Mockito.anyString());
 
-                Mockito.doAnswer(new Answer() {
-                    @Override
-                    public Object answer(InvocationOnMock invocation) throws Throwable {
-                        Mockito.when(resultMock.getTimeToComplete()).thenReturn((String) invocation.getArguments()[0]);
-                        return null;
-                    }
-                }).when(resultMock).setTimeToComplete(Mockito.anyString());
-
                 Mockito.doNothing().when(resultMock).save();
 
                 return resultMock;
             }
         });
 
-        planService = new EventOrganizationPlanService(mockActiveObjects);
+        planService = new EventPlanService(mockActiveObjects);
     }
 
     @Test
     public void onGetShouldResponseUnauthorizedWhenUserIsNull() {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
         Response result = fixture.get(new MockHttpServletRequest());
 
@@ -111,21 +99,21 @@ public class EventPlanRestManagerTest {
     @Test
     public void onPutShouldResponseUnauthorizedWhenUserIsNull() {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-        Response result = fixture.put(getEmptyPlan(), new MockHttpServletRequest());
+        Response result = fixture.put(getEmptyDomain(), new MockHttpServletRequest());
 
         assertEquals(Response.status(Response.Status.UNAUTHORIZED).build().getStatus(), result.getStatus());
     }
 
-    private EventPlanRestManager.EventPlanConfig getEmptyPlan() {
-        return EventPlanRestManager.EventPlanConfig.createEmpty();
+    private EventDomainRestManager.EventDomainConfig getEmptyDomain() {
+        return EventDomainRestManager.EventDomainConfig.createEmpty();
     }
 
     @Test
     public void onGetshouldResponseUnauthorizedWhenUserIsNotAdmin() {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
         Response result = fixture.get(new MockHttpServletRequest());
 
@@ -135,16 +123,16 @@ public class EventPlanRestManagerTest {
     @Test
     public void onPutshouldResponseUnauthorizedWhenUserIsNotAdmin() {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-        Response result = fixture.put(getEmptyPlan(), new MockHttpServletRequest());
+        Response result = fixture.put(getEmptyDomain(), new MockHttpServletRequest());
 
         assertEquals(Response.status(Response.Status.UNAUTHORIZED).build().getStatus(), result.getStatus());
     }
 
     @Test
     public void onPutshouldResponseNoContenWhenResourceIsNullOrEmpty() {
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
         Response result = fixture.put(null, new MockHttpServletRequest());
 
@@ -152,80 +140,77 @@ public class EventPlanRestManagerTest {
     }
 
     @Test
-    public void shouldGetPlanFromDatabaseById() {
-        String testPlanName = "Test name";
-        String testPlanDescription = "Test description";
-        String testDomainName = "Test domain";
-        String testTime = "Test time";
-        Plan mockPlan = getMockPlanWithOneDomain(1, testPlanName, testPlanDescription, testTime, testDomainName);
-        Mockito.when(mockActiveObjects.find(Plan.class)).thenReturn(new Plan[]{mockPlan});
+    public void shouldGetDomainFromDatabaseById() {
+        String testName = "Test name";
+        String testDescription = "Test description";
+        Domain mockDomain = getMockDomain(2, testName, testDescription);
+        Mockito.when(mockActiveObjects.find(Domain.class)).thenReturn(new Domain[]{mockDomain});
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        mockRequest.setParameter("id", "1");
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+        mockRequest.setParameter("id", "2");
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
         Response result = fixture.get(mockRequest);
 
-        EventPlanRestManager.EventPlanConfig expected = new EventPlanRestManager.EventPlanConfig();
-        expected.setName(testPlanName);
-        expected.setDescription(testPlanDescription);
-        expected.setDomains(testDomainName);
-        expected.setTime(testTime);
+        EventDomainRestManager.EventDomainConfig expected = new EventDomainRestManager.EventDomainConfig();
+        expected.setName(testName);
+        expected.setDescription(testDescription);
         assertEquals(expected, transactionResult);
     }
 
     @Test
     public void shouldGetEmptyPlanWhenIdWasNotSpecified() {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
         Response result = fixture.get(mockRequest);
 
-        assertEquals(getEmptyPlan(), transactionResult);
+        assertEquals(getEmptyDomain(), transactionResult);
     }
 
     @Test
     public void shouldGetEmptyPlanWhenIdIsNull() {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.setParameter("id", null);
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
         Response result = fixture.get(mockRequest);
 
-        assertEquals(getEmptyPlan(), transactionResult);
+        assertEquals(getEmptyDomain(), transactionResult);
     }
 
     @Test
     public void shouldGetEmptyPlanWhenIdWasNotFound() {
-        Plan mockPlan = getMockPlanWithOneDomain(1, "Test name", "Test description", "Test time", "Test domain");
-        Mockito.when(mockActiveObjects.find(Plan.class)).thenReturn(new Plan[]{mockPlan});
+        String testName = "Test name";
+        String testDescription = "Test description";
+        Domain mockDomain = getMockDomain(2, testName, testDescription);
+        Mockito.when(mockActiveObjects.find(Domain.class)).thenReturn(new Domain[]{mockDomain});
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.setParameter("id", "99999");
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
         Response result = fixture.get(mockRequest);
 
-        assertEquals(getEmptyPlan(), transactionResult);
+        assertEquals(getEmptyDomain(), transactionResult);
     }
 
     @Test
     public void shouldGetEmptyPlanWhenIdIsEmpty() {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.setParameter("id", "");
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
         Response result = fixture.get(mockRequest);
 
-        assertEquals(getEmptyPlan(), transactionResult);
+        assertEquals(getEmptyDomain(), transactionResult);
     }
 
     @Test
     public void shouldPutNewEventPlan() {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
-        EventPlanRestManager.EventPlanConfig config = new EventPlanRestManager.EventPlanConfig();
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
+        EventDomainRestManager.EventDomainConfig config = new EventDomainRestManager.EventDomainConfig();
         config.setName("Test name");
-        config.setTime("Test time");
-        config.setDomains("Test domain");
+        config.setDescription("Test description");
 
         Response result = fixture.put(config, mockRequest);
 
@@ -235,9 +220,9 @@ public class EventPlanRestManagerTest {
     @Test
     public void shouldNotPutEmptyEventPlan() {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-        Response result = fixture.put(new EventPlanRestManager.EventPlanConfig(), mockRequest);
+        Response result = fixture.put(new EventDomainRestManager.EventDomainConfig(), mockRequest);
 
         assertEquals(Response.status(Response.Status.NOT_ACCEPTABLE).build().getStatus(), result.getStatus());
     }
@@ -245,10 +230,12 @@ public class EventPlanRestManagerTest {
     @Test
     public void onPutShouldReturnInternalServerErrorWhenAnyExceptionOccursWhileAddingNewPlanToDatabase() throws SQLException {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
-
-        EventDomainRestManager.EventDomainConfig invalidConfig = new EventDomainRestManager.EventDomainConfig();
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
+        EventPlanRestManager.EventPlanConfig invalidConfig = new EventPlanRestManager.EventPlanConfig();
         invalidConfig.setName("Test name");
+        invalidConfig.setDescription("Test description");
+        invalidConfig.setDomains("Test domains");
+        invalidConfig.setTime("Test time");
 
         Response result = fixture.put(invalidConfig, mockRequest);
 

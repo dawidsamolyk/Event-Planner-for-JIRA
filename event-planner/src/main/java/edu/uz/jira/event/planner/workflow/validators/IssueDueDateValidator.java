@@ -7,7 +7,7 @@ import com.atlassian.sal.api.message.I18nResolver;
 import com.opensymphony.module.propertyset.PropertySet;
 import com.opensymphony.workflow.InvalidInputException;
 import com.opensymphony.workflow.Validator;
-import edu.uz.jira.event.planner.exceptions.NullArgumentException;
+import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.project.ProjectUtils;
 
 import javax.annotation.Nonnull;

@@ -5,7 +5,7 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectCategory;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.sal.api.message.I18nResolver;
-import edu.uz.jira.event.planner.util.Internationalization;
+import edu.uz.jira.event.planner.util.text.Internationalization;
 
 import javax.annotation.Nonnull;
 

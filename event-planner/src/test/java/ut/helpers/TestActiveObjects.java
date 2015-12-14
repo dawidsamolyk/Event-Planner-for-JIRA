@@ -1,4 +1,4 @@
-package ut.edu.uz.jira.event.planner.project.plan;
+package ut.helpers;
 
 import com.atlassian.activeobjects.internal.EntityManagedActiveObjects;
 import com.atlassian.activeobjects.internal.TransactionManager;

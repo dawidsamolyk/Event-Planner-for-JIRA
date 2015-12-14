@@ -1,12 +1,13 @@
 package edu.uz.jira.event.planner.project.plan.model;
 
+import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.PlanToTaskRelation;
 import net.java.ao.ManyToMany;
 import net.java.ao.schema.Table;
 
 /**
  * Plan of the Event Organization.
  *
- * @Preload annotation tells Active Objects to load all the fields of the entity eagerly.
  * <ul>Best practices for developing with Active Objects (from Atlassian):</ul>
  * <li>The Active Objects framework does not know about renaming.
  * So if you change the name of an entity, it will remove the other entity and create a new one.
@@ -20,19 +21,9 @@ import net.java.ao.schema.Table;
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
 @Table("EventPlan")
-public interface Plan extends NamedEntity {
-    String DESCRIPTION = "DESCRIPTION";
-    String TIME_TO_COMPLETE = "TIME_TO_COMPLETE";
+public interface Plan extends NamedEntityWithDescription, TimeframedEntity {
     String RELATED_DOMAINS = "RELATED_DOMAINS";
     String RELATED_TASKS = "RELATED_TASKS";
-
-    String getDescription();
-
-    void setDescription(String description);
-
-    String getTimeToComplete();
-
-    void setTimeToComplete(String time);
 
     @ManyToMany(value = PlanToDomainRelation.class)
     Domain[] getRelatedDomains();

@@ -1,11 +1,12 @@
-package edu.uz.jira.event.planner.project.plan.rest;
+package edu.uz.jira.event.planner.project.plan.rest.manager;
 
 import com.atlassian.activeobjects.internal.ActiveObjectsSqlException;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
-import edu.uz.jira.event.planner.exceptions.ResourceException;
-import edu.uz.jira.event.planner.project.plan.EventOrganizationPlanService;
+import edu.uz.jira.event.planner.exception.ResourceException;
+import edu.uz.jira.event.planner.project.plan.EventPlanService;
 import edu.uz.jira.event.planner.project.plan.model.Domain;
+import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import net.java.ao.Entity;
 
 import javax.annotation.Nonnull;
@@ -22,14 +23,21 @@ import java.util.Map;
 @Path("/domain")
 public class EventDomainRestManager extends RestManager {
 
+    /**
+     * Constructor.
+     *
+     * @param userManager         Injected {@code UserManager} implementation.
+     * @param transactionTemplate Injected {@code TransactionTemplate} implementation.
+     * @param eventPlanService    Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
+     */
     public EventDomainRestManager(@Nonnull final UserManager userManager,
                                   @Nonnull final TransactionTemplate transactionTemplate,
-                                  @Nonnull final EventOrganizationPlanService eventPlanService) {
+                                  @Nonnull final EventPlanService eventPlanService) {
         super(userManager, transactionTemplate, eventPlanService);
     }
 
     @Override
-    protected void doPut(@Nonnull final EventConfig resource) throws ResourceException {
+    protected void doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException {
         try {
             eventPlanService.addFrom((EventDomainConfig) resource);
         } catch (ClassCastException e) {
@@ -40,7 +48,7 @@ public class EventDomainRestManager extends RestManager {
     }
 
     @Override
-    protected EventConfig doGet(@Nonnull final Map parameterMap) {
+    protected EventRestConfiguration doGet(@Nonnull final Map parameterMap) {
         return doGetById(parameterMap, Domain.class, new EventDomainConfig());
     }
 
@@ -57,19 +65,29 @@ public class EventDomainRestManager extends RestManager {
         return result;
     }
 
+    /**
+     * Event Domain Configuration in XML form.
+     */
     @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
-    public static final class EventDomainConfig implements EventConfig {
+    public static final class EventDomainConfig implements EventRestConfiguration {
         @XmlElement
         private String name;
         @XmlElement
         private String description;
 
+        /**
+         * Constructor.
+         * Fills all fields with an empty String.
+         */
         public EventDomainConfig() {
             setName("");
             setDescription("");
         }
 
+        /**
+         * @return Event Domain Configuration with all empty fields (but not null).
+         */
         public static EventDomainConfig createEmpty() {
             return new EventDomainConfig();
         }
@@ -90,11 +108,17 @@ public class EventDomainRestManager extends RestManager {
             this.description = description;
         }
 
+        /**
+         * @see {@link EventRestConfiguration#isFullfilled()}
+         */
         @Override
         public boolean isFullfilled() {
             return getName() != null && !getName().isEmpty();
         }
 
+        /**
+         * @see {@link Object#equals(Object)}
+         */
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -107,6 +131,9 @@ public class EventDomainRestManager extends RestManager {
 
         }
 
+        /**
+         * @see {@link Object#hashCode()}
+         */
         @Override
         public int hashCode() {
             return getName().hashCode();

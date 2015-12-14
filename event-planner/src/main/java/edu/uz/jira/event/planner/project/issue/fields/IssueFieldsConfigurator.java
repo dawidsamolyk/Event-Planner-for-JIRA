@@ -8,7 +8,7 @@ import com.atlassian.jira.issue.fields.layout.field.FieldLayoutSchemeEntity;
 import com.atlassian.jira.issue.issuetype.IssueType;
 import com.atlassian.jira.project.Project;
 import com.atlassian.sal.api.message.I18nResolver;
-import edu.uz.jira.event.planner.util.Internationalization;
+import edu.uz.jira.event.planner.util.text.Internationalization;
 
 import javax.annotation.Nonnull;
 

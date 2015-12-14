@@ -1,6 +1,6 @@
-package edu.uz.jira.event.planner.exceptions;
+package edu.uz.jira.event.planner.exception;
 
-import edu.uz.jira.event.planner.util.TextUtils;
+import edu.uz.jira.event.planner.util.text.TextUtils;
 
 /**
  * Exception which indicates null reference passed to the method which not accepts non-instance references.

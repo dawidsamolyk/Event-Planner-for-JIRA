@@ -1,7 +1,7 @@
 package edu.uz.jira.event.planner.project.plan.rest;
 
 /**
- * Database transaction/operation result.
+ * Database (Active Objects) transaction/operation result.
  */
 public class TransactionResult {
     private State state;
@@ -15,21 +15,21 @@ public class TransactionResult {
     }
 
     /**
-     * Setting result to VALID.
+     * Setting state to VALID.
      */
     public void setValid() {
         state = State.VALID;
     }
 
     /**
-     * Setting result to ERROR.
+     * Setting state to ERROR.
      */
     public void setError() {
         state = State.ERROR;
     }
 
     /**
-     * @return Is result valid.
+     * @return Is state valid.
      */
     public boolean isValid() {
         return state.equals(State.VALID);
@@ -38,7 +38,7 @@ public class TransactionResult {
     /**
      * State of transaction.
      */
-    public enum State {
-        UNKNOWN, VALID, ERROR;
+    private enum State {
+        UNKNOWN, VALID, ERROR
     }
 }

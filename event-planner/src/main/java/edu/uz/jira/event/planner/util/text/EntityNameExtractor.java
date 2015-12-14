@@ -1,6 +1,6 @@
-package edu.uz.jira.event.planner.util;
+package edu.uz.jira.event.planner.util.text;
 
-import edu.uz.jira.event.planner.project.plan.model.NamedEntity;
+import edu.uz.jira.event.planner.project.plan.model.NamedEntityWithDescription;
 
 import javax.annotation.Nonnull;
 
@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
  */
 public class EntityNameExtractor {
 
-    public String[] getNames(@Nonnull final NamedEntity[] entities) {
+    public String[] getNames(@Nonnull final NamedEntityWithDescription[] entities) {
         int numberOfEntities = entities.length;
         String[] result = new String[numberOfEntities];
 

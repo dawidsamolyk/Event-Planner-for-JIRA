@@ -5,7 +5,7 @@ import com.atlassian.jira.issue.fields.OrderableField;
 import com.atlassian.jira.issue.fields.layout.field.*;
 import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.sal.api.message.I18nResolver;
-import edu.uz.jira.event.planner.util.Internationalization;
+import edu.uz.jira.event.planner.util.text.Internationalization;
 import org.apache.commons.collections.MapUtils;
 import org.ofbiz.core.entity.GenericValue;
 

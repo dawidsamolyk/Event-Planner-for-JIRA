@@ -1,4 +1,4 @@
-package edu.uz.jira.event.planner.exceptions;
+package edu.uz.jira.event.planner.exception;
 
 /**
  * Exception which indicates problem with resource in database (Acrive Objects) for example when try to add.

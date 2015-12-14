@@ -3,7 +3,7 @@ package ut.edu.uz.jira.event.planner.workflow;
 import com.atlassian.jira.issue.status.Status;
 import com.atlassian.jira.issue.status.category.StatusCategory;
 import com.atlassian.jira.workflow.JiraWorkflow;
-import edu.uz.jira.event.planner.exceptions.NullArgumentException;
+import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.workflow.WorkflowUtils;
 import org.junit.Test;
 import org.mockito.Mockito;

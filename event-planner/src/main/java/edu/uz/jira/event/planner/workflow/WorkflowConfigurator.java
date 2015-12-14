@@ -12,7 +12,7 @@ import com.opensymphony.workflow.loader.ActionDescriptor;
 import com.opensymphony.workflow.loader.ConditionDescriptor;
 import com.opensymphony.workflow.loader.FunctionDescriptor;
 import com.opensymphony.workflow.loader.ValidatorDescriptor;
-import edu.uz.jira.event.planner.util.TextUtils;
+import edu.uz.jira.event.planner.util.text.TextUtils;
 
 import javax.annotation.Nonnull;
 

@@ -2,7 +2,7 @@ package edu.uz.jira.event.planner.project.configuration;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.project.Project;
-import edu.uz.jira.event.planner.exceptions.NullArgumentException;
+import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.util.Validator;
 
 import javax.annotation.Nonnull;

@@ -14,7 +14,7 @@ import com.atlassian.jira.mock.ofbiz.MockOfBizDelegator;
 import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.project.issue.fields.FieldLayoutBuilder;
-import edu.uz.jira.event.planner.util.Internationalization;
+import edu.uz.jira.event.planner.util.text.Internationalization;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

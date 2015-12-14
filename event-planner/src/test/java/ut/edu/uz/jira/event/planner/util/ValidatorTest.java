@@ -1,6 +1,6 @@
 package ut.edu.uz.jira.event.planner.util;
 
-import edu.uz.jira.event.planner.exceptions.NullArgumentException;
+import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.util.Validator;
 import org.junit.Rule;
 import org.junit.Test;

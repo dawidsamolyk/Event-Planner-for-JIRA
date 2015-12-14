@@ -6,9 +6,9 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.version.VersionManager;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.sal.api.message.I18nResolver;
-import edu.uz.jira.event.planner.exceptions.NullArgumentException;
-import edu.uz.jira.event.planner.project.plan.EventOrganizationPlanService;
-import edu.uz.jira.event.planner.util.Internationalization;
+import edu.uz.jira.event.planner.exception.NullArgumentException;
+import edu.uz.jira.event.planner.project.plan.EventPlanService;
+import edu.uz.jira.event.planner.util.text.Internationalization;
 import webwork.action.Action;
 
 import javax.annotation.Nonnull;
@@ -27,7 +27,7 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
     private final VersionManager versionManager;
     private final I18nResolver internationalization;
     private final EventPlanConfigurationValidator validator;
-    private final EventOrganizationPlanService eventPlanService;
+    private final EventPlanService eventPlanService;
 
     /**
      * Constructor.
@@ -35,7 +35,7 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
      * @param i18nResolver Injected {@code I18nResolver} implementation.
      */
     public EventPlanConfigWebworkAction(@Nonnull final I18nResolver i18nResolver,
-                                        @Nonnull final EventOrganizationPlanService eventPlanService) {
+                                        @Nonnull final EventPlanService eventPlanService) {
         internationalization = i18nResolver;
         this.eventPlanService = eventPlanService;
         versionManager = ComponentAccessor.getVersionManager();

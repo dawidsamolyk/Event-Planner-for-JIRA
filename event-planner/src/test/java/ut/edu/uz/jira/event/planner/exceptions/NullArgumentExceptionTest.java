@@ -1,6 +1,6 @@
 package ut.edu.uz.jira.event.planner.exceptions;
 
-import edu.uz.jira.event.planner.exceptions.NullArgumentException;
+import edu.uz.jira.event.planner.exception.NullArgumentException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

@@ -10,14 +10,14 @@ import javax.annotation.Nonnull;
  * As ActiveObjects service is not thread-safe during first call, it is also important to ensure other HTTP request threads are blocked while initialisation is being performed.</li>
  */
 public class EventPlanIntializer {
-    private final EventOrganizationPlanService eventPlanService;
+    private final EventPlanService eventPlanService;
 
     /**
      * Constructor.
      *
      * @param eventPlanService Service which manages Event Plans.
      */
-    public EventPlanIntializer(@Nonnull final EventOrganizationPlanService eventPlanService) {
+    public EventPlanIntializer(@Nonnull final EventPlanService eventPlanService) {
         this.eventPlanService = eventPlanService;
     }
 

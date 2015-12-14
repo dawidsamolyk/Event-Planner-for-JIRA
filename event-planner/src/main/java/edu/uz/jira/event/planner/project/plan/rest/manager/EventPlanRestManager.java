@@ -1,13 +1,14 @@
-package edu.uz.jira.event.planner.project.plan.rest;
+package edu.uz.jira.event.planner.project.plan.rest.manager;
 
 import com.atlassian.activeobjects.internal.ActiveObjectsSqlException;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
-import edu.uz.jira.event.planner.exceptions.ResourceException;
-import edu.uz.jira.event.planner.project.plan.EventOrganizationPlanService;
+import edu.uz.jira.event.planner.exception.ResourceException;
+import edu.uz.jira.event.planner.project.plan.EventPlanService;
 import edu.uz.jira.event.planner.project.plan.model.Plan;
-import edu.uz.jira.event.planner.util.EntityNameExtractor;
-import edu.uz.jira.event.planner.util.TextUtils;
+import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
+import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
+import edu.uz.jira.event.planner.util.text.TextUtils;
 import net.java.ao.Entity;
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,14 +28,21 @@ public class EventPlanRestManager extends RestManager {
     private static final EntityNameExtractor ENTITY_NAME_EXTRACTOR = new EntityNameExtractor();
     private static final TextUtils TEXT_UTILS = new TextUtils();
 
+    /**
+     * Constructor.
+     *
+     * @param userManager         Injected {@code UserManager} implementation.
+     * @param transactionTemplate Injected {@code TransactionTemplate} implementation.
+     * @param eventPlanService    Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
+     */
     public EventPlanRestManager(@Nonnull final UserManager userManager,
                                 @Nonnull final TransactionTemplate transactionTemplate,
-                                @Nonnull final EventOrganizationPlanService eventPlanService) {
+                                @Nonnull final EventPlanService eventPlanService) {
         super(userManager, transactionTemplate, eventPlanService);
     }
 
     @Override
-    protected void doPut(@Nonnull final EventConfig resource) throws ResourceException {
+    protected void doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException {
         try {
             eventPlanService.addFrom((EventPlanConfig) resource);
         } catch (ClassCastException e) {
@@ -45,7 +53,7 @@ public class EventPlanRestManager extends RestManager {
     }
 
     @Override
-    protected EventConfig doGet(@Nonnull final Map parameterMap) {
+    protected EventRestConfiguration doGet(@Nonnull final Map parameterMap) {
         return doGetById(parameterMap, Plan.class, EventPlanConfig.createEmpty());
     }
 
@@ -65,9 +73,12 @@ public class EventPlanRestManager extends RestManager {
         return result;
     }
 
+    /**
+     * Event Plan Configuration in XML form.
+     */
     @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
-    public static final class EventPlanConfig implements EventConfig {
+    public static final class EventPlanConfig implements EventRestConfiguration {
         @XmlElement
         private String name;
         @XmlElement
@@ -77,6 +88,10 @@ public class EventPlanRestManager extends RestManager {
         @XmlElement
         private String domains;
 
+        /**
+         * Constructor.
+         * Fills all fields with an empty String.
+         */
         public EventPlanConfig() {
             setName("");
             setDescription("");
@@ -84,10 +99,16 @@ public class EventPlanRestManager extends RestManager {
             setDomains("");
         }
 
+        /**
+         * @return Event Plan Configuration with all empty fields (but not null).
+         */
         public static EventPlanConfig createEmpty() {
             return new EventPlanConfig();
         }
 
+        /**
+         * @see {@link EventRestConfiguration#isFullfilled()}
+         */
         @Override
         public boolean isFullfilled() {
             return StringUtils.isNotBlank(getName())
@@ -128,6 +149,9 @@ public class EventPlanRestManager extends RestManager {
             this.domains = domains;
         }
 
+        /**
+         * @see {@link Object#equals(Object)}
+         */
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -143,6 +167,9 @@ public class EventPlanRestManager extends RestManager {
 
         }
 
+        /**
+         * @see {@link Object#hashCode()}
+         */
         @Override
         public int hashCode() {
             return getName().hashCode();

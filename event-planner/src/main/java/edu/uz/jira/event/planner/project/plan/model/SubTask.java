@@ -4,7 +4,6 @@ import net.java.ao.schema.Table;
 
 /**
  * Sub-Task of the Event Organization Plan.
- * @Preload annotation tells Active Objects to load all the fields of the entity eagerly.
  * <ul>Best practices for developing with Active Objects (from Atlassian):</ul>
  * <li>The Active Objects framework does not know about renaming.
  * So if you change the name of an entity, it will remove the other entity and create a new one.
@@ -18,18 +17,8 @@ import net.java.ao.schema.Table;
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
 @Table("SubTask")
-public interface SubTask extends NamedEntity {
-    String DESCRIPTION = "DESCRIPTION";
-    String TIME_TO_COMPLETE = "TIME_TO_COMPLETE";
+public interface SubTask extends NamedEntityWithDescription, TimeframedEntity {
     String PARENT_TASK = "PARENT_TASK";
-
-    String getDescription();
-
-    void setDescription(String description);
-
-    String getTimeToComplete();
-
-    void setTimeToComplete(String time);
 
     Task getParentTask();
 
