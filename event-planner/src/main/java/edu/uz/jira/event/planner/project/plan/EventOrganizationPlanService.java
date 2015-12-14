@@ -2,11 +2,11 @@ package edu.uz.jira.event.planner.project.plan;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.tx.Transactional;
-import edu.uz.jira.event.planner.project.plan.model.Domain;
-import edu.uz.jira.event.planner.project.plan.model.Plan;
-import edu.uz.jira.event.planner.project.plan.model.PlanToTaskRelation;
-import edu.uz.jira.event.planner.project.plan.model.Task;
+import edu.uz.jira.event.planner.project.plan.model.*;
+import edu.uz.jira.event.planner.project.plan.rest.EventDomainRestManager;
+import edu.uz.jira.event.planner.project.plan.rest.EventPlanRestManager;
 import net.java.ao.Query;
+import net.java.ao.RawEntity;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -31,35 +31,45 @@ public class EventOrganizationPlanService {
 
     private PlanToTaskRelation associateEventTaskWithPlan(@Nonnull final Task task, @Nonnull final Plan plan) {
         PlanToTaskRelation postToLabel = activeObjectsService.create(PlanToTaskRelation.class);
-        postToLabel.setEventTask(task);
-        postToLabel.setEventPlan(plan);
+        postToLabel.setTask(task);
+        postToLabel.setPlan(plan);
         postToLabel.save();
         return postToLabel;
     }
 
-    private void associatePlanWithDomain(@Nonnull final Plan plan, @Nonnull final String domainName) {
+    private PlanToDomainRelation associatePlanWithDomain(@Nonnull final Plan plan, @Nonnull final String domainName) {
         Domain[] domains = null;
 
         if (domainName != null) {
             domains = activeObjectsService.find(Domain.class, Query.select().where("NAME = ?", domainName));
         }
         if (domains != null && domains.length == 1 && plan != null && domains[0] != null) {
-            plan.setDomain(domains[0]);
+            return associateEventPlanWithDomain(plan, domains[0]);
         }
+        return null;
+    }
+
+    private PlanToDomainRelation associateEventPlanWithDomain(@Nonnull final Plan plan, @Nonnull final Domain domain) {
+        PlanToDomainRelation result = activeObjectsService.create(PlanToDomainRelation.class);
+        result.setDomain(domain);
+        result.setPlan(plan);
+        result.save();
+        return result;
     }
 
     /**
      * @param resource Configuration of Event Organization Plan.
      * @return Newly created and added to database Event Organization Plan.
      */
-    public Plan addPlan(@Nonnull final EventPlansConfigResource.ResourceConfiguration resource) {
+    public Plan addFrom(@Nonnull final EventPlanRestManager.EventPlanConfig resource) {
+        if (resource == null) {
+            return null;
+        }
         Plan result = activeObjectsService.create(Plan.class);
-
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
-        result.setEstimatedTimeToComplete(resource.getTime());
-        associatePlanWithDomain(result, resource.getDomain());
-
+        result.setTimeToComplete(resource.getTime());
+        //associatePlanWithDomain(result, resource.getDomains());
         result.save();
         return result;
     }
@@ -68,7 +78,10 @@ public class EventOrganizationPlanService {
      * @param resource Configuration of Event Organization Domain.
      * @return Newly created and added to database Event Organization Domain.
      */
-    public Domain addDomain(@Nonnull final EventPlansConfigResource.ResourceConfiguration resource) {
+    public Domain addFrom(@Nonnull final EventDomainRestManager.EventDomainConfig resource) {
+        if (resource == null) {
+            return null;
+        }
         Domain result = activeObjectsService.create(Domain.class);
 
         result.setName(resource.getName());
@@ -79,28 +92,23 @@ public class EventOrganizationPlanService {
     }
 
     /**
-     * @return All Event Organization Plans.
+     * @return Database objects of specified type.
      */
-    public List<Plan> getPlans() {
-        return newArrayList(activeObjectsService.find(Plan.class));
+    public <T extends RawEntity<K>, K> List<T> get(@Nonnull final Class<T> type) {
+        if (type == null) {
+            return new ArrayList<T>();
+        }
+        return newArrayList(activeObjectsService.find(type));
     }
 
     /**
-     * @return All Event Organization Tasks.
+     * @return Event Plans names (map values) sorted by Event Domains names (map keys).
      */
-    public List<Task> getAllTasks() {
-        return newArrayList(activeObjectsService.find(Task.class));
-    }
-
-    private ArrayList<Domain> getDomains() {
-        return newArrayList(activeObjectsService.find(Domain.class));
-    }
-
     public Map<String, List<String>> getEventPlansSortedByDomain() {
         Map<String, List<String>> result = new HashMap<String, List<String>>();
 
-        for (Domain eachDomain : getDomains()) {
-            List<Plan> plans = Arrays.asList(eachDomain.getEventOrganizationPlans());
+        for (Domain eachDomain : get(Domain.class)) {
+            List<Plan> plans = Arrays.asList(eachDomain.getRelatedPlans());
             List<String> plansNames = new ArrayList<String>(plans.size());
 
             for (Plan eachPlan : plans) {
@@ -111,6 +119,19 @@ public class EventOrganizationPlanService {
         }
 
         return result;
+    }
+
+    /**
+     * Deletes all database content related with this plug-in.
+     */
+    public void clearDatabase() {
+        activeObjectsService.delete();
+        activeObjectsService.delete(activeObjectsService.find(Domain.class));
+        activeObjectsService.delete(activeObjectsService.find(Task.class));
+        activeObjectsService.delete(activeObjectsService.find(SubTask.class));
+        activeObjectsService.delete(activeObjectsService.find(Component.class));
+        activeObjectsService.delete(activeObjectsService.find(PlanToDomainRelation.class));
+        activeObjectsService.delete(activeObjectsService.find(PlanToTaskRelation.class));
     }
 
 }

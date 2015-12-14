@@ -7,16 +7,16 @@ import net.java.ao.schema.Table;
  * Relation between Event Organization Plan and Event Organization Task.
  * @Preload annotation tells Active Objects to load all the fields of the entity eagerly.
  */
-@Table("PlanToTask")
-public interface PlanToTaskRelation extends Entity {
+@Table("PlanToDomain")
+public interface PlanToDomainRelation extends Entity {
     String PLAN = "PLAN";
-    String TASK = "TASK";
+    String DOMAIN = "DOMAIN";
 
     Plan getPlan();
 
     void setPlan(Plan plan);
 
-    Task getTask();
+    Domain getDomain();
 
-    void setTask(Task task);
+    void setDomain(Domain domain);
 }

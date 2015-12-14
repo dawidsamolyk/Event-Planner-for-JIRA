@@ -1,11 +1,7 @@
 package edu.uz.jira.event.planner.project.plan.model;
 
-import net.java.ao.Entity;
-import net.java.ao.OneToMany;
-import net.java.ao.Preload;
+import net.java.ao.ManyToMany;
 import net.java.ao.schema.Table;
-
-import java.io.Serializable;
 
 /**
  * Domain of the Event Organization Plan.
@@ -23,17 +19,15 @@ import java.io.Serializable;
  * Instead, create a new column and migrate the data during the upgrade process.</li>
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
-@Table("EventPlan")
-@Preload
-public interface Domain extends Entity, Serializable {
-    String getName();
-
-    void setName(String name);
+@Table("Domain")
+public interface Domain extends NamedEntity {
+    String DESCRIPTION = "DESCRIPTION";
+    String RELATED_PLANS = "RELATED_PLANS";
 
     String getDescription();
 
     void setDescription(String description);
 
-    @OneToMany
-    Plan[] getEventOrganizationPlans();
+    @ManyToMany(value = PlanToDomainRelation.class)
+    Plan[] getRelatedPlans();
 }

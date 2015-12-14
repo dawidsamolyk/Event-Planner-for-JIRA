@@ -41,7 +41,8 @@ public class EventOrganizationProjectHook implements AddProjectHook {
      * @param workflowTransitionService Injected {@code WorkflowTransitionService} implementation.
      * @throws NullArgumentException Thrown when any input argument is null.
      */
-    public EventOrganizationProjectHook(@Nonnull final I18nResolver i18nResolver, @Nonnull final WorkflowTransitionService workflowTransitionService) throws NullArgumentException {
+    public EventOrganizationProjectHook(@Nonnull final I18nResolver i18nResolver,
+                                        @Nonnull final WorkflowTransitionService workflowTransitionService) throws NullArgumentException {
         workflowConfigurator = new WorkflowConfigurator(workflowTransitionService);
         workflowDescriptorsFactory = new WorkflowDescriptorsFactory();
         issueFieldsConfigurator = new IssueFieldsConfigurator(i18nResolver);

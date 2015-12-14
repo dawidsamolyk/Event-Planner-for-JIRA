@@ -4,6 +4,7 @@ import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import com.atlassian.templaterenderer.TemplateRenderer;
+import edu.uz.jira.event.planner.project.plan.model.Domain;
 import edu.uz.jira.event.planner.project.plan.model.Plan;
 
 import javax.annotation.Nonnull;
@@ -15,7 +16,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public final class EventPlanServlet extends HttpServlet {
     private final EventOrganizationPlanService eventPlanService;
@@ -36,17 +36,16 @@ public final class EventPlanServlet extends HttpServlet {
     /**
      * @return Event Organization Domain names (eg. Development).
      */
-    private Set<String> getAvailableDomainNames() {
-        return eventPlanService.getEventPlansSortedByDomain().keySet();
+    private List<Domain> getDomains() {
+        return eventPlanService.get(Domain.class);
     }
 
     /**
      * @return Event Organization Plans.
      */
     private List<Plan> getAllEventOrganziationPlans() {
-        return eventPlanService.getPlans();
+        return eventPlanService.get(Plan.class);
     }
-
 
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
@@ -56,9 +55,12 @@ public final class EventPlanServlet extends HttpServlet {
             return;
         }
 
+        eventPlanService.clearDatabase();
+
         Map<String, Object> context = new HashMap<String, Object>();
-        context.put("DOMAINS_NAMES", getAvailableDomainNames());
+        context.put("DOMAINS", getDomains());
         context.put("PLANS", getAllEventOrganziationPlans());
+        context.put("SERVICE", eventPlanService);
 
         response.setContentType("text/html;charset=utf-8");
         templateRenderer.render("/templates/admin/event-plans.vm", context, response.getWriter());

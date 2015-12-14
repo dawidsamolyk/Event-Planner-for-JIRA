@@ -1,15 +1,12 @@
 package edu.uz.jira.event.planner.project.plan.model;
 
-import net.java.ao.Entity;
 import net.java.ao.ManyToMany;
 import net.java.ao.OneToMany;
-import net.java.ao.Preload;
 import net.java.ao.schema.Table;
-
-import java.io.Serializable;
 
 /**
  * Task of the Event Organization Plan.
+ *
  * @Preload annotation tells Active Objects to load all the fields of the entity eagerly.
  * <ul>Best practices for developing with Active Objects (from Atlassian):</ul>
  * <li>The Active Objects framework does not know about renaming.
@@ -23,28 +20,29 @@ import java.io.Serializable;
  * Instead, create a new column and migrate the data during the upgrade process.</li>
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
-@Table("EventTask")
-@Preload
-public interface Task extends Entity, Serializable {
-    String getName();
-
-    void setName(String name);
+@Table("Task")
+public interface Task extends NamedEntity {
+    String DESCRIPTION = "DESCRIPTION";
+    String TIME_TO_COMPLETE = "TIME_TO_COMPLETE";
+    String COMPONENT = "COMPONENT";
+    String RELATED_PLANS = "RELATED_PLANS";
+    String RELATED_SUB_TASKS = "RELATED_SUB_TASKS";
 
     String getDescription();
 
     void setDescription(String description);
 
-    String getEstimatedTimeToComplete();
+    String getTimeToComplete();
 
-    void setEstimatedTimeToComplete(String time);
+    void setTimeToComplete(String time);
 
     Component getComponent();
 
     void setComponent(Component component);
 
     @ManyToMany(value = PlanToTaskRelation.class)
-    Plan[] getRelatedEventPlans();
+    Plan[] getRelatedPlans();
 
     @OneToMany
-    SubTask[] getSubTasks();
+    SubTask[] getRelatedSubTasks();
 }

@@ -1,14 +1,11 @@
 package edu.uz.jira.event.planner.project.plan.model;
 
-import net.java.ao.Entity;
 import net.java.ao.ManyToMany;
-import net.java.ao.Preload;
 import net.java.ao.schema.Table;
-
-import java.io.Serializable;
 
 /**
  * Plan of the Event Organization.
+ *
  * @Preload annotation tells Active Objects to load all the fields of the entity eagerly.
  * <ul>Best practices for developing with Active Objects (from Atlassian):</ul>
  * <li>The Active Objects framework does not know about renaming.
@@ -23,24 +20,23 @@ import java.io.Serializable;
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
 @Table("EventPlan")
-@Preload
-public interface Plan extends Entity, Serializable {
-    String getName();
-
-    void setName(String name);
+public interface Plan extends NamedEntity {
+    String DESCRIPTION = "DESCRIPTION";
+    String TIME_TO_COMPLETE = "TIME_TO_COMPLETE";
+    String RELATED_DOMAINS = "RELATED_DOMAINS";
+    String RELATED_TASKS = "RELATED_TASKS";
 
     String getDescription();
 
     void setDescription(String description);
 
-    Domain getDomain();
+    String getTimeToComplete();
 
-    void setDomain(Domain domain);
+    void setTimeToComplete(String time);
 
-    String getEstimatedTimeToComplete();
-
-    void setEstimatedTimeToComplete(String time);
+    @ManyToMany(value = PlanToDomainRelation.class)
+    Domain[] getRelatedDomains();
 
     @ManyToMany(value = PlanToTaskRelation.class)
-    Task[] getTasksToDo();
+    Task[] getRelatedTasks();
 }

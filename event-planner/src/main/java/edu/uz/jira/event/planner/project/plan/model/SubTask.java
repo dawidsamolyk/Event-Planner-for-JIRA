@@ -1,10 +1,6 @@
 package edu.uz.jira.event.planner.project.plan.model;
 
-import net.java.ao.Entity;
-import net.java.ao.Preload;
 import net.java.ao.schema.Table;
-
-import java.io.Serializable;
 
 /**
  * Sub-Task of the Event Organization Plan.
@@ -21,20 +17,19 @@ import java.io.Serializable;
  * Instead, create a new column and migrate the data during the upgrade process.</li>
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
-@Table("EventTask")
-@Preload
-public interface SubTask extends Entity, Serializable {
-    String getName();
-
-    void setName(String name);
+@Table("SubTask")
+public interface SubTask extends NamedEntity {
+    String DESCRIPTION = "DESCRIPTION";
+    String TIME_TO_COMPLETE = "TIME_TO_COMPLETE";
+    String PARENT_TASK = "PARENT_TASK";
 
     String getDescription();
 
     void setDescription(String description);
 
-    String getEstimatedTimeToComplete();
+    String getTimeToComplete();
 
-    void setEstimatedTimeToComplete(String time);
+    void setTimeToComplete(String time);
 
     Task getParentTask();
 

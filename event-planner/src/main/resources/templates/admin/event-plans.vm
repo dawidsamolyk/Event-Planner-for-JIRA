@@ -38,23 +38,23 @@
 
     <table id="plans-table" class="aui aui-table-rowhover">
         <thead>
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Description
-                </th>
-                <th>
-                    Domain
-                </th>
-                <th>
-                    Estimated time to complete
-                </th>
-                <th>
-                    Operations
-                </th>
-            </tr>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Domains
+            </th>
+            <th>
+                Estimated time to complete
+            </th>
+            <th>
+                Operations
+            </th>
+        </tr>
         </thead>
         <tbody>
         #foreach($eachPlan in $PLANS)
@@ -68,25 +68,29 @@
                     $eachPlan.getDescription()
                 </td>
                 <td>
-                    <a href="/jira/secure/" title="See Event Organization domain">$eachPlan.getDomain().getName()</a>
+                    <ul>
+                        #foreach($eachDomain in $eachPlan.getRelatedDomains())
+                        <li><a href="/jira/secure/" title="See Event Organization domains">$eachDomain.getName()</a></li>
+                        #end
+                    </ul>
                 </td>
                 <td>
-                    $eachPlan.getEstimatedTimeToComplete()
+                    $eachPlan.getTimeToComplete()
                 </td>
                 <td>
                     <ul class="operations-list">
                         <li>
-                            <a id="configure-"
+                            <a id="configure"
                                href="/jira/secure/admin/ViewIssueFields.jspa"
                                title="Configure Event Organization Plan">Configure</a>
                         </li>
                         <li>
-                            <a id="copy-"
+                            <a id="copy"
                                href="/jira/secure/admin/CopyFieldLayout!default.jspa?id=10000"
                                title="Copy Event Organization Plan">Copy</a>
                         </li>
                         <li>
-                            <a id="delete-"
+                            <a id="delete"
                                href="/jira/secure/admin/ViewIssueFields.jspa"
                                title="Delete Event Organization Plan">Delete</a>
                         </li>
@@ -124,22 +128,22 @@
                 <div class="description" id="plan-time-description">Estimated time for event organization.</div>
             </div>
             <div class="field-group">
-                <label for="plan-domain">Domain of the event<span
+                <label for="plan-domains">Domain of the event<span
                         class="aui-icon icon-required">(required)</span></label>
-                <select class="select" id="plan-domain" name="plan-domain" title="Domain">
-                    #foreach($eachDomain in $DOMAINS_NAMES)
-                    <option>$eachDomain</option>
+                <select class="multi-select" multiple="multiple" size="$DOMAINS.size()" id="plan-domains" name="plan-domains" title="Domain">
+                    #foreach($eachDomain in $DOMAINS)
+                        <option>$eachDomain.getName()</option>
                     #end
                 </select>
 
                 <div class="aui-buttons">
-                    <button id="add-domain" class="aui-button trigger-dialog">
+                    <button id="add-domains" class="aui-button trigger-dialog">
                         <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
                         Add new Domain
                     </button>
                 </div>
 
-                <div class="description" id="plan-domain-description">Domain of an event.</div>
+                <div class="description" id="plan-domains-description">Event domains.</div>
             </div>
         </form>
     </div>
@@ -151,30 +155,30 @@
     </footer>
 </section>
 
-<section role="dialog" id="event-domain-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+<section role="dialog" id="event-domains-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
     <header class="aui-dialog2-header">
         <h2 class="aui-dialog2-header-main">Event Domain Configuration</h2>
     </header>
     <div class="aui-dialog2-content">
-        <form class="aui" id="event-domain-configuration" action="#" method="post">
-            <div class="field-group" id="domain-name-group">
-                <label for="domain-name">Name<span class="aui-icon icon-required">(required)</span></label>
-                <input id="domain-name" name="domain-name" type="text">
+        <form class="aui" id="event-domains-configuration" action="#" method="post">
+            <div class="field-group" id="domains-name-group">
+                <label for="domains-name">Name<span class="aui-icon icon-required">(required)</span></label>
+                <input id="domains-name" name="domains-name" type="text">
 
-                <div class="description" id="domain-name-description">Name of the Domain.</div>
+                <div class="description" id="domains-name-description">Name of the Domain.</div>
             </div>
-            <div class="field-group" id="domain-description-group">
-                <label for="domain-description">Description</label>
-                <input id="domain-description" name="domain-description" type="text">
+            <div class="field-group" id="domains-description-group">
+                <label for="domains-description">Description</label>
+                <input id="domains-description" name="domains-description" type="text">
 
-                <div class="description" id="domain-description-description">Description of the Domain.</div>
+                <div class="description" id="domains-description-description">Description of the Domain.</div>
             </div>
         </form>
     </div>
     <footer class="aui-dialog2-footer">
         <div class="aui-dialog2-footer-actions">
-            <button id="event-domain-dialog-cancel-button" class="aui-button">Cancel</button>
-            <button id="event-domain-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save
+            <button id="event-domains-dialog-cancel-button" class="aui-button">Cancel</button>
+            <button id="event-domains-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save
             </button>
         </div>
     </footer>
@@ -187,19 +191,19 @@
             document.getElementById("plan-name").value = "";
             document.getElementById("plan-description").value = "";
             document.getElementById("plan-time").value = "";
-            document.getElementById("plan-domain").value = "";
+            document.getElementById("plan-domains").value = "";
 
             AJS.dialog2("#event-plan-dialog").show();
         });
 
         function saveEventPlan() {
-            var url = AJS.contextPath() + "/rest/event-plans/1.0/";
+            var url = AJS.contextPath() + "/rest/event-plans/1.0/plan";
 
             jQuery.ajax({
                 url: url,
                 type: "PUT",
                 contentType: "application/json",
-                data: '{ "type" : "PLAN" , "name": "' + AJS.$("#plan-name").attr("value") + '", "description": "' +  AJS.$("#plan-description").attr("value") + '", "time": "' +  AJS.$("#plan-time").attr("value") + '", "domain": "' +  AJS.$("#plan-domain").attr("value") + '" }',
+                data: '{ "name": "' + AJS.$("#plan-name").attr("value") + '", "description": "' +  AJS.$("#plan-description").attr("value") + '", "time": "' +  AJS.$("#plan-time").attr("value") + '", "domains": "' +  AJS.$("#plan-domains").attr("value") + '" }',
                 processData: false
             });
         }
@@ -209,7 +213,7 @@
 
             var planName = document.getElementById("plan-name").value;
             var planTime = document.getElementById("plan-time").value;
-            var domainName = document.getElementById("plan-domain").value;
+            var domainName = document.getElementById("plan-domains").value;
             var valid = true;
 
             if(planName.valueOf() == "".valueOf()) {
@@ -221,7 +225,7 @@
                 valid = false;
             }
             if(domainName.valueOf() == "".valueOf()) {
-                AJS.$('#plan-domain-description').html('<div class="error" data-field="plan-domain">You must specify a Domain of event Plan.</div>');
+                AJS.$('#plan-domains-description').html('<div class="error" data-field="plan-domains">You must select at least one Domain of event Plan.</div>');
                 valid = false;
             }
 
@@ -231,7 +235,7 @@
                 // TODO Sprawdź czy obiekt Plan o tej nazwie już istnieje
                 saveEventPlan();
 
-                AJS.dialog2("#event-domain-dialog").hide();
+                AJS.dialog2("#event-domains-dialog").hide();
                 AJS.dialog2("#event-plan-dialog").hide();
             }
         });
@@ -239,56 +243,57 @@
         AJS.$("#event-plan-dialog-cancel-button").click(function(e) {
             e.preventDefault();
             AJS.dialog2("#event-plan-dialog").hide();
-            AJS.dialog2("#event-domain-dialog").hide();
+            AJS.dialog2("#event-domains-dialog").hide();
         });
 
-        AJS.$("#add-domain").click(function(e) {
+        AJS.$("#add-domains").click(function(e) {
             e.preventDefault();
 
-            document.getElementById("domain-name").value = "";
-            document.getElementById("domain-description").value = "";
+            document.getElementById("domains-name").value = "";
+            document.getElementById("domains-description").value = "";
 
             AJS.dialog2("#event-plan-dialog").hide();
-            AJS.dialog2("#event-domain-dialog").show();
+            AJS.dialog2("#event-domains-dialog").show();
         });
 
         function saveEventDomain() {
-            var url = AJS.contextPath() + "/rest/event-plans/1.0/";
+            var url = AJS.contextPath() + "/rest/event-plans/1.0/domain";
 
             jQuery.ajax({
                 url: url,
                 type: "PUT",
                 contentType: "application/json",
-                data: '{ "type" : "DOMAIN" , "name": "' + AJS.$("#domain-name").attr("value") + '", "description": "' +  AJS.$("#domain-description").attr("value") + '" }',
+                data: '{ "name": "' + AJS.$("#domains-name").attr("value") + '", "description": "' +  AJS.$("#domains-description").attr("value") + '" }',
                 processData: false
             });
         }
 
-        AJS.$("#event-domain-dialog-save-button").click(function(e) {
+        AJS.$("#event-domains-dialog-save-button").click(function(e) {
             e.preventDefault();
 
-            var domainName = document.getElementById("domain-name").value;
+            var domainName = document.getElementById("domains-name").value;
 
             if(domainName.valueOf() == "".valueOf()) {
-                AJS.$('#domain-name-description').html('<div class="error" data-field="domain-name">You must specify a name of the event Domain.</div>');
+                AJS.$('#domains-name-description').html('<div class="error" data-field="domains-name">You must specify a name of the event Domain.</div>');
             } else {
                 // TODO Sprawdź czy obiekt Domain o tej nazwie już istnieje
 
                 saveEventDomain();
 
-                AJS.dialog2("#event-domain-dialog").hide();
+                AJS.dialog2("#event-domains-dialog").hide();
                 AJS.dialog2("#event-plan-dialog").show();
 
                 location.reload();
             }
         });
 
-        AJS.$("#event-domain-dialog-cancel-button").click(function(e) {
+        AJS.$("#event-domains-dialog-cancel-button").click(function(e) {
             e.preventDefault();
 
-            AJS.dialog2("#event-domain-dialog").hide();
+            AJS.dialog2("#event-domains-dialog").hide();
             AJS.dialog2("#event-plan-dialog").show();
         });
+
 </script>
 </body>
 </html>

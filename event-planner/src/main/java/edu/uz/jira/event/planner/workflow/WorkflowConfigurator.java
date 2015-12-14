@@ -39,7 +39,7 @@ public class WorkflowConfigurator {
 
     /**
      * @param workflow         Worflow to configure.
-     * @param postFunction     Post-function to addPlan.
+     * @param postFunction     Post-function to addFrom.
      * @param transitionsNames Names of the transitions to which post-function should be added.
      */
     public void addToDraft(@Nonnull final JiraWorkflow workflow, @Nonnull final FunctionDescriptor postFunction, @Nonnull final String... transitionsNames) throws JiraException {
@@ -73,7 +73,7 @@ public class WorkflowConfigurator {
 
     /**
      * @param workflow         Worflow to configure.
-     * @param validator        Validator to addPlan.
+     * @param validator        Validator to addFrom.
      * @param transitionsNames Names of the transitions to which validator should be added.
      */
     public void addToDraft(@Nonnull final JiraWorkflow workflow, @Nonnull final ValidatorDescriptor validator, @Nonnull final String... transitionsNames) throws JiraException {

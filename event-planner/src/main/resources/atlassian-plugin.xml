@@ -25,7 +25,6 @@
     <component-import key="activeObjectsService" interface="com.atlassian.activeobjects.external.ActiveObjects"/>
     <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager"/>
     <component-import key="loginUriProvider" interface="com.atlassian.sal.api.auth.LoginUriProvider"/>
-    <component-import key="pluginSettings" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>
     <component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/>
 
     <component key="transaction" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor"/>

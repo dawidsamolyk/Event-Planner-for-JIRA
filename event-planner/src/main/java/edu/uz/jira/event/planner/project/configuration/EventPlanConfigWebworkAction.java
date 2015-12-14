@@ -34,7 +34,8 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
      *
      * @param i18nResolver Injected {@code I18nResolver} implementation.
      */
-    public EventPlanConfigWebworkAction(@Nonnull final I18nResolver i18nResolver, @Nonnull final EventOrganizationPlanService eventPlanService) {
+    public EventPlanConfigWebworkAction(@Nonnull final I18nResolver i18nResolver,
+                                        @Nonnull final EventOrganizationPlanService eventPlanService) {
         internationalization = i18nResolver;
         this.eventPlanService = eventPlanService;
         versionManager = ComponentAccessor.getVersionManager();
