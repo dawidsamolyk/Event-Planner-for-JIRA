@@ -39,16 +39,30 @@ public abstract class RestManager {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response put(final EventConfig resource, @Context final HttpServletRequest request) {
         if (!isAdminUser(userManager.getRemoteUser(request))) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return buildStatus(Response.Status.UNAUTHORIZED);
         }
         if (resource == null) {
-            return Response.status(Response.Status.NO_CONTENT).build();
+            return buildStatus(Response.Status.NO_CONTENT);
         }
         if (!resource.isFullfilled()) {
-            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+            return buildStatus(Response.Status.NOT_ACCEPTABLE);
         }
 
+        final TransactionResult result = doPutTransaction(resource);
+
+        if (result.isValid()) {
+            return buildStatus(Response.Status.OK);
+        }
+        return buildStatus(Response.Status.INTERNAL_SERVER_ERROR);
+    }
+
+    private Response buildStatus(@Nonnull final Response.Status status) {
+        return Response.status(status).build();
+    }
+
+    private TransactionResult doPutTransaction(@Nonnull final EventConfig resource) {
         final TransactionResult result = new TransactionResult();
+
         transactionTemplate.execute(new TransactionCallback() {
             public Object doInTransaction() {
                 try {
@@ -61,10 +75,7 @@ public abstract class RestManager {
             }
         });
 
-        if (result.isValid()) {
-            return Response.status(Response.Status.OK).build();
-        }
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        return result;
     }
 
     protected abstract void doPut(@Nonnull final EventConfig resource) throws ResourceException;
@@ -73,7 +84,7 @@ public abstract class RestManager {
     @Produces(MediaType.APPLICATION_JSON)
     public Response get(@Context final HttpServletRequest request) {
         if (!isAdminUser(userManager.getRemoteUser(request))) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return buildStatus(Response.Status.UNAUTHORIZED);
         }
         return Response.ok(transactionTemplate.execute(new TransactionCallback() {
             public Object doInTransaction() {
@@ -82,7 +93,7 @@ public abstract class RestManager {
         })).build();
     }
 
-    protected abstract <T> EventConfig doGet(@Nonnull final Map parameterMap);
+    protected abstract EventConfig doGet(@Nonnull final Map parameterMap);
 
     protected EventConfig doGetById(@Nonnull final Map parameterMap, @Nonnull final Class<? extends RawEntity> entityType, @Nonnull final EventConfig emptyResult) {
         String values[] = (String[]) parameterMap.get("id");

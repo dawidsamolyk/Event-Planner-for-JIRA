@@ -6,7 +6,6 @@ import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.exceptions.ResourceException;
 import edu.uz.jira.event.planner.project.plan.EventOrganizationPlanService;
 import edu.uz.jira.event.planner.project.plan.model.Domain;
-import edu.uz.jira.event.planner.project.plan.model.Plan;
 import net.java.ao.Entity;
 
 import javax.annotation.Nonnull;
@@ -42,7 +41,7 @@ public class EventDomainRestManager extends RestManager {
 
     @Override
     protected EventConfig doGet(@Nonnull final Map parameterMap) {
-        return doGetById(parameterMap, Plan.class, new EventDomainConfig());
+        return doGetById(parameterMap, Domain.class, new EventDomainConfig());
     }
 
     @Override

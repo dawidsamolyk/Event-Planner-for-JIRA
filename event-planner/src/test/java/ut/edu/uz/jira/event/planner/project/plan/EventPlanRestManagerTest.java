@@ -38,7 +38,8 @@ public class EventPlanRestManagerTest {
         Mockito.when(result.getName()).thenReturn(planName);
         Mockito.when(result.getDescription()).thenReturn(planDescription);
         Mockito.when(result.getTimeToComplete()).thenReturn(planTime);
-        Mockito.when(result.getRelatedDomains()).thenReturn(new Domain[]{EventDomainRestManagerTest.getMockDomain(2, domainName, "")});
+        Domain mockDomain = EventDomainRestManagerTest.getMockDomain(2, domainName, "");
+        Mockito.when(result.getRelatedDomains()).thenReturn(new Domain[]{mockDomain});
         return result;
     }
 

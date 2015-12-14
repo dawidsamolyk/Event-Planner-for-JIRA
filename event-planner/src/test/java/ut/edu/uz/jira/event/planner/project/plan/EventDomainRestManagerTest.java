@@ -146,7 +146,7 @@ public class EventDomainRestManagerTest {
         Domain mockDomain = getMockDomain(2, testName, testDescription);
         Mockito.when(mockActiveObjects.find(Domain.class)).thenReturn(new Domain[]{mockDomain});
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        mockRequest.setParameter("id", "1");
+        mockRequest.setParameter("id", "2");
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
         Response result = fixture.get(mockRequest);
@@ -231,11 +231,11 @@ public class EventDomainRestManagerTest {
     public void onPutShouldReturnInternalServerErrorWhenAnyExceptionOccursWhileAddingNewPlanToDatabase() throws SQLException {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
-
         EventPlanRestManager.EventPlanConfig invalidConfig = new EventPlanRestManager.EventPlanConfig();
         invalidConfig.setName("Test name");
         invalidConfig.setDescription("Test description");
         invalidConfig.setDomains("Test domains");
+        invalidConfig.setTime("Test time");
 
         Response result = fixture.put(invalidConfig, mockRequest);
 
