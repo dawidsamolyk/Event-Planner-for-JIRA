@@ -10,13 +10,18 @@ import com.atlassian.sal.api.user.UserProfile;
 import edu.uz.jira.event.planner.project.plan.EventPlanService;
 import edu.uz.jira.event.planner.project.plan.model.Domain;
 import edu.uz.jira.event.planner.project.plan.model.Plan;
+import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
+import net.java.ao.EntityManager;
+import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import ut.helpers.TestActiveObjects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
@@ -25,22 +30,33 @@ import java.sql.SQLException;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
+@RunWith(ActiveObjectsJUnitRunner.class)
+
 public class EventPlanRestManagerTest {
+    private EntityManager entityManager;
     private UserManager mockUserManager;
     private TransactionTemplate mockTransactionTemplate;
     private EventPlanService planService;
-    private ActiveObjects mockActiveObjects;
+    private ActiveObjects activeObjects;
     private Object transactionResult;
 
-    public static Plan getMockPlanWithOneDomain(int id, String planName, String planDescription, String planTime, String domainName) {
-        Plan result = mock(Plan.class);
-        Mockito.when(result.getID()).thenReturn(id);
-        Mockito.when(result.getName()).thenReturn(planName);
-        Mockito.when(result.getDescription()).thenReturn(planDescription);
-        Mockito.when(result.getTimeToComplete()).thenReturn(planTime);
-        Domain mockDomain = EventDomainRestManagerTest.getMockDomain(2, domainName, "");
-        Mockito.when(result.getRelatedDomains()).thenReturn(new Domain[]{mockDomain});
-        return result;
+    public Plan createActiveObjects(String planName, String planDescription, String planTime, String domainName) {
+        Domain domain = activeObjects.create(Domain.class);
+        domain.setName(domainName);
+        domain.save();
+
+        Plan plan = activeObjects.create(Plan.class);
+        plan.setName(planName);
+        plan.setDescription(planDescription);
+        plan.setTimeToComplete(planTime);
+        plan.save();
+
+        PlanToDomainRelation relation = activeObjects.create(PlanToDomainRelation.class);
+        relation.setPlan(plan);
+        relation.setDomain(domain);
+        relation.save();
+
+        return plan;
     }
 
     @Before
@@ -59,43 +75,10 @@ public class EventPlanRestManagerTest {
             }
         });
 
-        mockActiveObjects = mock(ActiveObjects.class);
-        Mockito.when(mockActiveObjects.create(Plan.class)).thenAnswer(new Answer<Plan>() {
-            @Override
-            public Plan answer(InvocationOnMock invocation) throws Throwable {
-                final Plan resultMock = mock(Plan.class);
-
-                Mockito.doAnswer(new Answer() {
-                    @Override
-                    public Object answer(InvocationOnMock invocation) throws Throwable {
-                        Mockito.when(resultMock.getName()).thenReturn((String) invocation.getArguments()[0]);
-                        return null;
-                    }
-                }).when(resultMock).setName(Mockito.anyString());
-
-                Mockito.doAnswer(new Answer() {
-                    @Override
-                    public Object answer(InvocationOnMock invocation) throws Throwable {
-                        Mockito.when(resultMock.getDescription()).thenReturn((String) invocation.getArguments()[0]);
-                        return null;
-                    }
-                }).when(resultMock).setDescription(Mockito.anyString());
-
-                Mockito.doAnswer(new Answer() {
-                    @Override
-                    public Object answer(InvocationOnMock invocation) throws Throwable {
-                        Mockito.when(resultMock.getTimeToComplete()).thenReturn((String) invocation.getArguments()[0]);
-                        return null;
-                    }
-                }).when(resultMock).setTimeToComplete(Mockito.anyString());
-
-                Mockito.doNothing().when(resultMock).save();
-
-                return resultMock;
-            }
-        });
-
-        planService = new EventPlanService(mockActiveObjects);
+        activeObjects = new TestActiveObjects(entityManager);
+        activeObjects.flushAll();
+        activeObjects.migrate(Domain.class, Plan.class);
+        planService = new EventPlanService(activeObjects);
     }
 
     @Test
@@ -157,10 +140,10 @@ public class EventPlanRestManagerTest {
         String testPlanDescription = "Test description";
         String testDomainName = "Test domain";
         String testTime = "Test time";
-        Plan mockPlan = getMockPlanWithOneDomain(1, testPlanName, testPlanDescription, testTime, testDomainName);
-        Mockito.when(mockActiveObjects.find(Plan.class)).thenReturn(new Plan[]{mockPlan});
+        Plan mockPlan = createActiveObjects(testPlanName, testPlanDescription, testTime, testDomainName);
+
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        mockRequest.setParameter("id", "1");
+        mockRequest.setParameter("id", Integer.toString(mockPlan.getID()));
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
 
         Response result = fixture.get(mockRequest);
@@ -196,10 +179,9 @@ public class EventPlanRestManagerTest {
 
     @Test
     public void shouldGetEmptyPlanWhenIdWasNotFound() {
-        Plan mockPlan = getMockPlanWithOneDomain(1, "Test name", "Test description", "Test time", "Test domain");
-        Mockito.when(mockActiveObjects.find(Plan.class)).thenReturn(new Plan[]{mockPlan});
+        Plan mockPlan = createActiveObjects("Test name", "Test description", "Test time", "Test domain");
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        mockRequest.setParameter("id", "99999");
+        mockRequest.setParameter("id", Integer.toString(mockPlan.getID() + 9123));
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
 
         Response result = fixture.get(mockRequest);
