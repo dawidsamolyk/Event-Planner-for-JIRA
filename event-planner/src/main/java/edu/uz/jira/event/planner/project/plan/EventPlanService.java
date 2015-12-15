@@ -51,6 +51,7 @@ public class EventPlanService {
         result.setDescription(resource.getDescription());
         result.setTimeToComplete(resource.getTime());
         relationsManager.associatePlanWithDomains(result, resource.getDomains());
+        relationsManager.associatePlanWithComponents(result, resource.getComponents());
 
         result.save();
         return result;

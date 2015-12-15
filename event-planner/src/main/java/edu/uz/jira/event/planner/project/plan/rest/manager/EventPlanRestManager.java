@@ -104,6 +104,8 @@ public class EventPlanRestManager extends RestManager {
         private String time;
         @XmlElement
         private String[] domains;
+        @XmlElement
+        private String[] components;
 
         /**
          * Constructor.
@@ -114,6 +116,7 @@ public class EventPlanRestManager extends RestManager {
             setDescription("");
             setTime("");
             setDomains(new String[]{""});
+            setComponents(new String[]{""});
         }
 
         /**
@@ -126,6 +129,7 @@ public class EventPlanRestManager extends RestManager {
             setDescription(plan.getDescription());
             setTime(plan.getTimeToComplete());
             setDomains(ENTITY_NAME_EXTRACTOR.getNames(plan.getDomains()));
+            setComponents(ENTITY_NAME_EXTRACTOR.getNames(plan.getComponents()));
         }
 
         /**
@@ -176,6 +180,14 @@ public class EventPlanRestManager extends RestManager {
 
         public void setDomains(@Nonnull String[] domains) {
             this.domains = domains;
+        }
+
+        public String[] getComponents() {
+            return components;
+        }
+
+        public void setComponents(String[] components) {
+            this.components = components;
         }
 
         /**

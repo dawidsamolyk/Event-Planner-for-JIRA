@@ -1,9 +1,11 @@
 package edu.uz.jira.event.planner.project.plan;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
+import edu.uz.jira.event.planner.project.plan.model.Component;
 import edu.uz.jira.event.planner.project.plan.model.Domain;
 import edu.uz.jira.event.planner.project.plan.model.Plan;
 import edu.uz.jira.event.planner.project.plan.model.Task;
+import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToTaskRelation;
 import net.java.ao.Query;
@@ -29,12 +31,57 @@ class RelationsManager {
         this.activeObjectsService = activeObjectsService;
     }
 
-    PlanToTaskRelation associateEventTaskWithPlan(@Nonnull final Task task, @Nonnull final Plan plan) {
-        PlanToTaskRelation postToLabel = activeObjectsService.create(PlanToTaskRelation.class);
-        postToLabel.setTask(task);
-        postToLabel.setPlan(plan);
-        postToLabel.save();
-        return postToLabel;
+    PlanToTaskRelation associate(@Nonnull final Plan plan, @Nonnull final Task task) {
+        if (plan == null || task == null) {
+            return null;
+        }
+        PlanToTaskRelation relation = activeObjectsService.create(PlanToTaskRelation.class);
+        relation.setTask(task);
+        relation.setPlan(plan);
+        relation.save();
+        return relation;
+    }
+
+    PlanToDomainRelation associate(@Nonnull final Plan plan, @Nonnull final Domain domain) {
+        if (plan == null || domain == null) {
+            return null;
+        }
+        PlanToDomainRelation result = activeObjectsService.create(PlanToDomainRelation.class);
+        result.setDomain(domain);
+        result.setPlan(plan);
+        result.save();
+        return result;
+    }
+
+    private PlanToComponentRelation associate(@Nonnull final Plan plan, @Nonnull final Component component) {
+        if (plan == null || component == null) {
+            return null;
+        }
+        PlanToComponentRelation result = activeObjectsService.create(PlanToComponentRelation.class);
+        result.setPlan(plan);
+        result.setComponent(component);
+        result.save();
+        return result;
+    }
+
+    Collection<PlanToComponentRelation> associatePlanWithComponents(@Nonnull final Plan plan, @Nonnull final String[] componentsNames) {
+        Collection<PlanToComponentRelation> result = new ArrayList<PlanToComponentRelation>();
+
+        List<Component> components = new ArrayList<Component>();
+        if (componentsNames != null && componentsNames.length > 0) {
+            for (String eachDomainName : componentsNames) {
+                Component[] eachComponent = activeObjectsService.find(Component.class, Query.select().where(Component.NAME + " = ?", eachDomainName));
+                components.addAll(Arrays.asList(eachComponent));
+            }
+        }
+        if (components != null && components.size() > 0 && plan != null) {
+            for (Component eachComponent : components) {
+                PlanToComponentRelation eachRelation = associate(plan, eachComponent);
+                result.add(eachRelation);
+            }
+        }
+
+        return result;
     }
 
     Collection<PlanToDomainRelation> associatePlanWithDomains(@Nonnull final Plan plan, @Nonnull final String[] domainsNames) {
@@ -49,18 +96,10 @@ class RelationsManager {
         }
         if (domains != null && domains.size() > 0 && plan != null) {
             for (Domain eachDomain : domains) {
-                PlanToDomainRelation eachRelation = associatePlanWithDomain(plan, eachDomain);
+                PlanToDomainRelation eachRelation = associate(plan, eachDomain);
                 result.add(eachRelation);
             }
         }
-        return result;
-    }
-
-    PlanToDomainRelation associatePlanWithDomain(@Nonnull final Plan plan, @Nonnull final Domain domain) {
-        PlanToDomainRelation result = activeObjectsService.create(PlanToDomainRelation.class);
-        result.setDomain(domain);
-        result.setPlan(plan);
-        result.save();
         return result;
     }
 }

@@ -4,8 +4,10 @@ import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import com.atlassian.templaterenderer.TemplateRenderer;
+import edu.uz.jira.event.planner.project.plan.model.Component;
 import edu.uz.jira.event.planner.project.plan.model.Domain;
 import edu.uz.jira.event.planner.project.plan.model.Plan;
+import edu.uz.jira.event.planner.project.plan.model.Task;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServlet;
@@ -54,7 +56,8 @@ public final class EventPlanServlet extends HttpServlet {
         Map<String, Object> context = new HashMap<String, Object>();
         context.put("DOMAINS", eventPlanService.get(Domain.class));
         context.put("PLANS", eventPlanService.get(Plan.class));
-        context.put("SERVICE", eventPlanService);
+        context.put("COMPONENTS", eventPlanService.get(Component.class));
+        context.put("TASKS", eventPlanService.get(Task.class));
 
         response.setContentType("text/html;charset=utf-8");
         templateRenderer.render("/templates/admin/event-plans.vm", context, response.getWriter());

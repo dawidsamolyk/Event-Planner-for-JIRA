@@ -58,45 +58,45 @@
         </thead>
         <tbody>
         #foreach($eachPlan in $PLANS)
-            <tr>
-                <td>
+        <tr>
+            <td>
                     <span data-scheme-field="name" class="field-name">
                         <a href="/jira/secure/" title="Edit Event Organization Plan properties">$eachPlan.getName()</a>
                     </span>
-                </td>
-                <td>
-                    $eachPlan.getDescription()
-                </td>
-                <td>
-                    <ul>
-                        #foreach($eachDomain in $eachPlan.getDomains())
-                            <li><a href="/jira/secure/" title="See Event Organization domains">$eachDomain.getName()</a></li>
-                        #end
-                    </ul>
-                </td>
-                <td>
-                    $eachPlan.getTimeToComplete()
-                </td>
-                <td>
-                    <ul class="operations-list">
-                        <li>
-                            <a id="configure"
-                               href="/jira/secure/admin/ViewIssueFields.jspa"
-                               title="Configure Event Organization Plan">Configure</a>
-                        </li>
-                        <li>
-                            <a id="copy"
-                               href="/jira/secure/admin/CopyFieldLayout!default.jspa?id=10000"
-                               title="Copy Event Organization Plan">Copy</a>
-                        </li>
-                        <li>
-                            <a id="delete"
-                               href="/jira/secure/admin/ViewIssueFields.jspa"
-                               title="Delete Event Organization Plan">Delete</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
+            </td>
+            <td>
+                $eachPlan.getDescription()
+            </td>
+            <td>
+                <ul>
+                    #foreach($eachDomain in $eachPlan.getDomains())
+                    <li><a href="/jira/secure/" title="See Event Organization domains">$eachDomain.getName()</a></li>
+                    #end
+                </ul>
+            </td>
+            <td>
+                $eachPlan.getTimeToComplete()
+            </td>
+            <td>
+                <ul class="operations-list">
+                    <li>
+                        <a id="configure"
+                           href="/jira/secure/admin/ViewIssueFields.jspa"
+                           title="Configure Event Organization Plan">Edit</a>
+                    </li>
+                    <li>
+                        <a id="copy"
+                           href="/jira/secure/admin/CopyFieldLayout!default.jspa?id=10000"
+                           title="Copy Event Organization Plan">Copy</a>
+                    </li>
+                    <li>
+                        <a id="delete"
+                           href="/jira/secure/admin/ViewIssueFields.jspa"
+                           title="Delete Event Organization Plan">Delete</a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
         #end
         </tbody>
     </table>
@@ -128,11 +128,12 @@
                 <div class="description" id="plan-time-description">Estimated time for event organization.</div>
             </div>
             <div class="field-group">
-                <label for="plan-domains">Domain of the event<span
+                <label for="plan-domains">Domains<span
                         class="aui-icon icon-required">(required)</span></label>
-                <select class="multi-select" multiple="multiple" size="$DOMAINS.size()" id="plan-domains" name="plan-domains" title="Domain">
+                <select class="multi-select" multiple="multiple" size="$DOMAINS.size()" id="plan-domains"
+                        name="plan-domains" title="Domain">
                     #foreach($eachDomain in $DOMAINS)
-                        <option>$eachDomain.getName()</option>
+                    <option>$eachDomain.getName()</option>
                     #end
                 </select>
 
@@ -144,6 +145,25 @@
                 </div>
 
                 <div class="description" id="plan-domains-description">Event domains.</div>
+            </div>
+            <div class="field-group">
+                <label for="plan-components">Components<span
+                        class="aui-icon icon-required">(required)</span></label>
+                <select class="multi-select" multiple="multiple" size="$COMPONENTS.size()" id="plan-components"
+                        name="plan-components" title="Components">
+                    #foreach($eachComponent in $COMPONENTS)
+                    <option>$eachComponent.getName()</option>
+                    #end
+                </select>
+
+                <div class="aui-buttons">
+                    <button id="add-component" class="aui-button trigger-dialog">
+                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                        Add new Component
+                    </button>
+                </div>
+
+                <div class="description" id="plan-tasks-description">Elements of an event.</div>
             </div>
         </form>
     </div>
@@ -184,6 +204,63 @@
     </footer>
 </section>
 
+<section role="dialog" id="event-component-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <header class="aui-dialog2-header">
+        <h2 class="aui-dialog2-header-main">Event Component Configuration</h2>
+    </header>
+    <div class="aui-dialog2-content">
+        <form class="aui" id="event-component-configuration" action="#" method="post">
+            <div class="field-group" id="component-name-group">
+                <label for="component-name">Name<span class="aui-icon icon-required">(required)</span></label>
+                <input id="component-name" name="component-name" type="text">
+
+                <div class="description" id="component-name-description">Name of the Component.</div>
+            </div>
+            <div class="field-group" id="component-description-group">
+                <label for="component-description">Description</label>
+                <input id="component-description" name="component-description" type="text">
+
+                <div class="description" id="component-description-description">Description of the Component.</div>
+            </div>
+            <div class="field-group" id="component-time-group">
+                <label for="component-time">Time to complete<span
+                        class="aui-icon icon-required">(required)</span></label>
+                <input id="component-time" name="component-time" type="text">
+
+                <div class="description" id="component-time-description">Estimated time to complete event Component.
+                </div>
+            </div>
+            <div class="field-group">
+                <label for="component-tasks">Tasks<span
+                        class="aui-icon icon-required">(required)</span></label>
+                <select class="multi-select" multiple="multiple" size="$COMPONENTS.size()" id="component-tasks"
+                        name="component-tasks" title="Tasks">
+                    #foreach($eachTask in $TASKS)
+                    <option>$eachTask.getName()</option>
+                    #end
+                </select>
+
+                <div class="aui-buttons">
+                    <button id="add-task" class="aui-button trigger-dialog">
+                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                        Add new Task
+                    </button>
+                </div>
+
+                <div class="description" id="component-tasks-description">Tasks to do for complete event component.
+                </div>
+            </div>
+        </form>
+    </div>
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button id="event-component-dialog-cancel-button" class="aui-button">Cancel</button>
+            <button id="event-component-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save
+            </button>
+        </div>
+    </footer>
+</section>
+
 <script type="text/javascript">
         AJS.$("#add-plan-button").click(function(e) {
             e.preventDefault();
@@ -192,6 +269,7 @@
             document.getElementById("plan-description").value = "";
             document.getElementById("plan-time").value = "";
             document.getElementById("plan-domains").value = "";
+            document.getElementById("plan-components").value = "";
 
             AJS.dialog2("#event-plan-dialog").show();
         });
@@ -206,7 +284,8 @@
                 data: '{     "name": "'         + AJS.$("#plan-name").attr("value") +
                          '", "description": "'  + AJS.$("#plan-description").attr("value") +
                          '", "time": "'         + AJS.$("#plan-time").attr("value") +
-                         '", "domains": '       + JSON.stringify(AJS.$("#plan-domains").val()) + ' }',
+                         '", "domains": '       + JSON.stringify(AJS.$("#plan-domains").val()) +
+                         '", "components": '    + JSON.stringify(AJS.$("#plan-components").val()) + ' }',
                 processData: false
             });
 
@@ -219,7 +298,8 @@
 
             var planName = document.getElementById("plan-name").value;
             var planTime = document.getElementById("plan-time").value;
-            var domainName = document.getElementById("plan-domains").value;
+            var domains = document.getElementById("plan-domains").value;
+            var components = document.getElementById("plan-components").value;
             var valid = true;
 
             if(planName.valueOf() == "".valueOf()) {
@@ -230,8 +310,12 @@
                 AJS.$('#plan-time-description').html('<div class="error" data-field="plan-time">You must specify estimated tine for this kind of event Plan.</div>');
                 valid = false;
             }
-            if(domainName.valueOf() == "".valueOf()) {
+            if(domains.valueOf() == "".valueOf()) {
                 AJS.$('#plan-domains-description').html('<div class="error" data-field="plan-domains">You must select at least one Domain of event Plan.</div>');
+                valid = false;
+            }
+            if(components.valueOf() == "".valueOf()) {
+                AJS.$('#plan-components-description').html('<div class="error" data-field="plan-domains">You must select at least one Component of event Plan.</div>');
                 valid = false;
             }
 
@@ -241,7 +325,6 @@
                 // TODO Sprawdź czy obiekt Plan o tej nazwie już istnieje
                 saveEventPlan();
 
-                AJS.dialog2("#event-domains-dialog").hide();
                 AJS.dialog2("#event-plan-dialog").hide();
             }
         });
@@ -249,6 +332,7 @@
         AJS.$("#event-plan-dialog-cancel-button").click(function(e) {
             e.preventDefault();
             AJS.dialog2("#event-plan-dialog").hide();
+            AJS.dialog2("#event-component-dialog").hide();
             AJS.dialog2("#event-domains-dialog").hide();
         });
 
@@ -258,7 +342,6 @@
             document.getElementById("domains-name").value = "";
             document.getElementById("domains-description").value = "";
 
-            AJS.dialog2("#event-plan-dialog").hide();
             AJS.dialog2("#event-domains-dialog").show();
         });
 
@@ -301,6 +384,58 @@
             AJS.dialog2("#event-domains-dialog").hide();
             AJS.dialog2("#event-plan-dialog").show();
         });
+
+         AJS.$("#add-component").click(function(e) {
+            e.preventDefault();
+
+            document.getElementById("component-name").value = "";
+            document.getElementById("component-description").value = "";
+            document.getElementById("component-time").value = "";
+            document.getElementById("component-tasks").value = "";
+
+            AJS.dialog2("#event-component-dialog").show();
+        });
+
+        function saveEventComponent() {
+            var url = AJS.contextPath() + "/rest/event-plans/1.0/component";
+
+            jQuery.ajax({
+                url: url,
+                type: "PUT",
+                contentType: "application/json",
+                data: '{    "name": "'        + AJS.$("#domains-name").attr("value") +
+                        '", "description": "' + AJS.$("#domains-description").attr("value") + '" }',
+                processData: false
+            });
+
+            // Zastąp GET
+            location.reload();
+        }
+
+        AJS.$("#event-component-dialog-save-button").click(function(e) {
+            e.preventDefault();
+
+            var name = document.getElementById("component-name").value;
+
+            if(domainName.valueOf() == "".valueOf()) {
+                AJS.$('#domains-name-description').html('<div class="error" data-field="domains-name">You must specify a name of the event Component.</div>');
+            } else {
+                // TODO Sprawdź czy obiekt Component o tej nazwie już istnieje
+
+                saveEventComponent();
+
+                AJS.dialog2("#event-component-dialog").hide();
+                AJS.dialog2("#event-plan-dialog").show();
+            }
+        });
+
+        AJS.$("#event-component-dialog-cancel-button").click(function(e) {
+            e.preventDefault();
+
+            AJS.dialog2("#event-component-dialog").hide();
+            AJS.dialog2("#event-plan-dialog").show();
+        });
+
 
 </script>
 </body>

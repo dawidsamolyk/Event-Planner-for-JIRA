@@ -16,7 +16,7 @@ import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManage
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
 import net.java.ao.EntityManager;
 import net.java.ao.test.converters.NameConverters;
-import net.java.ao.test.jdbc.DerbyEmbedded;
+import net.java.ao.test.jdbc.Hsql;
 import net.java.ao.test.jdbc.Jdbc;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
 import org.junit.Before;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.mock;
 
 @Transactional
 @RunWith(ActiveObjectsJUnitRunner.class)
-@Jdbc(DerbyEmbedded.class)
+@Jdbc(Hsql.class)
 @NameConverters
 public class EventDomainRestManagerTest {
     private EntityManager entityManager;

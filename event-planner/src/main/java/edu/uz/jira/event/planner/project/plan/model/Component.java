@@ -1,6 +1,8 @@
 package edu.uz.jira.event.planner.project.plan.model;
 
+import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import net.java.ao.Entity;
+import net.java.ao.ManyToMany;
 import net.java.ao.OneToMany;
 import net.java.ao.schema.Table;
 
@@ -21,8 +23,12 @@ import net.java.ao.schema.Table;
  */
 @Table("Component")
 public interface Component extends Entity, NamedEntityWithDescription, TimeframedEntity {
-    String RELATED_TASKS = "RELATED_TASKS";
+    String TASKS = "TASKS";
+    String PLANS = "PLANS";
 
     @OneToMany
-    Task[] getRelatedTasks();
+    Task[] getTasks();
+
+    @ManyToMany(value = PlanToComponentRelation.class)
+    Plan[] getPlans();
 }
