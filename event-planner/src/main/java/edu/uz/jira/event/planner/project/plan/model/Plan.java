@@ -2,7 +2,6 @@ package edu.uz.jira.event.planner.project.plan.model;
 
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
-import edu.uz.jira.event.planner.project.plan.model.relation.PlanToTaskRelation;
 import net.java.ao.Entity;
 import net.java.ao.ManyToMany;
 import net.java.ao.schema.Table;
@@ -25,13 +24,10 @@ import net.java.ao.schema.Table;
 @Table("EventPlan")
 public interface Plan extends Entity, NamedEntityWithDescription, TimeframedEntity {
     String DOMAINS = "DOMAINS";
-    String TASKS = "TASKS";
+    String COMPONENTS = "COMPONENTS";
 
     @ManyToMany(value = PlanToDomainRelation.class)
     Domain[] getDomains();
-
-    @ManyToMany(value = PlanToTaskRelation.class)
-    Task[] getTasks();
 
     @ManyToMany(value = PlanToComponentRelation.class)
     Component[] getComponents();

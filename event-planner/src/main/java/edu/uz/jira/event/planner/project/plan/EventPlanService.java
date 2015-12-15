@@ -4,7 +4,6 @@ import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.tx.Transactional;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
-import edu.uz.jira.event.planner.project.plan.model.relation.PlanToTaskRelation;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
 import net.java.ao.RawEntity;
@@ -111,7 +110,6 @@ public class EventPlanService {
      */
     public void clearDatabase() {
         deleteAll(PlanToDomainRelation.class);
-        deleteAll(PlanToTaskRelation.class);
         deleteAll(SubTask.class);
         deleteAll(Task.class);
         deleteAll(Component.class);

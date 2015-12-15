@@ -4,10 +4,8 @@ import com.atlassian.activeobjects.external.ActiveObjects;
 import edu.uz.jira.event.planner.project.plan.model.Component;
 import edu.uz.jira.event.planner.project.plan.model.Domain;
 import edu.uz.jira.event.planner.project.plan.model.Plan;
-import edu.uz.jira.event.planner.project.plan.model.Task;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
-import edu.uz.jira.event.planner.project.plan.model.relation.PlanToTaskRelation;
 import net.java.ao.Query;
 
 import javax.annotation.Nonnull;
@@ -29,17 +27,6 @@ class RelationsManager {
      */
     RelationsManager(@Nonnull final ActiveObjects activeObjectsService) {
         this.activeObjectsService = activeObjectsService;
-    }
-
-    PlanToTaskRelation associate(@Nonnull final Plan plan, @Nonnull final Task task) {
-        if (plan == null || task == null) {
-            return null;
-        }
-        PlanToTaskRelation relation = activeObjectsService.create(PlanToTaskRelation.class);
-        relation.setTask(task);
-        relation.setPlan(plan);
-        relation.save();
-        return relation;
     }
 
     PlanToDomainRelation associate(@Nonnull final Plan plan, @Nonnull final Domain domain) {

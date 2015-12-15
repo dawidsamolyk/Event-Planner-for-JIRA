@@ -49,6 +49,9 @@
                 Domains
             </th>
             <th>
+                Components
+            </th>
+            <th>
                 Estimated time to complete
             </th>
             <th>
@@ -71,6 +74,13 @@
                 <ul>
                     #foreach($eachDomain in $eachPlan.getDomains())
                     <li><a href="/jira/secure/" title="See Event Organization domains">$eachDomain.getName()</a></li>
+                    #end
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    #foreach($eachComponent in $eachPlan.getComponents())
+                    <li><a href="/jira/secure/" title="See Event Organization domains">$eachComponent.getName()</a></li>
                     #end
                 </ul>
             </td>
