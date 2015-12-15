@@ -1,6 +1,7 @@
 package ut.edu.uz.jira.event.planner.project.plan.rest.manager;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
+import com.atlassian.activeobjects.tx.Transactional;
 import com.atlassian.jira.mock.servlet.MockHttpServletRequest;
 import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
@@ -11,9 +12,13 @@ import edu.uz.jira.event.planner.project.plan.EventPlanService;
 import edu.uz.jira.event.planner.project.plan.model.Domain;
 import edu.uz.jira.event.planner.project.plan.model.Plan;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
 import net.java.ao.EntityManager;
+import net.java.ao.test.converters.NameConverters;
+import net.java.ao.test.jdbc.DerbyEmbedded;
+import net.java.ao.test.jdbc.Jdbc;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,19 +33,23 @@ import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
+@Transactional
 @RunWith(ActiveObjectsJUnitRunner.class)
-
+@Jdbc(DerbyEmbedded.class)
+@NameConverters
 public class EventPlanRestManagerTest {
     private EntityManager entityManager;
+    private MockHttpServletRequest mockRequest;
     private UserManager mockUserManager;
     private TransactionTemplate mockTransactionTemplate;
     private EventPlanService planService;
     private ActiveObjects activeObjects;
     private Object transactionResult;
 
-    public Plan createActiveObjects(String planName, String planDescription, String planTime, String domainName) {
+    public Plan createPlanWithDomain(String planName, String planDescription, String planTime, String domainName) throws SQLException {
         Domain domain = activeObjects.create(Domain.class);
         domain.setName(domainName);
         domain.save();
@@ -61,6 +70,8 @@ public class EventPlanRestManagerTest {
 
     @Before
     public void setUp() {
+        mockRequest = new MockHttpServletRequest();
+
         mockUserManager = mock(UserManager.class);
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(mock(UserProfile.class));
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(true);
@@ -71,7 +82,7 @@ public class EventPlanRestManagerTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 TransactionCallback callback = (TransactionCallback) invocation.getArguments()[0];
                 transactionResult = callback.doInTransaction();
-                return null;
+                return transactionResult;
             }
         });
 
@@ -86,9 +97,9 @@ public class EventPlanRestManagerTest {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-        Response result = fixture.get(new MockHttpServletRequest());
+        Response result = fixture.get(mockRequest);
 
-        assertEquals(Response.status(Response.Status.UNAUTHORIZED).build().getStatus(), result.getStatus());
+        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }
 
     @Test
@@ -96,9 +107,9 @@ public class EventPlanRestManagerTest {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-        Response result = fixture.put(getEmptyPlan(), new MockHttpServletRequest());
+        Response result = fixture.put(getEmptyPlan(), mockRequest);
 
-        assertEquals(Response.status(Response.Status.UNAUTHORIZED).build().getStatus(), result.getStatus());
+        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }
 
     private EventPlanRestManager.EventPlanConfig getEmptyPlan() {
@@ -110,9 +121,9 @@ public class EventPlanRestManagerTest {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-        Response result = fixture.get(new MockHttpServletRequest());
+        Response result = fixture.get(mockRequest);
 
-        assertEquals(Response.status(Response.Status.UNAUTHORIZED).build().getStatus(), result.getStatus());
+        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }
 
     @Test
@@ -120,120 +131,89 @@ public class EventPlanRestManagerTest {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-        Response result = fixture.put(getEmptyPlan(), new MockHttpServletRequest());
+        Response result = fixture.put(getEmptyPlan(), mockRequest);
 
-        assertEquals(Response.status(Response.Status.UNAUTHORIZED).build().getStatus(), result.getStatus());
+        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }
 
     @Test
     public void onPutshouldResponseNoContenWhenResourceIsNullOrEmpty() {
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-        Response result = fixture.put(null, new MockHttpServletRequest());
+        Response result = fixture.put(null, mockRequest);
 
-        assertEquals(Response.status(Response.Status.NO_CONTENT).build().getStatus(), result.getStatus());
+        assertEquals(Response.Status.NO_CONTENT.getStatusCode(), result.getStatus());
     }
 
-    @Test
-    public void shouldGetPlanFromDatabaseById() {
-        String testPlanName = "Test name";
-        String testPlanDescription = "Test description";
-        String testDomainName = "Test domain";
-        String testTime = "Test time";
-        Plan mockPlan = createActiveObjects(testPlanName, testPlanDescription, testTime, testDomainName);
+//    @Test
+//    public void shouldGetPlanFromDatabase() throws SQLException {
+//        String testPlanName = "Test name";
+//        String testPlanDescription = "Test description";
+//        String testDomainName = "Test domain";
+//        String testTime = "Test time";
+//        createPlanWithDomain(testPlanName, testPlanDescription, testTime, testDomainName);
+//        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+//
+//        fixture.get(mockRequest);
+//
+//        EventPlanRestManager.EventPlanConfig expected = new EventPlanRestManager.EventPlanConfig();
+//        expected.setName(testPlanName);
+//        expected.setDescription(testPlanDescription);
+//        expected.setDomains(new String[]{testDomainName});
+//        expected.setTime(testTime);
+//        assertEquals(expected, ((EventRestConfiguration[]) transactionResult)[0]);
+//    }
 
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        mockRequest.setParameter("id", Integer.toString(mockPlan.getID()));
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
-
-        Response result = fixture.get(mockRequest);
-
-        EventPlanRestManager.EventPlanConfig expected = new EventPlanRestManager.EventPlanConfig();
-        expected.setName(testPlanName);
-        expected.setDescription(testPlanDescription);
-        expected.setDomains(testDomainName);
-        expected.setTime(testTime);
-        assertEquals(expected, transactionResult);
-    }
-
-    @Test
-    public void shouldGetEmptyPlanWhenIdWasNotSpecified() {
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
-
-        Response result = fixture.get(mockRequest);
-
-        assertEquals(getEmptyPlan(), transactionResult);
-    }
+//    @Test
+//    public void shouldGetManyPlansFromDatabase() throws SQLException {
+//        createPlanWithDomain("Plan 1", "Description", "Test time", "Domain 1");
+//        createPlanWithDomain("Plan 2", "Description", "Test time", "Domain 2");
+//        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+//
+//        fixture.get(mockRequest);
+//
+//        assertTrue(((EventRestConfiguration[]) transactionResult).length == 2);
+//    }
 
     @Test
-    public void shouldGetEmptyPlanWhenIdIsNull() {
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        mockRequest.setParameter("id", null);
+    public void shouldGetEmptyPlansArrayWhenThereIsNoPlansInDatabase() {
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-        Response result = fixture.get(mockRequest);
+        fixture.get(mockRequest);
 
-        assertEquals(getEmptyPlan(), transactionResult);
-    }
-
-    @Test
-    public void shouldGetEmptyPlanWhenIdWasNotFound() {
-        Plan mockPlan = createActiveObjects("Test name", "Test description", "Test time", "Test domain");
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        mockRequest.setParameter("id", Integer.toString(mockPlan.getID() + 9123));
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
-
-        Response result = fixture.get(mockRequest);
-
-        assertEquals(getEmptyPlan(), transactionResult);
-    }
-
-    @Test
-    public void shouldGetEmptyPlanWhenIdIsEmpty() {
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        mockRequest.setParameter("id", "");
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
-
-        Response result = fixture.get(mockRequest);
-
-        assertEquals(getEmptyPlan(), transactionResult);
+        assertTrue(((EventRestConfiguration[]) transactionResult).length == 0);
     }
 
     @Test
     public void shouldPutNewEventPlan() {
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
         EventPlanRestManager.EventPlanConfig config = new EventPlanRestManager.EventPlanConfig();
         config.setName("Test name");
         config.setTime("Test time");
-        config.setDomains("Test domain");
+        config.setDomains(new String[]{"Test domains"});
 
         Response result = fixture.put(config, mockRequest);
 
-        assertEquals(Response.status(Response.Status.OK).build().getStatus(), result.getStatus());
+        assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
     }
 
     @Test
     public void shouldNotPutEmptyEventPlan() {
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
 
         Response result = fixture.put(new EventPlanRestManager.EventPlanConfig(), mockRequest);
 
-        assertEquals(Response.status(Response.Status.NOT_ACCEPTABLE).build().getStatus(), result.getStatus());
+        assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), result.getStatus());
     }
 
     @Test
     public void onPutShouldReturnInternalServerErrorWhenAnyExceptionOccursWhileAddingNewPlanToDatabase() throws SQLException {
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
-
         EventDomainRestManager.EventDomainConfig invalidConfig = new EventDomainRestManager.EventDomainConfig();
         invalidConfig.setName("Test name");
 
         Response result = fixture.put(invalidConfig, mockRequest);
 
-        assertEquals(Response.status(Response.Status.INTERNAL_SERVER_ERROR).build().getStatus(), result.getStatus());
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), result.getStatus());
     }
 }

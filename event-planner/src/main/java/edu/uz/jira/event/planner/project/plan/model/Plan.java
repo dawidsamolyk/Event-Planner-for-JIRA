@@ -2,6 +2,7 @@ package edu.uz.jira.event.planner.project.plan.model;
 
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToTaskRelation;
+import net.java.ao.Entity;
 import net.java.ao.ManyToMany;
 import net.java.ao.schema.Table;
 
@@ -21,13 +22,13 @@ import net.java.ao.schema.Table;
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
 @Table("EventPlan")
-public interface Plan extends NamedEntityWithDescription, TimeframedEntity {
-    String RELATED_DOMAINS = "RELATED_DOMAINS";
-    String RELATED_TASKS = "RELATED_TASKS";
+public interface Plan extends Entity, NamedEntityWithDescription, TimeframedEntity {
+    String DOMAINS = "DOMAINS";
+    String TASKS = "TASKS";
 
     @ManyToMany(value = PlanToDomainRelation.class)
-    Domain[] getRelatedDomains();
+    Domain[] getDomains();
 
     @ManyToMany(value = PlanToTaskRelation.class)
-    Task[] getRelatedTasks();
+    Task[] getTasks();
 }

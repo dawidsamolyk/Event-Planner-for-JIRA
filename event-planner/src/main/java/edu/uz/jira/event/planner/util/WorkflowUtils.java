@@ -1,4 +1,4 @@
-package edu.uz.jira.event.planner.workflow;
+package edu.uz.jira.event.planner.util;
 
 import com.atlassian.jira.issue.status.Status;
 import com.atlassian.jira.issue.status.category.StatusCategory;

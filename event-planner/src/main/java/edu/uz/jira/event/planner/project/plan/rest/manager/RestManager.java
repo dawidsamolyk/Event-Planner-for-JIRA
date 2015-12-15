@@ -7,27 +7,22 @@ import com.atlassian.sal.api.user.UserProfile;
 import edu.uz.jira.event.planner.exception.ResourceException;
 import edu.uz.jira.event.planner.project.plan.EventPlanService;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
-import edu.uz.jira.event.planner.project.plan.rest.TransactionResult;
 import net.java.ao.Entity;
 import net.java.ao.RawEntity;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Abstract REST manager which implements common functionalities for concrete REST managers.
  */
-@Path("/")
 public abstract class RestManager {
+    private final UserManager userManager;
     protected final TransactionTemplate transactionTemplate;
     protected final EventPlanService eventPlanService;
-    private final UserManager userManager;
 
     /**
      * Constructor.
@@ -51,8 +46,6 @@ public abstract class RestManager {
      * @param request  Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
      */
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
     public Response put(final EventRestConfiguration resource, @Context final HttpServletRequest request) {
         if (!isAdminUser(userManager.getRemoteUser(request))) {
             return buildStatus(Response.Status.UNAUTHORIZED);
@@ -64,9 +57,9 @@ public abstract class RestManager {
             return buildStatus(Response.Status.NOT_ACCEPTABLE);
         }
 
-        final TransactionResult result = doPutTransaction(resource);
+        Response response = doPutTransaction(resource);
 
-        if (result.isValid()) {
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
             return buildStatus(Response.Status.OK);
         }
         return buildStatus(Response.Status.INTERNAL_SERVER_ERROR);
@@ -80,22 +73,17 @@ public abstract class RestManager {
         return Response.status(status).build();
     }
 
-    private TransactionResult doPutTransaction(@Nonnull final EventRestConfiguration resource) {
-        final TransactionResult result = new TransactionResult();
-
-        transactionTemplate.execute(new TransactionCallback() {
-            public Object doInTransaction() {
+    private Response doPutTransaction(@Nonnull final EventRestConfiguration resource) {
+        return transactionTemplate.execute(new TransactionCallback<Response>() {
+            public Response doInTransaction() {
                 try {
                     doPut(resource);
-                    result.setValid();
+                    return buildStatus(Response.Status.OK);
                 } catch (ResourceException e) {
-                    result.setError();
+                    return buildStatus(Response.Status.INTERNAL_SERVER_ERROR);
                 }
-                return null;
             }
         });
-
-        return result;
     }
 
     protected abstract void doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException;
@@ -106,46 +94,34 @@ public abstract class RestManager {
      * @param request Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
      */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Response get(@Context final HttpServletRequest request) {
         if (!isAdminUser(userManager.getRemoteUser(request))) {
             return buildStatus(Response.Status.UNAUTHORIZED);
         }
-        return Response.ok(transactionTemplate.execute(new TransactionCallback() {
-            public Object doInTransaction() {
-                return doGet(request.getParameterMap());
+        return Response.ok(transactionTemplate.execute(new TransactionCallback<EventRestConfiguration[]>() {
+            public EventRestConfiguration[] doInTransaction() {
+                return doGet();
             }
         })).build();
     }
 
-    protected abstract EventRestConfiguration doGet(@Nonnull final Map parameterMap);
+    protected abstract EventRestConfiguration[] doGet();
 
-    protected EventRestConfiguration doGetById(@Nonnull final Map parameterMap, @Nonnull final Class<? extends RawEntity> entityType, @Nonnull final EventRestConfiguration defaultResult) {
-        String values[] = (String[]) parameterMap.get("id");
-        if (values == null || values.length < 1) {
-            return defaultResult;
-        }
-
-        String id = values[0];
-        if (id == null || id.isEmpty()) {
-            return defaultResult;
-        }
-        Integer idAsNumber = Integer.parseInt(id);
-
+    protected EventRestConfiguration[] doGetAll(@Nonnull final Class<? extends RawEntity> entityType, @Nonnull final EventRestConfiguration defaultResult) {
         List<? extends RawEntity> entities = eventPlanService.get(entityType);
+        int numberOfEntities = entities.size();
 
-        for (RawEntity eachEntity : entities) {
+        EventRestConfiguration[] result = new EventRestConfiguration[numberOfEntities];
+
+        for (int index = 0; index < numberOfEntities; index++) {
+            RawEntity eachEntity = entities.get(index);
+
             if (eachEntity instanceof Entity) {
-                Entity entity = (Entity) eachEntity;
-                if (idAsNumber.equals(entity.getID())) {
-                    return createFrom(entity);
-                }
+                result[index] = createFrom((Entity) eachEntity);
             }
-
         }
-        return defaultResult;
+        return result;
     }
 
-    protected abstract EventRestConfiguration createFrom(Entity entity);
+    protected abstract EventRestConfiguration createFrom(@Nonnull final Entity entity);
 }

@@ -7,7 +7,6 @@ import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelatio
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToTaskRelation;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
-import net.java.ao.Query;
 import net.java.ao.RawEntity;
 
 import javax.annotation.Nonnull;
@@ -26,37 +25,16 @@ import static com.google.common.collect.Lists.newArrayList;
 @Transactional
 public class EventPlanService {
     private final ActiveObjects activeObjectsService;
+    private final RelationsManager relationsManager;
 
+    /**
+     * Constructor.
+     *
+     * @param activeObjectsService Injected {@code ActiveObjects} implementation.
+     */
     public EventPlanService(@Nonnull final ActiveObjects activeObjectsService) {
         this.activeObjectsService = activeObjectsService;
-    }
-
-    private PlanToTaskRelation associateEventTaskWithPlan(@Nonnull final Task task, @Nonnull final Plan plan) {
-        PlanToTaskRelation postToLabel = activeObjectsService.create(PlanToTaskRelation.class);
-        postToLabel.setTask(task);
-        postToLabel.setPlan(plan);
-        postToLabel.save();
-        return postToLabel;
-    }
-
-    private PlanToDomainRelation associatePlanWithDomain(@Nonnull final Plan plan, @Nonnull final String domainName) {
-        Domain[] domains = null;
-
-        if (domainName != null) {
-            domains = activeObjectsService.find(Domain.class, Query.select().where(Domain.NAME + " = ?", domainName));
-        }
-        if (domains != null && domains.length == 1 && plan != null && domains[0] != null) {
-            return associateEventPlanWithDomain(plan, domains[0]);
-        }
-        return null;
-    }
-
-    private PlanToDomainRelation associateEventPlanWithDomain(@Nonnull final Plan plan, @Nonnull final Domain domain) {
-        PlanToDomainRelation result = activeObjectsService.create(PlanToDomainRelation.class);
-        result.setDomain(domain);
-        result.setPlan(plan);
-        result.save();
-        return result;
+        relationsManager = new RelationsManager(activeObjectsService);
     }
 
     /**
@@ -68,13 +46,16 @@ public class EventPlanService {
             return null;
         }
         Plan result = activeObjectsService.create(Plan.class);
+
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
         result.setTimeToComplete(resource.getTime());
-        //associatePlanWithDomain(result, resource.getDomains());
+        relationsManager.associatePlanWithDomains(result, resource.getDomains());
+
         result.save();
         return result;
     }
+
 
     /**
      * @param resource Configuration of Event Organization Domain.
@@ -94,6 +75,7 @@ public class EventPlanService {
     }
 
     /**
+     * @param type Type of entities to get.
      * @return Database objects of specified type.
      */
     public <T extends RawEntity<K>, K> List<T> get(@Nonnull final Class<T> type) {
@@ -110,7 +92,7 @@ public class EventPlanService {
         Map<String, List<String>> result = new HashMap<String, List<String>>();
 
         for (Domain eachDomain : get(Domain.class)) {
-            List<Plan> plans = Arrays.asList(eachDomain.getRelatedPlans());
+            List<Plan> plans = Arrays.asList(eachDomain.getPlans());
             List<String> plansNames = new ArrayList<String>(plans.size());
 
             for (Plan eachPlan : plans) {
@@ -127,13 +109,19 @@ public class EventPlanService {
      * Deletes all database content related with this plug-in.
      */
     public void clearDatabase() {
-        activeObjectsService.delete();
-        activeObjectsService.delete(activeObjectsService.find(Domain.class));
-        activeObjectsService.delete(activeObjectsService.find(Task.class));
-        activeObjectsService.delete(activeObjectsService.find(SubTask.class));
-        activeObjectsService.delete(activeObjectsService.find(Component.class));
-        activeObjectsService.delete(activeObjectsService.find(PlanToDomainRelation.class));
-        activeObjectsService.delete(activeObjectsService.find(PlanToTaskRelation.class));
+        deleteAll(PlanToDomainRelation.class);
+        deleteAll(PlanToTaskRelation.class);
+        deleteAll(SubTask.class);
+        deleteAll(Task.class);
+        deleteAll(Component.class);
+        deleteAll(Domain.class);
+        deleteAll(Plan.class);
     }
 
+    /**
+     * @param type Type of entities to delete.
+     */
+    public void deleteAll(@Nonnull final Class<? extends RawEntity> type) {
+        activeObjectsService.delete(activeObjectsService.find(type));
+    }
 }

@@ -27,7 +27,7 @@ public class ProjectCategoryConfigurator {
     }
 
     /**
-     * @return Project Category.
+     * @return Event Organization Project Category.
      */
     public ProjectCategory createProjectCategory() {
         String name = getInternalized(Internationalization.PROJECT_CATEGORY_NAME);

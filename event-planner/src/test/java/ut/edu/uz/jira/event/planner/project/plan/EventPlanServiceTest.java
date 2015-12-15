@@ -1,12 +1,15 @@
 package ut.edu.uz.jira.event.planner.project.plan;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
+import com.atlassian.activeobjects.tx.Transactional;
 import edu.uz.jira.event.planner.project.plan.EventPlanService;
-import edu.uz.jira.event.planner.project.plan.model.Domain;
-import edu.uz.jira.event.planner.project.plan.model.Plan;
+import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
 import net.java.ao.EntityManager;
+import net.java.ao.test.converters.NameConverters;
+import net.java.ao.test.jdbc.DerbyEmbedded;
+import net.java.ao.test.jdbc.Jdbc;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +19,10 @@ import ut.helpers.TestActiveObjects;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+@Transactional
 @RunWith(ActiveObjectsJUnitRunner.class)
+@Jdbc(DerbyEmbedded.class)
+@NameConverters
 public class EventPlanServiceTest {
     private EntityManager entityManager;
     private ActiveObjects activeObjects;
@@ -62,7 +68,7 @@ public class EventPlanServiceTest {
         config.setName("Test name");
         config.setDescription("Test description");
         config.setTime("Test time");
-        config.setDomains("Test domains");
+        config.setDomains(new String[]{"Test domains"});
 
         service.addFrom(config);
 
@@ -82,4 +88,27 @@ public class EventPlanServiceTest {
 
         assertEquals(0, activeObjects.find(Plan.class).length);
     }
+
+//    @Test
+//    public void shouldClearDatabase() {
+//        activeObjects.create(Plan.class).save();
+//        activeObjects.create(Domain.class).save();
+//        activeObjects.create(Task.class).save();
+//        activeObjects.create(SubTask.class).save();
+//        activeObjects.create(Component.class).save();
+//
+//        assertEquals(1, activeObjects.count(Plan.class));
+//        assertEquals(1, activeObjects.count(Domain.class));
+//        assertEquals(1, activeObjects.count(Task.class));
+//        assertEquals(1, activeObjects.count(SubTask.class));
+//        assertEquals(1, activeObjects.count(Component.class));
+//
+//        service.clearDatabase();
+//
+//        assertEquals(0, activeObjects.count(Plan.class));
+//        assertEquals(0, activeObjects.count(Domain.class));
+//        assertEquals(0, activeObjects.count(Task.class));
+//        assertEquals(0, activeObjects.count(SubTask.class));
+//        assertEquals(0, activeObjects.count(Component.class));
+//    }
 }

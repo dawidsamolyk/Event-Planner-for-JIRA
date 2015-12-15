@@ -1,6 +1,5 @@
 package edu.uz.jira.event.planner.project.plan.rest.manager;
 
-import com.atlassian.activeobjects.internal.ActiveObjectsSqlException;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.exception.ResourceException;
@@ -8,14 +7,18 @@ import edu.uz.jira.event.planner.project.plan.EventPlanService;
 import edu.uz.jira.event.planner.project.plan.model.Domain;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import net.java.ao.Entity;
+import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nonnull;
-import javax.ws.rs.Path;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Map;
 
 /**
  * REST manager for Event Organization Domains.
@@ -36,33 +39,49 @@ public class EventDomainRestManager extends RestManager {
         super(userManager, transactionTemplate, eventPlanService);
     }
 
+    /**
+     * @param request Http Servlet request.
+     * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
+     * @see {@link RestManager#get(HttpServletRequest)}
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response get(@Context final HttpServletRequest request) {
+        return super.get(request);
+    }
+
+    /**
+     * @param resource Resource with data to put.
+     * @param request  Http Servlet request.
+     * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
+     * @see {@link RestManager#put(EventRestConfiguration, HttpServletRequest)}
+     */
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response put(final EventDomainConfig resource, @Context final HttpServletRequest request) {
+        return super.put(resource, request);
+    }
+
     @Override
     protected void doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException {
         try {
             eventPlanService.addFrom((EventDomainConfig) resource);
         } catch (ClassCastException e) {
             throw new ResourceException(e.getMessage(), e);
-        } catch (ActiveObjectsSqlException e) {
-            throw new ResourceException(e.getMessage(), e);
         }
     }
 
     @Override
-    protected EventRestConfiguration doGet(@Nonnull final Map parameterMap) {
-        return doGetById(parameterMap, Domain.class, new EventDomainConfig());
+    protected EventRestConfiguration[] doGet() {
+        return doGetAll(Domain.class, EventDomainConfig.createEmpty());
     }
 
     @Override
     protected EventDomainConfig createFrom(@Nonnull final Entity entity) {
-        EventDomainConfig result = new EventDomainConfig();
-
         if (entity instanceof Domain) {
-            Domain domain = (Domain) entity;
-
-            result.setName(domain.getName());
-            result.setDescription(domain.getDescription());
+            return new EventDomainConfig((Domain) entity);
         }
-        return result;
+        return EventDomainConfig.createEmpty();
     }
 
     /**
@@ -83,6 +102,16 @@ public class EventDomainRestManager extends RestManager {
         public EventDomainConfig() {
             setName("");
             setDescription("");
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param domain Domain database entity - source of data.
+         */
+        public EventDomainConfig(@Nonnull final Domain domain) {
+            setName(domain.getName());
+            setDescription(domain.getDescription());
         }
 
         /**
@@ -113,7 +142,7 @@ public class EventDomainRestManager extends RestManager {
          */
         @Override
         public boolean isFullfilled() {
-            return getName() != null && !getName().isEmpty();
+            return StringUtils.isNotBlank(name);
         }
 
         /**
@@ -128,7 +157,6 @@ public class EventDomainRestManager extends RestManager {
 
             if (!getName().equals(that.getName())) return false;
             return !(getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null);
-
         }
 
         /**

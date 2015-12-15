@@ -69,8 +69,8 @@
                 </td>
                 <td>
                     <ul>
-                        #foreach($eachDomain in $eachPlan.getRelatedDomains())
-                        <li><a href="/jira/secure/" title="See Event Organization domains">$eachDomain.getName()</a></li>
+                        #foreach($eachDomain in $eachPlan.getDomains())
+                            <li><a href="/jira/secure/" title="See Event Organization domains">$eachDomain.getName()</a></li>
                         #end
                     </ul>
                 </td>
@@ -203,9 +203,15 @@
                 url: url,
                 type: "PUT",
                 contentType: "application/json",
-                data: '{ "name": "' + AJS.$("#plan-name").attr("value") + '", "description": "' +  AJS.$("#plan-description").attr("value") + '", "time": "' +  AJS.$("#plan-time").attr("value") + '", "domains": "' +  AJS.$("#plan-domains").attr("value") + '" }',
+                data: '{     "name": "'         + AJS.$("#plan-name").attr("value") +
+                         '", "description": "'  + AJS.$("#plan-description").attr("value") +
+                         '", "time": "'         + AJS.$("#plan-time").attr("value") +
+                         '", "domains": '       + JSON.stringify(AJS.$("#plan-domains").val()) + ' }',
                 processData: false
             });
+
+            // Zastąp GET
+            location.reload();
         }
 
         AJS.$("#event-plan-dialog-next-button").click(function(e) {
@@ -263,9 +269,13 @@
                 url: url,
                 type: "PUT",
                 contentType: "application/json",
-                data: '{ "name": "' + AJS.$("#domains-name").attr("value") + '", "description": "' +  AJS.$("#domains-description").attr("value") + '" }',
+                data: '{    "name": "'        + AJS.$("#domains-name").attr("value") +
+                        '", "description": "' + AJS.$("#domains-description").attr("value") + '" }',
                 processData: false
             });
+
+            // Zastąp GET
+            location.reload();
         }
 
         AJS.$("#event-domains-dialog-save-button").click(function(e) {
@@ -282,8 +292,6 @@
 
                 AJS.dialog2("#event-domains-dialog").hide();
                 AJS.dialog2("#event-plan-dialog").show();
-
-                location.reload();
             }
         });
 

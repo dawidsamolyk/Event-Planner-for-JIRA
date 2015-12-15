@@ -1,6 +1,7 @@
 package edu.uz.jira.event.planner.project.plan.model;
 
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import net.java.ao.Entity;
 import net.java.ao.ManyToMany;
 import net.java.ao.schema.Table;
 
@@ -20,9 +21,9 @@ import net.java.ao.schema.Table;
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
 @Table("Domain")
-public interface Domain extends NamedEntityWithDescription {
-    String RELATED_PLANS = "RELATED_PLANS";
+public interface Domain extends Entity, NamedEntityWithDescription {
+    String PLANS = "PLANS";
 
     @ManyToMany(value = PlanToDomainRelation.class)
-    Plan[] getRelatedPlans();
+    Plan[] getPlans();
 }

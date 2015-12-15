@@ -1,6 +1,5 @@
 package edu.uz.jira.event.planner.project.plan.rest.manager;
 
-import com.atlassian.activeobjects.internal.ActiveObjectsSqlException;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.exception.ResourceException;
@@ -13,12 +12,16 @@ import net.java.ao.Entity;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
-import javax.ws.rs.Path;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Map;
+import java.util.Arrays;
 
 /**
  * REST manager for Event Organization Plans.
@@ -41,36 +44,50 @@ public class EventPlanRestManager extends RestManager {
         super(userManager, transactionTemplate, eventPlanService);
     }
 
+    /**
+     * @param request Http Servlet request.
+     * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
+     * @see {@link RestManager#get(HttpServletRequest)}
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Override
+    public Response get(@Context final HttpServletRequest request) {
+        return super.get(request);
+    }
+
+    /**
+     * @param resource Resource with data to put.
+     * @param request  Http Servlet request.
+     * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
+     * @see {@link RestManager#put(EventRestConfiguration, HttpServletRequest)}
+     */
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response put(final EventPlanConfig resource, @Context final HttpServletRequest request) {
+        return super.put(resource, request);
+    }
+
     @Override
     protected void doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException {
         try {
             eventPlanService.addFrom((EventPlanConfig) resource);
         } catch (ClassCastException e) {
             throw new ResourceException(e.getMessage(), e);
-        } catch (ActiveObjectsSqlException e) {
-            throw new ResourceException(e.getMessage(), e);
         }
     }
 
     @Override
-    protected EventRestConfiguration doGet(@Nonnull final Map parameterMap) {
-        return doGetById(parameterMap, Plan.class, EventPlanConfig.createEmpty());
+    protected EventRestConfiguration[] doGet() {
+        return doGetAll(Plan.class, EventPlanConfig.createEmpty());
     }
 
     @Override
     protected EventPlanConfig createFrom(@Nonnull final Entity entity) {
-        EventPlanConfig result = new EventPlanConfig();
-
         if (entity instanceof Plan) {
-            Plan plan = (Plan) entity;
-
-            result.setName(plan.getName());
-            result.setDescription(plan.getDescription());
-            result.setTime(plan.getTimeToComplete());
-            String[] relatedDomainNames = ENTITY_NAME_EXTRACTOR.getNames(plan.getRelatedDomains());
-            result.setDomains(TEXT_UTILS.getJoined(relatedDomainNames, ';'));
+            return new EventPlanConfig((Plan) entity);
         }
-        return result;
+        return new EventPlanConfig();
     }
 
     /**
@@ -86,7 +103,7 @@ public class EventPlanRestManager extends RestManager {
         @XmlElement
         private String time;
         @XmlElement
-        private String domains;
+        private String[] domains;
 
         /**
          * Constructor.
@@ -96,7 +113,19 @@ public class EventPlanRestManager extends RestManager {
             setName("");
             setDescription("");
             setTime("");
-            setDomains("");
+            setDomains(new String[]{""});
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param plan Plan database entity - source of data.
+         */
+        public EventPlanConfig(@Nonnull final Plan plan) {
+            setName(plan.getName());
+            setDescription(plan.getDescription());
+            setTime(plan.getTimeToComplete());
+            setDomains(ENTITY_NAME_EXTRACTOR.getNames(plan.getDomains()));
         }
 
         /**
@@ -114,7 +143,7 @@ public class EventPlanRestManager extends RestManager {
             return StringUtils.isNotBlank(getName())
                     && getDescription() != null
                     && StringUtils.isNotBlank(getTime())
-                    && StringUtils.isNotBlank(getDomains());
+                    && TEXT_UTILS.isNotBlank(getDomains());
         }
 
         public String getName() {
@@ -141,11 +170,11 @@ public class EventPlanRestManager extends RestManager {
             this.time = time;
         }
 
-        public String getDomains() {
+        public String[] getDomains() {
             return domains;
         }
 
-        public void setDomains(@Nonnull String domains) {
+        public void setDomains(@Nonnull String[] domains) {
             this.domains = domains;
         }
 
@@ -159,12 +188,12 @@ public class EventPlanRestManager extends RestManager {
 
             EventPlanConfig that = (EventPlanConfig) o;
 
-            if (!getName().equals(that.getName())) return false;
+            if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
             if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
                 return false;
-            if (!getTime().equals(that.getTime())) return false;
-            return getDomains().equals(that.getDomains());
+            if (getTime() != null ? !getTime().equals(that.getTime()) : that.getTime() != null) return false;
 
+            return Arrays.equals(getDomains(), that.getDomains());
         }
 
         /**

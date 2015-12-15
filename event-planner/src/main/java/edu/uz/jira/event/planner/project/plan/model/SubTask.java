@@ -1,5 +1,6 @@
 package edu.uz.jira.event.planner.project.plan.model;
 
+import net.java.ao.Entity;
 import net.java.ao.schema.Table;
 
 /**
@@ -17,7 +18,7 @@ import net.java.ao.schema.Table;
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
 @Table("SubTask")
-public interface SubTask extends NamedEntityWithDescription, TimeframedEntity {
+public interface SubTask extends Entity, NamedEntityWithDescription, TimeframedEntity {
     String PARENT_TASK = "PARENT_TASK";
 
     Task getParentTask();

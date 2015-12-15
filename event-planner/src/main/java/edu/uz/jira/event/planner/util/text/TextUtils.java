@@ -33,4 +33,16 @@ public class TextUtils {
         }
         return getJoined(Arrays.asList(array), separator);
     }
+
+    public boolean isNotBlank(final String[] elements) {
+        if (elements == null || elements.length < 1) {
+            return false;
+        }
+        for (String each : elements) {
+            if (StringUtils.isBlank(each)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

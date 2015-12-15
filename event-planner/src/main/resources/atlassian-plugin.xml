@@ -18,6 +18,7 @@
         <entity>edu.uz.jira.event.planner.project.plan.model.SubTask</entity>
         <entity>edu.uz.jira.event.planner.project.plan.model.Component</entity>
         <entity>edu.uz.jira.event.planner.project.plan.model.relation.PlanToTaskRelation</entity>
+        <entity>edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation</entity>
     </ao>
 
     <component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>

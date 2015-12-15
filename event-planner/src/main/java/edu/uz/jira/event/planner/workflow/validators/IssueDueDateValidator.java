@@ -8,7 +8,7 @@ import com.opensymphony.module.propertyset.PropertySet;
 import com.opensymphony.workflow.InvalidInputException;
 import com.opensymphony.workflow.Validator;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
-import edu.uz.jira.event.planner.project.ProjectUtils;
+import edu.uz.jira.event.planner.util.ProjectUtils;
 
 import javax.annotation.Nonnull;
 import java.sql.Timestamp;

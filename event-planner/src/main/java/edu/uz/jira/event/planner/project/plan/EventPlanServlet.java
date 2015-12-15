@@ -14,15 +14,25 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+/**
+ * Servlet which handles Event Plan Configuration page.
+ */
 public final class EventPlanServlet extends HttpServlet {
     private final EventPlanService eventPlanService;
     private final TemplateRenderer templateRenderer;
     private final UserManager userManager;
     private final LoginUriProvider loginUriProvider;
 
+    /**
+     * Constructor.
+     *
+     * @param eventPlanService Injected {@code EventPlanService} implementation.
+     * @param templateRenderer Injected {@code TemplateRenderer} implementation.
+     * @param userManager      Injected {@code UserManager} implementation.
+     * @param loginUriProvider Injected {@code LoginUriProvider} implementation.
+     */
     public EventPlanServlet(@Nonnull final EventPlanService eventPlanService,
                             @Nonnull final TemplateRenderer templateRenderer,
                             @Nonnull final UserManager userManager,
@@ -33,20 +43,6 @@ public final class EventPlanServlet extends HttpServlet {
         this.loginUriProvider = loginUriProvider;
     }
 
-    /**
-     * @return Event Organization Domain names (eg. Development).
-     */
-    private List<Domain> getDomains() {
-        return eventPlanService.get(Domain.class);
-    }
-
-    /**
-     * @return Event Organization Plans.
-     */
-    private List<Plan> getAllEventOrganziationPlans() {
-        return eventPlanService.get(Plan.class);
-    }
-
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         UserProfile user = userManager.getRemoteUser(request);
@@ -55,11 +51,9 @@ public final class EventPlanServlet extends HttpServlet {
             return;
         }
 
-        eventPlanService.clearDatabase();
-
         Map<String, Object> context = new HashMap<String, Object>();
-        context.put("DOMAINS", getDomains());
-        context.put("PLANS", getAllEventOrganziationPlans());
+        context.put("DOMAINS", eventPlanService.get(Domain.class));
+        context.put("PLANS", eventPlanService.get(Plan.class));
         context.put("SERVICE", eventPlanService);
 
         response.setContentType("text/html;charset=utf-8");

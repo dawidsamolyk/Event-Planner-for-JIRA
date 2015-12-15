@@ -17,7 +17,7 @@ import edu.uz.jira.event.planner.project.issue.fields.IssueFieldsConfigurator;
 import edu.uz.jira.event.planner.workflow.WorkflowConfigurator;
 import edu.uz.jira.event.planner.workflow.WorkflowConstants;
 import edu.uz.jira.event.planner.workflow.WorkflowDescriptorsFactory;
-import edu.uz.jira.event.planner.workflow.WorkflowUtils;
+import edu.uz.jira.event.planner.util.WorkflowUtils;
 
 import javax.annotation.Nonnull;
 import java.util.List;

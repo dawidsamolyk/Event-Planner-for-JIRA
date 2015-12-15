@@ -1,4 +1,4 @@
-package edu.uz.jira.event.planner.project;
+package edu.uz.jira.event.planner.util;
 
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.version.Version;
