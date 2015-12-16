@@ -85,13 +85,15 @@ class RelationsManager {
             }
         }
 
+        result.stream().filter(s -> (s != null));
+
         return result;
     }
 
     Collection<PlanToDomainRelation> associatePlanWithDomains(@Nonnull final Plan plan, @Nonnull final String[] domainsNames) {
-        Collection<PlanToDomainRelation> result = new ArrayList<PlanToDomainRelation>();
+        Collection<PlanToDomainRelation> result = new ArrayList<>();
 
-        List<Domain> domains = new ArrayList<Domain>();
+        List<Domain> domains = new ArrayList<>();
         if (domainsNames != null && domainsNames.length > 0) {
             for (String eachDomainName : domainsNames) {
                 Domain[] eachDomains = activeObjectsService.find(Domain.class, Query.select().where(Domain.NAME + " = ?", eachDomainName));
@@ -104,11 +106,14 @@ class RelationsManager {
                 result.add(eachRelation);
             }
         }
+
+        result.stream().filter(s -> (s != null));
+
         return result;
     }
 
     void associate(@Nonnull final Component component, @Nonnull final String[] tasksNames) {
-        List<Task> tasks = new ArrayList<Task>();
+        List<Task> tasks = new ArrayList<>();
         if (tasksNames != null && tasksNames.length > 0) {
             for (String eachTaskName : tasksNames) {
                 Task[] eachTasks = activeObjectsService.find(Task.class, Query.select().where(Task.NAME + " = ?", eachTaskName));

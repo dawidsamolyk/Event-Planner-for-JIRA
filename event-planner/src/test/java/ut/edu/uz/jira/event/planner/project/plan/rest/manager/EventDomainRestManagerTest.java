@@ -83,6 +83,7 @@ public class EventDomainRestManagerTest {
         activeObjects = new TestActiveObjects(entityManager);
         activeObjects.migrate(Domain.class, Plan.class, Component.class, Plan.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
         planService = new EventPlanService(activeObjects);
+        planService.clearDatabase();
     }
 
     @Test

@@ -95,7 +95,7 @@ public class EventPlanRestManager extends RestManager {
      */
     @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
-    public static final class Configuration implements EventRestConfiguration {
+    public static class Configuration implements EventRestConfiguration {
         @XmlElement
         private String name;
         @XmlElement

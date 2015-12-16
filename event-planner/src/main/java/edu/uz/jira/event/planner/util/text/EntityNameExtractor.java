@@ -2,6 +2,8 @@ package edu.uz.jira.event.planner.util.text;
 
 import edu.uz.jira.event.planner.project.plan.model.NamedEntityWithDescription;
 
+import java.util.Arrays;
+
 /**
  * Extracts names from Named Entities.
  */
@@ -19,9 +21,14 @@ public class EntityNameExtractor {
         String[] result = new String[numberOfEntities];
 
         for (int index = 0; index < numberOfEntities; index++) {
-            result[index] = new String(entities[index].getName());
+            String name = entities[index].getName();
+            if (name != null) {
+                result[index] = new String(name);
+            }
         }
 
-        return result;
+        return Arrays.stream(result)
+                .filter(s -> (s != null))
+                .toArray(String[]::new);
     }
 }

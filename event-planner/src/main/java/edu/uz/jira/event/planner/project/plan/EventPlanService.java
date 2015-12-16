@@ -38,7 +38,7 @@ public class EventPlanService {
 
     /**
      * @param resource Configuration of Event Organization Plan.
-     * @return Newly created and added to database Event Organization Plan.
+     * @return Newly created and added to database Event Organization Plan. Null if not created.
      */
     public Plan addFrom(@Nonnull final EventPlanRestManager.Configuration resource) {
         if (resource == null || !resource.isFullfilled()) {
@@ -49,14 +49,16 @@ public class EventPlanService {
         result.setDescription(resource.getDescription());
         result.setTimeToComplete(resource.getTime());
 
-        String[] domains = resource.getDomains();
-        if(domains != null && domains.length > 0) {
-            relationsManager.associatePlanWithDomains(result, domains);
+        Collection<PlanToDomainRelation> planToDomainRelations = relationsManager.associatePlanWithDomains(result, resource.getDomains());
+        if (planToDomainRelations.isEmpty()) {
+            activeObjectsService.delete(result);
+            return null;
         }
 
-        String[] components = resource.getComponents();
-        if(components != null && components.length > 0) {
-            relationsManager.associatePlanWithComponents(result, components);
+        Collection<PlanToComponentRelation> planToComponentRelations = relationsManager.associatePlanWithComponents(result, resource.getComponents());
+        if (planToComponentRelations.isEmpty()) {
+            activeObjectsService.delete(result);
+            return null;
         }
 
         result.save();
@@ -88,7 +90,7 @@ public class EventPlanService {
         result.setDescription(resource.getDescription());
 
         String[] tasks = resource.getTasks();
-        if(tasks != null && tasks.length > 0) {
+        if (tasks != null && tasks.length > 0) {
             relationsManager.associate(result, tasks);
         }
 
@@ -106,7 +108,7 @@ public class EventPlanService {
         result.setTimeToComplete(resource.getTime());
 
         String[] subtasks = resource.getSubtasks();
-        if(subtasks != null && subtasks.length > 0) {
+        if (subtasks != null && subtasks.length > 0) {
             relationsManager.associate(result, subtasks);
         }
 
@@ -132,7 +134,7 @@ public class EventPlanService {
      */
     public <T extends RawEntity<K>, K> List<T> get(@Nonnull final Class<T> type) {
         if (type == null) {
-            return new ArrayList<T>();
+            return new ArrayList<>();
         }
         return newArrayList(activeObjectsService.find(type));
     }
@@ -177,4 +179,5 @@ public class EventPlanService {
     public void deleteAll(@Nonnull final Class<? extends RawEntity> type) {
         activeObjectsService.delete(activeObjectsService.find(type));
     }
+
 }

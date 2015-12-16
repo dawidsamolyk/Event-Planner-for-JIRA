@@ -19,7 +19,7 @@ import net.java.ao.schema.Table;
  */
 @Table("SubTask")
 public interface SubTask extends Entity, NamedEntityWithDescription, TimeframedEntity {
-    String PARENT_TASK = "PARENT_TASK";
+    String Domain = "PARENT_TASK";
 
     Task getParentTask();
 

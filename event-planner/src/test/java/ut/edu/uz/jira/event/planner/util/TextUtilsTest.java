@@ -59,4 +59,40 @@ public class TextUtilsTest {
 
         assertEquals("A,B,C", result);
     }
+
+    @Test
+    public void stringArrayShouldBeBlankIfItIsNull() {
+        TextUtils fixture = new TextUtils();
+
+        boolean result = fixture.isNotBlank(null);
+
+        assertEquals(false, result);
+    }
+
+    @Test
+    public void stringArrayShouldBeBlankIfIsEmpty() {
+        TextUtils fixture = new TextUtils();
+
+        boolean result = fixture.isNotBlank(new String[]{});
+
+        assertEquals(false, result);
+    }
+
+    @Test
+    public void stringArrayShouldBeBlankIfAnyTextIsBlank() {
+        TextUtils fixture = new TextUtils();
+
+        boolean result = fixture.isNotBlank(new String[]{"Not blank", "", "any text", "test"});
+
+        assertEquals(false, result);
+    }
+
+    @Test
+    public void stringArraySgouldNotBeBlankIfContainsOnlyTexts() {
+        TextUtils fixture = new TextUtils();
+
+        boolean result = fixture.isNotBlank(new String[]{"Not blank", "testtesttest", "any text", "test"});
+
+        assertEquals(true, result);
+    }
 }
