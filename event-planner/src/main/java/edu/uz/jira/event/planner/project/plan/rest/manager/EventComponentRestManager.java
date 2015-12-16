@@ -4,7 +4,7 @@ import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.exception.ResourceException;
 import edu.uz.jira.event.planner.project.plan.EventPlanService;
-import edu.uz.jira.event.planner.project.plan.model.Plan;
+import edu.uz.jira.event.planner.project.plan.model.Component;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
 import edu.uz.jira.event.planner.util.text.TextUtils;
@@ -24,10 +24,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Arrays;
 
 /**
- * REST manager for Event Organization Plans.
+ * REST manager for Event Organization Components.
  */
-@Path("/plan")
-public class EventPlanRestManager extends RestManager {
+@Path("/component")
+public class EventComponentRestManager extends RestManager {
     private static final EntityNameExtractor ENTITY_NAME_EXTRACTOR = new EntityNameExtractor();
     private static final TextUtils TEXT_UTILS = new TextUtils();
 
@@ -38,9 +38,9 @@ public class EventPlanRestManager extends RestManager {
      * @param transactionTemplate Injected {@code TransactionTemplate} implementation.
      * @param eventPlanService    Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
      */
-    public EventPlanRestManager(@Nonnull final UserManager userManager,
-                                @Nonnull final TransactionTemplate transactionTemplate,
-                                @Nonnull final EventPlanService eventPlanService) {
+    public EventComponentRestManager(@Nonnull final UserManager userManager,
+                                     @Nonnull final TransactionTemplate transactionTemplate,
+                                     @Nonnull final EventPlanService eventPlanService) {
         super(userManager, transactionTemplate, eventPlanService);
     }
 
@@ -79,19 +79,19 @@ public class EventPlanRestManager extends RestManager {
 
     @Override
     protected EventRestConfiguration[] doGet() {
-        return doGetAll(Plan.class, Configuration.createEmpty());
+        return doGetAll(Component.class, Configuration.createEmpty());
     }
 
     @Override
     protected Configuration createFrom(@Nonnull final Entity entity) {
-        if (entity instanceof Plan) {
-            return new Configuration((Plan) entity);
+        if (entity instanceof Component) {
+            return new Configuration((Component) entity);
         }
         return new Configuration();
     }
 
     /**
-     * Event Plan Configuration in XML form.
+     * Event Component Configuration in XML form.
      */
     @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -101,11 +101,7 @@ public class EventPlanRestManager extends RestManager {
         @XmlElement
         private String description;
         @XmlElement
-        private String time;
-        @XmlElement
-        private String[] domains;
-        @XmlElement
-        private String[] components;
+        private String[] tasks;
 
         /**
          * Constructor.
@@ -114,26 +110,22 @@ public class EventPlanRestManager extends RestManager {
         public Configuration() {
             setName("");
             setDescription("");
-            setTime("");
-            setDomains(new String[]{""});
-            setComponents(new String[]{""});
+            setTasks(new String[]{});
         }
 
         /**
          * Constructor.
          *
-         * @param plan Plan database entity - source of data.
+         * @param component Component database entity - source of data.
          */
-        public Configuration(@Nonnull final Plan plan) {
-            setName(plan.getName());
-            setDescription(plan.getDescription());
-            setTime(plan.getTimeToComplete());
-            setDomains(ENTITY_NAME_EXTRACTOR.getNames(plan.getDomains()));
-            setComponents(ENTITY_NAME_EXTRACTOR.getNames(plan.getComponents()));
+        public Configuration(@Nonnull final Component component) {
+            setName(component.getName());
+            setDescription(component.getDescription());
+            setTasks(ENTITY_NAME_EXTRACTOR.getNames(component.getTasks()));
         }
 
         /**
-         * @return Event Plan Configuration with all empty fields (but not null).
+         * @return Event Component Configuration with all empty fields (but not null).
          */
         public static Configuration createEmpty() {
             return new Configuration();
@@ -146,9 +138,7 @@ public class EventPlanRestManager extends RestManager {
         public boolean isFullfilled() {
             return StringUtils.isNotBlank(getName())
                     && getDescription() != null
-                    && StringUtils.isNotBlank(getTime())
-                    && TEXT_UTILS.isNotBlank(getDomains())
-                    && TEXT_UTILS.isNotBlank(getComponents());
+                    && TEXT_UTILS.isNotBlank(tasks);
         }
 
         public String getName() {
@@ -167,28 +157,12 @@ public class EventPlanRestManager extends RestManager {
             this.description = description;
         }
 
-        public String getTime() {
-            return time;
+        public String[] getTasks() {
+            return tasks;
         }
 
-        public void setTime(@Nonnull String time) {
-            this.time = time;
-        }
-
-        public String[] getDomains() {
-            return domains;
-        }
-
-        public void setDomains(@Nonnull String[] domains) {
-            this.domains = domains;
-        }
-
-        public String[] getComponents() {
-            return components;
-        }
-
-        public void setComponents(String[] components) {
-            this.components = components;
+        public void setTasks(String[] tasks) {
+            this.tasks = tasks;
         }
 
         /**
@@ -204,9 +178,7 @@ public class EventPlanRestManager extends RestManager {
             if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
             if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
                 return false;
-            if (getTime() != null ? !getTime().equals(that.getTime()) : that.getTime() != null) return false;
-            if (!Arrays.equals(getDomains(), that.getDomains())) return false;
-            return Arrays.equals(getComponents(), that.getComponents());
+            return Arrays.equals(getTasks(), that.getTasks());
         }
 
         /**
@@ -216,5 +188,7 @@ public class EventPlanRestManager extends RestManager {
         public int hashCode() {
             return getName() != null ? getName().hashCode() : 0;
         }
+
+
     }
 }

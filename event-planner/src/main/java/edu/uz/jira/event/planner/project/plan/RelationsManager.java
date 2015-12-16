@@ -1,12 +1,11 @@
 package edu.uz.jira.event.planner.project.plan;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
-import edu.uz.jira.event.planner.project.plan.model.Component;
-import edu.uz.jira.event.planner.project.plan.model.Domain;
-import edu.uz.jira.event.planner.project.plan.model.Plan;
+import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
 import net.java.ao.Query;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -51,6 +50,15 @@ class RelationsManager {
         return result;
     }
 
+    private Task associate(@Nonnull final Component component, @Nonnull final Task eachTask) {
+        if (component == null || eachTask == null) {
+            return null;
+        }
+        eachTask.setComponent(component);
+        eachTask.save();
+        return eachTask;
+    }
+
     Collection<PlanToComponentRelation> associatePlanWithComponents(@Nonnull final Plan plan, @Nonnull final String[] componentsNames) {
         Collection<PlanToComponentRelation> result = new ArrayList<PlanToComponentRelation>();
 
@@ -89,4 +97,32 @@ class RelationsManager {
         }
         return result;
     }
+
+    void associate(@Nonnull final Component component, @Nonnull final String[] tasksNames) {
+        List<Task> tasks = new ArrayList<Task>();
+        if (tasksNames != null && tasksNames.length > 0) {
+            for (String eachTaskName : tasksNames) {
+                Task[] eachDomains = activeObjectsService.find(Task.class, Query.select().where(Task.NAME + " = ?", eachTaskName));
+                tasks.addAll(Arrays.asList(eachDomains));
+            }
+        }
+        if (tasks != null && tasks.size() > 0 && component != null) {
+            for (Task eachTask : tasks) {
+                associate(component, eachTask);
+            }
+        }
+    }
+
+    void associate(@Nonnull final SubTask subtask, @Nonnull final String parentTaskName) {
+        if (subtask == null || StringUtils.isBlank(parentTaskName)) {
+            return;
+        }
+        Task[] tasks = activeObjectsService.find(Task.class, Query.select().where(Task.NAME + " = ?", parentTaskName));
+
+        if (tasks != null && tasks.length == 1 && tasks[0] != null) {
+            subtask.setParentTask(tasks[0]);
+        }
+    }
+
+
 }

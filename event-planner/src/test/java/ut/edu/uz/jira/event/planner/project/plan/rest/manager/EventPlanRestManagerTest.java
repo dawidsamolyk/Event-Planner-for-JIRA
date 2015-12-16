@@ -112,8 +112,8 @@ public class EventPlanRestManagerTest {
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }
 
-    private EventPlanRestManager.EventPlanConfig getEmptyPlan() {
-        return EventPlanRestManager.EventPlanConfig.createEmpty();
+    private EventPlanRestManager.Configuration getEmptyPlan() {
+        return EventPlanRestManager.Configuration.createEmpty();
     }
 
     @Test
@@ -156,7 +156,7 @@ public class EventPlanRestManagerTest {
 //
 //        fixture.get(mockRequest);
 //
-//        EventPlanRestManager.EventPlanConfig expected = new EventPlanRestManager.EventPlanConfig();
+//        EventPlanRestManager.Configuration expected = new EventPlanRestManager.Configuration();
 //        expected.setName(testPlanName);
 //        expected.setDescription(testPlanDescription);
 //        expected.setDomains(new String[]{testDomainName});
@@ -187,7 +187,7 @@ public class EventPlanRestManagerTest {
 //    @Test
 //    public void shouldPutNewEventPlan() {
 //        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
-//        EventPlanRestManager.EventPlanConfig config = new EventPlanRestManager.EventPlanConfig();
+//        EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
 //        config.setName("Test name");
 //        config.setTime("Test time");
 //        config.setDomains(new String[]{"Test domains"});
@@ -202,7 +202,7 @@ public class EventPlanRestManagerTest {
     public void shouldNotPutEmptyEventPlan() {
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-        Response result = fixture.put(new EventPlanRestManager.EventPlanConfig(), mockRequest);
+        Response result = fixture.put(new EventPlanRestManager.Configuration(), mockRequest);
 
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), result.getStatus());
     }
@@ -210,10 +210,10 @@ public class EventPlanRestManagerTest {
     @Test
     public void onPutShouldReturnInternalServerErrorWhenAnyExceptionOccursWhileAddingNewPlanToDatabase() throws SQLException {
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
-        EventDomainRestManager.EventDomainConfig invalidConfig = new EventDomainRestManager.EventDomainConfig();
-        invalidConfig.setName("Test name");
+        EventDomainRestManager.Configuration invalidConfiguration = new EventDomainRestManager.Configuration();
+        invalidConfiguration.setName("Test name");
 
-        Response result = fixture.put(invalidConfig, mockRequest);
+        Response result = fixture.put(invalidConfiguration, mockRequest);
 
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), result.getStatus());
     }

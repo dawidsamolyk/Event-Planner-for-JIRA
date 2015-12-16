@@ -4,7 +4,7 @@ import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.exception.ResourceException;
 import edu.uz.jira.event.planner.project.plan.EventPlanService;
-import edu.uz.jira.event.planner.project.plan.model.Plan;
+import edu.uz.jira.event.planner.project.plan.model.Task;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
 import edu.uz.jira.event.planner.util.text.TextUtils;
@@ -21,13 +21,12 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Arrays;
 
 /**
- * REST manager for Event Organization Plans.
+ * REST manager for Event Organization Task.
  */
-@Path("/plan")
-public class EventPlanRestManager extends RestManager {
+@Path("/task")
+public class EventTaskRestManager extends RestManager {
     private static final EntityNameExtractor ENTITY_NAME_EXTRACTOR = new EntityNameExtractor();
     private static final TextUtils TEXT_UTILS = new TextUtils();
 
@@ -38,7 +37,7 @@ public class EventPlanRestManager extends RestManager {
      * @param transactionTemplate Injected {@code TransactionTemplate} implementation.
      * @param eventPlanService    Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
      */
-    public EventPlanRestManager(@Nonnull final UserManager userManager,
+    public EventTaskRestManager(@Nonnull final UserManager userManager,
                                 @Nonnull final TransactionTemplate transactionTemplate,
                                 @Nonnull final EventPlanService eventPlanService) {
         super(userManager, transactionTemplate, eventPlanService);
@@ -79,19 +78,19 @@ public class EventPlanRestManager extends RestManager {
 
     @Override
     protected EventRestConfiguration[] doGet() {
-        return doGetAll(Plan.class, Configuration.createEmpty());
+        return doGetAll(Task.class, Configuration.createEmpty());
     }
 
     @Override
     protected Configuration createFrom(@Nonnull final Entity entity) {
-        if (entity instanceof Plan) {
-            return new Configuration((Plan) entity);
+        if (entity instanceof Task) {
+            return new Configuration((Task) entity);
         }
         return new Configuration();
     }
 
     /**
-     * Event Plan Configuration in XML form.
+     * Event Task Configuration in XML form.
      */
     @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -102,10 +101,6 @@ public class EventPlanRestManager extends RestManager {
         private String description;
         @XmlElement
         private String time;
-        @XmlElement
-        private String[] domains;
-        @XmlElement
-        private String[] components;
 
         /**
          * Constructor.
@@ -115,25 +110,21 @@ public class EventPlanRestManager extends RestManager {
             setName("");
             setDescription("");
             setTime("");
-            setDomains(new String[]{""});
-            setComponents(new String[]{""});
         }
 
         /**
          * Constructor.
          *
-         * @param plan Plan database entity - source of data.
+         * @param task Task database entity - source of data.
          */
-        public Configuration(@Nonnull final Plan plan) {
-            setName(plan.getName());
-            setDescription(plan.getDescription());
-            setTime(plan.getTimeToComplete());
-            setDomains(ENTITY_NAME_EXTRACTOR.getNames(plan.getDomains()));
-            setComponents(ENTITY_NAME_EXTRACTOR.getNames(plan.getComponents()));
+        public Configuration(@Nonnull final Task task) {
+            setName(task.getName());
+            setDescription(task.getDescription());
+            setTime(task.getTimeToComplete());
         }
 
         /**
-         * @return Event Plan Configuration with all empty fields (but not null).
+         * @return Event Task Configuration with all empty fields (but not null).
          */
         public static Configuration createEmpty() {
             return new Configuration();
@@ -146,9 +137,7 @@ public class EventPlanRestManager extends RestManager {
         public boolean isFullfilled() {
             return StringUtils.isNotBlank(getName())
                     && getDescription() != null
-                    && StringUtils.isNotBlank(getTime())
-                    && TEXT_UTILS.isNotBlank(getDomains())
-                    && TEXT_UTILS.isNotBlank(getComponents());
+                    && StringUtils.isNotBlank(getTime());
         }
 
         public String getName() {
@@ -175,22 +164,6 @@ public class EventPlanRestManager extends RestManager {
             this.time = time;
         }
 
-        public String[] getDomains() {
-            return domains;
-        }
-
-        public void setDomains(@Nonnull String[] domains) {
-            this.domains = domains;
-        }
-
-        public String[] getComponents() {
-            return components;
-        }
-
-        public void setComponents(String[] components) {
-            this.components = components;
-        }
-
         /**
          * @see {@link Object#equals(Object)}
          */
@@ -204,9 +177,7 @@ public class EventPlanRestManager extends RestManager {
             if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
             if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
                 return false;
-            if (getTime() != null ? !getTime().equals(that.getTime()) : that.getTime() != null) return false;
-            if (!Arrays.equals(getDomains(), that.getDomains())) return false;
-            return Arrays.equals(getComponents(), that.getComponents());
+            return !(getTime() != null ? !getTime().equals(that.getTime()) : that.getTime() != null);
         }
 
         /**
@@ -216,5 +187,7 @@ public class EventPlanRestManager extends RestManager {
         public int hashCode() {
             return getName() != null ? getName().hashCode() : 0;
         }
+
+
     }
 }

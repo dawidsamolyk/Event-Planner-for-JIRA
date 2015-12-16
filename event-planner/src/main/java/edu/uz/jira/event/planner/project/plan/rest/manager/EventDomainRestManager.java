@@ -58,14 +58,14 @@ public class EventDomainRestManager extends RestManager {
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(final EventDomainConfig resource, @Context final HttpServletRequest request) {
+    public Response put(final Configuration resource, @Context final HttpServletRequest request) {
         return super.put(resource, request);
     }
 
     @Override
     protected void doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException {
         try {
-            eventPlanService.addFrom((EventDomainConfig) resource);
+            eventPlanService.addFrom((Configuration) resource);
         } catch (ClassCastException e) {
             throw new ResourceException(e.getMessage(), e);
         }
@@ -73,15 +73,15 @@ public class EventDomainRestManager extends RestManager {
 
     @Override
     protected EventRestConfiguration[] doGet() {
-        return doGetAll(Domain.class, EventDomainConfig.createEmpty());
+        return doGetAll(Domain.class, Configuration.createEmpty());
     }
 
     @Override
-    protected EventDomainConfig createFrom(@Nonnull final Entity entity) {
+    protected Configuration createFrom(@Nonnull final Entity entity) {
         if (entity instanceof Domain) {
-            return new EventDomainConfig((Domain) entity);
+            return new Configuration((Domain) entity);
         }
-        return EventDomainConfig.createEmpty();
+        return Configuration.createEmpty();
     }
 
     /**
@@ -89,7 +89,7 @@ public class EventDomainRestManager extends RestManager {
      */
     @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
-    public static final class EventDomainConfig implements EventRestConfiguration {
+    public static final class Configuration implements EventRestConfiguration {
         @XmlElement
         private String name;
         @XmlElement
@@ -99,7 +99,7 @@ public class EventDomainRestManager extends RestManager {
          * Constructor.
          * Fills all fields with an empty String.
          */
-        public EventDomainConfig() {
+        public Configuration() {
             setName("");
             setDescription("");
         }
@@ -109,7 +109,7 @@ public class EventDomainRestManager extends RestManager {
          *
          * @param domain Domain database entity - source of data.
          */
-        public EventDomainConfig(@Nonnull final Domain domain) {
+        public Configuration(@Nonnull final Domain domain) {
             setName(domain.getName());
             setDescription(domain.getDescription());
         }
@@ -117,8 +117,8 @@ public class EventDomainRestManager extends RestManager {
         /**
          * @return Event Domain Configuration with all empty fields (but not null).
          */
-        public static EventDomainConfig createEmpty() {
-            return new EventDomainConfig();
+        public static Configuration createEmpty() {
+            return new Configuration();
         }
 
         public String getName() {
@@ -142,7 +142,7 @@ public class EventDomainRestManager extends RestManager {
          */
         @Override
         public boolean isFullfilled() {
-            return StringUtils.isNotBlank(name);
+            return StringUtils.isNotBlank(name) && getDescription() != null;
         }
 
         /**
@@ -153,7 +153,7 @@ public class EventDomainRestManager extends RestManager {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            EventDomainConfig that = (EventDomainConfig) o;
+            Configuration that = (Configuration) o;
 
             if (!getName().equals(that.getName())) return false;
             return !(getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null);
@@ -164,7 +164,7 @@ public class EventDomainRestManager extends RestManager {
          */
         @Override
         public int hashCode() {
-            return getName().hashCode();
+            return getName() != null ? getName().hashCode() : 0;
         }
     }
 }

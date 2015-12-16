@@ -56,8 +56,8 @@ public class EventDomainRestManagerTest {
         return domain;
     }
 
-    private EventDomainRestManager.EventDomainConfig getEmptyDomain() {
-        return EventDomainRestManager.EventDomainConfig.createEmpty();
+    private EventDomainRestManager.Configuration getEmptyDomain() {
+        return EventDomainRestManager.Configuration.createEmpty();
     }
 
     @Before
@@ -143,7 +143,7 @@ public class EventDomainRestManagerTest {
 
         fixture.get(mockRequest);
 
-        EventDomainRestManager.EventDomainConfig expected = new EventDomainRestManager.EventDomainConfig();
+        EventDomainRestManager.Configuration expected = new EventDomainRestManager.Configuration();
         expected.setName(testName);
         expected.setDescription(testDescription);
         assertEquals(expected, ((EventRestConfiguration[]) transactionResult)[0]);
@@ -172,11 +172,11 @@ public class EventDomainRestManagerTest {
     @Test
     public void shouldPutNewDomain() {
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
-        EventDomainRestManager.EventDomainConfig config = new EventDomainRestManager.EventDomainConfig();
-        config.setName("Test name");
-        config.setDescription("Test description");
+        EventDomainRestManager.Configuration configuration = new EventDomainRestManager.Configuration();
+        configuration.setName("Test name");
+        configuration.setDescription("Test description");
 
-        Response result = fixture.put(config, mockRequest);
+        Response result = fixture.put(configuration, mockRequest);
 
         assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
     }
@@ -193,10 +193,11 @@ public class EventDomainRestManagerTest {
     @Test
     public void onPutShouldReturnInternalServerErrorWhenAnyExceptionOccursWhileAddingNewDomainToDatabase() throws SQLException {
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
-        EventPlanRestManager.EventPlanConfig invalidConfig = new EventPlanRestManager.EventPlanConfig();
+        EventPlanRestManager.Configuration invalidConfig = new EventPlanRestManager.Configuration();
         invalidConfig.setName("Test name");
         invalidConfig.setDescription("Test description");
         invalidConfig.setDomains(new String[]{"Test domain"});
+        invalidConfig.setComponents(new String[]{"Test component"});
         invalidConfig.setTime("Test time");
 
         Response result = fixture.put(invalidConfig, mockRequest);

@@ -17,7 +17,7 @@
         <entity>edu.uz.jira.event.planner.project.plan.model.Task</entity>
         <entity>edu.uz.jira.event.planner.project.plan.model.SubTask</entity>
         <entity>edu.uz.jira.event.planner.project.plan.model.Component</entity>
-        <entity>edu.uz.jira.event.planner.project.plan.model.relation.PlanToTaskRelation</entity>
+        <entity>edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation</entity>
         <entity>edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation</entity>
     </ao>
 
@@ -95,9 +95,9 @@
         <actions>
             <action name="edu.uz.jira.event.planner.project.configuration.EventPlanConfigWebworkAction"
                     alias="EventOrganizationPlanConfiguration">
-                <view name="success">/templates/webworks/eventConfig/success.vm</view>
-                <view name="input">/templates/webworks/eventConfig/input.vm</view>
-                <view name="error">/templates/webworks/eventConfig/error.vm</view>
+                <view name="success">/templates/webworks/event/config/success.vm</view>
+                <view name="input">/templates/webworks/event/config/input.vm</view>
+                <view name="error">/templates/webworks/event/config/error.vm</view>
             </action>
         </actions>
         <resource type="download" name="input-script" location="/templates/webworks/eventConfig/input.js"/>

@@ -3,9 +3,9 @@ package edu.uz.jira.event.planner.project.plan;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.tx.Transactional;
 import edu.uz.jira.event.planner.project.plan.model.*;
+import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
-import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
-import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
+import edu.uz.jira.event.planner.project.plan.rest.manager.*;
 import net.java.ao.RawEntity;
 
 import javax.annotation.Nonnull;
@@ -40,18 +40,16 @@ public class EventPlanService {
      * @param resource Configuration of Event Organization Plan.
      * @return Newly created and added to database Event Organization Plan.
      */
-    public Plan addFrom(@Nonnull final EventPlanRestManager.EventPlanConfig resource) {
+    public Plan addFrom(@Nonnull final EventPlanRestManager.Configuration resource) {
         if (resource == null || !resource.isFullfilled()) {
             return null;
         }
         Plan result = activeObjectsService.create(Plan.class);
-
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
         result.setTimeToComplete(resource.getTime());
         relationsManager.associatePlanWithDomains(result, resource.getDomains());
         relationsManager.associatePlanWithComponents(result, resource.getComponents());
-
         result.save();
         return result;
     }
@@ -61,15 +59,50 @@ public class EventPlanService {
      * @param resource Configuration of Event Organization Domain.
      * @return Newly created and added to database Event Organization Domain.
      */
-    public Domain addFrom(@Nonnull final EventDomainRestManager.EventDomainConfig resource) {
+    public Domain addFrom(@Nonnull final EventDomainRestManager.Configuration resource) {
         if (resource == null || !resource.isFullfilled()) {
             return null;
         }
         Domain result = activeObjectsService.create(Domain.class);
-
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
+        result.save();
+        return result;
+    }
 
+    public Component addFrom(@Nonnull final EventComponentRestManager.Configuration resource) {
+        if (resource == null || !resource.isFullfilled()) {
+            return null;
+        }
+        Component result = activeObjectsService.create(Component.class);
+        result.setName(resource.getName());
+        result.setDescription(resource.getDescription());
+        relationsManager.associate(result, resource.getTasks());
+        result.save();
+        return result;
+    }
+
+    public Task addFrom(EventTaskRestManager.Configuration resource) {
+        if (resource == null || !resource.isFullfilled()) {
+            return null;
+        }
+        Task result = activeObjectsService.create(Task.class);
+        result.setName(resource.getName());
+        result.setDescription(resource.getDescription());
+        result.setTimeToComplete(resource.getTime());
+        result.save();
+        return result;
+    }
+
+    public SubTask addFrom(EventSubTaskRestManager.Configuration resource) {
+        if (resource == null || !resource.isFullfilled()) {
+            return null;
+        }
+        SubTask result = activeObjectsService.create(SubTask.class);
+        result.setName(resource.getName());
+        result.setDescription(resource.getDescription());
+        result.setTimeToComplete(resource.getTime());
+        relationsManager.associate(result, resource.getParentTask());
         result.save();
         return result;
     }
@@ -110,6 +143,8 @@ public class EventPlanService {
      */
     public void clearDatabase() {
         deleteAll(PlanToDomainRelation.class);
+        deleteAll(PlanToComponentRelation.class);
+
         deleteAll(SubTask.class);
         deleteAll(Task.class);
         deleteAll(Component.class);
@@ -123,4 +158,6 @@ public class EventPlanService {
     public void deleteAll(@Nonnull final Class<? extends RawEntity> type) {
         activeObjectsService.delete(activeObjectsService.find(type));
     }
+
+
 }

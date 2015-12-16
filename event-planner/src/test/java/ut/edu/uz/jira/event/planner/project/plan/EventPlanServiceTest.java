@@ -40,32 +40,32 @@ public class EventPlanServiceTest {
 
     @Test
     public void shouldAddDomainFromFullfilledEventDomainConfig() {
-        EventDomainRestManager.EventDomainConfig config = new EventDomainRestManager.EventDomainConfig();
-        config.setName("Test name");
-        config.setDescription("Test description");
+        EventDomainRestManager.Configuration configuration = new EventDomainRestManager.Configuration();
+        configuration.setName("Test name");
+        configuration.setDescription("Test description");
 
-        service.addFrom(config);
+        service.addFrom(configuration);
 
         assertEquals(1, activeObjects.find(Domain.class).length);
     }
 
     @Test
     public void shouldNotAddDomainWithNullEventDomainConfig() {
-        service.addFrom((EventDomainRestManager.EventDomainConfig) null);
+        service.addFrom((EventDomainRestManager.Configuration) null);
 
         assertEquals(0, activeObjects.find(Domain.class).length);
     }
 
     @Test
     public void emptyDomainConfigShouldNotBeAdded() {
-        service.addFrom(EventDomainRestManager.EventDomainConfig.createEmpty());
+        service.addFrom(EventDomainRestManager.Configuration.createEmpty());
 
         assertEquals(0, activeObjects.find(Domain.class).length);
     }
 
 //    @Test
 //    public void shouldAddPlanFromFullfilledEventDomainConfig() {
-//        EventPlanRestManager.EventPlanConfig config = new EventPlanRestManager.EventPlanConfig();
+//        EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
 //        config.setName("Test name");
 //        config.setDescription("Test description");
 //        config.setTime("Test time");
@@ -79,14 +79,14 @@ public class EventPlanServiceTest {
 
     @Test
     public void shouldNotAddPlanWithNullEventDomainConfig() {
-        service.addFrom((EventPlanRestManager.EventPlanConfig) null);
+        service.addFrom((EventPlanRestManager.Configuration) null);
 
         assertEquals(0, activeObjects.find(Plan.class).length);
     }
 
     @Test
     public void notFullfilledPlanConfigShouldNotBeAdded() {
-        service.addFrom(EventPlanRestManager.EventPlanConfig.createEmpty());
+        service.addFrom(EventPlanRestManager.Configuration.createEmpty());
 
         assertEquals(0, activeObjects.find(Plan.class).length);
     }
