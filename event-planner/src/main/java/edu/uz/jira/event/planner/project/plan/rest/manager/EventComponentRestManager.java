@@ -162,7 +162,11 @@ public class EventComponentRestManager extends RestManager {
         }
 
         public void setTasks(String[] tasks) {
-            this.tasks = tasks;
+            if (tasks == null) {
+                this.tasks = new String[]{};
+            } else {
+                this.tasks = tasks;
+            }
         }
 
         /**

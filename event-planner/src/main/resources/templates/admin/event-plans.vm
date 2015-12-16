@@ -319,6 +319,43 @@
     </footer>
 </section>
 
+<section role="dialog" id="event-subtask-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <header class="aui-dialog2-header">
+        <h2 class="aui-dialog2-header-main">SubTask definition</h2>
+    </header>
+    <div class="aui-dialog2-content">
+        <form class="aui" id="event-subtask-configuration" action="#" method="post">
+            <div class="field-group" id="task-subtask-group">
+                <label for="subtask-name">Name<span class="aui-icon icon-required">(required)</span></label>
+                <input id="subtask-name" name="subtask-name" type="text">
+
+                <div class="description" id="subtask-name-description">Name of the SubTask.</div>
+            </div>
+            <div class="field-group" id="subtask-description-group">
+                <label for="subtask-description">Description</label>
+                <input id="subtask-description" name="subtask-description" type="text">
+
+                <div class="description" id="subtask-description-description">Description of the SubTask.</div>
+            </div>
+            <div class="field-group" id="subtask-time-group">
+                <label for="subtask-time">Time to complete<span
+                        class="aui-icon icon-required">(required)</span></label>
+                <input id="subtask-time" name="subtask-time" type="text">
+
+                <div class="description" id="subtask-time-description">Estimated time to complete SubTask.
+                </div>
+            </div>
+        </form>
+    </div>
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button id="event-subtask-dialog-cancel-button" class="aui-button">Cancel</button>
+            <button id="event-subtask-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save
+            </button>
+        </div>
+    </footer>
+</section>
+
 <script type="text/javascript">
         AJS.$("#add-plan-button").click(function(e) {
             e.preventDefault();
@@ -514,7 +551,8 @@
                 contentType: "application/json",
                 data:    '{ "name": "'        + AJS.$("#task-name").attr("value") +
                         '", "description": "' + AJS.$("#task-description").attr("value") +
-                        '", "time": "'        + AJS.$("#task-time").attr("value") + '" }',
+                        '", "time": "'        + AJS.$("#task-time").attr("value") +
+                        '", "subtasks": '     + JSON.stringify(AJS.$("#task-subtasks").val()) + ' }',
                 processData: false
             });
 
@@ -547,6 +585,61 @@
             e.preventDefault();
 
             AJS.dialog2("#event-task-dialog").hide();
+            AJS.dialog2("#event-plan-dialog").show();
+        });
+
+         AJS.$("#add-subtask").click(function(e) {
+            e.preventDefault();
+
+            document.getElementById("subtask-name").value = "";
+            document.getElementById("subtask-description").value = "";
+            document.getElementById("subtask-time").value = "";
+
+            AJS.dialog2("#event-subtask-dialog").show();
+        });
+
+        function saveEventSubTask() {
+            var url = AJS.contextPath() + "/rest/event-plans/1.0/subtask";
+
+            jQuery.ajax({
+                url: url,
+                type: "PUT",
+                contentType: "application/json",
+                data:    '{ "name": "'        + AJS.$("#subtask-name").attr("value") +
+                        '", "description": "' + AJS.$("#subtask-description").attr("value") +
+                        '", "time": "'        + AJS.$("#subtask-time").attr("value") + '" }',
+                processData: false
+            });
+
+            // wstaw GET
+        }
+
+        AJS.$("#event-subtask-dialog-save-button").click(function(e) {
+            e.preventDefault();
+
+            var name = document.getElementById("subtask-name").value;
+            var time = document.getElementById("subtask-time").value;
+
+            if(name.valueOf() == "".valueOf()) {
+                AJS.$('#subtask-name-description').html('<div class="error" data-field="subtask-name">You must specify a name of the SubTask.</div>');
+            }
+            if(time.valueOf() == "".valueOf()) {
+                AJS.$('#subtask-time-description').html('<div class="error" data-field="subtask-time">You must specify estimated time to complete SubTask.</div>');
+            }
+            else {
+                // TODO Sprawdź czy obiekt Component o tej nazwie już istnieje
+
+                saveEventSubTask();
+
+                AJS.dialog2("#event-subtask-dialog").hide();
+                AJS.dialog2("#event-plan-dialog").show();
+            }
+        });
+
+        AJS.$("#event-subtask-dialog-cancel-button").click(function(e) {
+            e.preventDefault();
+
+            AJS.dialog2("#event-subtask-dialog").hide();
             AJS.dialog2("#event-plan-dialog").show();
         });
 

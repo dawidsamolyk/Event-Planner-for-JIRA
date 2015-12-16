@@ -5,7 +5,6 @@ import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
 import net.java.ao.Query;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -50,13 +49,23 @@ class RelationsManager {
         return result;
     }
 
-    private Task associate(@Nonnull final Component component, @Nonnull final Task eachTask) {
-        if (component == null || eachTask == null) {
+    private Task associate(@Nonnull final Component component, @Nonnull final Task task) {
+        if (component == null || task == null) {
             return null;
         }
-        eachTask.setComponent(component);
-        eachTask.save();
-        return eachTask;
+        task.setComponent(component);
+        task.save();
+        return task;
+    }
+
+    private SubTask associate(@Nonnull final Task task, @Nonnull final SubTask subTask) {
+        if (task == null || subTask == null) {
+            return null;
+        }
+        subTask.setParentTask(task);
+        subTask.save();
+        return subTask;
+
     }
 
     Collection<PlanToComponentRelation> associatePlanWithComponents(@Nonnull final Plan plan, @Nonnull final String[] componentsNames) {
@@ -102,8 +111,8 @@ class RelationsManager {
         List<Task> tasks = new ArrayList<Task>();
         if (tasksNames != null && tasksNames.length > 0) {
             for (String eachTaskName : tasksNames) {
-                Task[] eachDomains = activeObjectsService.find(Task.class, Query.select().where(Task.NAME + " = ?", eachTaskName));
-                tasks.addAll(Arrays.asList(eachDomains));
+                Task[] eachTasks = activeObjectsService.find(Task.class, Query.select().where(Task.NAME + " = ?", eachTaskName));
+                tasks.addAll(Arrays.asList(eachTasks));
             }
         }
         if (tasks != null && tasks.size() > 0 && component != null) {
@@ -113,16 +122,18 @@ class RelationsManager {
         }
     }
 
-    void associate(@Nonnull final SubTask subtask, @Nonnull final String parentTaskName) {
-        if (subtask == null || StringUtils.isBlank(parentTaskName)) {
-            return;
+    void associate(@Nonnull final Task task, @Nonnull final String[] subTasksNames) {
+        List<SubTask> subTasks = new ArrayList<SubTask>();
+        if (subTasksNames != null && subTasksNames.length > 0) {
+            for (String eachTaskName : subTasksNames) {
+                SubTask[] eachSubTasks = activeObjectsService.find(SubTask.class, Query.select().where(SubTask.NAME + " = ?", eachTaskName));
+                subTasks.addAll(Arrays.asList(eachSubTasks));
+            }
         }
-        Task[] tasks = activeObjectsService.find(Task.class, Query.select().where(Task.NAME + " = ?", parentTaskName));
-
-        if (tasks != null && tasks.length == 1 && tasks[0] != null) {
-            subtask.setParentTask(tasks[0]);
+        if (subTasks != null && subTasks.size() > 0 && task != null) {
+            for (SubTask eachSubTask : subTasks) {
+                associate(task, eachSubTask);
+            }
         }
     }
-
-
 }

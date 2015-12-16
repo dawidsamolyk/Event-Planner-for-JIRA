@@ -115,8 +115,8 @@ public class EventPlanRestManager extends RestManager {
             setName("");
             setDescription("");
             setTime("");
-            setDomains(new String[]{""});
-            setComponents(new String[]{""});
+            setDomains(new String[]{});
+            setComponents(new String[]{});
         }
 
         /**
@@ -180,7 +180,11 @@ public class EventPlanRestManager extends RestManager {
         }
 
         public void setDomains(@Nonnull String[] domains) {
-            this.domains = domains;
+            if (domains == null) {
+                this.domains = new String[]{};
+            } else {
+                this.domains = domains;
+            }
         }
 
         public String[] getComponents() {
@@ -188,7 +192,11 @@ public class EventPlanRestManager extends RestManager {
         }
 
         public void setComponents(String[] components) {
-            this.components = components;
+            if (components == null) {
+                this.components = new String[]{};
+            } else {
+                this.components = components;
+            }
         }
 
         /**

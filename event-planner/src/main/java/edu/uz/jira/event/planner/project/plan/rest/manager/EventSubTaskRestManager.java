@@ -102,8 +102,6 @@ public class EventSubTaskRestManager extends RestManager {
         private String description;
         @XmlElement
         private String time;
-        @XmlElement
-        private String parentTask;
 
         /**
          * Constructor.
@@ -113,7 +111,6 @@ public class EventSubTaskRestManager extends RestManager {
             setName("");
             setDescription("");
             setTime("");
-            setParentTask("");
         }
 
         /**
@@ -125,10 +122,6 @@ public class EventSubTaskRestManager extends RestManager {
             setName(task.getName());
             setDescription(task.getDescription());
             setTime(task.getTimeToComplete());
-            Task parentTask = task.getParentTask();
-            if (parentTask != null) {
-                setParentTask(parentTask.getName());
-            }
         }
 
         /**
@@ -145,8 +138,7 @@ public class EventSubTaskRestManager extends RestManager {
         public boolean isFullfilled() {
             return StringUtils.isNotBlank(getName())
                     && getDescription() != null
-                    && StringUtils.isNotBlank(getTime())
-                    && StringUtils.isNotBlank(getParentTask());
+                    && StringUtils.isNotBlank(getTime());
         }
 
         public String getName() {
@@ -173,14 +165,6 @@ public class EventSubTaskRestManager extends RestManager {
             this.time = time;
         }
 
-        public String getParentTask() {
-            return parentTask;
-        }
-
-        public void setParentTask(String parentTask) {
-            this.parentTask = parentTask;
-        }
-
         /**
          * @see {@link Object#equals(Object)}
          */
@@ -194,8 +178,7 @@ public class EventSubTaskRestManager extends RestManager {
             if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
             if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
                 return false;
-            if (getTime() != null ? !getTime().equals(that.getTime()) : that.getTime() != null) return false;
-            return !(getParentTask() != null ? !getParentTask().equals(that.getParentTask()) : that.getParentTask() != null);
+            return !(getTime() != null ? !getTime().equals(that.getTime()) : that.getTime() != null);
         }
 
         /**

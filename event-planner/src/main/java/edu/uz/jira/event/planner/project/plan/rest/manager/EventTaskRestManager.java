@@ -4,11 +4,12 @@ import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.exception.ResourceException;
 import edu.uz.jira.event.planner.project.plan.EventPlanService;
+import edu.uz.jira.event.planner.project.plan.model.SubTask;
 import edu.uz.jira.event.planner.project.plan.model.Task;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
-import edu.uz.jira.event.planner.util.text.TextUtils;
 import net.java.ao.Entity;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -28,7 +29,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Path("/task")
 public class EventTaskRestManager extends RestManager {
     private static final EntityNameExtractor ENTITY_NAME_EXTRACTOR = new EntityNameExtractor();
-    private static final TextUtils TEXT_UTILS = new TextUtils();
 
     /**
      * Constructor.
@@ -101,6 +101,8 @@ public class EventTaskRestManager extends RestManager {
         private String description;
         @XmlElement
         private String time;
+        @XmlElement
+        private String[] subtasks;
 
         /**
          * Constructor.
@@ -110,6 +112,7 @@ public class EventTaskRestManager extends RestManager {
             setName("");
             setDescription("");
             setTime("");
+            setSubtasks(new String[]{});
         }
 
         /**
@@ -121,6 +124,7 @@ public class EventTaskRestManager extends RestManager {
             setName(task.getName());
             setDescription(task.getDescription());
             setTime(task.getTimeToComplete());
+            setSubTasksNames(task);
         }
 
         /**
@@ -128,6 +132,16 @@ public class EventTaskRestManager extends RestManager {
          */
         public static Configuration createEmpty() {
             return new Configuration();
+        }
+
+        private void setSubTasksNames(@Nonnull Task task) {
+            try {
+                SubTask[] subTasks = task.getSubTasks();
+                setSubtasks(ENTITY_NAME_EXTRACTOR.getNames(subTasks));
+
+            } catch (NotImplementedException e) {
+                setSubtasks(new String[]{});
+            }
         }
 
         /**
@@ -164,6 +178,18 @@ public class EventTaskRestManager extends RestManager {
             this.time = time;
         }
 
+        public String[] getSubtasks() {
+            return subtasks;
+        }
+
+        public void setSubtasks(@Nonnull String[] subtasks) {
+            if (subtasks == null) {
+                this.subtasks = new String[]{};
+            } else {
+                this.subtasks = subtasks;
+            }
+        }
+
         /**
          * @see {@link Object#equals(Object)}
          */
@@ -187,7 +213,5 @@ public class EventTaskRestManager extends RestManager {
         public int hashCode() {
             return getName() != null ? getName().hashCode() : 0;
         }
-
-
     }
 }

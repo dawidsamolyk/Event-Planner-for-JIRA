@@ -48,8 +48,17 @@ public class EventPlanService {
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
         result.setTimeToComplete(resource.getTime());
-        relationsManager.associatePlanWithDomains(result, resource.getDomains());
-        relationsManager.associatePlanWithComponents(result, resource.getComponents());
+
+        String[] domains = resource.getDomains();
+        if(domains != null && domains.length > 0) {
+            relationsManager.associatePlanWithDomains(result, domains);
+        }
+
+        String[] components = resource.getComponents();
+        if(components != null && components.length > 0) {
+            relationsManager.associatePlanWithComponents(result, components);
+        }
+
         result.save();
         return result;
     }
@@ -77,7 +86,12 @@ public class EventPlanService {
         Component result = activeObjectsService.create(Component.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
-        relationsManager.associate(result, resource.getTasks());
+
+        String[] tasks = resource.getTasks();
+        if(tasks != null && tasks.length > 0) {
+            relationsManager.associate(result, tasks);
+        }
+
         result.save();
         return result;
     }
@@ -90,6 +104,12 @@ public class EventPlanService {
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
         result.setTimeToComplete(resource.getTime());
+
+        String[] subtasks = resource.getSubtasks();
+        if(subtasks != null && subtasks.length > 0) {
+            relationsManager.associate(result, subtasks);
+        }
+
         result.save();
         return result;
     }
@@ -102,7 +122,6 @@ public class EventPlanService {
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
         result.setTimeToComplete(resource.getTime());
-        relationsManager.associate(result, resource.getParentTask());
         result.save();
         return result;
     }
@@ -158,6 +177,4 @@ public class EventPlanService {
     public void deleteAll(@Nonnull final Class<? extends RawEntity> type) {
         activeObjectsService.delete(activeObjectsService.find(type));
     }
-
-
 }
