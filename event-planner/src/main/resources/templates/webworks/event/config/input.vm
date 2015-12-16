@@ -630,7 +630,7 @@
 <script type="text/javascript">
         #include("libs/js/jquery.js")
         #include("libs/js/jquery.datetimepicker.full.min.js")
-        #include("templates/webworks/eventConfig/input.js")
+        #include("templates/webworks/event/config/input.js")
 </script>
 </body>
 </html>

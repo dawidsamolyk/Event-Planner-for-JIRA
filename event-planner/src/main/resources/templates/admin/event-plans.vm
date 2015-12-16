@@ -146,7 +146,7 @@
                     <option>$eachDomain.getName()</option>
                     #end
                 </select>
-
+                <br />
                 <div class="aui-buttons">
                     <button id="add-domains" class="aui-button trigger-dialog">
                         <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
@@ -165,7 +165,7 @@
                     <option>$eachComponent.getName()</option>
                     #end
                 </select>
-
+                <br />
                 <div class="aui-buttons">
                     <button id="add-component" class="aui-button trigger-dialog">
                         <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
@@ -241,7 +241,7 @@
                     <option>$eachTask.getName()</option>
                     #end
                 </select>
-
+                <br />
                 <div class="aui-buttons">
                     <button id="add-task" class="aui-button trigger-dialog">
                         <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
@@ -297,7 +297,7 @@
                         <option>$eachTask.getName()</option>
                     #end
                 </select>
-
+                <br />
                 <div class="aui-buttons">
                     <button id="add-subtask" class="aui-button trigger-dialog">
                         <span class="aui-icon aui-icon-small aui-iconfont-add"></span>

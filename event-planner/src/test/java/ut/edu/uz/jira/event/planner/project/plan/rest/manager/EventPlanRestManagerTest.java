@@ -9,8 +9,8 @@ import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import edu.uz.jira.event.planner.project.plan.EventPlanService;
-import edu.uz.jira.event.planner.project.plan.model.Domain;
-import edu.uz.jira.event.planner.project.plan.model.Plan;
+import edu.uz.jira.event.planner.project.plan.model.*;
+import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
@@ -49,10 +49,14 @@ public class EventPlanRestManagerTest {
     private ActiveObjects activeObjects;
     private Object transactionResult;
 
-    public Plan createPlanWithDomain(String planName, String planDescription, String planTime, String domainName) throws SQLException {
+    public void createPlanWithDomainAndComponent(String planName, String planDescription, String planTime, String domainName, String componentName) throws SQLException {
         Domain domain = activeObjects.create(Domain.class);
         domain.setName(domainName);
         domain.save();
+
+        Component component = activeObjects.create(Component.class);
+        component.setName(componentName);
+        component.save();
 
         Plan plan = activeObjects.create(Plan.class);
         plan.setName(planName);
@@ -65,7 +69,10 @@ public class EventPlanRestManagerTest {
         relation.setDomain(domain);
         relation.save();
 
-        return plan;
+        PlanToComponentRelation relation2 = activeObjects.create(PlanToComponentRelation.class);
+        relation2.setComponent(component);
+        relation2.setPlan(plan);
+        relation2.save();
     }
 
     @Before
@@ -87,8 +94,7 @@ public class EventPlanRestManagerTest {
         });
 
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.flushAll();
-        activeObjects.migrate(Domain.class, Plan.class);
+        activeObjects.migrate(Domain.class, Plan.class, Component.class, Plan.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
         planService = new EventPlanService(activeObjects);
     }
 
@@ -145,35 +151,37 @@ public class EventPlanRestManagerTest {
         assertEquals(Response.Status.NO_CONTENT.getStatusCode(), result.getStatus());
     }
 
-//    @Test
-//    public void shouldGetPlanFromDatabase() throws SQLException {
-//        String testPlanName = "Test name";
-//        String testPlanDescription = "Test description";
-//        String testDomainName = "Test domain";
-//        String testTime = "Test time";
-//        createPlanWithDomain(testPlanName, testPlanDescription, testTime, testDomainName);
-//        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
-//
-//        fixture.get(mockRequest);
-//
-//        EventPlanRestManager.Configuration expected = new EventPlanRestManager.Configuration();
-//        expected.setName(testPlanName);
-//        expected.setDescription(testPlanDescription);
-//        expected.setDomains(new String[]{testDomainName});
-//        expected.setTime(testTime);
-//        assertEquals(expected, ((EventRestConfiguration[]) transactionResult)[0]);
-//    }
+    @Test
+    public void shouldGetPlanFromDatabase() throws SQLException {
+        String testPlanName = "Test name";
+        String testPlanDescription = "Test description";
+        String testDomainName = "Test domain";
+        String testTime = "Test time";
+        String testComponentName = "Test component";
+        createPlanWithDomainAndComponent(testPlanName, testPlanDescription, testTime, testDomainName, testComponentName);
+        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-//    @Test
-//    public void shouldGetManyPlansFromDatabase() throws SQLException {
-//        createPlanWithDomain("Plan 1", "Description", "Test time", "Domain 1");
-//        createPlanWithDomain("Plan 2", "Description", "Test time", "Domain 2");
-//        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
-//
-//        fixture.get(mockRequest);
-//
-//        assertTrue(((EventRestConfiguration[]) transactionResult).length == 2);
-//    }
+        fixture.get(mockRequest);
+
+        EventPlanRestManager.Configuration expected = new EventPlanRestManager.Configuration();
+        expected.setName(testPlanName);
+        expected.setDescription(testPlanDescription);
+        expected.setDomains(new String[]{testDomainName});
+        expected.setComponents(new String[]{testComponentName});
+        expected.setTime(testTime);
+        assertEquals(expected, ((EventRestConfiguration[]) transactionResult)[0]);
+    }
+
+    @Test
+    public void shouldGetManyPlansFromDatabase() throws SQLException {
+        createPlanWithDomainAndComponent("Plan 1", "Description", "Test time", "Domain 1", "Component 1");
+        createPlanWithDomainAndComponent("Plan 2", "Description", "Test time", "Domain 2", "Component 1");
+        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+
+        fixture.get(mockRequest);
+
+        assertTrue(((EventRestConfiguration[]) transactionResult).length == 2);
+    }
 
     @Test
     public void shouldGetEmptyPlansArrayWhenThereIsNoPlansInDatabase() {
@@ -184,19 +192,19 @@ public class EventPlanRestManagerTest {
         assertTrue(((EventRestConfiguration[]) transactionResult).length == 0);
     }
 
-//    @Test
-//    public void shouldPutNewEventPlan() {
-//        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
-//        EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
-//        config.setName("Test name");
-//        config.setTime("Test time");
-//        config.setDomains(new String[]{"Test domains"});
-//        config.setComponents(new String[]{"Test component"});
-//
-//        Response result = fixture.put(config, mockRequest);
-//
-//        assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
-//    }
+    @Test
+    public void shouldPutNewEventPlan() {
+        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplate, planService);
+        EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
+        config.setName("Test name");
+        config.setTime("Test time");
+        config.setDomains(new String[]{"Test domains"});
+        config.setComponents(new String[]{"Test component"});
+
+        Response result = fixture.put(config, mockRequest);
+
+        assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
+    }
 
     @Test
     public void shouldNotPutEmptyEventPlan() {

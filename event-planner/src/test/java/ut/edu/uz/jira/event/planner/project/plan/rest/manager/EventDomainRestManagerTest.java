@@ -9,8 +9,9 @@ import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import edu.uz.jira.event.planner.project.plan.EventPlanService;
-import edu.uz.jira.event.planner.project.plan.model.Domain;
-import edu.uz.jira.event.planner.project.plan.model.Plan;
+import edu.uz.jira.event.planner.project.plan.model.*;
+import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
@@ -80,8 +81,7 @@ public class EventDomainRestManagerTest {
 
         activeObjects = mock(ActiveObjects.class);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.flushAll();
-        activeObjects.migrate(Domain.class, Plan.class);
+        activeObjects.migrate(Domain.class, Plan.class, Component.class, Plan.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
         planService = new EventPlanService(activeObjects);
     }
 

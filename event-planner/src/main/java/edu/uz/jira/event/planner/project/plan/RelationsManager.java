@@ -73,8 +73,8 @@ class RelationsManager {
 
         List<Component> components = new ArrayList<Component>();
         if (componentsNames != null && componentsNames.length > 0) {
-            for (String eachDomainName : componentsNames) {
-                Component[] eachComponent = activeObjectsService.find(Component.class, Query.select().where(Component.NAME + " = ?", eachDomainName));
+            for (String eachComponentName : componentsNames) {
+                Component[] eachComponent = activeObjectsService.find(Component.class, Query.select().where(Component.NAME + " = ?", eachComponentName));
                 components.addAll(Arrays.asList(eachComponent));
             }
         }
