@@ -2,7 +2,7 @@ package ut.edu.uz.jira.event.planner.project.plan;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.tx.Transactional;
-import edu.uz.jira.event.planner.project.plan.EventPlanService;
+import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
@@ -32,18 +32,18 @@ import static org.mockito.Mockito.mock;
 @RunWith(ActiveObjectsJUnitRunner.class)
 @Jdbc(Hsql.class)
 @NameConverters
-public class EventPlanServiceTest {
+public class ActiveObjectsServiceTest {
     private EntityManager entityManager;
     private ActiveObjects activeObjects;
     private ActiveObjectsTestHelper activeObjectsHelper;
-    private EventPlanService service;
+    private ActiveObjectsService service;
 
     @Before
     public void setUp() throws Exception {
         assertNotNull(entityManager);
         activeObjects = new TestActiveObjects(entityManager);
         activeObjects.migrate(Domain.class, Plan.class, Component.class, Plan.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
-        service = new EventPlanService(activeObjects);
+        service = new ActiveObjectsService(activeObjects);
         service.clearDatabase();
         activeObjects.flushAll();
         activeObjectsHelper = new ActiveObjectsTestHelper(activeObjects);
@@ -174,21 +174,9 @@ public class EventPlanServiceTest {
     }
 
     @Test
-    public void taskShouldBeAddedIfHasFullfilledConfiguration() {
-        EventTaskRestManager.Configuration config = new EventTaskRestManager.Configuration();
-        config.setName("Test name");
-        config.setDescription("Test description");
-        config.setTime("Test time");
-
-        service.addFrom(config);
-
-        assertEquals(1, activeObjects.find(Task.class).length);
-    }
-
-    @Test
     public void taskShouldBeAddedIfHasFullfilledConfigurationWithRelatedSubTasks() {
-        SubTask firstSubTask = activeObjectsHelper.createSubTaskNamed("Test 1", this);
-        SubTask secondSubTask = activeObjectsHelper.createSubTaskNamed("Test 2", this);
+        SubTask firstSubTask = activeObjectsHelper.createSubTaskNamed("Test 1");
+        SubTask secondSubTask = activeObjectsHelper.createSubTaskNamed("Test 2");
         EventTaskRestManager.Configuration config = new EventTaskRestManager.Configuration();
         config.setName("Test name");
         config.setDescription("Test description");

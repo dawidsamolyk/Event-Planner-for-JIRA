@@ -19,7 +19,7 @@ import java.util.Map;
  * Servlet which handles Event Plan Configuration page.
  */
 public final class EventPlanServlet extends HttpServlet {
-    private final EventPlanService eventPlanService;
+    private final ActiveObjectsService activeObjectsService;
     private final TemplateRenderer templateRenderer;
     private final UserManager userManager;
     private final LoginUriProvider loginUriProvider;
@@ -27,16 +27,16 @@ public final class EventPlanServlet extends HttpServlet {
     /**
      * Constructor.
      *
-     * @param eventPlanService Injected {@code EventPlanService} implementation.
+     * @param activeObjectsService Injected {@code ActiveObjectsService} implementation.
      * @param templateRenderer Injected {@code TemplateRenderer} implementation.
      * @param userManager      Injected {@code UserManager} implementation.
      * @param loginUriProvider Injected {@code LoginUriProvider} implementation.
      */
-    public EventPlanServlet(@Nonnull final EventPlanService eventPlanService,
+    public EventPlanServlet(@Nonnull final ActiveObjectsService activeObjectsService,
                             @Nonnull final TemplateRenderer templateRenderer,
                             @Nonnull final UserManager userManager,
                             @Nonnull final LoginUriProvider loginUriProvider) {
-        this.eventPlanService = eventPlanService;
+        this.activeObjectsService = activeObjectsService;
         this.templateRenderer = templateRenderer;
         this.userManager = userManager;
         this.loginUriProvider = loginUriProvider;
@@ -51,11 +51,11 @@ public final class EventPlanServlet extends HttpServlet {
         }
 
         Map<String, Object> context = new HashMap<String, Object>();
-        context.put("DOMAINS", eventPlanService.get(Domain.class));
-        context.put("PLANS", eventPlanService.get(Plan.class));
-        context.put("COMPONENTS", eventPlanService.get(Component.class));
-        context.put("TASKS", eventPlanService.get(Task.class));
-        context.put("SUBTASKS", eventPlanService.get(SubTask.class));
+        context.put("DOMAINS", activeObjectsService.get(Domain.class));
+        context.put("PLANS", activeObjectsService.get(Plan.class));
+        context.put("COMPONENTS", activeObjectsService.get(Component.class));
+        context.put("TASKS", activeObjectsService.get(Task.class));
+        context.put("SUBTASKS", activeObjectsService.get(SubTask.class));
 
         response.setContentType("text/html;charset=utf-8");
         templateRenderer.render("/templates/admin/event-plans.vm", context, response.getWriter());

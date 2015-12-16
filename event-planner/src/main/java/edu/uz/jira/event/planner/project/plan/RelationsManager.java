@@ -112,33 +112,40 @@ class RelationsManager {
         return result;
     }
 
-    void associate(@Nonnull final Component component, @Nonnull final String[] tasksNames) {
+    boolean associate(@Nonnull final Component component, @Nonnull final String[] tasksNames) {
+        if (tasksNames == null || tasksNames.length == 0 || component == null) {
+            return false;
+        }
         List<Task> tasks = new ArrayList<>();
-        if (tasksNames != null && tasksNames.length > 0) {
-            for (String eachTaskName : tasksNames) {
-                Task[] eachTasks = activeObjectsService.find(Task.class, Query.select().where(Task.NAME + " = ?", eachTaskName));
-                tasks.addAll(Arrays.asList(eachTasks));
-            }
+        for (String eachTaskName : tasksNames) {
+            Task[] eachTasks = activeObjectsService.find(Task.class, Query.select().where(Task.NAME + " = ?", eachTaskName));
+            tasks.addAll(Arrays.asList(eachTasks));
         }
-        if (tasks != null && tasks.size() > 0 && component != null) {
-            for (Task eachTask : tasks) {
-                associate(component, eachTask);
-            }
+        if (tasks == null || tasks.size() == 0) {
+            return false;
         }
+        for (Task eachTask : tasks) {
+            associate(component, eachTask);
+        }
+        return true;
     }
 
-    void associate(@Nonnull final Task task, @Nonnull final String[] subTasksNames) {
+    boolean associate(@Nonnull final Task task, @Nonnull final String[] subTasksNames) {
+        if (subTasksNames == null || subTasksNames.length == 0) {
+            // Because Task does not have to contains SubTasks
+            return true;
+        }
         List<SubTask> subTasks = new ArrayList<SubTask>();
-        if (subTasksNames != null && subTasksNames.length > 0) {
-            for (String eachTaskName : subTasksNames) {
-                SubTask[] eachSubTasks = activeObjectsService.find(SubTask.class, Query.select().where(SubTask.NAME + " = ?", eachTaskName));
-                subTasks.addAll(Arrays.asList(eachSubTasks));
-            }
+        for (String eachTaskName : subTasksNames) {
+            SubTask[] eachSubTasks = activeObjectsService.find(SubTask.class, Query.select().where(SubTask.NAME + " = ?", eachTaskName));
+            subTasks.addAll(Arrays.asList(eachSubTasks));
         }
-        if (subTasks != null && subTasks.size() > 0 && task != null) {
-            for (SubTask eachSubTask : subTasks) {
-                associate(task, eachSubTask);
-            }
+        if (subTasks == null || subTasks.size() == 0 || task == null) {
+            return false;
         }
+        for (SubTask eachSubTask : subTasks) {
+            associate(task, eachSubTask);
+        }
+        return true;
     }
 }

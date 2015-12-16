@@ -7,7 +7,7 @@ import com.atlassian.jira.project.version.VersionManager;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
-import edu.uz.jira.event.planner.project.plan.EventPlanService;
+import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.util.text.Internationalization;
 import webwork.action.Action;
 
@@ -27,7 +27,7 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
     private final VersionManager versionManager;
     private final I18nResolver internationalization;
     private final EventPlanConfigurationValidator validator;
-    private final EventPlanService eventPlanService;
+    private final ActiveObjectsService activeObjectsService;
 
     /**
      * Constructor.
@@ -35,9 +35,9 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
      * @param i18nResolver Injected {@code I18nResolver} implementation.
      */
     public EventPlanConfigWebworkAction(@Nonnull final I18nResolver i18nResolver,
-                                        @Nonnull final EventPlanService eventPlanService) {
+                                        @Nonnull final ActiveObjectsService activeObjectsService) {
         internationalization = i18nResolver;
-        this.eventPlanService = eventPlanService;
+        this.activeObjectsService = activeObjectsService;
         versionManager = ComponentAccessor.getVersionManager();
         validator = new EventPlanConfigurationValidator();
     }
@@ -98,6 +98,6 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
      * @return Event Plans with Event Organization Domain name as key (eg. Development), and Event Organization Plan name
      */
     public Map<String, List<String>> getEventPlans() {
-        return eventPlanService.getEventPlansSortedByDomain();
+        return activeObjectsService.getEventPlansSortedByDomain();
     }
 }

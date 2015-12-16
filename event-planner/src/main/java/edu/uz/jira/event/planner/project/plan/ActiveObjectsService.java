@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Service for transactional managing Event Organization Plan entities.
@@ -22,7 +23,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * AO does not support cascading.</li>
  */
 @Transactional
-public class EventPlanService {
+public class ActiveObjectsService {
     private final ActiveObjects activeObjectsService;
     private final RelationsManager relationsManager;
 
@@ -31,7 +32,7 @@ public class EventPlanService {
      *
      * @param activeObjectsService Injected {@code ActiveObjects} implementation.
      */
-    public EventPlanService(@Nonnull final ActiveObjects activeObjectsService) {
+    public ActiveObjectsService(@Nonnull final ActiveObjects activeObjectsService) {
         this.activeObjectsService = activeObjectsService;
         relationsManager = new RelationsManager(activeObjectsService);
     }
@@ -65,7 +66,6 @@ public class EventPlanService {
         return result;
     }
 
-
     /**
      * @param resource Configuration of Event Organization Domain.
      * @return Newly created and added to database Event Organization Domain.
@@ -89,9 +89,10 @@ public class EventPlanService {
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
 
-        String[] tasks = resource.getTasks();
-        if (tasks != null && tasks.length > 0) {
-            relationsManager.associate(result, tasks);
+        boolean valid = relationsManager.associate(result, resource.getTasks());
+        if (!valid) {
+            activeObjectsService.delete(result);
+            return null;
         }
 
         result.save();
@@ -107,9 +108,10 @@ public class EventPlanService {
         result.setDescription(resource.getDescription());
         result.setTimeToComplete(resource.getTime());
 
-        String[] subtasks = resource.getSubtasks();
-        if (subtasks != null && subtasks.length > 0) {
-            relationsManager.associate(result, subtasks);
+        boolean valid = relationsManager.associate(result, resource.getSubtasks());
+        if (!valid) {
+            activeObjectsService.delete(result);
+            return null;
         }
 
         result.save();
@@ -146,12 +148,11 @@ public class EventPlanService {
         Map<String, List<String>> result = new HashMap<String, List<String>>();
 
         for (Domain eachDomain : get(Domain.class)) {
-            List<Plan> plans = Arrays.asList(eachDomain.getPlans());
-            List<String> plansNames = new ArrayList<String>(plans.size());
-
-            for (Plan eachPlan : plans) {
-                plansNames.add(eachPlan.getName());
-            }
+            List<String> plansNames = Arrays
+                    .stream(eachDomain.getPlans())
+                    .filter(t -> t != null)
+                    .map(Plan::getName)
+                    .collect(toList());
 
             result.put(eachDomain.getName(), plansNames);
         }

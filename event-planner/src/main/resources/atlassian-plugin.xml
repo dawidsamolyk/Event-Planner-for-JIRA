@@ -29,7 +29,7 @@
     <component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/>
 
     <component key="transaction" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor"/>
-    <component key="event-plan-service" class="edu.uz.jira.event.planner.project.plan.EventPlanService"/>
+    <component key="event-plan-service" class="edu.uz.jira.event.planner.project.plan.ActiveObjectsService"/>
 
     <rest key="rest" path="/event-plans" version="1.0">
         <description>Provides REST resources for the Event Organization Plans admin UI.</description>

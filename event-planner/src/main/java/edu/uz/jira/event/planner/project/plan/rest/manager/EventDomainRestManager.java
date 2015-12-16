@@ -3,7 +3,7 @@ package edu.uz.jira.event.planner.project.plan.rest.manager;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.exception.ResourceException;
-import edu.uz.jira.event.planner.project.plan.EventPlanService;
+import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.model.Domain;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import net.java.ao.Entity;
@@ -29,14 +29,14 @@ public class EventDomainRestManager extends RestManager {
     /**
      * Constructor.
      *
-     * @param userManager         Injected {@code UserManager} implementation.
-     * @param transactionTemplate Injected {@code TransactionTemplate} implementation.
-     * @param eventPlanService    Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
+     * @param userManager          Injected {@code UserManager} implementation.
+     * @param transactionTemplate  Injected {@code TransactionTemplate} implementation.
+     * @param activeObjectsService Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
      */
     public EventDomainRestManager(@Nonnull final UserManager userManager,
                                   @Nonnull final TransactionTemplate transactionTemplate,
-                                  @Nonnull final EventPlanService eventPlanService) {
-        super(userManager, transactionTemplate, eventPlanService);
+                                  @Nonnull final ActiveObjectsService activeObjectsService) {
+        super(userManager, transactionTemplate, activeObjectsService);
     }
 
     /**
@@ -63,12 +63,14 @@ public class EventDomainRestManager extends RestManager {
     }
 
     @Override
-    protected void doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException {
+    protected Response doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException {
+        Domain result;
         try {
-            eventPlanService.addFrom((Configuration) resource);
+            result = activeObjectsService.addFrom((Configuration) resource);
         } catch (ClassCastException e) {
             throw new ResourceException(e.getMessage(), e);
         }
+        return checkArgumentAndResponse(result);
     }
 
     @Override

@@ -13,7 +13,6 @@ import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
-import edu.uz.jira.event.planner.project.plan.rest.manager.EventComponentRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
 import net.java.ao.EntityManager;
 import net.java.ao.test.converters.NameConverters;
@@ -41,7 +40,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(ActiveObjectsJUnitRunner.class)
 @Jdbc(Hsql.class)
 @NameConverters
-public class EventDomainRestManagerTest {
+public class EventComponentRestManagerTest {
     private EntityManager entityManager;
     private MockHttpServletRequest mockRequest;
     private UserManager mockUserManager;
@@ -51,10 +50,6 @@ public class EventDomainRestManagerTest {
     private ActiveObjects activeObjects;
     private EventRestConfiguration[] transactionResult;
     private ActiveObjectsTestHelper testHelper;
-
-    private EventDomainRestManager.Configuration getEmptyDomain() {
-        return EventDomainRestManager.Configuration.createEmpty();
-    }
 
     @Before
     public void setUp() {
@@ -93,25 +88,25 @@ public class EventDomainRestManagerTest {
     }
 
     @Test
-    public void shouldGetComponentFromDatabase() throws SQLException {
+    public void shouldGetDomainFromDatabase() throws SQLException {
         String testName = "Test name";
         String testDescription = "Test description";
-        testHelper.createComponent(testName, testDescription);
-        EventComponentRestManager fixture = new EventComponentRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        testHelper.createDomain(testName, testDescription);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
 
-        EventComponentRestManager.Configuration expected = new EventComponentRestManager.Configuration();
+        EventDomainRestManager.Configuration expected = new EventDomainRestManager.Configuration();
         expected.setName(testName);
         expected.setDescription(testDescription);
         assertEquals(expected, transactionResult[0]);
     }
 
     @Test
-    public void shouldGetManyComponentsFromDatabase() throws SQLException {
-        testHelper.createComponent("Component 1", "Description");
-        testHelper.createComponent("Component 2", "Description");
-        EventComponentRestManager fixture = new EventComponentRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+    public void shouldGetManyDomainsFromDatabase() throws SQLException {
+        testHelper.createDomain("Domain 1", "Description");
+        testHelper.createDomain("Domain 2", "Description");
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
 
@@ -119,8 +114,8 @@ public class EventDomainRestManagerTest {
     }
 
     @Test
-    public void shouldGetEmptyComponentArrayWhenThereIsNoDomainsInDatabase() {
-        EventComponentRestManager fixture = new EventComponentRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+    public void shouldGetEmptyDomainsArrayWhenThereIsNoDomainsInDatabase() {
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
 
@@ -128,14 +123,11 @@ public class EventDomainRestManagerTest {
     }
 
     @Test
-    public void shouldPutNewComponent() {
-        Task firstTask = testHelper.createTaskNamed("Test task1");
-        Task secondTask = testHelper.createTaskNamed("Test task2");
-        EventComponentRestManager fixture = new EventComponentRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
-        EventComponentRestManager.Configuration configuration = new EventComponentRestManager.Configuration();
+    public void shouldPutNewDomain() {
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
+        EventDomainRestManager.Configuration configuration = new EventDomainRestManager.Configuration();
         configuration.setName("Test name");
         configuration.setDescription("Test description");
-        configuration.setTasks(new String[]{firstTask.getName(), secondTask.getName()});
 
         Response result = fixture.put(configuration, mockRequest);
 

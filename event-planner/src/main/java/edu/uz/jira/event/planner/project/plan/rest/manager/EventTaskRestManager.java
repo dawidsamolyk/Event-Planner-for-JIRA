@@ -3,7 +3,7 @@ package edu.uz.jira.event.planner.project.plan.rest.manager;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.exception.ResourceException;
-import edu.uz.jira.event.planner.project.plan.EventPlanService;
+import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.model.SubTask;
 import edu.uz.jira.event.planner.project.plan.model.Task;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Arrays;
 
 /**
  * REST manager for Event Organization Task.
@@ -33,14 +34,14 @@ public class EventTaskRestManager extends RestManager {
     /**
      * Constructor.
      *
-     * @param userManager         Injected {@code UserManager} implementation.
-     * @param transactionTemplate Injected {@code TransactionTemplate} implementation.
-     * @param eventPlanService    Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
+     * @param userManager          Injected {@code UserManager} implementation.
+     * @param transactionTemplate  Injected {@code TransactionTemplate} implementation.
+     * @param activeObjectsService Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
      */
     public EventTaskRestManager(@Nonnull final UserManager userManager,
                                 @Nonnull final TransactionTemplate transactionTemplate,
-                                @Nonnull final EventPlanService eventPlanService) {
-        super(userManager, transactionTemplate, eventPlanService);
+                                @Nonnull final ActiveObjectsService activeObjectsService) {
+        super(userManager, transactionTemplate, activeObjectsService);
     }
 
     /**
@@ -68,12 +69,14 @@ public class EventTaskRestManager extends RestManager {
     }
 
     @Override
-    protected void doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException {
+    protected Response doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException {
+        Task result;
         try {
-            eventPlanService.addFrom((Configuration) resource);
+            result = activeObjectsService.addFrom((Configuration) resource);
         } catch (ClassCastException e) {
             throw new ResourceException(e.getMessage(), e);
         }
+        return checkArgumentAndResponse(result);
     }
 
     @Override
@@ -135,12 +138,15 @@ public class EventTaskRestManager extends RestManager {
         }
 
         private void setSubTasksNames(@Nonnull Task task) {
+            SubTask[] subTasks = null;
             try {
-                SubTask[] subTasks = task.getSubTasks();
-                setSubtasks(ENTITY_NAME_EXTRACTOR.getNames(subTasks));
-
+                subTasks = task.getSubTasks();
             } catch (NotImplementedException e) {
+            }
+            if (subTasks == null) {
                 setSubtasks(new String[]{});
+            } else {
+                setSubtasks(ENTITY_NAME_EXTRACTOR.getNames(subTasks));
             }
         }
 
@@ -159,7 +165,11 @@ public class EventTaskRestManager extends RestManager {
         }
 
         public void setName(@Nonnull String name) {
-            this.name = name;
+            if (name == null) {
+                this.name = "";
+            } else {
+                this.name = name;
+            }
         }
 
         public String getDescription() {
@@ -167,7 +177,11 @@ public class EventTaskRestManager extends RestManager {
         }
 
         public void setDescription(@Nonnull String description) {
-            this.description = description;
+            if (description == null) {
+                this.description = "";
+            } else {
+                this.description = description;
+            }
         }
 
         public String getTime() {
@@ -175,7 +189,11 @@ public class EventTaskRestManager extends RestManager {
         }
 
         public void setTime(@Nonnull String time) {
-            this.time = time;
+            if (time == null) {
+                this.time = "";
+            } else {
+                this.time = time;
+            }
         }
 
         public String[] getSubtasks() {
@@ -203,7 +221,8 @@ public class EventTaskRestManager extends RestManager {
             if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
             if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
                 return false;
-            return !(getTime() != null ? !getTime().equals(that.getTime()) : that.getTime() != null);
+            if (getTime() != null ? !getTime().equals(that.getTime()) : that.getTime() != null) return false;
+            return Arrays.equals(getSubtasks(), that.getSubtasks());
         }
 
         /**

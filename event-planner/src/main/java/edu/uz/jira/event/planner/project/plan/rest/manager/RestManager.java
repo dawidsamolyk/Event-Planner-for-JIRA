@@ -5,7 +5,7 @@ import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import edu.uz.jira.event.planner.exception.ResourceException;
-import edu.uz.jira.event.planner.project.plan.EventPlanService;
+import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import net.java.ao.Entity;
 import net.java.ao.RawEntity;
@@ -20,23 +20,23 @@ import java.util.List;
  * Abstract REST manager which implements common functionalities for concrete REST managers.
  */
 public abstract class RestManager {
-    private final UserManager userManager;
     protected final TransactionTemplate transactionTemplate;
-    protected final EventPlanService eventPlanService;
+    protected final ActiveObjectsService activeObjectsService;
+    private final UserManager userManager;
 
     /**
      * Constructor.
      *
-     * @param userManager         Injected {@code UserManager} implementation.
-     * @param transactionTemplate Injected {@code TransactionTemplate} implementation.
-     * @param eventPlanService    Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
+     * @param userManager          Injected {@code UserManager} implementation.
+     * @param transactionTemplate  Injected {@code TransactionTemplate} implementation.
+     * @param activeObjectsService Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
      */
     public RestManager(@Nonnull final UserManager userManager,
                        @Nonnull final TransactionTemplate transactionTemplate,
-                       @Nonnull final EventPlanService eventPlanService) {
+                       @Nonnull final ActiveObjectsService activeObjectsService) {
         this.userManager = userManager;
         this.transactionTemplate = transactionTemplate;
-        this.eventPlanService = eventPlanService;
+        this.activeObjectsService = activeObjectsService;
     }
 
     /**
@@ -56,20 +56,14 @@ public abstract class RestManager {
         if (!resource.isFullfilled()) {
             return buildStatus(Response.Status.NOT_ACCEPTABLE);
         }
-
-        Response response = doPutTransaction(resource);
-
-        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            return buildStatus(Response.Status.OK);
-        }
-        return buildStatus(Response.Status.INTERNAL_SERVER_ERROR);
+        return doPutTransaction(resource);
     }
 
     private boolean isAdminUser(final UserProfile user) {
         return user != null && userManager.isSystemAdmin(user.getUserKey());
     }
 
-    private Response buildStatus(@Nonnull final Response.Status status) {
+    protected Response buildStatus(@Nonnull final Response.Status status) {
         return Response.status(status).build();
     }
 
@@ -77,8 +71,7 @@ public abstract class RestManager {
         return transactionTemplate.execute(new TransactionCallback<Response>() {
             public Response doInTransaction() {
                 try {
-                    doPut(resource);
-                    return buildStatus(Response.Status.OK);
+                    return doPut(resource);
                 } catch (ResourceException e) {
                     return buildStatus(Response.Status.INTERNAL_SERVER_ERROR);
                 }
@@ -86,7 +79,7 @@ public abstract class RestManager {
         });
     }
 
-    protected abstract void doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException;
+    protected abstract Response doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException;
 
     /**
      * Handles GET request.
@@ -108,7 +101,7 @@ public abstract class RestManager {
     protected abstract EventRestConfiguration[] doGet();
 
     protected EventRestConfiguration[] doGetAll(@Nonnull final Class<? extends RawEntity> entityType, @Nonnull final EventRestConfiguration defaultResult) {
-        List<? extends RawEntity> entities = eventPlanService.get(entityType);
+        List<? extends RawEntity> entities = activeObjectsService.get(entityType);
         int numberOfEntities = entities.size();
 
         EventRestConfiguration[] result = new EventRestConfiguration[numberOfEntities];
@@ -124,4 +117,11 @@ public abstract class RestManager {
     }
 
     protected abstract EventRestConfiguration createFrom(@Nonnull final Entity entity);
+
+    protected Response checkArgumentAndResponse(final Entity entity) {
+        if (entity == null) {
+            return buildStatus(Response.Status.NOT_ACCEPTABLE);
+        }
+        return buildStatus(Response.Status.ACCEPTED);
+    }
 }
