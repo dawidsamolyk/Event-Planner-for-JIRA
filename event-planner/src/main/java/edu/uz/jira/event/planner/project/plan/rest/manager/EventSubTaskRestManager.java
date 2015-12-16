@@ -147,7 +147,11 @@ public class EventSubTaskRestManager extends RestManager {
         }
 
         public void setName(@Nonnull String name) {
-            this.name = name;
+            if (name == null) {
+                this.name = "";
+            } else {
+                this.name = name;
+            }
         }
 
         public String getDescription() {
@@ -155,7 +159,11 @@ public class EventSubTaskRestManager extends RestManager {
         }
 
         public void setDescription(@Nonnull String description) {
-            this.description = description;
+            if (description == null) {
+                this.description = "";
+            } else {
+                this.description = description;
+            }
         }
 
         public String getTime() {
@@ -163,7 +171,11 @@ public class EventSubTaskRestManager extends RestManager {
         }
 
         public void setTime(@Nonnull String time) {
-            this.time = time;
+            if (time == null) {
+                this.time = "";
+            } else {
+                this.time = time;
+            }
         }
 
         /**

@@ -148,7 +148,11 @@ public class EventComponentRestManager extends RestManager {
         }
 
         public void setName(@Nonnull String name) {
-            this.name = name;
+            if (name == null) {
+                this.name = "";
+            } else {
+                this.name = name;
+            }
         }
 
         public String getDescription() {
@@ -156,7 +160,11 @@ public class EventComponentRestManager extends RestManager {
         }
 
         public void setDescription(@Nonnull String description) {
-            this.description = description;
+            if (description == null) {
+                this.description = "";
+            } else {
+                this.description = description;
+            }
         }
 
         public String[] getTasks() {
@@ -194,7 +202,5 @@ public class EventComponentRestManager extends RestManager {
         public int hashCode() {
             return getName() != null ? getName().hashCode() : 0;
         }
-
-
     }
 }
