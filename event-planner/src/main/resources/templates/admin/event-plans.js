@@ -153,6 +153,8 @@ function ButtonListener(resource) {
 
         AJS.$(showButtonId).click(
             function(e) {
+                e.preventDefault();
+
                 document.getElementById(formId).reset();
                 AJS.dialog2(dialogId).show();
             }
@@ -166,6 +168,8 @@ function ButtonListener(resource) {
 
         AJS.$(this.getSaveButtonId()).click(
             function(e) {
+                e.preventDefault();
+
                 // TODO walidacja lub złapanie exceptiona i wyświetlenie błędu na ekranie
                 rest.put(resource);
             }
@@ -177,6 +181,8 @@ function ButtonListener(resource) {
 
             AJS.$(this.getSaveButtonId()).click(
                 function(e) {
+                    e.preventDefault();
+
                     AJS.dialog2(dialogId).hide();
                 }
             );
@@ -188,6 +194,8 @@ function ButtonListener(resource) {
 
             AJS.$(this.getSaveButtonId()).click(
                 function(e) {
+                    e.preventDefault();
+
                     for(eachKey in resources) {
                         var eachResource = resources[eachKey];
                         var eachJson = rest.get(eachResource);
@@ -203,6 +211,8 @@ function ButtonListener(resource) {
 
         AJS.$(cancelButtonId).click(
             function(e) {
+                e.preventDefault();
+
                 AJS.dialog2(dialogId).hide();
             }
         );
