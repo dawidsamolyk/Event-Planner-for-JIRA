@@ -58,6 +58,7 @@ public class ActiveObjectsService {
 
         Collection<PlanToComponentRelation> planToComponentRelations = relationsManager.associatePlanWithComponents(result, resource.getComponents());
         if (planToComponentRelations.isEmpty()) {
+            planToDomainRelations.stream().forEach(each -> activeObjectsService.delete(each));
             activeObjectsService.delete(result);
             return null;
         }

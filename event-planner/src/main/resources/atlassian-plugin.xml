@@ -39,6 +39,7 @@
              key="event-plans-configuration">
         <url-pattern>/eventPlans/configuration</url-pattern>
         <resource name="view" type="velocity" location="/templates/admin/event-plans.vm"/>
+        <resource type="download" name="js-script" location="/templates/admin/event-plans.js"/>
     </servlet>
 
     <web-item key="event_plans" name="Event Organization Plans Link"

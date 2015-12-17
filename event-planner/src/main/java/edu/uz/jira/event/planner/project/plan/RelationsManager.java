@@ -4,19 +4,20 @@ import com.atlassian.activeobjects.external.ActiveObjects;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
-import net.java.ao.Query;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Manages database Entities (Active Objects) relations.
  */
 class RelationsManager {
     private final ActiveObjects activeObjectsService;
+    private final ActiveObjectsHelper helper;
 
     /**
      * Constructor.
@@ -25,6 +26,7 @@ class RelationsManager {
      */
     RelationsManager(@Nonnull final ActiveObjects activeObjectsService) {
         this.activeObjectsService = activeObjectsService;
+        helper = new ActiveObjectsHelper(activeObjectsService);
     }
 
     PlanToDomainRelation associate(@Nonnull final Plan plan, @Nonnull final Domain domain) {
@@ -65,68 +67,36 @@ class RelationsManager {
         subTask.setParentTask(task);
         subTask.save();
         return subTask;
-
     }
 
     Collection<PlanToComponentRelation> associatePlanWithComponents(@Nonnull final Plan plan, @Nonnull final String[] componentsNames) {
         Collection<PlanToComponentRelation> result = new ArrayList<PlanToComponentRelation>();
-
-        List<Component> components = new ArrayList<Component>();
-        if (componentsNames != null && componentsNames.length > 0) {
-            for (String eachComponentName : componentsNames) {
-                Component[] eachComponent = activeObjectsService.find(Component.class, Query.select().where(Component.NAME + " = ?", eachComponentName));
-                components.addAll(Arrays.asList(eachComponent));
-            }
-        }
+        List<Component> components = helper.get(Component.class, Component.NAME + " = ?", componentsNames);
         if (components != null && components.size() > 0 && plan != null) {
-            for (Component eachComponent : components) {
-                PlanToComponentRelation eachRelation = associate(plan, eachComponent);
-                result.add(eachRelation);
-            }
+            components.stream().forEach(eachComponent -> result.add(associate(plan, eachComponent)));
         }
-
-        result.stream().filter(s -> (s != null));
-
-        return result;
+        return result.stream().filter(s -> (s != null)).collect(toList());
     }
 
     Collection<PlanToDomainRelation> associatePlanWithDomains(@Nonnull final Plan plan, @Nonnull final String[] domainsNames) {
         Collection<PlanToDomainRelation> result = new ArrayList<>();
 
-        List<Domain> domains = new ArrayList<>();
-        if (domainsNames != null && domainsNames.length > 0) {
-            for (String eachDomainName : domainsNames) {
-                Domain[] eachDomains = activeObjectsService.find(Domain.class, Query.select().where(Domain.NAME + " = ?", eachDomainName));
-                domains.addAll(Arrays.asList(eachDomains));
-            }
-        }
+        List<Domain> domains = helper.get(Domain.class, Domain.NAME + " = ?", domainsNames);
         if (domains != null && domains.size() > 0 && plan != null) {
-            for (Domain eachDomain : domains) {
-                PlanToDomainRelation eachRelation = associate(plan, eachDomain);
-                result.add(eachRelation);
-            }
+            domains.stream().forEach(eachDomain -> result.add(associate(plan, eachDomain)));
         }
-
-        result.stream().filter(s -> (s != null));
-
-        return result;
+        return result.stream().filter(s -> (s != null)).collect(toList());
     }
 
     boolean associate(@Nonnull final Component component, @Nonnull final String[] tasksNames) {
         if (tasksNames == null || tasksNames.length == 0 || component == null) {
             return false;
         }
-        List<Task> tasks = new ArrayList<>();
-        for (String eachTaskName : tasksNames) {
-            Task[] eachTasks = activeObjectsService.find(Task.class, Query.select().where(Task.NAME + " = ?", eachTaskName));
-            tasks.addAll(Arrays.asList(eachTasks));
-        }
+        List<Task> tasks = helper.get(Task.class, Task.NAME + " = ?", tasksNames);
         if (tasks == null || tasks.size() == 0) {
             return false;
         }
-        for (Task eachTask : tasks) {
-            associate(component, eachTask);
-        }
+        tasks.stream().forEach(eachTask -> associate(component, eachTask));
         return true;
     }
 
@@ -135,17 +105,11 @@ class RelationsManager {
             // Because Task does not have to contains SubTasks
             return true;
         }
-        List<SubTask> subTasks = new ArrayList<SubTask>();
-        for (String eachTaskName : subTasksNames) {
-            SubTask[] eachSubTasks = activeObjectsService.find(SubTask.class, Query.select().where(SubTask.NAME + " = ?", eachTaskName));
-            subTasks.addAll(Arrays.asList(eachSubTasks));
-        }
+        List<SubTask> subTasks = helper.get(SubTask.class, SubTask.NAME + " = ?", subTasksNames);
         if (subTasks == null || subTasks.size() == 0 || task == null) {
             return false;
         }
-        for (SubTask eachSubTask : subTasks) {
-            associate(task, eachSubTask);
-        }
+        subTasks.stream().forEach(eachSubTask -> associate(task, eachSubTask));
         return true;
     }
 }

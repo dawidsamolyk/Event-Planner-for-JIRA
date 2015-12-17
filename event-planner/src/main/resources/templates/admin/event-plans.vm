@@ -117,7 +117,7 @@
         <h2 class="aui-dialog2-header-main">Event Organization Plan Configuration</h2>
     </header>
     <div class="aui-dialog2-content">
-        <form class="aui" id="event-plan-configuration" action="#" method="post">
+        <form class="aui" id="plan-configuration" action="#" method="post">
             <div class="field-group" id="event-name-group">
                 <label for="plan-name">Name<span class="aui-icon icon-required">(required)</span></label>
                 <input id="plan-name" name="plan-name" type="text">
@@ -148,7 +148,7 @@
                 </select>
                 <br />
                 <div class="aui-buttons">
-                    <button id="add-domains" class="aui-button trigger-dialog">
+                    <button id="add-domain-button" class="aui-button trigger-dialog">
                         <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
                         Add new Domain
                     </button>
@@ -167,7 +167,7 @@
                 </select>
                 <br />
                 <div class="aui-buttons">
-                    <button id="add-component" class="aui-button trigger-dialog">
+                    <button id="add-component-button" class="aui-button trigger-dialog">
                         <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
                         Add new Component
                     </button>
@@ -185,12 +185,12 @@
     </footer>
 </section>
 
-<section role="dialog" id="event-domains-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+<section role="dialog" id="event-domain-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
     <header class="aui-dialog2-header">
         <h2 class="aui-dialog2-header-main">Event Domain Configuration</h2>
     </header>
     <div class="aui-dialog2-content">
-        <form class="aui" id="event-domains-configuration" action="#" method="post">
+        <form class="aui" id="domain-configuration" action="#" method="post">
             <div class="field-group" id="domains-name-group">
                 <label for="domains-name">Name<span class="aui-icon icon-required">(required)</span></label>
                 <input id="domains-name" name="domains-name" type="text">
@@ -207,8 +207,8 @@
     </div>
     <footer class="aui-dialog2-footer">
         <div class="aui-dialog2-footer-actions">
-            <button id="event-domains-dialog-cancel-button" class="aui-button">Cancel</button>
-            <button id="event-domains-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save
+            <button id="event-domain-dialog-cancel-button" class="aui-button">Cancel</button>
+            <button id="event-domain-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save
             </button>
         </div>
     </footer>
@@ -219,7 +219,7 @@
         <h2 class="aui-dialog2-header-main">Event Component Configuration</h2>
     </header>
     <div class="aui-dialog2-content">
-        <form class="aui" id="event-component-configuration" action="#" method="post">
+        <form class="aui" id="component-configuration" action="#" method="post">
             <div class="field-group" id="component-name-group">
                 <label for="component-name">Name<span class="aui-icon icon-required">(required)</span></label>
                 <input id="component-name" name="component-name" type="text">
@@ -243,7 +243,7 @@
                 </select>
                 <br />
                 <div class="aui-buttons">
-                    <button id="add-task" class="aui-button trigger-dialog">
+                    <button id="add-task-button" class="aui-button trigger-dialog">
                         <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
                         Add new Task
                     </button>
@@ -268,7 +268,7 @@
         <h2 class="aui-dialog2-header-main">Task definition</h2>
     </header>
     <div class="aui-dialog2-content">
-        <form class="aui" id="event-task-configuration" action="#" method="post">
+        <form class="aui" id="task-configuration" action="#" method="post">
             <div class="field-group" id="task-name-group">
                 <label for="task-name">Name<span class="aui-icon icon-required">(required)</span></label>
                 <input id="task-name" name="task-name" type="text">
@@ -324,7 +324,7 @@
         <h2 class="aui-dialog2-header-main">SubTask definition</h2>
     </header>
     <div class="aui-dialog2-content">
-        <form class="aui" id="event-subtask-configuration" action="#" method="post">
+        <form class="aui" id="subtask-configuration" action="#" method="post">
             <div class="field-group" id="task-subtask-group">
                 <label for="subtask-name">Name<span class="aui-icon icon-required">(required)</span></label>
                 <input id="subtask-name" name="subtask-name" type="text">
@@ -357,292 +357,7 @@
 </section>
 
 <script type="text/javascript">
-        AJS.$("#add-plan-button").click(function(e) {
-            e.preventDefault();
-
-            document.getElementById("plan-name").value = "";
-            document.getElementById("plan-description").value = "";
-            document.getElementById("plan-time").value = "";
-            document.getElementById("plan-domains").value = "";
-            document.getElementById("plan-components").value = "";
-
-            AJS.dialog2("#event-plan-dialog").show();
-        });
-
-        function saveEventPlan() {
-            var url = AJS.contextPath() + "/rest/event-plans/1.0/plan";
-
-            jQuery.ajax({
-                url: url,
-                type: "PUT",
-                contentType: "application/json",
-                data:     '{ "name": "'         + AJS.$("#plan-name").attr("value") +
-                         '", "description": "'  + AJS.$("#plan-description").attr("value") +
-                         '", "time": "'         + AJS.$("#plan-time").attr("value") +
-                         '", "domains": '       + JSON.stringify(AJS.$("#plan-domains").val()) +
-                          ', "components": '    + JSON.stringify(AJS.$("#plan-components").val()) + ' }',
-                processData: false
-            });
-
-            // wstaw GET
-        }
-
-        AJS.$("#event-plan-dialog-save-button").click(function(e) {
-            e.preventDefault();
-
-            var planName = document.getElementById("plan-name").value;
-            var planTime = document.getElementById("plan-time").value;
-            var domains = document.getElementById("plan-domains").value;
-            var components = document.getElementById("plan-components").value;
-            var valid = true;
-
-            if(planName.valueOf() == "".valueOf()) {
-                AJS.$('#plan-name-description').html('<div class="error" data-field="plan-name">You must specify a name of event Plan.</div>');
-                valid = false;
-            }
-            if(planTime.valueOf() == "".valueOf()) {
-                AJS.$('#plan-time-description').html('<div class="error" data-field="plan-time">You must specify estimated tine for this kind of event Plan.</div>');
-                valid = false;
-            }
-            if(domains.valueOf() == "".valueOf()) {
-                AJS.$('#plan-domains-description').html('<div class="error" data-field="plan-domains">You must select at least one Domain of event Plan.</div>');
-                valid = false;
-            }
-            if(components.valueOf() == "".valueOf()) {
-                AJS.$('#plan-components-description').html('<div class="error" data-field="plan-components">You must select at least one Component of event Plan.</div>');
-                valid = false;
-            }
-
-            if(valid) {
-                // TODO Sprawdź czy obiekt Plan o tej nazwie już istnieje
-                saveEventPlan();
-
-                AJS.dialog2("#event-plan-dialog").hide();
-            }
-        });
-
-        AJS.$("#event-plan-dialog-cancel-button").click(function(e) {
-            e.preventDefault();
-            AJS.dialog2("#event-plan-dialog").hide();
-            AJS.dialog2("#event-component-dialog").hide();
-            AJS.dialog2("#event-domains-dialog").hide();
-        });
-
-        AJS.$("#add-domains").click(function(e) {
-            e.preventDefault();
-
-            document.getElementById("domains-name").value = "";
-            document.getElementById("domains-description").value = "";
-
-            AJS.dialog2("#event-domains-dialog").show();
-        });
-
-        function saveEventDomain() {
-            var url = AJS.contextPath() + "/rest/event-plans/1.0/domain";
-
-            jQuery.ajax({
-                url: url,
-                type: "PUT",
-                contentType: "application/json",
-                data:    '{ "name": "'        + AJS.$("#domains-name").attr("value") +
-                        '", "description": "' + AJS.$("#domains-description").attr("value") + '" }',
-                processData: false
-            });
-
-            // wstaw GET
-        }
-
-        AJS.$("#event-domains-dialog-save-button").click(function(e) {
-            e.preventDefault();
-
-            var domainName = document.getElementById("domains-name").value;
-
-            if(domainName.valueOf() == "".valueOf()) {
-                AJS.$('#domains-name-description').html('<div class="error" data-field="domains-name">You must specify a name of the event Domain.</div>');
-            } else {
-                // TODO Sprawdź czy obiekt Domain o tej nazwie już istnieje
-
-                saveEventDomain();
-
-                AJS.dialog2("#event-domains-dialog").hide();
-                AJS.dialog2("#event-plan-dialog").show();
-            }
-        });
-
-        AJS.$("#event-domains-dialog-cancel-button").click(function(e) {
-            e.preventDefault();
-
-            AJS.dialog2("#event-domains-dialog").hide();
-            AJS.dialog2("#event-plan-dialog").show();
-        });
-
-         AJS.$("#add-component").click(function(e) {
-            e.preventDefault();
-
-            document.getElementById("component-name").value = "";
-            document.getElementById("component-description").value = "";
-            document.getElementById("component-tasks").value = "";
-
-            AJS.dialog2("#event-component-dialog").show();
-        });
-
-        function saveEventComponent() {
-            var url = AJS.contextPath() + "/rest/event-plans/1.0/component";
-
-            jQuery.ajax({
-                url: url,
-                type: "PUT",
-                contentType: "application/json",
-                data:    '{ "name": "'        + AJS.$("#component-name").attr("value") +
-                        '", "description": "' + AJS.$("#component-description").attr("value") +
-                        '", "tasks": '        + JSON.stringify(AJS.$("#component-tasks").val()) + ' }',
-                processData: false
-            });
-
-            // wstaw GET
-        }
-
-        AJS.$("#event-component-dialog-save-button").click(function(e) {
-            e.preventDefault();
-
-            var name = document.getElementById("component-name").value;
-            var tasks = document.getElementById("component-tasks").value;
-
-            if(name.valueOf() == "".valueOf()) {
-                AJS.$('#component-name-description').html('<div class="error" data-field="component-name">You must specify a name of the event Component.</div>');
-            }
-            if(tasks.valueOf() == "".valueOf()) {
-                AJS.$('#component-tasks-description').html('<div class="error" data-field="component-tasks">You must specify Tasks of which Component consists.</div>');
-            }
-            else {
-                // TODO Sprawdź czy obiekt Component o tej nazwie już istnieje
-
-                saveEventComponent();
-
-                AJS.dialog2("#event-component-dialog").hide();
-                AJS.dialog2("#event-plan-dialog").show();
-            }
-        });
-
-        AJS.$("#event-component-dialog-cancel-button").click(function(e) {
-            e.preventDefault();
-
-            AJS.dialog2("#event-component-dialog").hide();
-            AJS.dialog2("#event-plan-dialog").show();
-        });
-
-        AJS.$("#add-task").click(function(e) {
-            e.preventDefault();
-
-            document.getElementById("task-name").value = "";
-            document.getElementById("task-description").value = "";
-            document.getElementById("task-time").value = "";
-            document.getElementById("task-subtasks").value = "";
-
-            AJS.dialog2("#event-task-dialog").show();
-        });
-
-        function saveEventTask() {
-            var url = AJS.contextPath() + "/rest/event-plans/1.0/task";
-
-            jQuery.ajax({
-                url: url,
-                type: "PUT",
-                contentType: "application/json",
-                data:    '{ "name": "'        + AJS.$("#task-name").attr("value") +
-                        '", "description": "' + AJS.$("#task-description").attr("value") +
-                        '", "time": "'        + AJS.$("#task-time").attr("value") +
-                        '", "subtasks": '     + JSON.stringify(AJS.$("#task-subtasks").val()) + ' }',
-                processData: false
-            });
-
-            // wstaw GET
-        }
-
-        AJS.$("#event-task-dialog-save-button").click(function(e) {
-            e.preventDefault();
-
-            var name = document.getElementById("task-name").value;
-            var time = document.getElementById("task-time").value;
-
-            if(name.valueOf() == "".valueOf()) {
-                AJS.$('#task-name-description').html('<div class="error" data-field="task-name">You must specify a name of the Task.</div>');
-            }
-            if(time.valueOf() == "".valueOf()) {
-                AJS.$('#task-time-description').html('<div class="error" data-field="task-time">You must specify estimated time to complete Task.</div>');
-            }
-            else {
-                // TODO Sprawdź czy obiekt Component o tej nazwie już istnieje
-
-                saveEventTask();
-
-                AJS.dialog2("#event-task-dialog").hide();
-                AJS.dialog2("#event-plan-dialog").show();
-            }
-        });
-
-        AJS.$("#event-task-dialog-cancel-button").click(function(e) {
-            e.preventDefault();
-
-            AJS.dialog2("#event-task-dialog").hide();
-            AJS.dialog2("#event-plan-dialog").show();
-        });
-
-         AJS.$("#add-subtask").click(function(e) {
-            e.preventDefault();
-
-            document.getElementById("subtask-name").value = "";
-            document.getElementById("subtask-description").value = "";
-            document.getElementById("subtask-time").value = "";
-
-            AJS.dialog2("#event-subtask-dialog").show();
-        });
-
-        function saveEventSubTask() {
-            var url = AJS.contextPath() + "/rest/event-plans/1.0/subtask";
-
-            jQuery.ajax({
-                url: url,
-                type: "PUT",
-                contentType: "application/json",
-                data:    '{ "name": "'        + AJS.$("#subtask-name").attr("value") +
-                        '", "description": "' + AJS.$("#subtask-description").attr("value") +
-                        '", "time": "'        + AJS.$("#subtask-time").attr("value") + '" }',
-                processData: false
-            });
-
-            // wstaw GET
-        }
-
-        AJS.$("#event-subtask-dialog-save-button").click(function(e) {
-            e.preventDefault();
-
-            var name = document.getElementById("subtask-name").value;
-            var time = document.getElementById("subtask-time").value;
-
-            if(name.valueOf() == "".valueOf()) {
-                AJS.$('#subtask-name-description').html('<div class="error" data-field="subtask-name">You must specify a name of the SubTask.</div>');
-            }
-            if(time.valueOf() == "".valueOf()) {
-                AJS.$('#subtask-time-description').html('<div class="error" data-field="subtask-time">You must specify estimated time to complete SubTask.</div>');
-            }
-            else {
-                // TODO Sprawdź czy obiekt Component o tej nazwie już istnieje
-
-                saveEventSubTask();
-
-                AJS.dialog2("#event-subtask-dialog").hide();
-                AJS.dialog2("#event-plan-dialog").show();
-            }
-        });
-
-        AJS.$("#event-subtask-dialog-cancel-button").click(function(e) {
-            e.preventDefault();
-
-            AJS.dialog2("#event-subtask-dialog").hide();
-            AJS.dialog2("#event-plan-dialog").show();
-        });
-
+    #include("templates/admin/event-plans.js")
 </script>
 </body>
 </html>

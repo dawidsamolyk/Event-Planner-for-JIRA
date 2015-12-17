@@ -67,11 +67,7 @@ public class ActiveObjectsTestHelper {
 
         Component component = createComponentNamed(componentName);
 
-        Plan plan = activeObjects.create(Plan.class);
-        plan.setName(planName);
-        plan.setDescription(planDescription);
-        plan.setTimeToComplete(planTime);
-        plan.save();
+        Plan plan = createPlan(planName, planDescription, planTime);
 
         PlanToDomainRelation relation = activeObjects.create(PlanToDomainRelation.class);
         relation.setPlan(plan);
@@ -82,5 +78,14 @@ public class ActiveObjectsTestHelper {
         relation2.setComponent(component);
         relation2.setPlan(plan);
         relation2.save();
+    }
+
+    public Plan createPlan(String planName, String planDescription, String planTime) {
+        Plan plan = activeObjects.create(Plan.class);
+        plan.setName(planName);
+        plan.setDescription(planDescription);
+        plan.setTimeToComplete(planTime);
+        plan.save();
+        return plan;
     }
 }

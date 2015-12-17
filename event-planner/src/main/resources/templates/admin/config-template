@@ -34,3 +34,18 @@ updateConfig();
 });
 
 fillConfig();
+
+function Plan() {
+    this.name = "jakiesImie";
+    this.description = "jakisopis";
+
+    this.getJson = function() {
+        var result = '{ ';
+        for (var eachProperty in this) {
+            if (this.hasOwnProperty(eachProperty) && eachProperty !== 'getJson') {
+                result.concat('"name" : ');
+            }
+        }
+        return result.concat(' }');
+    };
+}
