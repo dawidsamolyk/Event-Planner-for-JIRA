@@ -20,7 +20,7 @@ class ActiveObjectsHelper {
     }
 
     <T extends RawEntity<K>, K> List<T> get(@Nonnull final Class<T> type, @Nonnull final String whereClause, @Nonnull final String[] whereValues) {
-        List<T> result = new ArrayList<>();
+        List<T> result = new ArrayList<T>();
         if (whereValues != null && whereValues.length > 0 && whereClause != null) {
             for (String eachName : whereValues) {
                 T[] eachComponent = activeObjectsService.find(type, Query.select().where(whereClause, eachName));

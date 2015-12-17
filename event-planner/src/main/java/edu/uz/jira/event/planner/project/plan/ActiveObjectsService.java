@@ -12,7 +12,6 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Service for transactional managing Event Organization Plan entities.
@@ -58,7 +57,9 @@ public class ActiveObjectsService {
 
         Collection<PlanToComponentRelation> planToComponentRelations = relationsManager.associatePlanWithComponents(result, resource.getComponents());
         if (planToComponentRelations.isEmpty()) {
-            planToDomainRelations.stream().forEach(each -> activeObjectsService.delete(each));
+            for (PlanToDomainRelation each : planToDomainRelations) {
+                activeObjectsService.delete(each);
+            }
             activeObjectsService.delete(result);
             return null;
         }
@@ -137,7 +138,7 @@ public class ActiveObjectsService {
      */
     public <T extends RawEntity<K>, K> List<T> get(@Nonnull final Class<T> type) {
         if (type == null) {
-            return new ArrayList<>();
+            return new ArrayList<T>();
         }
         return newArrayList(activeObjectsService.find(type));
     }
@@ -149,12 +150,10 @@ public class ActiveObjectsService {
         Map<String, List<String>> result = new HashMap<String, List<String>>();
 
         for (Domain eachDomain : get(Domain.class)) {
-            List<String> plansNames = Arrays
-                    .stream(eachDomain.getPlans())
-                    .filter(t -> t != null)
-                    .map(Plan::getName)
-                    .collect(toList());
-
+            List<String> plansNames = new ArrayList<String>();
+            for(Plan eachPlan : eachDomain.getPlans()) {
+                plansNames.add(eachPlan.getName());
+            }
             result.put(eachDomain.getName(), plansNames);
         }
 

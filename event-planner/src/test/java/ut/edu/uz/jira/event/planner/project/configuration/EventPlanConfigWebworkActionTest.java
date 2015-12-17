@@ -255,8 +255,8 @@ public class EventPlanConfigWebworkActionTest {
         associate(plan1, domain);
         associate(plan2, domain);
 
-        Map<String, List<String>> expectedResult = new HashMap<>();
-        List<String> plans = new ArrayList<>();
+        Map<String, List<String>> expectedResult = new HashMap<String, List<String>>();
+        List<String> plans = new ArrayList<String>();
         plans.add(testPlanName);
         plans.add(secondTestPlanName);
         expectedResult.put(testDomainName, plans);

@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 /**
  * Manages database Entities (Active Objects) relations.
  */
@@ -73,19 +71,23 @@ class RelationsManager {
         Collection<PlanToComponentRelation> result = new ArrayList<PlanToComponentRelation>();
         List<Component> components = helper.get(Component.class, Component.NAME + " = ?", componentsNames);
         if (components != null && components.size() > 0 && plan != null) {
-            components.stream().forEach(eachComponent -> result.add(associate(plan, eachComponent)));
+            for(Component each : components) {
+                result.add(associate(plan, each));
+            }
         }
-        return result.stream().filter(s -> (s != null)).collect(toList());
+        return result;
     }
 
     Collection<PlanToDomainRelation> associatePlanWithDomains(@Nonnull final Plan plan, @Nonnull final String[] domainsNames) {
-        Collection<PlanToDomainRelation> result = new ArrayList<>();
+        Collection<PlanToDomainRelation> result = new ArrayList<PlanToDomainRelation>();
 
         List<Domain> domains = helper.get(Domain.class, Domain.NAME + " = ?", domainsNames);
         if (domains != null && domains.size() > 0 && plan != null) {
-            domains.stream().forEach(eachDomain -> result.add(associate(plan, eachDomain)));
+            for(Domain each : domains) {
+                result.add(associate(plan, each));
+            }
         }
-        return result.stream().filter(s -> (s != null)).collect(toList());
+        return result;
     }
 
     boolean associate(@Nonnull final Component component, @Nonnull final String[] tasksNames) {
@@ -96,7 +98,9 @@ class RelationsManager {
         if (tasks == null || tasks.size() == 0) {
             return false;
         }
-        tasks.stream().forEach(eachTask -> associate(component, eachTask));
+        for(Task each : tasks) {
+            associate(component, each);
+        }
         return true;
     }
 
@@ -109,7 +113,9 @@ class RelationsManager {
         if (subTasks == null || subTasks.size() == 0 || task == null) {
             return false;
         }
-        subTasks.stream().forEach(eachSubTask -> associate(task, eachSubTask));
+        for(SubTask each : subTasks) {
+            associate(task, each);
+        }
         return true;
     }
 }

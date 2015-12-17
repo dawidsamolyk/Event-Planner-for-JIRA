@@ -1,12 +1,15 @@
 <html>
 <head>
     <title>Event Organization Plans Configurations</title>
+
     <meta name="decorator" content="atl.admin">
     <meta name="admin.active.section" content="admin_project_menu/project_section"/>
     <meta name="admin.active.tab" content="event_plans"/>
+
     <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui.js"></script>
     <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-experimental.js"></script>
     <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-datepicker.js"></script>
+
     <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui.css"/>
     <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui-experimental.css"/>
 </head>
@@ -117,7 +120,7 @@
         <h2 class="aui-dialog2-header-main">Event Organization Plan Configuration</h2>
     </header>
     <div class="aui-dialog2-content">
-        <form class="aui" id="plan-configuration" action="#" method="post">
+        <form class="aui" id="event-plan-configuration" action="#" method="post">
             <div class="field-group" id="event-name-group">
                 <label for="plan-name">Name<span class="aui-icon icon-required">(required)</span></label>
                 <input id="plan-name" name="plan-name" type="text">
@@ -142,9 +145,9 @@
                         class="aui-icon icon-required">(required)</span></label>
                 <select class="multi-select" multiple="multiple" size="$DOMAINS.size()" id="plan-domains"
                         name="plan-domains" title="Domain">
-                    #foreach($eachDomain in $DOMAINS)
-                    <option>$eachDomain.getName()</option>
-                    #end
+                    <!--#foreach($eachDomain in $DOMAINS)-->
+                    <!--<option>$eachDomain.getName()</option>-->
+                    <!--#end-->
                 </select>
                 <br />
                 <div class="aui-buttons">
@@ -161,9 +164,9 @@
                         class="aui-icon icon-required">(required)</span></label>
                 <select class="multi-select" multiple="multiple" size="$COMPONENTS.size()" id="plan-components"
                         name="plan-components" title="Components">
-                    #foreach($eachComponent in $COMPONENTS)
-                    <option>$eachComponent.getName()</option>
-                    #end
+                    <!--#foreach($eachComponent in $COMPONENTS)-->
+                    <!--<option>$eachComponent.getName()</option>-->
+                    <!--#end-->
                 </select>
                 <br />
                 <div class="aui-buttons">
@@ -190,18 +193,18 @@
         <h2 class="aui-dialog2-header-main">Event Domain Configuration</h2>
     </header>
     <div class="aui-dialog2-content">
-        <form class="aui" id="domain-configuration" action="#" method="post">
+        <form class="aui" id="event-domain-configuration" action="#" method="post">
             <div class="field-group" id="domains-name-group">
-                <label for="domains-name">Name<span class="aui-icon icon-required">(required)</span></label>
-                <input id="domains-name" name="domains-name" type="text">
+                <label for="domain-name">Name<span class="aui-icon icon-required">(required)</span></label>
+                <input id="domain-name" name="domain-name" type="text">
 
-                <div class="description" id="domains-name-description">Name of the Domain.</div>
+                <div class="description" id="domain-name-description">Name of the Domain.</div>
             </div>
-            <div class="field-group" id="domains-description-group">
-                <label for="domains-description">Description</label>
-                <input id="domains-description" name="domains-description" type="text">
+            <div class="field-group" id="domain-description-group">
+                <label for="domain-description">Description</label>
+                <input id="domain-description" name="domain-description" type="text">
 
-                <div class="description" id="domains-description-description">Description of the Domain.</div>
+                <div class="description" id="domain-description-description">Description of the Domain.</div>
             </div>
         </form>
     </div>
@@ -219,7 +222,7 @@
         <h2 class="aui-dialog2-header-main">Event Component Configuration</h2>
     </header>
     <div class="aui-dialog2-content">
-        <form class="aui" id="component-configuration" action="#" method="post">
+        <form class="aui" id="event-component-configuration" action="#" method="post">
             <div class="field-group" id="component-name-group">
                 <label for="component-name">Name<span class="aui-icon icon-required">(required)</span></label>
                 <input id="component-name" name="component-name" type="text">
@@ -237,9 +240,9 @@
                         class="aui-icon icon-required">(required)</span></label>
                 <select class="multi-select" multiple="multiple" size="$COMPONENTS.size()" id="component-tasks"
                         name="component-tasks" title="Tasks">
-                    #foreach($eachTask in $TASKS)
-                    <option>$eachTask.getName()</option>
-                    #end
+                    <!--#foreach($eachTask in $TASKS)-->
+                    <!--<option>$eachTask.getName()</option>-->
+                    <!--#end-->
                 </select>
                 <br />
                 <div class="aui-buttons">
@@ -268,7 +271,7 @@
         <h2 class="aui-dialog2-header-main">Task definition</h2>
     </header>
     <div class="aui-dialog2-content">
-        <form class="aui" id="task-configuration" action="#" method="post">
+        <form class="aui" id="event-task-configuration" action="#" method="post">
             <div class="field-group" id="task-name-group">
                 <label for="task-name">Name<span class="aui-icon icon-required">(required)</span></label>
                 <input id="task-name" name="task-name" type="text">
@@ -293,13 +296,13 @@
                 <label for="task-subtasks">SubTasks</label>
                 <select class="multi-select" multiple="multiple" size="$SUBTASKS.size()" id="task-subtasks"
                         name="task-subtasks" title="Sub-Tasks">
-                    #foreach($eachTask in $SUBTASKS)
-                        <option>$eachTask.getName()</option>
-                    #end
+                    <!--#foreach($eachTask in $SUBTASKS)-->
+                        <!--<option>$eachTask.getName()</option>-->
+                    <!--#end-->
                 </select>
                 <br />
                 <div class="aui-buttons">
-                    <button id="add-subtask" class="aui-button trigger-dialog">
+                    <button id="add-subtask-button" class="aui-button trigger-dialog">
                         <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
                         Add new Sub-Task
                     </button>
@@ -324,7 +327,7 @@
         <h2 class="aui-dialog2-header-main">SubTask definition</h2>
     </header>
     <div class="aui-dialog2-content">
-        <form class="aui" id="subtask-configuration" action="#" method="post">
+        <form class="aui" id="event-subtask-configuration" action="#" method="post">
             <div class="field-group" id="task-subtask-group">
                 <label for="subtask-name">Name<span class="aui-icon icon-required">(required)</span></label>
                 <input id="subtask-name" name="subtask-name" type="text">
