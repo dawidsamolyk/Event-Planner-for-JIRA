@@ -62,8 +62,7 @@
             </th>
         </tr>
         </thead>
-        <tbody>
-        #foreach($eachPlan in $PLANS)
+        <tbody id="plans-table-body">
         <tr>
             <td>
                     <span data-scheme-field="name" class="field-name">
@@ -110,7 +109,6 @@
                 </ul>
             </td>
         </tr>
-        #end
         </tbody>
     </table>
 </section>
@@ -145,9 +143,6 @@
                         class="aui-icon icon-required">(required)</span></label>
                 <select class="multi-select" multiple="multiple" size="$DOMAINS.size()" id="plan-domains"
                         name="plan-domains" title="Domain">
-                    <!--#foreach($eachDomain in $DOMAINS)-->
-                    <!--<option>$eachDomain.getName()</option>-->
-                    <!--#end-->
                 </select>
                 <br />
                 <div class="aui-buttons">
@@ -164,9 +159,6 @@
                         class="aui-icon icon-required">(required)</span></label>
                 <select class="multi-select" multiple="multiple" size="$COMPONENTS.size()" id="plan-components"
                         name="plan-components" title="Components">
-                    <!--#foreach($eachComponent in $COMPONENTS)-->
-                    <!--<option>$eachComponent.getName()</option>-->
-                    <!--#end-->
                 </select>
                 <br />
                 <div class="aui-buttons">
@@ -240,9 +232,6 @@
                         class="aui-icon icon-required">(required)</span></label>
                 <select class="multi-select" multiple="multiple" size="$COMPONENTS.size()" id="component-tasks"
                         name="component-tasks" title="Tasks">
-                    <!--#foreach($eachTask in $TASKS)-->
-                    <!--<option>$eachTask.getName()</option>-->
-                    <!--#end-->
                 </select>
                 <br />
                 <div class="aui-buttons">
@@ -296,9 +285,6 @@
                 <label for="task-subtasks">SubTasks</label>
                 <select class="multi-select" multiple="multiple" size="$SUBTASKS.size()" id="task-subtasks"
                         name="task-subtasks" title="Sub-Tasks">
-                    <!--#foreach($eachTask in $SUBTASKS)-->
-                        <!--<option>$eachTask.getName()</option>-->
-                    <!--#end-->
                 </select>
                 <br />
                 <div class="aui-buttons">

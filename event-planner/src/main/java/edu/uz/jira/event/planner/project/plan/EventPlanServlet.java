@@ -51,11 +51,7 @@ public final class EventPlanServlet extends HttpServlet {
         }
 
         Map<String, Object> context = new HashMap<String, Object>();
-        context.put("DOMAINS", activeObjectsService.get(Domain.class));
         context.put("PLANS", activeObjectsService.get(Plan.class));
-        context.put("COMPONENTS", activeObjectsService.get(Component.class));
-        context.put("TASKS", activeObjectsService.get(Task.class));
-        context.put("SUBTASKS", activeObjectsService.get(SubTask.class));
 
         response.setContentType("text/html;charset=utf-8");
         templateRenderer.render("/templates/admin/event-plans.vm", context, response.getWriter());

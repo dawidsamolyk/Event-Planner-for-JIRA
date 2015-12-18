@@ -1,3 +1,43 @@
+function PlansList() {
+    this.tableId = 'plans-table';
+    this.id = 'plans-table-body';
+    this.getTable = function() { return document.getElementById(this.id) };
+
+    this.setFromJson = function(allPlans) {
+        this.clearTable();
+
+        for(eachKey in allPlans) {
+            var eachPlan = allPlans[eachKey];
+            this.insert(eachPlan);
+        }
+    };
+
+    this.clearTable = function() {
+        var table = this.getTable();
+        while(table.rows.length > 0) {
+            table.deleteRow(0);
+        }
+    }
+
+    this.insert = function(plan) {
+        var table = this.getTable();
+        var newRow = table.insertRow(table.rows.length);
+
+        this.insertCell(newRow, 0, plan.name);
+        this.insertCell(newRow, 1, plan.description);
+        this.insertCell(newRow, 2, plan.domains);
+        this.insertCell(newRow, 3, plan.components);
+        this.insertCell(newRow, 4, plan.time);
+        this.insertCell(newRow, 5, 'Edit Copy Delete');
+    };
+
+    this.insertCell = function(row, index, text) {
+        var newText  = document.createTextNode(text)
+        var newCell  = row.insertCell(index);
+        newCell.appendChild(newText);
+    };
+};
+
 function Plan() {
     this.id = 'plan';
     this.getName = function() { return AJS.$("#plan-name") };
@@ -23,7 +63,7 @@ function Plan() {
         } else {
             this.getDomains().empty();
         }
-        
+
         for(eachKey in allResources) {
             var eachResource = allResources[eachKey];
             var eachOption = "<option>" + eachResource.name + "</option>";
@@ -156,58 +196,60 @@ function ButtonListener(resource) {
         return "#event-".concat(this.getResourceId()).concat("-dialog-save-button");
     }
     this.onAddShowDialog = function() {
-        var showButtonId = "#add-".concat(this.getResourceId()).concat("-button");
+        var addButtonId = "#add-".concat(this.getResourceId()).concat("-button");
         var formId = "event-".concat(this.getResourceId()).concat("-configuration");
         var dialogId = this.getDialogId();
 
-        AJS.$(showButtonId).click(
+        AJS.$(addButtonId).click(
             function(e) {
                 e.preventDefault();
-
                 document.getElementById(formId).reset();
                 AJS.dialog2(dialogId).show();
             }
         );
-        return this;
     };
-    this.onSaveDoPostResource = function() {
+    this.onSaveDoGetResourceAndFill = function(objectToFill) {
+        var rest = this.rest;
+        var resourceId = this.getResourceId();
+
+        AJS.$(this.getSaveButtonId()).click(
+            function(e) {
+                e.preventDefault();
+                rest.get(resourceId, objectToFill);
+            }
+        );
+    };
+    this.onSaveDoPutResource = function() {
         var rest = this.rest;
         var resource = this.resource;
+
+        AJS.$(this.getSaveButtonId()).click(
+            function(e) {
+                e.preventDefault();
+                rest.put(resource);
+            }
+        );
+    };
+    this.onSaveHideDialog = function() {
         var dialogId = this.getDialogId();
 
         AJS.$(this.getSaveButtonId()).click(
             function(e) {
                 e.preventDefault();
-
-                rest.put(resource);
+                AJS.dialog2(dialogId).hide();
             }
         );
-        return this;
-    };
-    this.onSaveHideDialog = function() {
-            var dialogId = this.getDialogId();
-
-            AJS.$(this.getSaveButtonId()).click(
-                function(e) {
-                    e.preventDefault();
-
-                    AJS.dialog2(dialogId).hide();
-                }
-            );
-            return this;
     };
     this.onSaveDoGetAndSaveInto = function(destinationResource) {
-            var rest = this.rest;
-            var resource = this.resource;
+        var rest = this.rest;
+        var resource = this.resource;
 
-            AJS.$(this.getSaveButtonId()).click(
-                function(e) {
-                    e.preventDefault();
-
-                    rest.get(resource.id, destinationResource);
-                }
-            );
-            return this;
+        AJS.$(this.getSaveButtonId()).click(
+            function(e) {
+                e.preventDefault();
+                rest.get(resource.id, destinationResource);
+            }
+        );
     };
     this.onCancelCloseDialog = function() {
         var cancelButtonId = "#event-".concat(this.getResourceId()).concat("-dialog-cancel-button");
@@ -216,11 +258,9 @@ function ButtonListener(resource) {
         AJS.$(cancelButtonId).click(
             function(e) {
                 e.preventDefault();
-
                 AJS.dialog2(dialogId).hide();
             }
         );
-        return this;
     };
     this.onShowDoGet = function(resources) {
         var rest = this.rest;
@@ -234,19 +274,24 @@ function ButtonListener(resource) {
                 }
             }
         );
-        return this;
     };
 };
 
+var plansList = new PlansList();
 var plan = new Plan();
 var domain = new Domain();
 var component = new Component();
 var task = new Task();
 var subTask = new SubTask();
 
+fillPlansListAction = function() {
+    var rest = new RESTManager();
+    rest.get(plan.id, plansList);
+};
+
 var subTaskListener = new ButtonListener(subTask);
     subTaskListener.onAddShowDialog();
-    subTaskListener.onSaveDoPostResource();
+    subTaskListener.onSaveDoPutResource();
     subTaskListener.onSaveHideDialog();
     subTaskListener.onSaveDoGetAndSaveInto(task);
     subTaskListener.onCancelCloseDialog();
@@ -254,7 +299,7 @@ var subTaskListener = new ButtonListener(subTask);
 var taskListener = new ButtonListener(task);
     taskListener.onShowDoGet([subTask]);
     taskListener.onAddShowDialog();
-    taskListener.onSaveDoPostResource();
+    taskListener.onSaveDoPutResource();
     taskListener.onSaveDoGetAndSaveInto(component);
     taskListener.onSaveHideDialog();
     taskListener.onCancelCloseDialog();
@@ -262,14 +307,14 @@ var taskListener = new ButtonListener(task);
 var componentListener = new ButtonListener(component);
     componentListener.onShowDoGet([task]);
     componentListener.onAddShowDialog();
-    componentListener.onSaveDoPostResource();
+    componentListener.onSaveDoPutResource();
     componentListener.onSaveDoGetAndSaveInto(plan);
     componentListener.onSaveHideDialog();
     componentListener.onCancelCloseDialog();
 
 var domainListener = new ButtonListener(domain);
     domainListener.onAddShowDialog();
-    domainListener.onSaveDoPostResource();
+    domainListener.onSaveDoPutResource();
     domainListener.onSaveHideDialog();
     domainListener.onSaveDoGetAndSaveInto(plan);
     domainListener.onCancelCloseDialog();
@@ -277,6 +322,13 @@ var domainListener = new ButtonListener(domain);
 var planListener = new ButtonListener(plan)
     planListener.onShowDoGet([domain, component]);
     planListener.onAddShowDialog();
-    planListener.onSaveDoPostResource();
+    planListener.onSaveDoPutResource();
     planListener.onSaveHideDialog();
+    planListener.onSaveDoGetResourceAndFill(plansList);
     planListener.onCancelCloseDialog();
+
+AJS.$(document).ready(
+    function() {
+        var rest = new RESTManager();
+        rest.get(plan.id, plansList);
+});
