@@ -38,6 +38,9 @@
     <servlet name="Event Plans Configuration" class="edu.uz.jira.event.planner.project.plan.EventPlanServlet"
              key="event-plans-configuration">
         <url-pattern>/eventPlans/configuration</url-pattern>
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <dependency>com.atlassian.auiplugin:dialog2</dependency>
+        <dependency>com.atlassian.auiplugin:aui-form-validation</dependency>
         <resource name="view" type="velocity" location="/templates/admin/event-plans.vm"/>
         <resource type="download" name="js-script" location="/templates/admin/event-plans.js"/>
     </servlet>

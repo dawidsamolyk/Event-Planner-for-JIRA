@@ -16,16 +16,22 @@ function Plan() {
     };
 
     this.setFromJson = function(allResources) {
+        var isComponent = (allResources.length > 0 && allResources[0].hasOwnProperty('tasks'));
+
+        if(isComponent === true) {
+            this.getComponents().empty();
+        } else {
+            this.getDomains().empty();
+        }
+        
         for(eachKey in allResources) {
             var eachResource = allResources[eachKey];
+            var eachOption = "<option>" + eachResource.name + "</option>";
 
-            // Component
-            if(eachResource.hasOwnProperty('tasks')) {
-                this.getComponents().append("<option>" + eachResource.name + "</option>");
-            }
-            // Domain
-            else {
-                this.getDomains().append("<option>" + eachResource.name + "</option>");
+            if(isComponent) {
+                this.getComponents().append(eachOption);
+            } else {
+                this.getDomains().append(eachOption);
             }
         }
     };
@@ -57,6 +63,8 @@ function Component() {
     };
 
     this.setFromJson = function(allTasks) {
+        this.getTasks().empty();
+
         for(eachKey in allTasks) {
             var eachTask = allTasks[eachKey];
             this.getTasks().append("<option>" + eachTask.name + "</option>");
@@ -80,6 +88,8 @@ function Task() {
     };
 
     this.setFromJson = function(allSubTasks) {
+        this.getSubTasks().empty();
+
         for(eachKey in allSubTasks) {
             var eachSubTask = allSubTasks[eachKey];
             this.getSubTasks().append("<option>" + eachSubTask.name + "</option>");
@@ -105,31 +115,30 @@ function RESTManager() {
     this.baseUrl = AJS.contextPath() + "/rest/event-plans/1.0/";
 
     this.put = function(resource) {
-        var resourceId = resource.id;
-        var resourceDataAsJson = resource.getJson();
-
         jQuery.ajax({
-            url: this.baseUrl + resourceId,
+            url: this.baseUrl + resource.id,
             type: "PUT",
             contentType: "application/json",
-            data: resourceDataAsJson,
-            processData: false
+            data: resource.getJson(),
+            processData: false,
+            error: function (request, status, error) {
+                // Wyświetlenie komunikatu o błędzie
+            }
         });
     };
 
-    this.get = function(resource) {
-        var result;
-
+    this.get = function(sourceId, destinationResource) {
         jQuery.ajax({
-            url: this.baseUrl + resource.id,
+            url: this.baseUrl + sourceId,
             type: "GET",
-            dataType: "json"
-        })
-        .done(function(config) {
-            result = config;
+            dataType: "json",
+            success: function (data, status, request) {
+                destinationResource.setFromJson(data);
+            },
+            error: function (request, status, error) {
+                // Wyświetlenie komunikatu o błędzie
+            }
         });
-
-        return result;
     };
 };
 
@@ -170,7 +179,6 @@ function ButtonListener(resource) {
             function(e) {
                 e.preventDefault();
 
-                // TODO walidacja lub złapanie exceptiona i wyświetlenie błędu na ekranie
                 rest.put(resource);
             }
         );
@@ -188,7 +196,7 @@ function ButtonListener(resource) {
             );
             return this;
     };
-    this.onSaveDoGet = function(resources) {
+    this.onSaveDoGetAndSaveInto = function(destinationResource) {
             var rest = this.rest;
             var resource = this.resource;
 
@@ -196,11 +204,7 @@ function ButtonListener(resource) {
                 function(e) {
                     e.preventDefault();
 
-                    for(eachKey in resources) {
-                        var eachResource = resources[eachKey];
-                        var eachJson = rest.get(eachResource);
-                        resource.setFromJson(eachJson);
-                    }
+                    rest.get(resource.id, destinationResource);
                 }
             );
             return this;
@@ -226,8 +230,7 @@ function ButtonListener(resource) {
             function() {
                 for(eachKey in resources) {
                     var eachResource = resources[eachKey];
-                    var eachJson = rest.get(eachResource);
-                    resource.setFromJson(eachJson);
+                    rest.get(eachResource.id, resource);
                 }
             }
         );
@@ -245,13 +248,14 @@ var subTaskListener = new ButtonListener(subTask);
     subTaskListener.onAddShowDialog();
     subTaskListener.onSaveDoPostResource();
     subTaskListener.onSaveHideDialog();
+    subTaskListener.onSaveDoGetAndSaveInto(task);
     subTaskListener.onCancelCloseDialog();
 
 var taskListener = new ButtonListener(task);
     taskListener.onShowDoGet([subTask]);
     taskListener.onAddShowDialog();
     taskListener.onSaveDoPostResource();
-    taskListener.onSaveDoGet([subTask]);
+    taskListener.onSaveDoGetAndSaveInto(component);
     taskListener.onSaveHideDialog();
     taskListener.onCancelCloseDialog();
 
@@ -259,7 +263,7 @@ var componentListener = new ButtonListener(component);
     componentListener.onShowDoGet([task]);
     componentListener.onAddShowDialog();
     componentListener.onSaveDoPostResource();
-    componentListener.onSaveDoGet([task]);
+    componentListener.onSaveDoGetAndSaveInto(plan);
     componentListener.onSaveHideDialog();
     componentListener.onCancelCloseDialog();
 
@@ -267,12 +271,12 @@ var domainListener = new ButtonListener(domain);
     domainListener.onAddShowDialog();
     domainListener.onSaveDoPostResource();
     domainListener.onSaveHideDialog();
+    domainListener.onSaveDoGetAndSaveInto(plan);
     domainListener.onCancelCloseDialog();
 
 var planListener = new ButtonListener(plan)
     planListener.onShowDoGet([domain, component]);
     planListener.onAddShowDialog();
     planListener.onSaveDoPostResource();
-    planListener.onSaveDoGet([domain, component]);
     planListener.onSaveHideDialog();
     planListener.onCancelCloseDialog();
