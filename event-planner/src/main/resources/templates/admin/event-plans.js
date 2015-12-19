@@ -1,5 +1,4 @@
 function PlansList() {
-    this.tableId = 'plans-table';
     this.id = 'plans-table-body';
     this.getTable = function() { return document.getElementById(this.id) };
 
@@ -17,25 +16,44 @@ function PlansList() {
         while(table.rows.length > 0) {
             table.deleteRow(0);
         }
-    }
+    };
 
     this.insert = function(plan) {
         var table = this.getTable();
         var newRow = table.insertRow(table.rows.length);
 
-        this.insertCell(newRow, 0, plan.name);
-        this.insertCell(newRow, 1, plan.description);
-        this.insertCell(newRow, 2, plan.domains);
-        this.insertCell(newRow, 3, plan.components);
-        this.insertCell(newRow, 4, plan.time);
-        this.insertCell(newRow, 5, 'Edit Copy Delete');
+        var name = document.createElement('SPAN');
+        name.className = "field-name";
+        name.dataSchemeField = "name";
+        name.appendChild(document.createTextNode(plan.name));
+        this.insertCell(newRow, 0, name);
+
+        var description = document.createTextNode(plan.description);
+        this.insertCell(newRow, 1, description);
+
+        // TODO create <li> for each
+        var domains = document.createTextNode(plan.domains);
+        console.log(plan.domains);
+        this.insertCell(newRow, 2, domains);
+
+        // TODO create <li> for each
+        var components = document.createTextNode(plan.components);
+        this.insertCell(newRow, 3, components);
+
+        var time = document.createTextNode(plan.time);
+        this.insertCell(newRow, 4, time);
+
+        var operations = document.createTextNode('Edit Copy Delete');
+        this.insertCell(newRow, 5, operations);
     };
 
-    this.insertCell = function(row, index, text) {
-        var newText  = document.createTextNode(text)
-        var newCell  = row.insertCell(index);
-        newCell.appendChild(newText);
+    this.insertCell = function(row, index, element) {
+        var newCell = row.insertCell(index);
+        newCell.appendChild(element);
     };
+
+    this.createLiForEach(array) {
+    }
 };
 
 function Plan() {
@@ -194,7 +212,8 @@ function ButtonListener(resource) {
     };
     this.getSaveButtonId = function() {
         return "#event-".concat(this.getResourceId()).concat("-dialog-save-button");
-    }
+    };
+
     this.onAddShowDialog = function() {
         var addButtonId = "#add-".concat(this.getResourceId()).concat("-button");
         var formId = "event-".concat(this.getResourceId()).concat("-configuration");
@@ -284,10 +303,11 @@ var component = new Component();
 var task = new Task();
 var subTask = new SubTask();
 
-fillPlansListAction = function() {
-    var rest = new RESTManager();
-    rest.get(plan.id, plansList);
-};
+AJS.$(document).ready(
+    function() {
+        var rest = new RESTManager();
+        rest.get(plan.id, plansList);
+});
 
 var subTaskListener = new ButtonListener(subTask);
     subTaskListener.onAddShowDialog();
@@ -326,9 +346,3 @@ var planListener = new ButtonListener(plan)
     planListener.onSaveHideDialog();
     planListener.onSaveDoGetResourceAndFill(plansList);
     planListener.onCancelCloseDialog();
-
-AJS.$(document).ready(
-    function() {
-        var rest = new RESTManager();
-        rest.get(plan.id, plansList);
-});

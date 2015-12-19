@@ -63,52 +63,6 @@
         </tr>
         </thead>
         <tbody id="plans-table-body">
-        <tr>
-            <td>
-                    <span data-scheme-field="name" class="field-name">
-                        <a href="/jira/secure/" title="Edit Event Organization Plan properties">$eachPlan.getName()</a>
-                    </span>
-            </td>
-            <td>
-                $eachPlan.getDescription()
-            </td>
-            <td>
-                <ul>
-                    #foreach($eachDomain in $eachPlan.getDomains())
-                    <li><a href="/jira/secure/" title="See Event Organization domains">$eachDomain.getName()</a></li>
-                    #end
-                </ul>
-            </td>
-            <td>
-                <ul>
-                    #foreach($eachComponent in $eachPlan.getComponents())
-                    <li><a href="/jira/secure/" title="See Event Organization domains">$eachComponent.getName()</a></li>
-                    #end
-                </ul>
-            </td>
-            <td>
-                $eachPlan.getTimeToComplete()
-            </td>
-            <td>
-                <ul class="operations-list">
-                    <li>
-                        <a id="configure"
-                           href="/jira/secure/admin/ViewIssueFields.jspa"
-                           title="Configure Event Organization Plan">Edit</a>
-                    </li>
-                    <li>
-                        <a id="copy"
-                           href="/jira/secure/admin/CopyFieldLayout!default.jspa?id=10000"
-                           title="Copy Event Organization Plan">Copy</a>
-                    </li>
-                    <li>
-                        <a id="delete"
-                           href="/jira/secure/admin/ViewIssueFields.jspa"
-                           title="Delete Event Organization Plan">Delete</a>
-                    </li>
-                </ul>
-            </td>
-        </tr>
         </tbody>
     </table>
 </section>
