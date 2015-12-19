@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 public class WorkflowNoInputValidatorFactoryTest {
     @Test
-    public void parameterslistShouldBeEmpty() {
+    public void parameters_List_Should_Be_Empty() {
         WorkflowNoInputValidatorFactory fixture = new WorkflowNoInputValidatorFactory();
 
         assertTrue(fixture.getDescriptorParams(null).isEmpty());

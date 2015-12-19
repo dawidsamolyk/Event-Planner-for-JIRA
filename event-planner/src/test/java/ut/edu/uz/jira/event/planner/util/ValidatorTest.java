@@ -15,7 +15,7 @@ public class ValidatorTest {
     public ExpectedException exception = ExpectedException.none();
 
     @Test
-    public void shouldThrowExceptionWhenHttpServletRequestIsNull() throws NullArgumentException {
+    public void should_Throw_Exception_When_Http_Servlet_Request_Is_Null() throws NullArgumentException {
         Validator fixture = new Validator();
 
         exception.expect(NullArgumentException.class);
@@ -23,7 +23,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void shouldNotThrowExceptionWhenHttpServletRequestInstatiated() throws NullArgumentException {
+    public void should_Not_Throw_Exception_When_Http_Servlet_Request_Instatiated() throws NullArgumentException {
         Validator fixture = new Validator();
 
         fixture.check(mock(HttpServletRequest.class));

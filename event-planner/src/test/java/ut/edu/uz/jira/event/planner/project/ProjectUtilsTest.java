@@ -31,7 +31,7 @@ public class ProjectUtilsTest {
     }
 
     @Test
-    public void shouldThrowErrorWhenTryingToGetDueDateVerionOfNullProject() throws NullArgumentException {
+    public void should_Throw_Error_When_Trying_To_Get_Due_Date_Verion_Of_Null_Project() throws NullArgumentException {
         ProjectUtils fixture = new ProjectUtils(mocki18n);
 
         exception.expect(NullArgumentException.class);
@@ -39,7 +39,7 @@ public class ProjectUtilsTest {
     }
 
     @Test
-    public void shouldReturnNullIfNoDueDateVersionFoundInProject() throws NullArgumentException {
+    public void should_Return_Null_If_No_Due_Date_Version_Found_In_Project() throws NullArgumentException {
         ProjectUtils fixture = new ProjectUtils(mocki18n);
         Project mockProject = new MockProject();
 
@@ -49,7 +49,7 @@ public class ProjectUtilsTest {
     }
 
     @Test
-    public void shouldReturnNullIfDueDateVersionNotFoundInProjectVersions() throws NullArgumentException {
+    public void should_Return_Null_If_Due_Date_Version_Not_Found_In_Project_Versions() throws NullArgumentException {
         ProjectUtils fixture = new ProjectUtils(mocki18n);
         MockProject mockProject = new MockProject();
         mockProject.setVersions(MocksProvider.getMockVersionsNamed("Some version"));
@@ -60,7 +60,7 @@ public class ProjectUtilsTest {
     }
 
     @Test
-    public void shouldReturnDueDateVersionFromSpecifiedProject() throws NullArgumentException {
+    public void should_Return_Due_Date_Version_From_Specified_Project() throws NullArgumentException {
         ProjectUtils fixture = new ProjectUtils(mocki18n);
         MockProject mockProject = new MockProject();
         mockProject.setVersions(MocksProvider.getMockVersionsNamed(TEST_VERSION_NAME, "Another version"));

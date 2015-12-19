@@ -95,7 +95,7 @@ public class EventOrganizationProjectHookTest {
     }
 
     @Test
-    public void validateResponseShouldNotBeNull() throws NullArgumentException {
+    public void validate_Response_Should_Not_Be_Null() throws NullArgumentException {
         EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService);
         ValidateData validateData = new ValidateData("EVENT PLAN", "EVENT", mock(ApplicationUser.class));
 
@@ -105,7 +105,7 @@ public class EventOrganizationProjectHookTest {
     }
 
     @Test
-    public void configureResponseShouldNotBeNull() throws NullArgumentException {
+    public void configure_Response_Should_Not_Be_Null() throws NullArgumentException {
         EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService);
         ConfigureData configureData = ConfigureData.create(mock(Project.class), mock(Scheme.class), new HashMap<String, JiraWorkflow>(), mock(FieldConfigScheme.class), new HashMap<String, IssueType>());
 
@@ -115,7 +115,7 @@ public class EventOrganizationProjectHookTest {
     }
 
     @Test
-    public void eventOrganizationWorkflowShouldHasAddedUpdateDueDatePostFunction() throws NullArgumentException {
+    public void event_Organization_Workflow_Should_Has_Added_Update_Due_Date_Post_Function() throws NullArgumentException {
         final String transitionName = "Deadline exceeded";
         String mockWorkflowName = "EVENT-ORGANIZATION-WORKFLOW";
 
@@ -166,7 +166,7 @@ public class EventOrganizationProjectHookTest {
     }
 
     @Test
-    public void shouldReturnRedirectWithoutArgumentsWhenErrorOccursDuringProjectConfiguration() throws NullArgumentException {
+    public void should_Return_Redirect_Without_Arguments_When_Error_Occurs_During_Project_Configuration() throws NullArgumentException {
         EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService);
         ConfigureData configureData = ConfigureData.create(mock(Project.class), mock(Scheme.class), MapUtils.EMPTY_MAP, mock(FieldConfigScheme.class), new HashMap<String, IssueType>());
 

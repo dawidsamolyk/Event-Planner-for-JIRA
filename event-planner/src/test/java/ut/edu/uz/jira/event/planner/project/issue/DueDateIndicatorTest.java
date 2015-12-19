@@ -20,7 +20,7 @@ import static org.mockito.Mockito.mock;
  */
 public class DueDateIndicatorTest {
     @Test
-    public void daysAwayFromDueDateShouldBeCalculatedProperlyForDueDateSettedToTomorrow() {
+    public void days_Away_From_DueDate_Should_Be_Calculated_Properly_For_Due_Date_Setted_To_Tomorrow() {
         JiraHelper mockJiraHelper = getMockJiraHelperWithIssueWithDueDate(1);
         DueDateIndicator indicator = new DueDateIndicator();
 
@@ -31,7 +31,7 @@ public class DueDateIndicatorTest {
     }
 
     @Test
-    public void daysAwayFromDueDateShouldBeCalculatedProperlyForDueDateSettedToYesterday() {
+    public void days_Away_From_Due_Date_Should_Be_Calculated_Properly_For_Due_Date_Setted_To_Yesterday() {
         JiraHelper mockJiraHelper = getMockJiraHelperWithIssueWithDueDate(-1);
         DueDateIndicator indicator = new DueDateIndicator();
 

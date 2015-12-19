@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class TextUtilsTest {
 
     @Test
-    public void shouldReturnEmptyTextIfNullCollectionShouldBeJoined() {
+    public void should_Return_Empty_Text_If_Null_Collection_Should_Be_Joined() {
         TextUtils fixture = new TextUtils();
 
         String result = fixture.getJoined((String[]) null, ' ');
@@ -21,7 +21,7 @@ public class TextUtilsTest {
     }
 
     @Test
-    public void shouldReturnEmptyTextIfInputCollectionIsEmpty() {
+    public void should_Return_Empty_Text_If_Input_Collection_Is_Empty() {
         TextUtils fixture = new TextUtils();
 
         String result = fixture.getJoined(ListUtils.EMPTY_LIST, ' ');
@@ -30,7 +30,7 @@ public class TextUtilsTest {
     }
 
     @Test
-    public void shouldReturnEmptyTextIfInputArrayIsEmpty() {
+    public void should_Return_Empty_Text_If_Input_Array_Is_Empty() {
         TextUtils fixture = new TextUtils();
 
         String result = fixture.getJoined(new String[]{}, ' ');
@@ -39,7 +39,7 @@ public class TextUtilsTest {
     }
 
     @Test
-    public void shouldJoinTextsFromCollectionWithSpecifiedSeparator() {
+    public void should_Join_Texts_From_Collection_With_Specified_Separator() {
         TextUtils fixture = new TextUtils();
         Collection<String> texts = new ArrayList<String>(3);
         texts.add("A");
@@ -52,7 +52,7 @@ public class TextUtilsTest {
     }
 
     @Test
-    public void shouldJoinTextsFromArrayWithSpecifiedSeparator() {
+    public void should_Join_Texts_From_Array_With_Specified_Separator() {
         TextUtils fixture = new TextUtils();
 
         String result = fixture.getJoined(new String[]{"A", "B", "C"}, ',');
@@ -61,7 +61,7 @@ public class TextUtilsTest {
     }
 
     @Test
-    public void stringArrayShouldBeBlankIfItIsNull() {
+    public void string_Array_Should_Be_Blank_If_It_Is_Null() {
         TextUtils fixture = new TextUtils();
 
         boolean result = fixture.isNotBlank(null);
@@ -70,7 +70,7 @@ public class TextUtilsTest {
     }
 
     @Test
-    public void stringArrayShouldBeBlankIfIsEmpty() {
+    public void string_Array_Should_Be_Blank_If_Is_Empty() {
         TextUtils fixture = new TextUtils();
 
         boolean result = fixture.isNotBlank(new String[]{});
@@ -79,7 +79,7 @@ public class TextUtilsTest {
     }
 
     @Test
-    public void stringArrayShouldBeBlankIfAnyTextIsBlank() {
+    public void string_Array_Should_Be_Blank_If_Any_Text_Is_Blank() {
         TextUtils fixture = new TextUtils();
 
         boolean result = fixture.isNotBlank(new String[]{"Not blank", "", "any text", "test"});
@@ -88,7 +88,7 @@ public class TextUtilsTest {
     }
 
     @Test
-    public void stringArraySgouldNotBeBlankIfContainsOnlyTexts() {
+    public void string_Array_Sgould_Not_Be_Blank_If_Contains_Only_Texts() {
         TextUtils fixture = new TextUtils();
 
         boolean result = fixture.isNotBlank(new String[]{"Not blank", "testtesttest", "any text", "test"});

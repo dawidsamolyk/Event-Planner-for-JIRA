@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class EventPlanConfigurationValidatorTest {
 
     @Test
-    public void containsAnyVersionShouldReturnFalseForNullProject() {
+    public void contains_Any_Version_Should_Return_False_For_Null_Project() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
 
         boolean result = fixture.containsAnyVersion(null);
@@ -20,7 +20,7 @@ public class EventPlanConfigurationValidatorTest {
     }
 
     @Test
-    public void containsAnyVersionShouldReturnTrueIfProjectHasAnyVersion() {
+    public void contains_Any_Version_Should_Return_True_If_Project_Has_Any_Version() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
         MockProject mockProject = new MockProject();
         mockProject.setVersions(MocksProvider.getMockVersionsNamed("Some version", "Test version"));
@@ -31,7 +31,7 @@ public class EventPlanConfigurationValidatorTest {
     }
 
     @Test
-    public void containsAnyVersionShouldReturnFalseIfProjectHasNotAnyVersion() {
+    public void contains_Any_Version_Should_Return_False_If_Project_Has_Not_Any_Version() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
         MockProject mockProject = new MockProject();
         mockProject.setVersions(ListUtils.EMPTY_LIST);
@@ -42,7 +42,7 @@ public class EventPlanConfigurationValidatorTest {
     }
 
     @Test
-    public void configurationIsInvalidIfProjectIsNull() {
+    public void configuration_Is_Invalid_If_Project_Is_Null() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
 
         boolean result = fixture.isInvalid(null);
@@ -51,7 +51,7 @@ public class EventPlanConfigurationValidatorTest {
     }
 
     @Test
-    public void configurationIsInvalidIfProjectContainsAnyVersion() {
+    public void configuration_Is_Invalid_If_Project_Contains_Any_Version() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
         MockProject mockProject = new MockProject();
         mockProject.setVersions(MocksProvider.getMockVersionsNamed("Some version", "Test version"));
@@ -62,7 +62,7 @@ public class EventPlanConfigurationValidatorTest {
     }
 
     @Test
-    public void canInputProjectConfigurationIfAllRequirementsAreFulfilled() {
+    public void can_Input_Project_Configuration_If_All_Requirements_Are_Fulfilled() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
         MockProject mockProject = new MockProject();
         mockProject.setVersions(ListUtils.EMPTY_LIST);
@@ -73,7 +73,7 @@ public class EventPlanConfigurationValidatorTest {
     }
 
     @Test
-    public void cannotInputProjectConfigurationIfProjectIsNull() {
+    public void cannot_Input_Project_Configuration_If_Project_Is_Null() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
 
         boolean result = fixture.canInputProjectConfiguration(null, "", "");
@@ -82,7 +82,7 @@ public class EventPlanConfigurationValidatorTest {
     }
 
     @Test
-    public void cannotInputProjectConfigurationIfProjectContainsAnyVersion() {
+    public void cannot_Input_Project_Configuration_If_Project_Contains_Any_Version() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
         MockProject mockProject = new MockProject();
         mockProject.setVersions(MocksProvider.getMockVersionsNamed("Some version", "Test version"));
@@ -93,7 +93,7 @@ public class EventPlanConfigurationValidatorTest {
     }
 
     @Test
-    public void cannotInputProjectConfigurationIfEventTypeIsNotEmpty() {
+    public void cannot_Input_Project_Configuration_If_Event_Type_Is_Not_Empty() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
         MockProject mockProject = new MockProject();
         mockProject.setVersions(ListUtils.EMPTY_LIST);
@@ -104,7 +104,7 @@ public class EventPlanConfigurationValidatorTest {
     }
 
     @Test
-    public void cannotInputProjectConfigurationIfEventDueDateIsFilled() {
+    public void cannot_Input_Project_Configuration_If_Event_Due_Date_Is_Filled() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
         MockProject mockProject = new MockProject();
         mockProject.setVersions(ListUtils.EMPTY_LIST);
@@ -114,9 +114,8 @@ public class EventPlanConfigurationValidatorTest {
         assertEquals(false, result);
     }
 
-    //----------------------
     @Test
-    public void canConfigureProjectConfigurationIfAllRequirementsAreFulfilled() {
+    public void can_Configure_Project_Configuration_If_All_Requirements_Are_Fulfilled() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
         MockProject mockProject = new MockProject();
         mockProject.setVersions(ListUtils.EMPTY_LIST);
@@ -127,7 +126,7 @@ public class EventPlanConfigurationValidatorTest {
     }
 
     @Test
-    public void cannotConfigureProjectConfigurationIfProjectIsNull() {
+    public void cannot_Configure_Project_Configuration_If_Project_Is_Null() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
 
         boolean result = fixture.canConfigureProject(null, "Undefined", "2016-10-10 15:00");
@@ -136,7 +135,7 @@ public class EventPlanConfigurationValidatorTest {
     }
 
     @Test
-    public void cannotConfigureProjectConfigurationIfProjectContainsAnyVersion() {
+    public void cannot_Configure_Project_Configuration_If_Project_Contains_Any_Version() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
         MockProject mockProject = new MockProject();
         mockProject.setVersions(MocksProvider.getMockVersionsNamed("Some version", "Test version"));
@@ -147,7 +146,7 @@ public class EventPlanConfigurationValidatorTest {
     }
 
     @Test
-    public void cannotConfigureProjectConfigurationIfEventTypeIsEmpty() {
+    public void cannot_Configure_Project_Configuration_If_Event_Type_Is_Empty() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
         MockProject mockProject = new MockProject();
         mockProject.setVersions(ListUtils.EMPTY_LIST);
@@ -158,7 +157,7 @@ public class EventPlanConfigurationValidatorTest {
     }
 
     @Test
-    public void cannotConfigureProjectConfigurationIfEventDueDateIsEmpty() {
+    public void cannot_Configure_Project_Configuration_If_Event_Due_Date_Is_Empty() {
         EventPlanConfigurationValidator fixture = new EventPlanConfigurationValidator();
         MockProject mockProject = new MockProject();
         mockProject.setVersions(ListUtils.EMPTY_LIST);

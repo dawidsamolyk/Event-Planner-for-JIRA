@@ -34,7 +34,7 @@ public class UpdateDueDatePostFunctionTest {
     }
 
     @Test
-    public void dueDateShouldBeChangedIfItIsAfterCurrentDay() throws Exception {
+    public void due_Date_Should_Be_Changed_If_It_Is_After_Current_Day() throws Exception {
         final MockIssue mockIssue = new MockIssue();
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, 1);
@@ -53,7 +53,7 @@ public class UpdateDueDatePostFunctionTest {
     }
 
     @Test
-    public void dueDateShouldNotBeChangedWhenDueDateIsBeforeCurrentDay() throws Exception {
+    public void due_Date_Should_Not_Be_Changed_When_Due_Date_Is_Before_Current_Day() throws Exception {
         final MockIssue mockIssue = new MockIssue();
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -1);

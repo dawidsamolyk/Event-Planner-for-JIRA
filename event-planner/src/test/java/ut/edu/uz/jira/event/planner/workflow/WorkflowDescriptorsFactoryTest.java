@@ -15,7 +15,7 @@ import static org.junit.Assert.assertNotNull;
 public class WorkflowDescriptorsFactoryTest {
 
     @Test
-    public void subTaskBlockingConditionDescriptorShouldContainsStatusesSeparatedByComma() {
+    public void sub_Task_Blocking_Condition_Descriptor_Should_Contains_Statuses_Separated_By_Comma() {
         WorkflowDescriptorsFactory fixture = new WorkflowDescriptorsFactory();
         String expectedResult = "1203,90,123";
         List<String> statusesToBlock = new ArrayList<String>(3);
@@ -29,7 +29,7 @@ public class WorkflowDescriptorsFactoryTest {
     }
 
     @Test
-    public void subTaskBlockingConditionDescriptorShouldBeCreatedEventWhenInputIsEmpty() {
+    public void sub_Task_Blocking_Condition_Descriptor_Should_Be_Created_Event_When_Input_Is_Empty() {
         WorkflowDescriptorsFactory fixture = new WorkflowDescriptorsFactory();
         String expectedResult = "";
         List<String> statusesToBlock = new ArrayList<String>();
@@ -40,7 +40,7 @@ public class WorkflowDescriptorsFactoryTest {
     }
 
     @Test
-    public void subTaskBlockingConditionDescriptorShouldBeCreatedEventWhenInputIsNull() {
+    public void sub_Task_Blocking_Condition_Descriptor_Should_Be_Created_Event_When_Input_Is_Null() {
         WorkflowDescriptorsFactory fixture = new WorkflowDescriptorsFactory();
         String expectedResult = "";
 
@@ -50,7 +50,7 @@ public class WorkflowDescriptorsFactoryTest {
     }
 
     @Test
-    public void subTaskBlockingConditionShouldNotBeNull() {
+    public void sub_Task_Blocking_Condition_Should_Not_Be_Null() {
         WorkflowDescriptorsFactory fixture = new WorkflowDescriptorsFactory();
         ConditionDescriptor result = fixture.createSubTaskBlockingConditionDescriptor(null);
 
@@ -58,7 +58,7 @@ public class WorkflowDescriptorsFactoryTest {
     }
 
     @Test
-    public void updateDueDatePostFunctionShouldNotBeNull() {
+    public void update_Due_Date_Post_Function_Should_Not_Be_Null() {
         WorkflowDescriptorsFactory fixture = new WorkflowDescriptorsFactory();
         FunctionDescriptor result = fixture.createUpdateDueDatePostFunctionDescriptor();
 
@@ -66,7 +66,7 @@ public class WorkflowDescriptorsFactoryTest {
     }
 
     @Test
-    public void issueDueDateValidatorShouldNotBeNull() {
+    public void issue_Due_Date_Validator_Should_Not_Be_Null() {
         WorkflowDescriptorsFactory fixture = new WorkflowDescriptorsFactory();
         ValidatorDescriptor result = fixture.createIssueDueDateValidatorDescriptor();
 

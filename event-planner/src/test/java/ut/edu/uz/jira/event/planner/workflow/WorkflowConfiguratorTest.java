@@ -58,7 +58,7 @@ public class WorkflowConfiguratorTest {
     }
 
     @Test
-    public void shouldThrowExceptionIfAnyErrorOccursDuringAddingPostFunctionToWorkflo() throws JiraException {
+    public void should_Throw_Exception_If_Any_Error_Occurs_During_Adding_Post_Function_To_Workflow() throws JiraException {
         Mockito.when(mockWorkflowTransitionService.addPostFunctionToWorkflow(Mockito.anyString(), Mockito.any(FunctionDescriptor.class), Mockito.any(JiraWorkflow.class))).thenAnswer(new Answer<ErrorCollection>() {
             @Override
             public ErrorCollection answer(InvocationOnMock invocation) throws Throwable {
@@ -77,7 +77,7 @@ public class WorkflowConfiguratorTest {
     }
 
     @Test
-    public void shouldThrowExceptionIfAnyErrorOccursDuringAddingConditionToWorkflo() throws JiraException {
+    public void should_Throw_Exception_If_Any_Error_Occurs_During_Adding_Condition_To_Workflow() throws JiraException {
         Mockito.when(mockWorkflowTransitionService.addConditionToWorkflow(Mockito.anyString(), Mockito.any(ConditionDescriptor.class), Mockito.any(JiraWorkflow.class))).thenAnswer(new Answer<ErrorCollection>() {
             @Override
             public ErrorCollection answer(InvocationOnMock invocation) throws Throwable {
@@ -96,7 +96,7 @@ public class WorkflowConfiguratorTest {
     }
 
     @Test
-    public void shouldThrowExceptionIfAnyErrorOccursDuringAddingValidatorToWorkflo() throws JiraException {
+    public void should_Throw_Exception_If_Any_Error_Occurs_During_Adding_Validator_To_Workflow() throws JiraException {
         Mockito.when(mockWorkflowManager.getDraftWorkflow(Mockito.anyString())).thenReturn(null);
         JiraWorkflow mockWorkflow = new MockJiraWorkflow();
         ValidatorDescriptor mockvalidator = mock(ValidatorDescriptor.class);

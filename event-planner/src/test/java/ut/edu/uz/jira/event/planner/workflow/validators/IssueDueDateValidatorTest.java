@@ -31,7 +31,7 @@ public class IssueDueDateValidatorTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenIssueIsNull() throws InvalidInputException {
+    public void should_Throw_Exception_When_Issue_Is_Null() throws InvalidInputException {
         IssueDueDateValidator fixture = new IssueDueDateValidator(mocki18n);
         Map transientVars = new HashMap();
         transientVars.put("issue", null);
@@ -41,7 +41,7 @@ public class IssueDueDateValidatorTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenIssueDueDateIsAfterProjectDueDate() throws InvalidInputException {
+    public void should_Throw_Exception_When_Issue_Due_Date_Is_After_Project_Due_Date() throws InvalidInputException {
         Long time = new Date().getTime();
         Project mockProject = getMockProjectWithVersionDueDate(time);
         Issue mockIssue = getMockIssueWithDueDate(mockProject, (time + 10000));
@@ -54,7 +54,7 @@ public class IssueDueDateValidatorTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenIssueDueDateIsEmpty() throws InvalidInputException {
+    public void should_Throw_Exception_When_Issue_Due_Date_Is_Empty() throws InvalidInputException {
         Long time = new Date().getTime();
         Project mockProject = getMockProjectWithVersionDueDate(time);
         Issue mockIssue = getMockIssueWithDueDate(mockProject, null);
@@ -67,7 +67,7 @@ public class IssueDueDateValidatorTest {
     }
 
     @Test
-    public void shouldPassWhenIssueDueDateIsBeforeProjectDueDate() throws InvalidInputException {
+    public void should_Pass_When_Issue_Due_Date_Is_Before_Project_Due_Date() throws InvalidInputException {
         Long time = new Date().getTime();
         Project mockProject = getMockProjectWithVersionDueDate(time);
         Issue mockIssue = getMockIssueWithDueDate(mockProject, (time - 10000));
@@ -79,7 +79,7 @@ public class IssueDueDateValidatorTest {
     }
 
     @Test
-    public void shouldPassWhenIssueDueDateIsInTheSameMomentWithProjectDueDate() throws InvalidInputException {
+    public void should_Pass_When_Issue_Due_Date_Is_In_The_Same_Moment_With_Project_Due_Date() throws InvalidInputException {
         Long time = new Date().getTime();
         Project mockProject = getMockProjectWithVersionDueDate(time);
         Issue mockIssue = getMockIssueWithDueDate(mockProject, (time));

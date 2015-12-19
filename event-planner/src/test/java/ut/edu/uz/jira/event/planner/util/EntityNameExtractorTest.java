@@ -12,7 +12,7 @@ import static org.mockito.Mockito.mock;
 public class EntityNameExtractorTest {
 
     @Test
-    public void shouldReturnNamesOfEntities() {
+    public void should_Return_Names_Of_Entities() {
         EntityNameExtractor fixture = new EntityNameExtractor();
         String[] expectedResult = new String[]{"Test name 1", "Test name2"};
         NamedEntityWithDescription[] mockEntities = new NamedEntityWithDescription[expectedResult.length];
@@ -28,7 +28,7 @@ public class EntityNameExtractorTest {
     }
 
     @Test
-    public void shouldReturnEmptyArrayIfInputIsNull() {
+    public void should_Return_Empty_Array_If_Input_Is_Null() {
         EntityNameExtractor fixture = new EntityNameExtractor();
 
         String[] result = fixture.getNames(null);
@@ -37,7 +37,7 @@ public class EntityNameExtractorTest {
     }
 
     @Test
-    public void shouldReturnEmptyArrayIfInputIsEmpty() {
+    public void should_Return_Empty_Array_If_Input_Is_Empty() {
         EntityNameExtractor fixture = new EntityNameExtractor();
 
         String[] result = fixture.getNames(new NamedEntityWithDescription[]{});
@@ -46,7 +46,7 @@ public class EntityNameExtractorTest {
     }
 
     @Test
-    public void shouldReturnArrayWithoutNullValues() {
+    public void should_Return_Array_Without_Null_Values() {
         EntityNameExtractor fixture = new EntityNameExtractor();
         String[] expectedResult = new String[]{"Test name 1", null, "test name 2"};
         NamedEntityWithDescription[] mockEntities = new NamedEntityWithDescription[expectedResult.length];

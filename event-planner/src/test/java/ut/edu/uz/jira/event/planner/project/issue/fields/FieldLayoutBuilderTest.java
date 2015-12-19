@@ -47,7 +47,7 @@ public class FieldLayoutBuilderTest {
     }
 
     @Test
-    public void shouldCopyFieldLayoutWithOnlyOneRequiredField() {
+    public void should_Copy_Field_Layout_With_Only_One_Required_Field() {
         String modifieldFieldId = "non-required-field-which-should-be-required";
         FieldLayout toCopy = mock(FieldLayout.class);
         List<FieldLayoutItem> toCopyItems = new ArrayList<FieldLayoutItem>();
@@ -63,7 +63,7 @@ public class FieldLayoutBuilderTest {
     }
 
     @Test
-    public void shouldCopyFieldLayoutWithOnlyManyRequiredFields() {
+    public void should_Copy_Field_Layout_With_Only_Many_Required_Fields() {
         String firstModifieldFieldId = "first-non-required-field-which-should-be-required";
         String secondModifieldFieldId = "second-non-required-field-which-should-be-required";
         String thirdModifieldFieldId = "second-required-field-which-should-be-still-required";
@@ -85,7 +85,7 @@ public class FieldLayoutBuilderTest {
     }
 
     @Test
-    public void shouldCopyFieldLayoutWithoutModificationsWhenAnyFieldShouldNotBeModified() {
+    public void should_Copy_Field_Layout_Without_Modifications_When_Any_Field_Should_Not_Be_Modified() {
         FieldLayout toCopy = mock(FieldLayout.class);
         List<FieldLayoutItem> toCopyItems = new ArrayList<FieldLayoutItem>();
         toCopyItems.add(getMockItem("required-field", true));

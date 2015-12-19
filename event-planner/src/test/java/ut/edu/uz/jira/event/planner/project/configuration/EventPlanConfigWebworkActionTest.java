@@ -89,7 +89,7 @@ public class EventPlanConfigWebworkActionTest {
     }
 
     @Test
-    public void inputStatusShouldBeReturnedWhenAllRequiredParametersAreEmpty() throws Exception {
+    public void input_Status_Should_Be_Returned_When_All_Required_Parameters_Are_Empty() throws Exception {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getParameter("event-type")).thenReturn("");
         Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("");
@@ -104,7 +104,7 @@ public class EventPlanConfigWebworkActionTest {
     }
 
     @Test
-    public void successStatusShouldBeReturnedWhenAllRequiredParametersAreNotEmpty() throws Exception {
+    public void success_Status_Should_Be_Returned_When_All_Required_Parameters_Are_Not_Empty() throws Exception {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getParameter("event-type")).thenReturn("Undefined");
         Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("02-12-2015 07:00");
@@ -122,7 +122,7 @@ public class EventPlanConfigWebworkActionTest {
     }
 
     @Test
-    public void eventDueDateShouldBeConfiguredAsProjectVersion() throws Exception {
+    public void event_Due_Date_Should_Be_Configured_As_Project_Version() throws Exception {
         String projectDueDate = "09-12-2015 23:00";
         String projectKey = "ABC";
 
@@ -160,7 +160,7 @@ public class EventPlanConfigWebworkActionTest {
     }
 
     @Test
-    public void errorStatusShouldBeReturnedWhenDueDateIsEmptyAndTheRestAreFilled() throws Exception {
+    public void error_Status_Should_Be_Returned_When_Due_Date_Is_Empty_And_The_Rest_Are_Filled() throws Exception {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getParameter("event-type")).thenReturn("Undefined");
         Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn(null);
@@ -178,7 +178,7 @@ public class EventPlanConfigWebworkActionTest {
     }
 
     @Test
-    public void errorStatusShouldBeReturnedWhenEventTypeIsEmptyAndTheRestAreFilled() throws Exception {
+    public void error_Status_Should_Be_Returned_When_Event_Type_Is_Empty_And_The_Rest_Are_Filled() throws Exception {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getParameter("event-type")).thenReturn(null);
         Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("02-12-2015 23:00");
@@ -196,7 +196,7 @@ public class EventPlanConfigWebworkActionTest {
     }
 
     @Test
-    public void errorStatusShouldBeReturnedIfProjectNotFound() throws Exception {
+    public void error_Status_Should_Be_Returned_If_Project_Not_Found() throws Exception {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getParameter("event-type")).thenReturn("Undefined");
         Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("02-12-2015 23:00");
@@ -211,7 +211,7 @@ public class EventPlanConfigWebworkActionTest {
     }
 
     @Test
-    public void errorStatusShouldBeReturnedIfProjectContainsAnyVersion() throws Exception {
+    public void error_Status_Should_Be_Returned_If_Project_Contains_Any_Version() throws Exception {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getParameter("event-type")).thenReturn("Undefined");
         Mockito.when(mockRequest.getParameter("event-duedate")).thenReturn("02-12-2015 23:00");
@@ -230,7 +230,7 @@ public class EventPlanConfigWebworkActionTest {
     }
 
     @Test
-    public void errorStatusShouldBeReturnedIfHttpRequestIsNull() throws Exception {
+    public void error_Status_Should_Be_Returned_If_Http_Request_Is_Null() throws Exception {
         Mockito.when(mockHttpVariables.getHttpRequest()).thenReturn(null);
         Project mockProject = mock(Project.class);
         Collection<Version> mockVersions = new ArrayList<Version>(1);
@@ -245,7 +245,7 @@ public class EventPlanConfigWebworkActionTest {
     }
 
     @Test
-    public void shouldReturnEventPlansSortedByDomains() throws Exception {
+    public void should_Return_Event_Plans_Sorted_By_Domains() throws Exception {
         String testPlanName = "Test plan 1";
         String secondTestPlanName = "Test plan 2";
         String testDomainName = "Test domain";

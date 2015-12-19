@@ -55,7 +55,7 @@ public class IssueFieldsConfigurationTest {
     }
 
     @Test
-    public void shouldCreateInstanceOfEventOrganizationFieldLayout() {
+    public void should_Create_Instance_Of_Event_Organization_Field_Layout() {
         IssueFieldsConfigurator fixture = new IssueFieldsConfigurator(mocki18n);
 
         FieldLayout result = fixture.getEventOrganizationFieldLayout();
@@ -64,7 +64,7 @@ public class IssueFieldsConfigurationTest {
     }
 
     @Test
-    public void shouldCreateInstanceOfFieldConfigurationScheme() {
+    public void should_Create_Instance_Of_Field_Configuration_Scheme() {
         IssueFieldsConfigurator fixture = new IssueFieldsConfigurator(mocki18n);
         Project mockProject = mock(Project.class);
         EditableFieldLayout mockLayout = mock(EditableFieldLayout.class);
@@ -75,7 +75,7 @@ public class IssueFieldsConfigurationTest {
     }
 
     @Test
-    public void createdFieldConfigurationSchemeShouldHas() {
+    public void created_Field_Configuration_Scheme_Should_Has() {
         IssueFieldsConfigurator fixture = new IssueFieldsConfigurator(mocki18n);
         Project mockProject = mock(Project.class);
         EditableFieldLayout mockLayout = mock(EditableFieldLayout.class);
@@ -86,7 +86,7 @@ public class IssueFieldsConfigurationTest {
     }
 
     @Test
-    public void shouldCreateConfiguredFieldConfigurationScheme() {
+    public void should_Create_Configured_Field_Configuration_Scheme() {
         IssueFieldsConfigurator fixture = new IssueFieldsConfigurator(mocki18n);
         Project mockProject = mock(Project.class);
         Collection<IssueType> issueTypes = new ArrayList<IssueType>();

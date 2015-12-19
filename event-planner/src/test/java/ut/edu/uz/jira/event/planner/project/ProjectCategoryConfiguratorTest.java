@@ -32,7 +32,7 @@ public class ProjectCategoryConfiguratorTest {
     }
 
     @Test
-    public void projectCategoryShouldBeCreatedOnlyOnce() {
+    public void project_Category_Should_Be_Created_Only_Once() {
         ProjectCategoryConfigurator fixture = new ProjectCategoryConfigurator(mocki18n);
 
         ProjectCategory projectCategory = fixture.createProjectCategory();
@@ -41,7 +41,7 @@ public class ProjectCategoryConfiguratorTest {
     }
 
     @Test
-    public void projectCategoryShouldBeCreated() {
+    public void project_Category_Should_Be_Created() {
         ProjectCategoryConfigurator fixture = new ProjectCategoryConfigurator(mocki18n);
 
         ProjectCategory projectCategory = fixture.createProjectCategory();

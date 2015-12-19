@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 public class WorkflowUtilsTest {
 
     @Test
-    public void shouldReturnValidWorkflowStatusesIdsFromSelectedCategory() throws NullArgumentException {
+    public void should_Return_Valid_Workflow_Statuses_Ids_From_Selected_Category() throws NullArgumentException {
         WorkflowUtils fixture = new WorkflowUtils();
         String testCategoryName = "Completed";
         List<String> expectedResult = new ArrayList<String>(2);
@@ -39,7 +39,7 @@ public class WorkflowUtilsTest {
     }
 
     @Test
-    public void shouldReturnEmptyStatusesListWhenWorkflowIsNull() throws NullArgumentException {
+    public void should_Return_Empty_Statuses_List_When_Workflow_Is_Null() throws NullArgumentException {
         WorkflowUtils fixture = new WorkflowUtils();
         String testCategoryName = "Completed";
 
@@ -49,7 +49,7 @@ public class WorkflowUtilsTest {
     }
 
     @Test
-    public void shouldReturnEmptyStatusesListWhenCategoryNameIsNull() throws NullArgumentException {
+    public void should_Return_Empty_Statuses_List_When_Category_Name_Is_Null() throws NullArgumentException {
         WorkflowUtils fixture = new WorkflowUtils();
         JiraWorkflow mockWorkflow = mock(JiraWorkflow.class);
         List<Status> mockStatuses = new ArrayList<Status>(5);
