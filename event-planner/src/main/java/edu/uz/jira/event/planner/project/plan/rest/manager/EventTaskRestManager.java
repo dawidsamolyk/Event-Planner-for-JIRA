@@ -82,12 +82,12 @@ public class EventTaskRestManager extends RestManager {
     /**
      * @param id Id of Task to delete. If not specified nothing should be deleted.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
-     * @see {@link RestManager#delete(Class, String)}
+     * @see {@link RestManager#delete(Class, String, HttpServletRequest)}
      */
     @DELETE
     @Consumes(MediaType.TEXT_PLAIN)
-    public Response delete(@Nonnull final String id) {
-        return super.delete(entityType, id);
+    public Response delete(@Nonnull final String id, @Context final HttpServletRequest request) {
+        return super.delete(entityType, id, request);
     }
 
     /**

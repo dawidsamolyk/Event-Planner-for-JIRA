@@ -57,7 +57,6 @@ function ButtonListener(resource) {
             }
         );
     };
-
     this.onCancelCloseDialog = function() {
         var cancelButtonId = "#event-".concat(this.getResourceId()).concat("-dialog-cancel-button");
         var dialogId = this.getDialogId();

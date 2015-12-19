@@ -15,7 +15,7 @@ import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelatio
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
-import edu.uz.jira.event.planner.project.plan.rest.manager.RestManager;
+import edu.uz.jira.event.planner.project.plan.rest.manager.EventTaskRestManager;
 import net.java.ao.EntityManager;
 import net.java.ao.test.converters.NameConverters;
 import net.java.ao.test.jdbc.Hsql;
@@ -95,17 +95,17 @@ public class RestManagerTest {
     @Test
     public void on_Get_Should_Response_Unauthorized_When_User_Is_Null() {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
-        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        Response result = fixture.post(null, mockRequest);
+        Response result = fixture.get(mockRequest);
 
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }
 
     @Test
-    public void on_Put_Should_Response_Unauthorized_When_User_Is_Null() {
+    public void on_Post_Should_Response_Unauthorized_When_User_Is_Null() {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
-        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.post(getEmptyDomain(), mockRequest);
 
@@ -113,19 +113,29 @@ public class RestManagerTest {
     }
 
     @Test
-    public void on_Getshould_Response_Unauthorized_When_User_Is_Not_Admin() {
-        Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
-        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+    public void on_Delete_Should_Response_Unauthorized_When_User_Is_Null() {
+        Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        Response result = fixture.post(null, mockRequest);
+        Response result = fixture.delete("10", mockRequest);
 
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }
 
     @Test
-    public void on_Putshould_Response_Unauthorized_When_User_Is_Not_Admin() {
+    public void on_Get_should_Response_Unauthorized_When_User_Is_Not_Admin() {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
-        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response result = fixture.get(mockRequest);
+
+        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void on_Post_Should_Response_Unauthorized_When_User_Is_Not_Admin() {
+        Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.post(getEmptyDomain(), mockRequest);
 
@@ -133,17 +143,26 @@ public class RestManagerTest {
     }
 
     @Test
-    public void on_Putshould_Response_No_Conten_When_Resource_Is_Null() {
-        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+    public void on_Delete_Should_Response_Unauthorized_When_User_Is_Not_Admin() {
+        Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        Response result = fixture.post(null, mockRequest);
+        Response result = fixture.delete("11", mockRequest);
+
+        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void on_Post_should_Response_No_Content_When_Resource_Is_Null() {
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response result = fixture.post((EventRestConfiguration) null, mockRequest);
 
         assertEquals(Response.Status.NO_CONTENT.getStatusCode(), result.getStatus());
     }
 
-
     @Test
-    public void should_Not_Put_Empty_Configuration() {
+    public void should_Not_Post_Empty_Configuration() {
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.post(getEmptyDomain(), mockRequest);
@@ -152,7 +171,45 @@ public class RestManagerTest {
     }
 
     @Test
-    public void on_Put_Should_Not_Accept_When_Trying_To_Put_Configuration_Of_Invalid_Resource() throws SQLException {
+    public void should_return_not_found_on_delete_if_id_is_null() {
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response result = fixture.delete(null, mockRequest);
+
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void should_return_not_found_on_delete_if_id_is_empty() {
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response result = fixture.delete(null, mockRequest);
+
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void should_return_not_found_on_delete_if_entity_not_exists() {
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response result = fixture.delete("9999", mockRequest);
+
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void should_deletes_entity() {
+        Task task = testHelper.createTask("test", "test");
+        EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response result = fixture.delete(Integer.toString(task.getID()), mockRequest);
+
+        assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
+        assertEquals(0, activeObjects.count(Task.class));
+    }
+
+    @Test
+    public void on_Post_Should_Not_Accept_When_Trying_To_Put_Configuration_Of_Invalid_Resource() throws SQLException {
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
         EventPlanRestManager.Configuration invalidConfig = new EventPlanRestManager.Configuration();
         invalidConfig.setName("Test name");

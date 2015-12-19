@@ -88,7 +88,7 @@ public class EventSubTaskRestManagerTest {
     }
 
     @Test
-    public void shouldGetSubTaskFromDatabase() throws SQLException {
+    public void should_Get_Sub_Task_From_Database() throws SQLException {
         String testName = "Test name";
         String testTime = "Test time";
         testHelper.createSubTask(testName, testTime);
@@ -96,16 +96,13 @@ public class EventSubTaskRestManagerTest {
 
         fixture.get(mockRequest);
 
-//        EventSubTaskRestManager.Configuration expected = new EventSubTaskRestManager.Configuration();
-//        expected.setName(testName);
-//        expected.setTime(testTime);
         EventSubTaskRestManager.Configuration result = (EventSubTaskRestManager.Configuration) transactionResult[0];
         assertEquals(testName, result.getName());
         assertEquals(testTime, result.getTime());
     }
 
     @Test
-    public void shouldGetManySubTasksFromDatabase() throws SQLException {
+    public void should_Get_Many_Sub_Tasks_From_Database() throws SQLException {
         testHelper.createSubTask("SubTask 1", "Test time");
         testHelper.createSubTask("SubTask 2", "Test time");
         EventSubTaskRestManager fixture = new EventSubTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
@@ -116,7 +113,7 @@ public class EventSubTaskRestManagerTest {
     }
 
     @Test
-    public void shouldGetEmptySubTasksArrayWhenThereIsNoSubTasksInDatabase() {
+    public void should_Get_Empty_Sub_Tasks_Array_When_There_Is_No_Sub_Tasks_In_Database() {
         EventSubTaskRestManager fixture = new EventSubTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
@@ -125,14 +122,14 @@ public class EventSubTaskRestManagerTest {
     }
 
     @Test
-    public void shouldPutNewSubTask() {
+    public void should_Put_New_Sub_Task() {
         EventSubTaskRestManager fixture = new EventSubTaskRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
         EventSubTaskRestManager.Configuration configuration = new EventSubTaskRestManager.Configuration();
         configuration.setName("Test name");
         configuration.setDescription("Test description");
         configuration.setTime("Test time");
 
-        Response result = fixture.put(configuration, mockRequest);
+        Response result = fixture.post(configuration, mockRequest);
 
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), result.getStatus());
     }

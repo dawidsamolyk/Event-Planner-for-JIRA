@@ -88,7 +88,7 @@ public class EventTaskRestManagerTest {
     }
 
     @Test
-    public void shouldGetTaskFromDatabase() throws SQLException {
+    public void should_Get_Task_From_Database() throws SQLException {
         String testName = "Test name";
         String testTime = "Test time";
         testHelper.createTask(testName, testTime);
@@ -103,7 +103,7 @@ public class EventTaskRestManagerTest {
     }
 
     @Test
-    public void shouldGetManyTasksFromDatabase() throws SQLException {
+    public void should_Get_Many_Tasks_From_Database() throws SQLException {
         testHelper.createTask("Task 1", "Test time");
         testHelper.createTask("Task 2", "Test time");
         EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
@@ -114,7 +114,7 @@ public class EventTaskRestManagerTest {
     }
 
     @Test
-    public void shouldGetEmptyTasksArrayWhenThereIsNoTasksInDatabase() {
+    public void should_Get_Empty_Tasks_Array_When_There_Is_No_Tasks_In_Database() {
         EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
@@ -123,14 +123,14 @@ public class EventTaskRestManagerTest {
     }
 
     @Test
-    public void shouldPutNewTask() {
+    public void should_Post_New_Task() {
         EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
         EventTaskRestManager.Configuration configuration = new EventTaskRestManager.Configuration();
         configuration.setName("Test name");
         configuration.setDescription("Test description");
         configuration.setTime("Test time");
 
-        Response result = fixture.put(configuration, mockRequest);
+        Response result = fixture.post(configuration, mockRequest);
 
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), result.getStatus());
     }

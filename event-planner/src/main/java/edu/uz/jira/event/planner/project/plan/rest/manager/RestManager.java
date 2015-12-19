@@ -105,7 +105,10 @@ public abstract class RestManager {
         })).build();
     }
 
-    public Response delete(@Nonnull final Class<? extends RawEntity> type, @Nonnull final String id) {
+    public Response delete(@Nonnull final Class<? extends RawEntity> type, @Nonnull final String id, @Nonnull final HttpServletRequest request) {
+        if (!isAdminUser(userManager.getRemoteUser(request))) {
+            return buildStatus(Response.Status.UNAUTHORIZED);
+        }
         if (!activeObjectsService.delete(type, id)) {
             return buildStatus(Response.Status.NOT_FOUND);
         }
@@ -158,6 +161,4 @@ public abstract class RestManager {
         }
         return buildStatus(Response.Status.ACCEPTED);
     }
-
-
 }

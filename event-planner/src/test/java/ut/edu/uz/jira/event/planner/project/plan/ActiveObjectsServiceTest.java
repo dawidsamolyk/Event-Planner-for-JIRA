@@ -50,7 +50,7 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void shouldNotAddAnyWithNullConfiguration() {
+    public void should_Not_Add_Any_With_Null_Configuration() {
         service.addFrom((EventDomainRestManager.Configuration) null);
         assertEquals(0, activeObjects.count(Domain.class));
 
@@ -68,7 +68,7 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void shouldNotAddAnyWithEmptyConfiguration() {
+    public void should_Not_Add_Any_With_Empty_Configuration() {
         service.addFrom(EventDomainRestManager.Configuration.createEmpty());
         assertEquals(0, activeObjects.count(Domain.class));
 
@@ -86,7 +86,7 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void shouldNotAddAnyWhenConfugirationIsNotFullfilled() {
+    public void should_Not_Add_Any_When_Confugiration_Is_Not_Fullfilled() {
         EventComponentRestManager.Configuration mockDomainConfig = mock(EventComponentRestManager.Configuration.class);
         Mockito.when(mockDomainConfig.isFullfilled()).thenReturn(false);
         service.addFrom(mockDomainConfig);
@@ -114,14 +114,14 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void shouldNotGetAnyIfInputTypeIsNull() {
+    public void should_Not_Get_Any_If_Input_Type_Is_Null() {
         List<RawEntity<Integer>> result = service.get(null, Query.select());
 
         assertTrue(result.isEmpty());
     }
 
     @Test
-    public void shouldReturnArrayOfDatabaseObjectsOfSpecifiedType() {
+    public void should_Return_Array_Of_Database_Objects_Of_Specified_Type() {
         activeObjects.create(Plan.class).save();
         activeObjects.create(Plan.class).save();
         activeObjects.create(Task.class).save();
@@ -133,7 +133,7 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void planShouldNotBeAddedIfHasFullfilledConfigurationButNoRelatedObjects() {
+    public void plan_Should_Not_Be_Added_If_Has_Fullfilled_Configuration_But_No_Related_Objects() {
         EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
         config.setName("Test name");
         config.setDescription("Test description");
@@ -147,7 +147,7 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void planShouldBeAddedIfHasFullfilledConfigurationAndHasRelatedObjects() {
+    public void plan_Should_Be_Added_If_Has_Fullfilled_Configuration_And_Has_Related_Objects() {
         Domain domain = activeObjectsHelper.createDomainNamed("Test domain");
         Component component = activeObjectsHelper.createComponentNamed("Test component");
         EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
@@ -163,7 +163,7 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void domainShouldBeAddedIfHasFullfilledConfiguration() {
+    public void domain_Should_Be_Added_If_Has_Fullfilled_Configuration() {
         EventDomainRestManager.Configuration configuration = new EventDomainRestManager.Configuration();
         configuration.setName("Test name");
         configuration.setDescription("Test description");
@@ -174,7 +174,7 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void taskShouldBeAddedIfHasFullfilledConfigurationWithRelatedSubTasks() {
+    public void task_Should_Be_Added_If_Has_Fullfilled_Configuration_With_Related_Sub_Tasks() {
         SubTask firstSubTask = activeObjectsHelper.createSubTaskNamed("Test 1");
         SubTask secondSubTask = activeObjectsHelper.createSubTaskNamed("Test 2");
         EventTaskRestManager.Configuration config = new EventTaskRestManager.Configuration();
@@ -191,7 +191,7 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void componentShouldBeAddedIfHasFullfilledConfiguration() {
+    public void component_Should_Be_Added_If_Has_Fullfilled_Configuration() {
         Task task = activeObjectsHelper.createTaskNamed("Test");
         EventComponentRestManager.Configuration config = new EventComponentRestManager.Configuration();
         config.setName("Test name");
@@ -204,7 +204,7 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void componentShouldBeAddedIfHasFullfilledConfigurationWithRelatedTasks() {
+    public void component_Should_Be_Added_If_Has_Fullfilled_Configuration_With_Related_Tasks() {
         Task firstTask = activeObjectsHelper.createTaskNamed("Test 1");
         Task secondTask = activeObjectsHelper.createTaskNamed("Test 2");
         EventComponentRestManager.Configuration config = new EventComponentRestManager.Configuration();
@@ -220,7 +220,7 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void subTaskShouldBeAddedIfHasFullfilledConfiguration() {
+    public void sub_Task_Should_Be_Added_If_Has_Fullfilled_Configuration() {
         EventSubTaskRestManager.Configuration config = new EventSubTaskRestManager.Configuration();
         config.setName("Test name");
         config.setDescription("Test description");
@@ -231,66 +231,95 @@ public class ActiveObjectsServiceTest {
         assertEquals(1, activeObjects.count(SubTask.class));
     }
 
-//    @Test
-//    public void planShouldNotBeAddIfCannotRelateItWithDomain() {
-//        Plan plan = activeObjectsHelper.createPlan("Name", "Description", "Time");
-//        Component component = activeObjectsHelper.createComponentNamed("Test componnet");
-//        EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
-//        config.setName("Name");
-//        config.setDescription("Description");
-//        config.setTime("Time");
-//        config.setDomains(new String[]{"Nonexistent domain"});
-//        config.setComponents(new String[]{component.getName()});
-//
-//        service.addFrom(config);
-//
-//        assertEquals(0, activeObjects.count(Plan.class));
-//    }
-//
-//    @Test
-//    public void planShouldNotBeAddIfCannotRelateItWithComponent() {
-//        Plan plan = activeObjectsHelper.createPlan("Name", "Description", "Time");
-//        Domain domain = activeObjectsHelper.createDomainNamed("test domain");
-//        EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
-//        config.setName("Name");
-//        config.setDescription("Description");
-//        config.setTime("Time");
-//        config.setComponents(new String[]{"Nonexistent component"});
-//        config.setDomains(new String[]{domain.getName()});
-//
-//        service.addFrom(config);
-//
-//        assertEquals(0, activeObjects.count(Plan.class));
-//    }
-//
-//    @Test
-//    public void componentShouldNotBeAddIfCannotRelateItWithTasks() {
-//        activeObjectsHelper.createComponent("Name", "Description");
-//        EventComponentRestManager.Configuration config = new EventComponentRestManager.Configuration();
-//        config.setName("Name");
-//        config.setDescription("Description");
-//        config.setTasks(new String[]{"Nonexistent task"});
-//
-//        service.addFrom(config);
-//
-//        assertEquals(0, activeObjects.count(Component.class));
-//    }
-//
-//    @Test
-//    public void taskShouldNotBeAddIfCannotRelateItWithSubTasks() {
-//        activeObjectsHelper.createTask("Name", "Description");
-//        EventTaskRestManager.Configuration config = new EventTaskRestManager.Configuration();
-//        config.setName("Name");
-//        config.setDescription("Description");
-//        config.setSubtasks(new String[]{"Nonexistent subtask"});
-//
-//        service.addFrom(config);
-//
-//        assertEquals(0, activeObjects.count(Task.class));
-//    }
+    @Test
+    public void plan_Should_Not_Be_Add_If_Cannot_Relate_It_With_Domain() {
+        Component component = activeObjectsHelper.createComponentNamed("Test componnet");
+        EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
+        config.setName("Name");
+        config.setDescription("Description");
+        config.setTime("Time");
+        config.setDomains(new String[]{"Nonexistent domain"});
+        config.setComponents(new String[]{component.getName()});
+
+        service.addFrom(config);
+
+        assertEquals(0, activeObjects.count(Plan.class));
+    }
 
     @Test
-    public void shouldClearDatabase() {
+    public void plan_Should_Not_Be_Add_If_Cannot_Relate_It_With_Component() {
+        Domain domain = activeObjectsHelper.createDomainNamed("test domain");
+        EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
+        config.setName("Name");
+        config.setDescription("Description");
+        config.setTime("Time");
+        config.setComponents(new String[]{"Nonexistent component"});
+        config.setDomains(new String[]{domain.getName()});
+
+        service.addFrom(config);
+
+        assertEquals(0, activeObjects.count(Plan.class));
+    }
+
+    @Test
+    public void component_Should_Not_Be_Add_If_Cannot_Relate_It_With_Tasks() {
+        EventComponentRestManager.Configuration config = new EventComponentRestManager.Configuration();
+        config.setName("Name");
+        config.setDescription("Description");
+        config.setTasks(new String[]{"Nonexistent task"});
+
+        service.addFrom(config);
+
+        assertEquals(0, activeObjects.count(Component.class));
+    }
+
+    @Test
+    public void task_Should_Not_Be_Add_If_Cannot_Relate_It_With_Sub_Tasks() {
+        EventTaskRestManager.Configuration config = new EventTaskRestManager.Configuration();
+        config.setName("Name");
+        config.setDescription("Description");
+        config.setTime("time");
+        config.setSubtasks(new String[]{"Nonexistent subtask"});
+
+        service.addFrom(config);
+
+        assertEquals(0, activeObjects.count(Task.class));
+    }
+
+    @Test
+    public void any_Entity_Should_Be_Deleted_By_Id() {
+        Task task = activeObjectsHelper.createTask("Name", "Description");
+
+        service.delete(Task.class, Integer.toString(task.getID()));
+
+        assertEquals(0, activeObjects.count(Task.class));
+    }
+
+    @Test
+    public void any_Entity_Related_With_Others_Should_Be_Deleted_By_Id() {
+        Domain domain = activeObjectsHelper.createDomainNamed("test name");
+        Component component = activeObjectsHelper.createComponentNamed("test name");
+        Plan plan = activeObjectsHelper.createPlan("Name", "description", "time");
+        PlanToDomainRelation relation = activeObjects.create(PlanToDomainRelation.class);
+        relation.setDomain(domain);
+        relation.setPlan(plan);
+        relation.save();
+        PlanToComponentRelation relation2 = activeObjects.create(PlanToComponentRelation.class);
+        relation2.setPlan(plan);
+        relation2.setComponent(component);
+        relation2.save();
+
+        service.delete(Plan.class, Integer.toString(plan.getID()));
+
+        assertEquals(0, activeObjects.count(Plan.class));
+        assertEquals(0, activeObjects.count(PlanToComponentRelation.class));
+        assertEquals(0, activeObjects.count(PlanToDomainRelation.class));
+        assertEquals(1, activeObjects.count(Domain.class));
+        assertEquals(1, activeObjects.count(Component.class));
+    }
+
+    @Test
+    public void should_Clear_Database() {
         Task task = activeObjectsHelper.createTask("test name", "test description");
         SubTask subTask = activeObjectsHelper.createSubTask("name", "");
         subTask.setParentTask(task);

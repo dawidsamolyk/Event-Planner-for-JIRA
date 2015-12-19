@@ -91,7 +91,7 @@ public class EventPlanRestManagerTest {
     }
 
     @Test
-    public void shouldGetPlanFromDatabase() throws SQLException {
+    public void should_Get_Plan_From_Database() throws SQLException {
         String testPlanName = "Test name";
         String testPlanDescription = "Test description";
         String testDomainName = "Test domain";
@@ -113,7 +113,7 @@ public class EventPlanRestManagerTest {
     }
 
     @Test
-    public void shouldGetManyPlansFromDatabase() throws SQLException {
+    public void should_Get_Many_Plans_From_Database() throws SQLException {
         testHelper.createPlanWithDomainAndComponent("Plan 1", "Description", "Test time", "Domain 1", "Component 1");
         testHelper.createPlanWithDomainAndComponent("Plan 2", "Description", "Test time", "Domain 2", "Component 1");
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
@@ -124,7 +124,7 @@ public class EventPlanRestManagerTest {
     }
 
     @Test
-    public void shouldGetEmptyPlansArrayWhenThereIsNoPlansInDatabase() {
+    public void should_Get_Empty_Plans_Array_When_There_Is_No_Plans_In_Database() {
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
@@ -133,7 +133,7 @@ public class EventPlanRestManagerTest {
     }
 
     @Test
-    public void shouldPutNewEventPlan() {
+    public void should_Put_New_Event_Plan() {
         Domain domain = testHelper.createDomainNamed("Test domain");
         Component firstComponent = testHelper.createComponent("Test component 1", "");
         Component secondComponent = testHelper.createComponent("Test component 2", "");
@@ -145,7 +145,7 @@ public class EventPlanRestManagerTest {
         config.setDomains(new String[]{domain.getName()});
         config.setComponents(new String[]{firstComponent.getName(), secondComponent.getName(), thirdComponent.getName()});
 
-        Response result = fixture.put(config, mockRequest);
+        Response result = fixture.post(config, mockRequest);
 
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), result.getStatus());
     }

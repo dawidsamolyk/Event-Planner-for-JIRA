@@ -87,7 +87,7 @@ public class EventComponentRestManagerTest {
     }
 
     @Test
-    public void shouldGetDomainFromDatabase() throws SQLException {
+    public void should_Get_Domain_From_Database() throws SQLException {
         String testName = "Test name";
         String testDescription = "Test description";
         testHelper.createDomain(testName, testDescription);
@@ -102,7 +102,7 @@ public class EventComponentRestManagerTest {
     }
 
     @Test
-    public void shouldGetManyDomainsFromDatabase() throws SQLException {
+    public void should_Get_Many_Domains_From_Database() throws SQLException {
         testHelper.createDomain("Domain 1", "Description");
         testHelper.createDomain("Domain 2", "Description");
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
@@ -113,7 +113,7 @@ public class EventComponentRestManagerTest {
     }
 
     @Test
-    public void shouldGetEmptyDomainsArrayWhenThereIsNoDomainsInDatabase() {
+    public void should_Get_Empty_Domains_Array_When_There_Is_No_Domains_In_Database() {
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get( mockRequest);
@@ -122,7 +122,7 @@ public class EventComponentRestManagerTest {
     }
 
     @Test
-    public void shouldPutNewDomain() {
+    public void should_Put_New_Domain() {
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
         EventDomainRestManager.Configuration configuration = new EventDomainRestManager.Configuration();
         configuration.setName("Test name");

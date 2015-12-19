@@ -73,16 +73,13 @@ public class ActiveObjectsService {
 
         Collection<PlanToDomainRelation> planToDomainRelations = relationsManager.associatePlanWithDomains(result, resource.getDomains());
         if (planToDomainRelations.isEmpty()) {
-            activeObjectsService.delete(result);
+            deleteWithRelations(result);
             return null;
         }
 
         Collection<PlanToComponentRelation> planToComponentRelations = relationsManager.associatePlanWithComponents(result, resource.getComponents());
         if (planToComponentRelations.isEmpty()) {
-            for (PlanToDomainRelation each : planToDomainRelations) {
-                activeObjectsService.delete(each);
-            }
-            activeObjectsService.delete(result);
+            deleteWithRelations(result);
             return null;
         }
 
@@ -115,7 +112,7 @@ public class ActiveObjectsService {
 
         boolean valid = relationsManager.associate(result, resource.getTasks());
         if (!valid) {
-            activeObjectsService.delete(result);
+            deleteWithRelations(result);
             return null;
         }
 
@@ -134,7 +131,7 @@ public class ActiveObjectsService {
 
         boolean valid = relationsManager.associate(result, resource.getSubtasks());
         if (!valid) {
-            activeObjectsService.delete(result);
+            deleteWithRelations(result);
             return null;
         }
 
@@ -186,7 +183,7 @@ public class ActiveObjectsService {
         return true;
     }
 
-    private void deleteWithRelations(@Nonnull final RawEntity[] entities) {
+    private void deleteWithRelations(@Nonnull final RawEntity... entities) {
         for (RawEntity each : entities) {
             RawEntity[] relations = getRelations(each);
             activeObjectsService.delete(relations);
