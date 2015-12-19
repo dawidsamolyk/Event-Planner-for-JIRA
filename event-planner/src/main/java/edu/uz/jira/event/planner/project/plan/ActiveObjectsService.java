@@ -5,7 +5,9 @@ import com.atlassian.activeobjects.tx.Transactional;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.*;
+import net.java.ao.Entity;
 import net.java.ao.Query;
 import net.java.ao.RawEntity;
 
@@ -35,6 +37,25 @@ public class ActiveObjectsService {
     public ActiveObjectsService(@Nonnull final ActiveObjects activeObjectsService) {
         this.activeObjectsService = activeObjectsService;
         relationsManager = new RelationsManager(activeObjectsService);
+    }
+
+    public Entity addFrom(@Nonnull final EventRestConfiguration resource) {
+        if (resource instanceof EventPlanRestManager.Configuration) {
+            return addFrom((EventPlanRestManager.Configuration) resource);
+        }
+        if (resource instanceof EventDomainRestManager.Configuration) {
+            return addFrom((EventDomainRestManager.Configuration) resource);
+        }
+        if (resource instanceof EventComponentRestManager.Configuration) {
+            return addFrom((EventComponentRestManager.Configuration) resource);
+        }
+        if (resource instanceof EventTaskRestManager.Configuration) {
+            return addFrom((EventTaskRestManager.Configuration) resource);
+        }
+        if (resource instanceof EventSubTaskRestManager.Configuration) {
+            return addFrom((EventSubTaskRestManager.Configuration) resource);
+        }
+        return null;
     }
 
     /**
@@ -151,7 +172,7 @@ public class ActiveObjectsService {
      * @param id   Id of Entity.
      * @return Indicates that Entity was deleted.
      */
-    public boolean delete(@Nonnull final Class<? extends RawEntity<Integer>> type, @Nonnull final String id) {
+    public boolean delete(@Nonnull final Class<? extends RawEntity> type, @Nonnull final String id) {
         if (type == null || id == null || id.isEmpty()) {
             return false;
         }
@@ -239,6 +260,4 @@ public class ActiveObjectsService {
     public void deleteAll(@Nonnull final Class<? extends RawEntity> type) {
         activeObjectsService.delete(activeObjectsService.find(type));
     }
-
-
 }

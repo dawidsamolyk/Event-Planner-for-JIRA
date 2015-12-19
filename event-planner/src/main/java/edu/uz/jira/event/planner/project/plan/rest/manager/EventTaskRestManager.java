@@ -2,7 +2,6 @@ package edu.uz.jira.event.planner.project.plan.rest.manager;
 
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
-import edu.uz.jira.event.planner.exception.ResourceException;
 import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.model.SubTask;
 import edu.uz.jira.event.planner.project.plan.model.Task;
@@ -41,19 +40,31 @@ public class EventTaskRestManager extends RestManager {
     public EventTaskRestManager(@Nonnull final UserManager userManager,
                                 @Nonnull final TransactionTemplate transactionTemplate,
                                 @Nonnull final ActiveObjectsService activeObjectsService) {
-        super(userManager, transactionTemplate, activeObjectsService);
+        super(userManager, transactionTemplate, activeObjectsService, Task.class, Configuration.createEmpty());
+    }
+
+    /**
+     * @param id      Id of Task to get. If not specified, all Tasks will be returned.
+     * @param request Http Servlet request.
+     * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
+     * @see {@link RestManager#get(String, HttpServletRequest)}
+     */
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response get(final String id, @Context final HttpServletRequest request) {
+        return super.get(id, request);
     }
 
     /**
      * @param request Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
-     * @see {@link RestManager#get(HttpServletRequest)}
+     * @see {@link RestManager#get(String, HttpServletRequest)}
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Override
     public Response get(@Context final HttpServletRequest request) {
-        return super.get(request);
+        return super.get(null, request);
     }
 
     /**
@@ -68,28 +79,15 @@ public class EventTaskRestManager extends RestManager {
         return super.put(resource, request);
     }
 
-    @Override
-    protected Response doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException {
-        Task result;
-        try {
-            result = activeObjectsService.addFrom((Configuration) resource);
-        } catch (ClassCastException e) {
-            throw new ResourceException(e.getMessage(), e);
-        }
-        return checkArgumentAndResponse(result);
-    }
-
-    @Override
-    protected EventRestConfiguration[] doGet() {
-        return doGetAll(Task.class, Configuration.createEmpty());
-    }
-
-    @Override
-    protected Configuration createFrom(@Nonnull final Entity entity) {
-        if (entity instanceof Task) {
-            return new Configuration((Task) entity);
-        }
-        return new Configuration();
+    /**
+     * @param id Id of Task to delete. If not specified nothing should be deleted.
+     * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
+     * @see {@link RestManager#delete(Class, String)}
+     */
+    @DELETE
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response delete(@Nonnull final String id) {
+        return super.delete(entityType, id);
     }
 
     /**
@@ -119,22 +117,33 @@ public class EventTaskRestManager extends RestManager {
         }
 
         /**
-         * Constructor.
-         *
-         * @param task Task database entity - source of data.
-         */
-        public Configuration(@Nonnull final Task task) {
-            setName(task.getName());
-            setDescription(task.getDescription());
-            setTime(task.getTimeToComplete());
-            setSubTasksNames(task);
-        }
-
-        /**
          * @return Event Task Configuration with all empty fields (but not null).
          */
         public static Configuration createEmpty() {
             return new Configuration();
+        }
+
+        /**
+         * @see {@link EventRestConfiguration#fill(Entity)}
+         */
+        @Override
+        public EventRestConfiguration fill(@Nonnull final Entity entity) {
+            if (entity instanceof Task) {
+                Task task = (Task) entity;
+                setName(task.getName());
+                setDescription(task.getDescription());
+                setTime(task.getTimeToComplete());
+                setSubTasksNames(task);
+            }
+            return this;
+        }
+
+        /**
+         * @see {@link EventRestConfiguration#getWrappedType()}
+         */
+        @Override
+        public Class getWrappedType() {
+            return Task.class;
         }
 
         private void setSubTasksNames(@Nonnull Task task) {

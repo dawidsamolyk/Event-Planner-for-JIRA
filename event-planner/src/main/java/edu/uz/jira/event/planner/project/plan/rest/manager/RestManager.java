@@ -4,7 +4,6 @@ import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
-import edu.uz.jira.event.planner.exception.ResourceException;
 import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import net.java.ao.Entity;
@@ -20,8 +19,10 @@ import java.util.List;
  * Abstract REST manager which implements common functionalities for concrete REST managers.
  */
 public abstract class RestManager {
-    protected final TransactionTemplate transactionTemplate;
     protected final ActiveObjectsService activeObjectsService;
+    protected final Class entityType;
+    private final TransactionTemplate transactionTemplate;
+    private final EventRestConfiguration emptyConfiguration;
     private final UserManager userManager;
 
     /**
@@ -30,13 +31,19 @@ public abstract class RestManager {
      * @param userManager          Injected {@code UserManager} implementation.
      * @param transactionTemplate  Injected {@code TransactionTemplate} implementation.
      * @param activeObjectsService Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
+     * @param entityType           Type of Entities which this RestManages can handle.
+     * @param emptyConfiguration   Empty configuration of handled Entities.
      */
     public RestManager(@Nonnull final UserManager userManager,
                        @Nonnull final TransactionTemplate transactionTemplate,
-                       @Nonnull final ActiveObjectsService activeObjectsService) {
+                       @Nonnull final ActiveObjectsService activeObjectsService,
+                       @Nonnull final Class entityType,
+                       @Nonnull final EventRestConfiguration emptyConfiguration) {
         this.userManager = userManager;
         this.transactionTemplate = transactionTemplate;
         this.activeObjectsService = activeObjectsService;
+        this.entityType = entityType;
+        this.emptyConfiguration = emptyConfiguration;
     }
 
     /**
@@ -59,48 +66,54 @@ public abstract class RestManager {
         return doPutTransaction(resource);
     }
 
-    private boolean isAdminUser(final UserProfile user) {
-        return user != null && userManager.isSystemAdmin(user.getUserKey());
-    }
-
-    protected Response buildStatus(@Nonnull final Response.Status status) {
-        return Response.status(status).build();
-    }
-
-    private Response doPutTransaction(@Nonnull final EventRestConfiguration resource) {
-        return transactionTemplate.execute(new TransactionCallback<Response>() {
-            public Response doInTransaction() {
-                try {
-                    return doPut(resource);
-                } catch (ResourceException e) {
-                    return buildStatus(Response.Status.INTERNAL_SERVER_ERROR);
-                }
-            }
-        });
-    }
-
-    protected abstract Response doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException;
-
     /**
      * Handles GET request.
      *
      * @param request Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
      */
-    public Response get(@Context final HttpServletRequest request) {
+    public Response get(final String id, @Context final HttpServletRequest request) {
         if (!isAdminUser(userManager.getRemoteUser(request))) {
             return buildStatus(Response.Status.UNAUTHORIZED);
         }
         return Response.ok(transactionTemplate.execute(new TransactionCallback<EventRestConfiguration[]>() {
             public EventRestConfiguration[] doInTransaction() {
-                return doGet();
+                if (id == null || id.isEmpty()) {
+                    return doGetAll(entityType, emptyConfiguration);
+                }
+                return null;
             }
         })).build();
     }
 
-    protected abstract EventRestConfiguration[] doGet();
+    public Response delete(@Nonnull final Class<? extends RawEntity> type, @Nonnull final String id) {
+        if (!activeObjectsService.delete(type, id)) {
+            return buildStatus(Response.Status.NOT_FOUND);
+        }
+        return buildStatus(Response.Status.OK);
+    }
 
-    protected EventRestConfiguration[] doGetAll(@Nonnull final Class<? extends RawEntity> entityType, @Nonnull final EventRestConfiguration defaultResult) {
+    private boolean isAdminUser(final UserProfile user) {
+        return user != null && userManager.isSystemAdmin(user.getUserKey());
+    }
+
+    private Response buildStatus(@Nonnull final Response.Status status) {
+        return Response.status(status).build();
+    }
+
+    private Response doPutTransaction(@Nonnull final EventRestConfiguration resource) {
+        return transactionTemplate.execute(new TransactionCallback<Response>() {
+            public Response doInTransaction() {
+                if (!resource.getWrappedType().equals(entityType)) {
+                    return buildStatus(Response.Status.NOT_ACCEPTABLE);
+                }
+                Entity result = activeObjectsService.addFrom(resource);
+                return checkArgumentAndResponse(result);
+            }
+        });
+    }
+
+    private EventRestConfiguration[] doGetAll(@Nonnull final Class<? extends RawEntity> entityType, @Nonnull final EventRestConfiguration defaultResult) {
         List<? extends RawEntity> entities = activeObjectsService.get(entityType);
         int numberOfEntities = entities.size();
 
@@ -116,12 +129,16 @@ public abstract class RestManager {
         return result;
     }
 
-    protected abstract EventRestConfiguration createFrom(@Nonnull final Entity entity);
+    private EventRestConfiguration createFrom(@Nonnull final Entity entity) {
+        return emptyConfiguration.fill(entity);
+    }
 
-    protected Response checkArgumentAndResponse(final Entity entity) {
+    private Response checkArgumentAndResponse(final Entity entity) {
         if (entity == null) {
             return buildStatus(Response.Status.NOT_ACCEPTABLE);
         }
         return buildStatus(Response.Status.ACCEPTED);
     }
+
+
 }

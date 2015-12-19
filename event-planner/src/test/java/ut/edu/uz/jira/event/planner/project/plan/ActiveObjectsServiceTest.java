@@ -115,7 +115,7 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void shouldNotGetAnyIfInputTypeIsNull() {
-        List<RawEntity<Object>> result = service.get(null);
+        List<RawEntity<Integer>> result = service.get(null);
 
         assertTrue(result.isEmpty());
     }

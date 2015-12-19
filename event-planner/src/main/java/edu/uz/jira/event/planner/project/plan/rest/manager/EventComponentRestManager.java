@@ -2,7 +2,6 @@ package edu.uz.jira.event.planner.project.plan.rest.manager;
 
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
-import edu.uz.jira.event.planner.exception.ResourceException;
 import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.model.Component;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
@@ -41,19 +40,31 @@ public class EventComponentRestManager extends RestManager {
     public EventComponentRestManager(@Nonnull final UserManager userManager,
                                      @Nonnull final TransactionTemplate transactionTemplate,
                                      @Nonnull final ActiveObjectsService activeObjectsService) {
-        super(userManager, transactionTemplate, activeObjectsService);
+        super(userManager, transactionTemplate, activeObjectsService, Component.class, Configuration.createEmpty());
+    }
+
+    /**
+     * @param id      Id of Component to get. If not specified, all Components will be returned.
+     * @param request Http Servlet request.
+     * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
+     * @see {@link RestManager#get(String, HttpServletRequest)}
+     */
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response get(final String id, @Context final HttpServletRequest request) {
+        return super.get(id, request);
     }
 
     /**
      * @param request Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
-     * @see {@link RestManager#get(HttpServletRequest)}
+     * @see {@link RestManager#get(String, HttpServletRequest)}
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Override
     public Response get(@Context final HttpServletRequest request) {
-        return super.get(request);
+        return super.get(null, request);
     }
 
     /**
@@ -68,28 +79,15 @@ public class EventComponentRestManager extends RestManager {
         return super.put(resource, request);
     }
 
-    @Override
-    protected Response doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException {
-        Component result;
-        try {
-            result = activeObjectsService.addFrom((Configuration) resource);
-        } catch (ClassCastException e) {
-            throw new ResourceException(e.getMessage(), e);
-        }
-        return checkArgumentAndResponse(result);
-    }
-
-    @Override
-    protected EventRestConfiguration[] doGet() {
-        return doGetAll(Component.class, Configuration.createEmpty());
-    }
-
-    @Override
-    protected Configuration createFrom(@Nonnull final Entity entity) {
-        if (entity instanceof Component) {
-            return new Configuration((Component) entity);
-        }
-        return new Configuration();
+    /**
+     * @param id Id of Component to delete. If not specified nothing should be deleted.
+     * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
+     * @see {@link RestManager#delete(Class, String)}
+     */
+    @DELETE
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response delete(String id) {
+        return super.delete(entityType, id);
     }
 
     /**
@@ -116,21 +114,32 @@ public class EventComponentRestManager extends RestManager {
         }
 
         /**
-         * Constructor.
-         *
-         * @param component Component database entity - source of data.
-         */
-        public Configuration(@Nonnull final Component component) {
-            setName(component.getName());
-            setDescription(component.getDescription());
-            setTasks(ENTITY_NAME_EXTRACTOR.getNames(component.getTasks()));
-        }
-
-        /**
          * @return Event Component Configuration with all empty fields (but not null).
          */
         public static Configuration createEmpty() {
             return new Configuration();
+        }
+
+        /**
+         * @see {@link EventRestConfiguration#fill(Entity)}
+         */
+        @Override
+        public EventRestConfiguration fill(@Nonnull final Entity entity) {
+            if (entity instanceof Component) {
+                Component component = (Component) entity;
+                setName(component.getName());
+                setDescription(component.getDescription());
+                setTasks(ENTITY_NAME_EXTRACTOR.getNames(component.getTasks()));
+            }
+            return this;
+        }
+
+        /**
+         * @see {@link EventRestConfiguration#getWrappedType()}
+         */
+        @Override
+        public Class getWrappedType() {
+            return Component.class;
         }
 
         /**

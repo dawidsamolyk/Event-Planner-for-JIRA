@@ -19,7 +19,7 @@
             <div class="field-group">
                 <label for="component-tasks">Tasks<span
                         class="aui-icon icon-required">(required)</span></label>
-                <select class="multi-select" multiple="multiple" size="$COMPONENTS.size()" id="component-tasks"
+                <select class="multi-select" multiple="multiple" id="component-tasks"
                         name="component-tasks" title="Tasks">
                 </select>
                 <br />

@@ -26,7 +26,7 @@
             </div>
             <div class="field-group">
                 <label for="task-subtasks">SubTasks</label>
-                <select class="multi-select" multiple="multiple" size="$SUBTASKS.size()" id="task-subtasks"
+                <select class="multi-select" multiple="multiple" id="task-subtasks"
                         name="task-subtasks" title="Sub-Tasks">
                 </select>
                 <br />

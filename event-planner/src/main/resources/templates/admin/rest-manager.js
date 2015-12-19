@@ -14,11 +14,13 @@ function RESTManager() {
         });
     };
 
-    this.get = function(sourceId, destinationResource) {
+    this.get = function(sourceId, destinationResource, databaseResourceId) {
         jQuery.ajax({
             url: this.baseUrl + sourceId,
             type: "GET",
             dataType: "json",
+            contentType: "text/plain",
+            data: databaseResourceId,
             success: function (data, status, request) {
                 destinationResource.setFromJson(data);
             },

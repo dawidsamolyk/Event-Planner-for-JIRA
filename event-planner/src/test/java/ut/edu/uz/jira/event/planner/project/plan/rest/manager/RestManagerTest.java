@@ -86,7 +86,7 @@ public class RestManagerTest {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
         RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-        Response result = fixture.get(mockRequest);
+        Response result = fixture.get(null, mockRequest);
 
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }
@@ -106,7 +106,7 @@ public class RestManagerTest {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
         RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-        Response result = fixture.get(mockRequest);
+        Response result = fixture.get(null, mockRequest);
 
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }
@@ -141,7 +141,7 @@ public class RestManagerTest {
     }
 
     @Test
-    public void onPutShouldReturnInternalServerErrorWhenAnyExceptionOccursWhileAddingNewDomainToDatabase() throws SQLException {
+    public void onPutShouldNotAcceptWhenTryingToPutConfigurationOfInvalidResource() throws SQLException {
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
         EventPlanRestManager.Configuration invalidConfig = new EventPlanRestManager.Configuration();
         invalidConfig.setName("Test name");
@@ -152,6 +152,6 @@ public class RestManagerTest {
 
         Response result = fixture.put(invalidConfig, mockRequest);
 
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), result.getStatus());
+        assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), result.getStatus());
     }
 }

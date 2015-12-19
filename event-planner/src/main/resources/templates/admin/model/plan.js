@@ -1,5 +1,6 @@
 function Plan() {
     this.id = 'plan';
+    this.elementsTag = 'option';
     this.getName = function() { return AJS.$("#plan-name") };
     this.getDescription = function() { return AJS.$("#plan-description") };
     this.getTimeToComplete = function() { return AJS.$("#plan-time") };
@@ -15,8 +16,14 @@ function Plan() {
                ' }';
     };
 
-    this.setFromJson = function(allResources) {
-        var isComponent = (allResources.length > 0 && allResources[0].hasOwnProperty('tasks'));
+    this.setFromJson = function(resources) {
+        var isComponent = (resources.length > 0 && resources[0].hasOwnProperty('tasks'));
+        var isPlan = (resources.length > 0 && resources[0].hasOwnProperty('domains'));
+
+        if(isPlan === true) {
+            this.setFromPlanObject(resources);
+            return;
+        }
 
         if(isComponent === true) {
             this.getComponents().empty();
@@ -24,15 +31,36 @@ function Plan() {
             this.getDomains().empty();
         }
 
-        for(eachKey in allResources) {
-            var eachResource = allResources[eachKey];
-            var eachOption = "<option>" + eachResource.name + "</option>";
+        for(eachKey in resources) {
+            var eachElement = this.getElement(resources[eachKey].name);
 
             if(isComponent) {
-                this.getComponents().append(eachOption);
+                this.getComponents().append(eachElement);
             } else {
-                this.getDomains().append(eachOption);
+                this.getDomains().append(eachElement);
             }
+        }
+    };
+
+    this.getElement = function(value) {
+        return "<".concat(this.elementsTag).concat(">").concat(value).concat("</").concat(this.elementsTag).concat(">");
+    };
+
+    this.setFromPlanObject = function(plan) {
+        console.log(plan);
+        var name = this.getName().attr("value");
+        name = plan.name;
+        var description = this.getDescription().attr("value");
+        description = plan.description;
+        var time = this.getTimeToComplete().attr("value");
+        time = plan.time;
+
+        for(eachKey in plan.domains) {
+            this.getDomains().append(this.getElement(plan.domains[eachKey]));
+        }
+
+        for(eachKey in plan.components) {
+            this.getComponents().append(this.getElement(plan.components[eachKey]));
         }
     };
 };

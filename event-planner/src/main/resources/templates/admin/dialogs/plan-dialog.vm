@@ -26,7 +26,7 @@
             <div class="field-group">
                 <label for="plan-domains">Domains<span
                         class="aui-icon icon-required">(required)</span></label>
-                <select class="multi-select" multiple="multiple" size="$DOMAINS.size()" id="plan-domains"
+                <select class="multi-select" multiple="multiple" id="plan-domains"
                         name="plan-domains" title="Domain">
                 </select>
                 <br />
@@ -42,7 +42,7 @@
             <div class="field-group">
                 <label for="plan-components">Components<span
                         class="aui-icon icon-required">(required)</span></label>
-                <select class="multi-select" multiple="multiple" size="$COMPONENTS.size()" id="plan-components"
+                <select class="multi-select" multiple="multiple" id="plan-components"
                         name="plan-components" title="Components">
                 </select>
                 <br />
