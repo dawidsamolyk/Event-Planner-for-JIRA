@@ -68,6 +68,15 @@ public class EventPlanRestManager extends RestManager {
         return super.put(resource, request);
     }
 
+    @DELETE
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response delete(String id) {
+        if (!activeObjectsService.delete(Plan.class, id)) {
+            return buildStatus(Response.Status.NOT_FOUND);
+        }
+        return buildStatus(Response.Status.OK);
+    }
+
     @Override
     protected Response doPut(@Nonnull final EventRestConfiguration resource) throws ResourceException {
         Plan result;
@@ -99,6 +108,8 @@ public class EventPlanRestManager extends RestManager {
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Configuration implements EventRestConfiguration {
         @XmlElement
+        private int id;
+        @XmlElement
         private String name;
         @XmlElement
         private String description;
@@ -127,6 +138,7 @@ public class EventPlanRestManager extends RestManager {
          * @param plan Plan database entity - source of data.
          */
         public Configuration(@Nonnull final Plan plan) {
+            setId(plan.getID());
             setName(plan.getName());
             setDescription(plan.getDescription());
             setTime(plan.getTimeToComplete());
@@ -157,7 +169,7 @@ public class EventPlanRestManager extends RestManager {
             return name;
         }
 
-        public void setName(@Nonnull String name) {
+        public void setName(@Nonnull final String name) {
             if (name == null) {
                 this.name = "";
             } else {
@@ -169,7 +181,7 @@ public class EventPlanRestManager extends RestManager {
             return description;
         }
 
-        public void setDescription(@Nonnull String description) {
+        public void setDescription(@Nonnull final String description) {
             if (description == null) {
                 this.description = "";
             } else {
@@ -181,7 +193,7 @@ public class EventPlanRestManager extends RestManager {
             return time;
         }
 
-        public void setTime(@Nonnull String time) {
+        public void setTime(@Nonnull final String time) {
             if (time == null) {
                 this.time = "";
             } else {
@@ -193,7 +205,7 @@ public class EventPlanRestManager extends RestManager {
             return domains;
         }
 
-        public void setDomains(@Nonnull String[] domains) {
+        public void setDomains(@Nonnull final String[] domains) {
             if (domains == null) {
                 this.domains = new String[]{};
             } else {
@@ -205,12 +217,20 @@ public class EventPlanRestManager extends RestManager {
             return components;
         }
 
-        public void setComponents(String[] components) {
+        public void setComponents(@Nonnull final String[] components) {
             if (components == null) {
                 this.components = new String[]{};
             } else {
                 this.components = components;
             }
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(@Nonnull final int id) {
+            this.id = id;
         }
 
         /**

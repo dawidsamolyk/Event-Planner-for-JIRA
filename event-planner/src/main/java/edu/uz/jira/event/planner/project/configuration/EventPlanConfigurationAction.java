@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Webwork action for configuring Event Plan Organization project.
  */
-public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
+public class EventPlanConfigurationAction extends JiraWebActionSupport {
     public static final String DUE_DATE_FORMAT = "dd-MM-yyyy HH:mm";
     private final VersionManager versionManager;
     private final I18nResolver internationalization;
@@ -34,7 +34,7 @@ public class EventPlanConfigWebworkAction extends JiraWebActionSupport {
      *
      * @param i18nResolver Injected {@code I18nResolver} implementation.
      */
-    public EventPlanConfigWebworkAction(@Nonnull final I18nResolver i18nResolver,
+    public EventPlanConfigurationAction(@Nonnull final I18nResolver i18nResolver,
                                         @Nonnull final ActiveObjectsService activeObjectsService) {
         internationalization = i18nResolver;
         this.activeObjectsService = activeObjectsService;

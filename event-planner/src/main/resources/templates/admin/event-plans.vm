@@ -9,7 +9,6 @@
     <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui.js"></script>
     <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-experimental.js"></script>
     <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-datepicker.js"></script>
-
     <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui.css"/>
     <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui-experimental.css"/>
 </head>
@@ -46,9 +45,6 @@
                 Name
             </th>
             <th>
-                Description
-            </th>
-            <th>
                 Domains
             </th>
             <th>
@@ -67,240 +63,21 @@
     </table>
 </section>
 
-<section role="dialog" id="event-plan-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
-    <header class="aui-dialog2-header">
-        <h2 class="aui-dialog2-header-main">Event Organization Plan Configuration</h2>
-    </header>
-    <div class="aui-dialog2-content">
-        <form class="aui" id="event-plan-configuration" action="#" method="post">
-            <div class="field-group" id="event-name-group">
-                <label for="plan-name">Name<span class="aui-icon icon-required">(required)</span></label>
-                <input id="plan-name" name="plan-name" type="text">
-
-                <div class="description" id="plan-name-description">Name of the plan.</div>
-            </div>
-            <div class="field-group" id="event-description-group">
-                <label for="plan-description">Description</label>
-                <input id="plan-description" name="plan-description" type="text">
-
-                <div class="description" id="plan-description-description">Description of the plan.</div>
-            </div>
-            <div class="field-group" id="event-time-group">
-                <label for="plan-time">Time to completion
-                    <span class="aui-icon icon-required">(required)</span></label>
-                <input id="plan-time" name="plan-time" type="text">
-
-                <div class="description" id="plan-time-description">Estimated time for event organization.</div>
-            </div>
-            <div class="field-group">
-                <label for="plan-domains">Domains<span
-                        class="aui-icon icon-required">(required)</span></label>
-                <select class="multi-select" multiple="multiple" size="$DOMAINS.size()" id="plan-domains"
-                        name="plan-domains" title="Domain">
-                </select>
-                <br />
-                <div class="aui-buttons">
-                    <button id="add-domain-button" class="aui-button trigger-dialog">
-                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                        Add new Domain
-                    </button>
-                </div>
-
-                <div class="description" id="plan-domains-description">Event domains.</div>
-            </div>
-            <div class="field-group">
-                <label for="plan-components">Components<span
-                        class="aui-icon icon-required">(required)</span></label>
-                <select class="multi-select" multiple="multiple" size="$COMPONENTS.size()" id="plan-components"
-                        name="plan-components" title="Components">
-                </select>
-                <br />
-                <div class="aui-buttons">
-                    <button id="add-component-button" class="aui-button trigger-dialog">
-                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                        Add new Component
-                    </button>
-                </div>
-
-                <div class="description" id="plan-components-description">Elements of an event.</div>
-            </div>
-        </form>
-    </div>
-    <footer class="aui-dialog2-footer">
-        <div class="aui-dialog2-footer-actions">
-            <button id="event-plan-dialog-cancel-button" class="aui-button">Cancel</button>
-            <button id="event-plan-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save</button>
-        </div>
-    </footer>
-</section>
-
-<section role="dialog" id="event-domain-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
-    <header class="aui-dialog2-header">
-        <h2 class="aui-dialog2-header-main">Event Domain Configuration</h2>
-    </header>
-    <div class="aui-dialog2-content">
-        <form class="aui" id="event-domain-configuration" action="#" method="post">
-            <div class="field-group" id="domains-name-group">
-                <label for="domain-name">Name<span class="aui-icon icon-required">(required)</span></label>
-                <input id="domain-name" name="domain-name" type="text">
-
-                <div class="description" id="domain-name-description">Name of the Domain.</div>
-            </div>
-            <div class="field-group" id="domain-description-group">
-                <label for="domain-description">Description</label>
-                <input id="domain-description" name="domain-description" type="text">
-
-                <div class="description" id="domain-description-description">Description of the Domain.</div>
-            </div>
-        </form>
-    </div>
-    <footer class="aui-dialog2-footer">
-        <div class="aui-dialog2-footer-actions">
-            <button id="event-domain-dialog-cancel-button" class="aui-button">Cancel</button>
-            <button id="event-domain-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save
-            </button>
-        </div>
-    </footer>
-</section>
-
-<section role="dialog" id="event-component-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
-    <header class="aui-dialog2-header">
-        <h2 class="aui-dialog2-header-main">Event Component Configuration</h2>
-    </header>
-    <div class="aui-dialog2-content">
-        <form class="aui" id="event-component-configuration" action="#" method="post">
-            <div class="field-group" id="component-name-group">
-                <label for="component-name">Name<span class="aui-icon icon-required">(required)</span></label>
-                <input id="component-name" name="component-name" type="text">
-
-                <div class="description" id="component-name-description">Name of the Component.</div>
-            </div>
-            <div class="field-group" id="component-description-group">
-                <label for="component-description">Description</label>
-                <input id="component-description" name="component-description" type="text">
-
-                <div class="description" id="component-description-description">Description of the Component.</div>
-            </div>
-            <div class="field-group">
-                <label for="component-tasks">Tasks<span
-                        class="aui-icon icon-required">(required)</span></label>
-                <select class="multi-select" multiple="multiple" size="$COMPONENTS.size()" id="component-tasks"
-                        name="component-tasks" title="Tasks">
-                </select>
-                <br />
-                <div class="aui-buttons">
-                    <button id="add-task-button" class="aui-button trigger-dialog">
-                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                        Add new Task
-                    </button>
-                </div>
-
-                <div class="description" id="component-tasks-description">Tasks to do for complete event component.
-                </div>
-            </div>
-        </form>
-    </div>
-    <footer class="aui-dialog2-footer">
-        <div class="aui-dialog2-footer-actions">
-            <button id="event-component-dialog-cancel-button" class="aui-button">Cancel</button>
-            <button id="event-component-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save
-            </button>
-        </div>
-    </footer>
-</section>
-
-<section role="dialog" id="event-task-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
-    <header class="aui-dialog2-header">
-        <h2 class="aui-dialog2-header-main">Task definition</h2>
-    </header>
-    <div class="aui-dialog2-content">
-        <form class="aui" id="event-task-configuration" action="#" method="post">
-            <div class="field-group" id="task-name-group">
-                <label for="task-name">Name<span class="aui-icon icon-required">(required)</span></label>
-                <input id="task-name" name="task-name" type="text">
-
-                <div class="description" id="task-name-description">Name of the Task.</div>
-            </div>
-            <div class="field-group" id="task-description-group">
-                <label for="task-description">Description</label>
-                <input id="task-description" name="task-description" type="text">
-
-                <div class="description" id="task-description-description">Description of the Task.</div>
-            </div>
-            <div class="field-group" id="task-time-group">
-                <label for="task-time">Time to complete<span
-                        class="aui-icon icon-required">(required)</span></label>
-                <input id="task-time" name="task-time" type="text">
-
-                <div class="description" id="task-time-description">Estimated time to complete Task.
-                </div>
-            </div>
-            <div class="field-group">
-                <label for="task-subtasks">SubTasks</label>
-                <select class="multi-select" multiple="multiple" size="$SUBTASKS.size()" id="task-subtasks"
-                        name="task-subtasks" title="Sub-Tasks">
-                </select>
-                <br />
-                <div class="aui-buttons">
-                    <button id="add-subtask-button" class="aui-button trigger-dialog">
-                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                        Add new Sub-Task
-                    </button>
-                </div>
-
-                <div class="description" id="task-subtasks-description">Sub-Tasks to do for complete this Task.
-                </div>
-            </div>
-        </form>
-    </div>
-    <footer class="aui-dialog2-footer">
-        <div class="aui-dialog2-footer-actions">
-            <button id="event-task-dialog-cancel-button" class="aui-button">Cancel</button>
-            <button id="event-task-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save
-            </button>
-        </div>
-    </footer>
-</section>
-
-<section role="dialog" id="event-subtask-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
-    <header class="aui-dialog2-header">
-        <h2 class="aui-dialog2-header-main">SubTask definition</h2>
-    </header>
-    <div class="aui-dialog2-content">
-        <form class="aui" id="event-subtask-configuration" action="#" method="post">
-            <div class="field-group" id="task-subtask-group">
-                <label for="subtask-name">Name<span class="aui-icon icon-required">(required)</span></label>
-                <input id="subtask-name" name="subtask-name" type="text">
-
-                <div class="description" id="subtask-name-description">Name of the SubTask.</div>
-            </div>
-            <div class="field-group" id="subtask-description-group">
-                <label for="subtask-description">Description</label>
-                <input id="subtask-description" name="subtask-description" type="text">
-
-                <div class="description" id="subtask-description-description">Description of the SubTask.</div>
-            </div>
-            <div class="field-group" id="subtask-time-group">
-                <label for="subtask-time">Time to complete<span
-                        class="aui-icon icon-required">(required)</span></label>
-                <input id="subtask-time" name="subtask-time" type="text">
-
-                <div class="description" id="subtask-time-description">Estimated time to complete SubTask.
-                </div>
-            </div>
-        </form>
-    </div>
-    <footer class="aui-dialog2-footer">
-        <div class="aui-dialog2-footer-actions">
-            <button id="event-subtask-dialog-cancel-button" class="aui-button">Cancel</button>
-            <button id="event-subtask-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save
-            </button>
-        </div>
-    </footer>
-</section>
+#include("templates/admin/dialogs/plan-dialog.vm")
+#include("templates/admin/dialogs/domain-dialog.vm")
+#include("templates/admin/dialogs/component-dialog.vm")
+#include("templates/admin/dialogs/task-dialog.vm")
+#include("templates/admin/dialogs/subtask-dialog.vm")
 
 <script type="text/javascript">
-    #include("templates/admin/event-plans.js")
+    #include("templates/admin/model/plans-list.js")
+    #include("templates/admin/model/component.js")
+    #include("templates/admin/model/domain.js")
+    #include("templates/admin/model/plan.js")
+    #include("templates/admin/model/task.js")
+    #include("templates/admin/model/subtask.js")
+    #include("templates/admin/rest-manager.js")
+    #include("templates/admin/button-listener.js")
 </script>
 </body>
 </html>

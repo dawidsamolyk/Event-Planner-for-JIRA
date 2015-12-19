@@ -1,0 +1,66 @@
+<section role="dialog" id="event-plan-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <header class="aui-dialog2-header">
+        <h2 class="aui-dialog2-header-main">Event Organization Plan Configuration</h2>
+    </header>
+    <div class="aui-dialog2-content">
+        <form class="aui" id="event-plan-configuration" action="#" method="post">
+            <div class="field-group" id="event-name-group">
+                <label for="plan-name">Name<span class="aui-icon icon-required">(required)</span></label>
+                <input id="plan-name" name="plan-name" type="text">
+
+                <div class="description" id="plan-name-description">Name of the plan.</div>
+            </div>
+            <div class="field-group" id="event-description-group">
+                <label for="plan-description">Description</label>
+                <input id="plan-description" name="plan-description" type="text">
+
+                <div class="description" id="plan-description-description">Description of the plan.</div>
+            </div>
+            <div class="field-group" id="event-time-group">
+                <label for="plan-time">Time to completion
+                    <span class="aui-icon icon-required">(required)</span></label>
+                <input id="plan-time" name="plan-time" type="text">
+
+                <div class="description" id="plan-time-description">Estimated time for event organization.</div>
+            </div>
+            <div class="field-group">
+                <label for="plan-domains">Domains<span
+                        class="aui-icon icon-required">(required)</span></label>
+                <select class="multi-select" multiple="multiple" size="$DOMAINS.size()" id="plan-domains"
+                        name="plan-domains" title="Domain">
+                </select>
+                <br />
+                <div class="aui-buttons">
+                    <button id="add-domain-button" class="aui-button trigger-dialog">
+                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                        Add new Domain
+                    </button>
+                </div>
+
+                <div class="description" id="plan-domains-description">Event domains.</div>
+            </div>
+            <div class="field-group">
+                <label for="plan-components">Components<span
+                        class="aui-icon icon-required">(required)</span></label>
+                <select class="multi-select" multiple="multiple" size="$COMPONENTS.size()" id="plan-components"
+                        name="plan-components" title="Components">
+                </select>
+                <br />
+                <div class="aui-buttons">
+                    <button id="add-component-button" class="aui-button trigger-dialog">
+                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                        Add new Component
+                    </button>
+                </div>
+
+                <div class="description" id="plan-components-description">Elements of an event.</div>
+            </div>
+        </form>
+    </div>
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button id="event-plan-dialog-cancel-button" class="aui-button">Cancel</button>
+            <button id="event-plan-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save</button>
+        </div>
+    </footer>
+</section>

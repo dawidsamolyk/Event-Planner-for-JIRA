@@ -6,6 +6,7 @@ import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.project.plan.rest.manager.*;
+import net.java.ao.Query;
 import net.java.ao.RawEntity;
 
 import javax.annotation.Nonnull;
@@ -136,11 +137,69 @@ public class ActiveObjectsService {
      * @param type Type of entities to get.
      * @return Database objects of specified type.
      */
-    public <T extends RawEntity<K>, K> List<T> get(@Nonnull final Class<T> type) {
+    public <T extends RawEntity<Integer>> List<T> get(@Nonnull final Class<T> type) {
         if (type == null) {
             return new ArrayList<T>();
         }
         return newArrayList(activeObjectsService.find(type));
+    }
+
+    /**
+     * Deletes specified entity (classifying by type and ID) with associated relations Entities.
+     *
+     * @param type Type of Entity.
+     * @param id   Id of Entity.
+     * @return Indicates that Entity was deleted.
+     */
+    public boolean delete(@Nonnull final Class<? extends RawEntity<Integer>> type, @Nonnull final String id) {
+        if (type == null || id == null || id.isEmpty()) {
+            return false;
+        }
+        RawEntity[] result = activeObjectsService.find(type, Query.select().where("ID = " + id));
+
+        if (result == null || result.length == 0) {
+            return false;
+        }
+        deleteWithRelations(result);
+        return true;
+    }
+
+    private void deleteWithRelations(@Nonnull final RawEntity[] entities) {
+        for (RawEntity each : entities) {
+            RawEntity[] relations = getRelations(each);
+            activeObjectsService.delete(relations);
+        }
+        activeObjectsService.delete(entities);
+    }
+
+    private RawEntity[] getRelations(RawEntity entity) {
+        if (entity instanceof Plan) {
+            return getRelations((Plan) entity);
+        }
+        if (entity instanceof Domain) {
+            return getRelations((Domain) entity);
+        }
+        if (entity instanceof Component) {
+            return getRelations((Component) entity);
+        }
+        return new RawEntity[]{};
+    }
+
+    private RawEntity[] getRelations(@Nonnull final Plan entity) {
+        List<RawEntity> result = new ArrayList<RawEntity>();
+
+        result.addAll(Arrays.asList(activeObjectsService.find(PlanToDomainRelation.class, Query.select().where(PlanToDomainRelation.PLAN + "_ID = ?", entity.getID()))));
+        result.addAll(Arrays.asList(activeObjectsService.find(PlanToComponentRelation.class, Query.select().where(PlanToComponentRelation.PLAN + "_ID = ?", entity.getID()))));
+
+        return result.toArray(new RawEntity[result.size()]);
+    }
+
+    private RawEntity[] getRelations(@Nonnull final Domain entity) {
+        return activeObjectsService.find(PlanToDomainRelation.class, Query.select().where(PlanToDomainRelation.DOMAIN + "_ID = ?", entity.getID()));
+    }
+
+    private RawEntity[] getRelations(@Nonnull final Component entity) {
+        return activeObjectsService.find(PlanToComponentRelation.class, Query.select().where(PlanToComponentRelation.COMPONENT + "_ID = ?", entity.getID()));
     }
 
     /**
@@ -151,7 +210,7 @@ public class ActiveObjectsService {
 
         for (Domain eachDomain : get(Domain.class)) {
             List<String> plansNames = new ArrayList<String>();
-            for(Plan eachPlan : eachDomain.getPlans()) {
+            for (Plan eachPlan : eachDomain.getPlans()) {
                 plansNames.add(eachPlan.getName());
             }
             result.put(eachDomain.getName(), plansNames);
@@ -180,5 +239,6 @@ public class ActiveObjectsService {
     public void deleteAll(@Nonnull final Class<? extends RawEntity> type) {
         activeObjectsService.delete(activeObjectsService.find(type));
     }
+
 
 }

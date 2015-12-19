@@ -13,7 +13,7 @@ import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.util.I18nHelper;
 import com.atlassian.jira.web.HttpServletVariables;
 import com.atlassian.sal.api.message.I18nResolver;
-import edu.uz.jira.event.planner.project.configuration.EventPlanConfigWebworkAction;
+import edu.uz.jira.event.planner.project.configuration.EventPlanConfigurationAction;
 import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
@@ -96,7 +96,7 @@ public class EventPlanConfigWebworkActionTest {
         Mockito.when(mockRequest.getParameter("project-key")).thenReturn("ABC");
         Mockito.when(mockHttpVariables.getHttpRequest()).thenReturn(mockRequest);
         Mockito.when(mockProjectManager.getProjectObjByKey("ABC")).thenReturn(mock(Project.class));
-        EventPlanConfigWebworkAction fixture = new EventPlanConfigWebworkAction(mocki18n, activeObjectsService);
+        EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
 
         String result = fixture.execute();
 
@@ -114,7 +114,7 @@ public class EventPlanConfigWebworkActionTest {
         List<Version> emptyList = new ArrayList<Version>();
         Mockito.when(mockProject.getVersions()).thenReturn(emptyList);
         Mockito.when(mockProjectManager.getProjectObjByKey("ABC")).thenReturn(mockProject);
-        EventPlanConfigWebworkAction fixture = new EventPlanConfigWebworkAction(mocki18n, activeObjectsService);
+        EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
 
         String result = fixture.execute();
 
@@ -148,13 +148,13 @@ public class EventPlanConfigWebworkActionTest {
                         return mockVersion;
                     }
                 });
-        EventPlanConfigWebworkAction fixture = new EventPlanConfigWebworkAction(mocki18n, activeObjectsService);
+        EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
 
         fixture.execute();
 
         Collection<Version> versions = mockProject.getVersions();
         Version version = versions.iterator().next();
-        DateFormat format = new SimpleDateFormat(EventPlanConfigWebworkAction.DUE_DATE_FORMAT, fixture.getLocale());
+        DateFormat format = new SimpleDateFormat(EventPlanConfigurationAction.DUE_DATE_FORMAT, fixture.getLocale());
         Date releaseDate = format.parse(projectDueDate);
         assertEquals(releaseDate, version.getReleaseDate());
     }
@@ -170,7 +170,7 @@ public class EventPlanConfigWebworkActionTest {
         Project mockProject = mock(Project.class);
         Mockito.when(mockProject.getVersions()).thenReturn(new ArrayList<Version>());
         Mockito.when(mockProjectManager.getProjectObjByKey("ABC")).thenReturn(mockProject);
-        EventPlanConfigWebworkAction fixture = new EventPlanConfigWebworkAction(mocki18n, activeObjectsService);
+        EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
 
         String result = fixture.execute();
 
@@ -188,7 +188,7 @@ public class EventPlanConfigWebworkActionTest {
         Project mockProject = mock(Project.class);
         Mockito.when(mockProject.getVersions()).thenReturn(new ArrayList<Version>());
         Mockito.when(mockProjectManager.getProjectObjByKey("ABC")).thenReturn(mockProject);
-        EventPlanConfigWebworkAction fixture = new EventPlanConfigWebworkAction(mocki18n, activeObjectsService);
+        EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
 
         String result = fixture.execute();
 
@@ -203,7 +203,7 @@ public class EventPlanConfigWebworkActionTest {
         Mockito.when(mockRequest.getParameter("project-key")).thenReturn(null);
         Mockito.when(mockHttpVariables.getHttpRequest()).thenReturn(mockRequest);
         Mockito.when(mockProjectManager.getProjectObjByKey(null)).thenReturn(null);
-        EventPlanConfigWebworkAction fixture = new EventPlanConfigWebworkAction(mocki18n, activeObjectsService);
+        EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
 
         String result = fixture.execute();
 
@@ -222,7 +222,7 @@ public class EventPlanConfigWebworkActionTest {
         mockVersions.add(mock(Version.class));
         Mockito.when(mockProject.getVersions()).thenReturn(mockVersions);
         Mockito.when(mockProjectManager.getProjectObjByKey("ABC")).thenReturn(mockProject);
-        EventPlanConfigWebworkAction fixture = new EventPlanConfigWebworkAction(mocki18n, activeObjectsService);
+        EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
 
         String result = fixture.execute();
 
@@ -237,7 +237,7 @@ public class EventPlanConfigWebworkActionTest {
         mockVersions.add(mock(Version.class));
         Mockito.when(mockProject.getVersions()).thenReturn(mockVersions);
         Mockito.when(mockProjectManager.getProjectObjByKey("ABC")).thenReturn(mockProject);
-        EventPlanConfigWebworkAction fixture = new EventPlanConfigWebworkAction(mocki18n, activeObjectsService);
+        EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
 
         String result = fixture.execute();
 
@@ -261,7 +261,7 @@ public class EventPlanConfigWebworkActionTest {
         plans.add(secondTestPlanName);
         expectedResult.put(testDomainName, plans);
 
-        EventPlanConfigWebworkAction fixture = new EventPlanConfigWebworkAction(mocki18n, activeObjectsService);
+        EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
 
         Map<String, List<String>> result = fixture.getEventPlans();
 

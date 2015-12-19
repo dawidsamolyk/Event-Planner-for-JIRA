@@ -5,8 +5,8 @@
         <description>${project.description}</description>
         <version>${project.version}</version>
         <vendor name="${project.organization.name}" url="${project.organization.url}"/>
-        <param name="plugin-icon">images/icons/pluginIcon.png</param>
-        <param name="plugin-logo">images/pluginLogo.png</param>
+        <param name="plugin-icon">images/icons/projects/event-organization-plan-project-icon.png</param>
+        <param name="plugin-logo">images/icons/projects/event-organization-plan-project-icon.png</param>
     </plugin-info>
 
     <resource type="i18n" name="i18n" location="event-planner"/>
@@ -41,8 +41,22 @@
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <dependency>com.atlassian.auiplugin:aui-form-validation</dependency>
-        <resource name="view" type="velocity" location="/templates/admin/event-plans.vm"/>
-        <resource type="download" name="js-script" location="/templates/admin/event-plans.js"/>
+
+        <resource type="velocity" name="view" location="/templates/admin/event-plans.vm"/>
+        <resource type="download" name="component-dialog.vm" location="/templates/admin/dialogs/component-dialog.vm"/>
+        <resource type="download" name="domain-dialog.vm" location="/templates/admin/dialogs/domain-dialog.vm"/>
+        <resource type="download" name="plan-dialog.vm" location="/templates/admin/dialogs/plan-dialog.vm"/>
+        <resource type="download" name="subtask-dialog.vm" location="/templates/admin/dialogs/subtask-dialog.vm"/>
+        <resource type="download" name="task-dialog.vm" location="/templates/admin/dialogs/task-dialog.vm"/>
+
+        <resource type="download" name="component.js" location="/templates/admin/model/component.js"/>
+        <resource type="download" name="domain.js" location="/templates/admin/model/domain.js"/>
+        <resource type="download" name="plan.js" location="/templates/admin/model/plan.js"/>
+        <resource type="download" name="plans-list.js" location="/templates/admin/model/plans-list.js"/>
+        <resource type="download" name="subtask.js" location="/templates/admin/model/subtask.js"/>
+        <resource type="download" name="task.js" location="/templates/admin/model/task.js"/>
+        <resource type="download" name="rest-manager.js" location="/templates/admin/rest-manager.js"/>
+        <resource type="download" name="button-listener.js" location="/templates/admin/button-listener.js"/>
     </servlet>
 
     <web-item key="event_plans" name="Event Organization Plans Link"
@@ -91,17 +105,30 @@
         <label key="due.date.indicator.title"/>
     </web-panel>
 
-    <webwork1 key="event-organization-config-webwork" name="EventPlanConfigWebwork"
+    <webwork1 key="event-organization-config-webwork" name="Event Organziation Plan Configuration Webwork"
               i18n-name-key="event.organization.config.webwork.name">
         <description key="event-organization-config-webwork-description">The Event Organization Configuration Webwork
             Plugin
         </description>
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
         <actions>
-            <action name="edu.uz.jira.event.planner.project.configuration.EventPlanConfigWebworkAction"
+            <action name="edu.uz.jira.event.planner.project.configuration.EventPlanConfigurationAction"
                     alias="EventOrganizationPlanConfiguration">
                 <view name="success">/templates/webworks/event/config/success.vm</view>
                 <view name="input">/templates/webworks/event/config/input.vm</view>
                 <view name="error">/templates/webworks/event/config/error.vm</view>
+            </action>
+            <action name="edu.uz.jira.event.planner.project.plan.action.OnlyShowInputAction"
+                    alias="DeleteEventOrganizationPlan">
+                <view name="input">/templates/admin/webworks/delete.vm</view>
+            </action>
+            <action name="edu.uz.jira.event.planner.project.plan.action.OnlyShowInputAction"
+                    alias="EditEventOrganizationPlan">
+                <view name="input">/templates/admin/webworks/edit.vm</view>
+            </action>
+            <action name="edu.uz.jira.event.planner.project.plan.action.OnlyShowInputAction"
+                    alias="ViewEventOrganizationPlan">
+                <view name="input">/templates/admin/webworks/view.vm</view>
             </action>
         </actions>
         <resource type="download" name="input-script" location="/templates/webworks/eventConfig/input.js"/>

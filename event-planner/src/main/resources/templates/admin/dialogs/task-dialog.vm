@@ -1,0 +1,52 @@
+<section role="dialog" id="event-task-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <header class="aui-dialog2-header">
+        <h2 class="aui-dialog2-header-main">Task definition</h2>
+    </header>
+    <div class="aui-dialog2-content">
+        <form class="aui" id="event-task-configuration" action="#" method="post">
+            <div class="field-group" id="task-name-group">
+                <label for="task-name">Name<span class="aui-icon icon-required">(required)</span></label>
+                <input id="task-name" name="task-name" type="text">
+
+                <div class="description" id="task-name-description">Name of the Task.</div>
+            </div>
+            <div class="field-group" id="task-description-group">
+                <label for="task-description">Description</label>
+                <input id="task-description" name="task-description" type="text">
+
+                <div class="description" id="task-description-description">Description of the Task.</div>
+            </div>
+            <div class="field-group" id="task-time-group">
+                <label for="task-time">Time to complete<span
+                        class="aui-icon icon-required">(required)</span></label>
+                <input id="task-time" name="task-time" type="text">
+
+                <div class="description" id="task-time-description">Estimated time to complete Task.
+                </div>
+            </div>
+            <div class="field-group">
+                <label for="task-subtasks">SubTasks</label>
+                <select class="multi-select" multiple="multiple" size="$SUBTASKS.size()" id="task-subtasks"
+                        name="task-subtasks" title="Sub-Tasks">
+                </select>
+                <br />
+                <div class="aui-buttons">
+                    <button id="add-subtask-button" class="aui-button trigger-dialog">
+                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                        Add new Sub-Task
+                    </button>
+                </div>
+
+                <div class="description" id="task-subtasks-description">Sub-Tasks to do for complete this Task.
+                </div>
+            </div>
+        </form>
+    </div>
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button id="event-task-dialog-cancel-button" class="aui-button">Cancel</button>
+            <button id="event-task-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save
+            </button>
+        </div>
+    </footer>
+</section>
