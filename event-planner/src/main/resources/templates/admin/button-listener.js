@@ -25,25 +25,25 @@ function ButtonListener(resource) {
             }
         );
     };
-    this.onSaveDoGetResourceAndFill = function(objectToFill) {
-        var rest = this.rest;
-        var resourceId = this.getResourceId();
+    this.onSaveDoGetAndSaveInto = function(destinationResource) {
+            var rest = this.rest;
+            var resource = this.resource;
 
-        AJS.$(this.getSaveButtonId()).click(
-            function(e) {
-                e.preventDefault();
-                rest.get(resourceId, objectToFill);
-            }
-        );
+            AJS.$(this.getSaveButtonId()).click(
+                function(e) {
+                    e.preventDefault();
+                    rest.get(resource.id, destinationResource);
+                }
+            );
     };
-    this.onSaveDoPutResource = function() {
+    this.onSaveDoPostResource = function() {
         var rest = this.rest;
         var resource = this.resource;
 
         AJS.$(this.getSaveButtonId()).click(
             function(e) {
                 e.preventDefault();
-                rest.put(resource);
+                rest.post(resource);
             }
         );
     };
@@ -57,17 +57,7 @@ function ButtonListener(resource) {
             }
         );
     };
-    this.onSaveDoGetAndSaveInto = function(destinationResource) {
-        var rest = this.rest;
-        var resource = this.resource;
 
-        AJS.$(this.getSaveButtonId()).click(
-            function(e) {
-                e.preventDefault();
-                rest.get(resource.id, destinationResource);
-            }
-        );
-    };
     this.onCancelCloseDialog = function() {
         var cancelButtonId = "#event-".concat(this.getResourceId()).concat("-dialog-cancel-button");
         var dialogId = this.getDialogId();
@@ -92,8 +82,6 @@ function ButtonListener(resource) {
             }
         );
     };
-    this.onDeleteDoDelete = function() {
-    }
 };
 
 var plansList = new PlansList();
@@ -111,7 +99,7 @@ AJS.$(document).ready(
 
 var subTaskListener = new ButtonListener(subTask);
     subTaskListener.onAddShowDialog();
-    subTaskListener.onSaveDoPutResource();
+    subTaskListener.onSaveDoPostResource();
     subTaskListener.onSaveHideDialog();
     subTaskListener.onSaveDoGetAndSaveInto(task);
     subTaskListener.onCancelCloseDialog();
@@ -119,7 +107,7 @@ var subTaskListener = new ButtonListener(subTask);
 var taskListener = new ButtonListener(task);
     taskListener.onShowDoGet([subTask]);
     taskListener.onAddShowDialog();
-    taskListener.onSaveDoPutResource();
+    taskListener.onSaveDoPostResource();
     taskListener.onSaveDoGetAndSaveInto(component);
     taskListener.onSaveHideDialog();
     taskListener.onCancelCloseDialog();
@@ -127,14 +115,14 @@ var taskListener = new ButtonListener(task);
 var componentListener = new ButtonListener(component);
     componentListener.onShowDoGet([task]);
     componentListener.onAddShowDialog();
-    componentListener.onSaveDoPutResource();
+    componentListener.onSaveDoPostResource();
     componentListener.onSaveDoGetAndSaveInto(plan);
     componentListener.onSaveHideDialog();
     componentListener.onCancelCloseDialog();
 
 var domainListener = new ButtonListener(domain);
     domainListener.onAddShowDialog();
-    domainListener.onSaveDoPutResource();
+    domainListener.onSaveDoPostResource();
     domainListener.onSaveHideDialog();
     domainListener.onSaveDoGetAndSaveInto(plan);
     domainListener.onCancelCloseDialog();
@@ -142,7 +130,7 @@ var domainListener = new ButtonListener(domain);
 var planListener = new ButtonListener(plan)
     planListener.onShowDoGet([domain, component]);
     planListener.onAddShowDialog();
-    planListener.onSaveDoPutResource();
+    planListener.onSaveDoPostResource();
     planListener.onSaveHideDialog();
-    planListener.onSaveDoGetResourceAndFill(plansList);
+    planListener.onSaveDoGetAndSaveInto(plansList);
     planListener.onCancelCloseDialog();

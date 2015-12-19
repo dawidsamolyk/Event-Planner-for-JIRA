@@ -128,7 +128,7 @@ public class EventComponentRestManagerTest {
         configuration.setName("Test name");
         configuration.setDescription("Test description");
 
-        Response result = fixture.put(configuration, mockRequest);
+        Response result = fixture.post(configuration, mockRequest);
 
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), result.getStatus());
     }

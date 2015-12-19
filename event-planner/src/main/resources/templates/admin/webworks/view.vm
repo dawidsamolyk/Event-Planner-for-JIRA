@@ -66,7 +66,7 @@
 
     #include("templates/admin/rest-manager.js")
     var rest = new RESTManager();
-        rest.post('plan', plan, getParameterByName('id'));
+        rest.getAsPost('plan', plan, getParameterByName('id'));
 
     AJS.$("#plan-close-button").click(
         function(e) {

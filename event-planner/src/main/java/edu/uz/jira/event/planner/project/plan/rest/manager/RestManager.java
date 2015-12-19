@@ -50,11 +50,11 @@ public abstract class RestManager {
     /**
      * Handles PUT request.
      *
-     * @param resource Resource with data to put.
+     * @param resource Resource with data to post.
      * @param request  Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
      */
-    public Response put(final EventRestConfiguration resource, @Context final HttpServletRequest request) {
+    public Response post(final EventRestConfiguration resource, @Context final HttpServletRequest request) {
         if (!isAdminUser(userManager.getRemoteUser(request))) {
             return buildStatus(Response.Status.UNAUTHORIZED);
         }

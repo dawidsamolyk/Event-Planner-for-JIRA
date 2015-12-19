@@ -1,10 +1,10 @@
 function RESTManager() {
     this.baseUrl = AJS.contextPath() + "/rest/event-plans/1.0/";
 
-    this.put = function(resource) {
+    this.post = function(resource) {
         jQuery.ajax({
             url: this.baseUrl + resource.id,
-            type: "PUT",
+            type: "POST",
             contentType: "application/json",
             data: resource.getJson(),
             processData: false,
@@ -28,7 +28,7 @@ function RESTManager() {
         });
     };
 
-    this.post = function(sourceId, destinationResource, objectId) {
+    this.getAsPost = function(sourceId, destinationResource, objectId) {
             jQuery.ajax({
                 url: this.baseUrl + sourceId,
                 type: "POST",

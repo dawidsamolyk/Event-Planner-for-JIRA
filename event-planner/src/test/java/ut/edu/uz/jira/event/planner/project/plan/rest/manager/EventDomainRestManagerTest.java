@@ -136,7 +136,7 @@ public class EventDomainRestManagerTest {
         configuration.setDescription("Test description");
         configuration.setTasks(new String[]{firstTask.getName(), secondTask.getName()});
 
-        Response result = fixture.put(configuration, mockRequest);
+        Response result = fixture.post(configuration, mockRequest);
 
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), result.getStatus());
     }

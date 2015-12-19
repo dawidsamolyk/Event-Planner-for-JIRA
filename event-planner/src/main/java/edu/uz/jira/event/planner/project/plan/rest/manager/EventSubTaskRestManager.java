@@ -63,15 +63,15 @@ public class EventSubTaskRestManager extends RestManager {
     }
 
     /**
-     * @param resource Resource with data to put.
+     * @param resource Resource with data to post.
      * @param request  Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
-     * @see {@link RestManager#put(EventRestConfiguration, HttpServletRequest)}
+     * @see {@link RestManager#post(EventRestConfiguration, HttpServletRequest)}
      */
-    @PUT
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(final Configuration resource, @Context final HttpServletRequest request) {
-        return super.put(resource, request);
+    public Response post(final Configuration resource, @Context final HttpServletRequest request) {
+        return super.post(resource, request);
     }
 
     /**

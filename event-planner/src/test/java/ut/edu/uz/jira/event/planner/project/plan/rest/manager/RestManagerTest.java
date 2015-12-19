@@ -107,7 +107,7 @@ public class RestManagerTest {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
         RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        Response result = fixture.put(getEmptyDomain(), mockRequest);
+        Response result = fixture.post(getEmptyDomain(), mockRequest);
 
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }
@@ -127,7 +127,7 @@ public class RestManagerTest {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
         RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        Response result = fixture.put(getEmptyDomain(), mockRequest);
+        Response result = fixture.post(getEmptyDomain(), mockRequest);
 
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }
@@ -136,7 +136,7 @@ public class RestManagerTest {
     public void on_Putshould_Response_No_Conten_When_Resource_Is_Null() {
         RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        Response result = fixture.put(null, mockRequest);
+        Response result = fixture.post(null, mockRequest);
 
         assertEquals(Response.Status.NO_CONTENT.getStatusCode(), result.getStatus());
     }
@@ -146,7 +146,7 @@ public class RestManagerTest {
     public void should_Not_Put_Empty_Configuration() {
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        Response result = fixture.put(getEmptyDomain(), mockRequest);
+        Response result = fixture.post(getEmptyDomain(), mockRequest);
 
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), result.getStatus());
     }
@@ -161,7 +161,7 @@ public class RestManagerTest {
         invalidConfig.setComponents(new String[]{"Test component"});
         invalidConfig.setTime("Test time");
 
-        Response result = fixture.put(invalidConfig, mockRequest);
+        Response result = fixture.post(invalidConfig, mockRequest);
 
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), result.getStatus());
     }
