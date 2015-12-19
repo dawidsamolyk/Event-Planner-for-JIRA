@@ -33,7 +33,6 @@ import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @Transactional
@@ -94,7 +93,7 @@ public class EventComponentRestManagerTest {
         testHelper.createDomain(testName, testDescription);
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        fixture.post(null, mockRequest);
+        fixture.get(mockRequest);
 
         EventDomainRestManager.Configuration expected = new EventDomainRestManager.Configuration();
         expected.setName(testName);
@@ -108,18 +107,18 @@ public class EventComponentRestManagerTest {
         testHelper.createDomain("Domain 2", "Description");
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        fixture.post(null, mockRequest);
+        fixture.get(mockRequest);
 
-        assertTrue(transactionResult.length == 2);
+        assertEquals(2, transactionResult.length);
     }
 
     @Test
     public void shouldGetEmptyDomainsArrayWhenThereIsNoDomainsInDatabase() {
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        fixture.post(null, mockRequest);
+        fixture.get( mockRequest);
 
-        assertTrue(transactionResult.length == 0);
+        assertEquals(0, transactionResult.length);
     }
 
     @Test

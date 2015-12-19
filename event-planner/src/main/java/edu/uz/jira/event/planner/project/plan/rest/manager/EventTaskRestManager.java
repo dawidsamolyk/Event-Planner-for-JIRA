@@ -169,6 +169,14 @@ public class EventTaskRestManager extends RestManager {
                     && StringUtils.isNotBlank(getTime());
         }
 
+        /**
+         * @see {@link EventRestConfiguration#getEmptyCopy()}
+         */
+        @Override
+        public EventRestConfiguration getEmptyCopy() {
+            return new Configuration();
+        }
+
         public String getName() {
             return name;
         }

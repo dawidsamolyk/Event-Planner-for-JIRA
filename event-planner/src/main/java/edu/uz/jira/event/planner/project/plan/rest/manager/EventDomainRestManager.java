@@ -113,6 +113,13 @@ public class EventDomainRestManager extends RestManager {
         }
 
         /**
+         * @see {@link EventRestConfiguration#getEmptyCopy()}
+         */
+        public EventRestConfiguration getEmptyCopy() {
+            return new Configuration();
+        }
+
+        /**
          * @see {@link EventRestConfiguration#fill(Entity)}
          */
         @Override

@@ -81,9 +81,9 @@ public abstract class RestManager {
         return Response.ok(transactionTemplate.execute(new TransactionCallback<EventRestConfiguration[]>() {
             public EventRestConfiguration[] doInTransaction() {
                 if (id == null || id.isEmpty()) {
-                    return getEntities(entityType, Query.select());
+                    return new EventRestConfiguration[]{};
                 }
-                return new EventRestConfiguration[]{};
+                return getEntities(entityType, Query.select().where("ID = ?", id));
             }
         })).build();
     }
@@ -149,7 +149,7 @@ public abstract class RestManager {
     }
 
     private EventRestConfiguration createFrom(@Nonnull final Entity entity) {
-        return emptyConfiguration.fill(entity);
+        return emptyConfiguration.getEmptyCopy().fill(entity);
     }
 
     private Response checkArgumentAndResponse(final Entity entity) {

@@ -34,7 +34,6 @@ import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @Transactional
@@ -93,13 +92,13 @@ public class EventDomainRestManagerTest {
     }
 
     @Test
-    public void shouldGetComponentFromDatabase() throws SQLException {
+    public void should_Get_Component_From_Database() throws SQLException {
         String testName = "Test name";
         String testDescription = "Test description";
         testHelper.createComponent(testName, testDescription);
         EventComponentRestManager fixture = new EventComponentRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        fixture.post(null, mockRequest);
+        fixture.get(mockRequest);
 
         EventComponentRestManager.Configuration expected = new EventComponentRestManager.Configuration();
         expected.setName(testName);
@@ -108,27 +107,27 @@ public class EventDomainRestManagerTest {
     }
 
     @Test
-    public void shouldGetManyComponentsFromDatabase() throws SQLException {
+    public void should_Get_Many_Components_From_Database() throws SQLException {
         testHelper.createComponent("Component 1", "Description");
         testHelper.createComponent("Component 2", "Description");
         EventComponentRestManager fixture = new EventComponentRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        fixture.post(null, mockRequest);
+        fixture.get(mockRequest);
 
-        assertTrue(transactionResult.length == 2);
+        assertEquals(2, transactionResult.length);
     }
 
     @Test
-    public void shouldGetEmptyComponentArrayWhenThereIsNoDomainsInDatabase() {
+    public void should_Get_Empty_Component_Array_When_There_Is_No_Domains_In_Database() {
         EventComponentRestManager fixture = new EventComponentRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        fixture.post(null, mockRequest);
+        fixture.get(mockRequest);
 
-        assertTrue(transactionResult.length == 0);
+        assertEquals(0, transactionResult.length);
     }
 
     @Test
-    public void shouldPutNewComponent() {
+    public void should_Put_New_Component() {
         Task firstTask = testHelper.createTaskNamed("Test task1");
         Task secondTask = testHelper.createTaskNamed("Test task2");
         EventComponentRestManager fixture = new EventComponentRestManager(mockUserManager, mockTransactionTemplateForPut, planService);

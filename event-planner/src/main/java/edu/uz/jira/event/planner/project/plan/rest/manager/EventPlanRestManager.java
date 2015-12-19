@@ -165,6 +165,14 @@ public class EventPlanRestManager extends RestManager {
                     && TEXT_UTILS.isNotBlank(getComponents());
         }
 
+        /**
+         * @see {@link EventRestConfiguration#getEmptyCopy()}
+         */
+        @Override
+        public EventRestConfiguration getEmptyCopy() {
+            return new Configuration();
+        }
+
         public String getName() {
             return name;
         }

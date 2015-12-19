@@ -21,4 +21,9 @@ public interface EventRestConfiguration {
      * @return Are all required parameters fullfilled.
      */
     boolean isFullfilled();
+
+    /**
+     * @return Copy of object without filled fields.
+     */
+    EventRestConfiguration getEmptyCopy();
 }

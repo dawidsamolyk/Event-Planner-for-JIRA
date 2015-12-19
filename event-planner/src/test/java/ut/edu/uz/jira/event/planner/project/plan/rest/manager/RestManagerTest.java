@@ -12,6 +12,7 @@ import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.RestManager;
@@ -44,10 +45,11 @@ public class RestManagerTest {
     private EntityManager entityManager;
     private MockHttpServletRequest mockRequest;
     private UserManager mockUserManager;
-    private TransactionTemplate mockTransactionTemplate;
+    private TransactionTemplate mockTransactionTemplateForGet;
+    private TransactionTemplate mockTransactionTemplateForPut;
     private ActiveObjectsService planService;
     private ActiveObjects activeObjects;
-    private Object transactionResult;
+    private EventRestConfiguration[] doGetTransactionResult;
     private ActiveObjectsTestHelper testHelper;
 
     private EventDomainRestManager.Configuration getEmptyDomain() {
@@ -62,13 +64,22 @@ public class RestManagerTest {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(mock(UserProfile.class));
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(true);
 
-        mockTransactionTemplate = mock(TransactionTemplate.class);
-        Mockito.when(mockTransactionTemplate.execute(Mockito.any(TransactionCallback.class))).thenAnswer(new Answer<Object>() {
+        mockTransactionTemplateForGet = mock(TransactionTemplate.class);
+        Mockito.when(mockTransactionTemplateForGet.execute(Mockito.any(TransactionCallback.class))).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                TransactionCallback callback = (TransactionCallback) invocation.getArguments()[0];
-                transactionResult = callback.doInTransaction();
-                return transactionResult;
+                TransactionCallback<EventRestConfiguration[]> callback = (TransactionCallback) invocation.getArguments()[0];
+                doGetTransactionResult = callback.doInTransaction();
+                return doGetTransactionResult;
+            }
+        });
+
+        mockTransactionTemplateForPut = mock(TransactionTemplate.class);
+        Mockito.when(mockTransactionTemplateForPut.execute(Mockito.any(TransactionCallback.class))).thenAnswer(new Answer<Response>() {
+            @Override
+            public Response answer(InvocationOnMock invocation) throws Throwable {
+                TransactionCallback<Response> callback = (TransactionCallback) invocation.getArguments()[0];
+                return callback.doInTransaction();
             }
         });
 
@@ -82,9 +93,9 @@ public class RestManagerTest {
     }
 
     @Test
-    public void onGetShouldResponseUnauthorizedWhenUserIsNull() {
+    public void on_Get_Should_Response_Unauthorized_When_User_Is_Null() {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
-        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
+        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.post(null, mockRequest);
 
@@ -92,9 +103,9 @@ public class RestManagerTest {
     }
 
     @Test
-    public void onPutShouldResponseUnauthorizedWhenUserIsNull() {
+    public void on_Put_Should_Response_Unauthorized_When_User_Is_Null() {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
-        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
+        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.put(getEmptyDomain(), mockRequest);
 
@@ -102,9 +113,9 @@ public class RestManagerTest {
     }
 
     @Test
-    public void onGetshouldResponseUnauthorizedWhenUserIsNotAdmin() {
+    public void on_Getshould_Response_Unauthorized_When_User_Is_Not_Admin() {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
-        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
+        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.post(null, mockRequest);
 
@@ -112,9 +123,9 @@ public class RestManagerTest {
     }
 
     @Test
-    public void onPutshouldResponseUnauthorizedWhenUserIsNotAdmin() {
+    public void on_Putshould_Response_Unauthorized_When_User_Is_Not_Admin() {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
-        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
+        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.put(getEmptyDomain(), mockRequest);
 
@@ -122,8 +133,8 @@ public class RestManagerTest {
     }
 
     @Test
-    public void onPutshouldResponseNoContenWhenResourceIsNull() {
-        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
+    public void on_Putshould_Response_No_Conten_When_Resource_Is_Null() {
+        RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.put(null, mockRequest);
 
@@ -132,8 +143,8 @@ public class RestManagerTest {
 
 
     @Test
-    public void shouldNotPutEmptyConfiguration() {
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
+    public void should_Not_Put_Empty_Configuration() {
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.put(getEmptyDomain(), mockRequest);
 
@@ -141,8 +152,8 @@ public class RestManagerTest {
     }
 
     @Test
-    public void onPutShouldNotAcceptWhenTryingToPutConfigurationOfInvalidResource() throws SQLException {
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
+    public void on_Put_Should_Not_Accept_When_Trying_To_Put_Configuration_Of_Invalid_Resource() throws SQLException {
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
         EventPlanRestManager.Configuration invalidConfig = new EventPlanRestManager.Configuration();
         invalidConfig.setName("Test name");
         invalidConfig.setDescription("Test description");
@@ -153,5 +164,34 @@ public class RestManagerTest {
         Response result = fixture.put(invalidConfig, mockRequest);
 
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void on_Post_Should_Return_Only_One_Resource_With_Specified_Id() throws SQLException {
+        Domain firstDomain = testHelper.createDomain("name", "descr");
+        testHelper.createDomain("test", "test");
+
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response result = fixture.post(Integer.toString(firstDomain.getID()), mockRequest);
+
+        assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
+        assertEquals(1, doGetTransactionResult.length);
+        assertEquals(firstDomain.getName(), ((EventDomainRestManager.Configuration) doGetTransactionResult[0]).getName());
+    }
+
+    @Test
+    public void on_Get_Should_Return_All_Resources() throws SQLException {
+        Domain firstDomain = testHelper.createDomain("name", "descr");
+        Domain secondDomain = testHelper.createDomain("test", "test");
+
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response result = fixture.get(mockRequest);
+
+        assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
+        assertEquals(2, doGetTransactionResult.length);
+        assertEquals(firstDomain.getName(), ((EventDomainRestManager.Configuration) doGetTransactionResult[0]).getName());
+        assertEquals(secondDomain.getName(), ((EventDomainRestManager.Configuration) doGetTransactionResult[1]).getName());
     }
 }
