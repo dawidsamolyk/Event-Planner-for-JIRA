@@ -7,6 +7,7 @@ import com.atlassian.sal.api.user.UserProfile;
 import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import net.java.ao.Entity;
+import net.java.ao.Query;
 import net.java.ao.RawEntity;
 
 import javax.annotation.Nonnull;
@@ -67,21 +68,39 @@ public abstract class RestManager {
     }
 
     /**
-     * Handles GET request.
+     * Handles POST request.
      *
+     * @param id      Id of Entity to get.
      * @param request Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
      */
-    public Response get(final String id, @Context final HttpServletRequest request) {
+    public Response post(final String id, @Context final HttpServletRequest request) {
         if (!isAdminUser(userManager.getRemoteUser(request))) {
             return buildStatus(Response.Status.UNAUTHORIZED);
         }
         return Response.ok(transactionTemplate.execute(new TransactionCallback<EventRestConfiguration[]>() {
             public EventRestConfiguration[] doInTransaction() {
                 if (id == null || id.isEmpty()) {
-                    return doGetAll(entityType, emptyConfiguration);
+                    return getEntities(entityType, Query.select());
                 }
-                return null;
+                return new EventRestConfiguration[]{};
+            }
+        })).build();
+    }
+
+    /**
+     * Handles GET request.
+     *
+     * @param request Http Servlet request.
+     * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
+     */
+    public Response get(@Context final HttpServletRequest request) {
+        if (!isAdminUser(userManager.getRemoteUser(request))) {
+            return buildStatus(Response.Status.UNAUTHORIZED);
+        }
+        return Response.ok(transactionTemplate.execute(new TransactionCallback<EventRestConfiguration[]>() {
+            public EventRestConfiguration[] doInTransaction() {
+                return getEntities(entityType, Query.select());
             }
         })).build();
     }
@@ -113,8 +132,8 @@ public abstract class RestManager {
         });
     }
 
-    private EventRestConfiguration[] doGetAll(@Nonnull final Class<? extends RawEntity> entityType, @Nonnull final EventRestConfiguration defaultResult) {
-        List<? extends RawEntity> entities = activeObjectsService.get(entityType);
+    private EventRestConfiguration[] getEntities(@Nonnull final Class<? extends RawEntity> entityType, @Nonnull final Query query) {
+        List<? extends RawEntity> entities = activeObjectsService.get(entityType, query);
         int numberOfEntities = entities.size();
 
         EventRestConfiguration[] result = new EventRestConfiguration[numberOfEntities];

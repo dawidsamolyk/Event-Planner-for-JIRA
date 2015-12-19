@@ -108,6 +108,7 @@ public class EventPlanRestManagerTest {
         expected.setDomains(new String[]{testDomainName});
         expected.setComponents(new String[]{testComponentName});
         expected.setTime(testTime);
+        expected.setId(((EventPlanRestManager.Configuration)transactionResult[0]).getId());
         assertEquals(expected, transactionResult[0]);
     }
 

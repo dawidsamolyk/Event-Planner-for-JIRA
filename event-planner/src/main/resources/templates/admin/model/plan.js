@@ -18,7 +18,7 @@ function Plan() {
 
     this.setFromJson = function(resources) {
         var isComponent = (resources.length > 0 && resources[0].hasOwnProperty('tasks'));
-        var isPlan = (resources.length > 0 && resources[0].hasOwnProperty('domains'));
+        var isPlan = (resources.length > 0 && resources[0].hasOwnProperty('domains') && resources[0].hasOwnProperty('components'));
 
         if(isPlan === true) {
             this.setFromPlanObject(resources);
@@ -46,19 +46,16 @@ function Plan() {
         return "<".concat(this.elementsTag).concat(">").concat(value).concat("</").concat(this.elementsTag).concat(">");
     };
 
-    this.setFromPlanObject = function(plan) {
-        console.log(plan);
-        var name = this.getName().attr("value");
-        name = plan.name;
-        var description = this.getDescription().attr("value");
-        description = plan.description;
-        var time = this.getTimeToComplete().attr("value");
-        time = plan.time;
+    this.setFromPlanObject = function(plans) {
+        var plan = plans[0];
+
+        this.getName().append(plan.name);
+        this.getDescription().append(plan.description);
+        this.getTimeToComplete().append(plan.time);
 
         for(eachKey in plan.domains) {
             this.getDomains().append(this.getElement(plan.domains[eachKey]));
         }
-
         for(eachKey in plan.components) {
             this.getComponents().append(this.getElement(plan.components[eachKey]));
         }

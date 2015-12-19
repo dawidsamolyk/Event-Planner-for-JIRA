@@ -19,25 +19,25 @@
     </header>
     <div class="aui-dialog2-content">
         <div class="field-group" id="event-name-group">
-            <label for="plan-name">Name: </label>
-            <p id="plan-name"></p>
+            <label for="plan-name" style="font-weight:bold">Name: </label>
+            <span id="plan-name"></span>
         </div>
         <div class="field-group" id="event-description-group">
-            <label for="plan-description">Description: </label>
-            <p id="plan-description"></p>
+            <label for="plan-description" style="font-weight:bold">Description: </label>
+            <span id="plan-description"></span>
         </div>
         <div class="field-group" id="event-time-group">
-            <label for="plan-time">Estimate time to complete: </label>
-            <p id="plan-time"></p>
+            <label for="plan-time" style="font-weight:bold">Estimate time to complete: </label>
+            <span id="plan-time"></span>
         </div>
         <div class="field-group">
-            <label for="plan-domains">Domains</label>
+            <label for="plan-domains" style="font-weight:bold">Domains:</label>
             <ul id="plan-domains">
 
             </ul>
         </div>
         <div class="field-group">
-            <label for="plan-components">Components</label>
+            <label for="plan-components" style="font-weight:bold">Components:</label>
             <ul id="plan-components">
 
             </ul>
@@ -66,7 +66,7 @@
 
     #include("templates/admin/rest-manager.js")
     var rest = new RESTManager();
-        rest.get('plan', plan, getParameterByName("id"));
+        rest.post('plan', plan, getParameterByName('id'));
 
     AJS.$("#plan-close-button").click(
         function(e) {
@@ -76,6 +76,7 @@
             window.history.back(-1);
         }
     );
+
 </script>
 </body>
 </html>

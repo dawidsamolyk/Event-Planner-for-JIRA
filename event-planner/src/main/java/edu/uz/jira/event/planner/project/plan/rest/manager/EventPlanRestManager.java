@@ -44,28 +44,27 @@ public class EventPlanRestManager extends RestManager {
     }
 
     /**
-     * @param id      Id of Plan to get. If not specified, all Plans will be returned.
+     * @param id      Id of Plan to post. If not specified, all Plans will be returned.
      * @param request Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
-     * @see {@link RestManager#get(String, HttpServletRequest)}
+     * @see {@link RestManager#post(String, HttpServletRequest)}
      */
-    @GET
+    @POST
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(final String id, @Context final HttpServletRequest request) {
-        return super.get(id, request);
+    public Response post(String id, @Context final HttpServletRequest request) {
+        return super.post(id, request);
     }
-
 
     /**
      * @param request Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
-     * @see {@link RestManager#get(String, HttpServletRequest)}
+     * @see {@link RestManager#get(HttpServletRequest)}
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response get(@Context final HttpServletRequest request) {
-        return super.get(null, request);
+        return super.get(request);
     }
 
     /**
@@ -244,6 +243,7 @@ public class EventPlanRestManager extends RestManager {
 
             Configuration that = (Configuration) o;
 
+            if (getId() != that.getId()) return false;
             if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
             if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
                 return false;
@@ -257,7 +257,9 @@ public class EventPlanRestManager extends RestManager {
          */
         @Override
         public int hashCode() {
-            return getName() != null ? getName().hashCode() : 0;
+            int result = getId();
+            result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+            return result;
         }
     }
 }

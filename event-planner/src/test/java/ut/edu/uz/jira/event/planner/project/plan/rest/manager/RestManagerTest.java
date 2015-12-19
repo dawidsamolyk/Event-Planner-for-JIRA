@@ -86,7 +86,7 @@ public class RestManagerTest {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
         RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-        Response result = fixture.get(null, mockRequest);
+        Response result = fixture.post(null, mockRequest);
 
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }
@@ -106,7 +106,7 @@ public class RestManagerTest {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
         RestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplate, planService);
 
-        Response result = fixture.get(null, mockRequest);
+        Response result = fixture.post(null, mockRequest);
 
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }

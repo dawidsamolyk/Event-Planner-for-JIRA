@@ -115,7 +115,7 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void shouldNotGetAnyIfInputTypeIsNull() {
-        List<RawEntity<Integer>> result = service.get(null);
+        List<RawEntity<Integer>> result = service.get(null, Query.select());
 
         assertTrue(result.isEmpty());
     }
@@ -127,7 +127,7 @@ public class ActiveObjectsServiceTest {
         activeObjects.create(Task.class).save();
         activeObjects.create(Domain.class).save();
 
-        List<Plan> result = service.get(Plan.class);
+        List<Plan> result = service.get(Plan.class, Query.select());
 
         assertEquals(2, result.size());
     }

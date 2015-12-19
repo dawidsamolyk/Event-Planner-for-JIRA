@@ -155,14 +155,15 @@ public class ActiveObjectsService {
     }
 
     /**
-     * @param type Type of entities to get.
+     * @param type  Type of entities to get.
+     * @param query
      * @return Database objects of specified type.
      */
-    public <T extends RawEntity<Integer>> List<T> get(@Nonnull final Class<T> type) {
+    public <T extends RawEntity<Integer>> List<T> get(@Nonnull final Class<T> type, @Nonnull final Query query) {
         if (type == null) {
             return new ArrayList<T>();
         }
-        return newArrayList(activeObjectsService.find(type));
+        return newArrayList(activeObjectsService.find(type, query));
     }
 
     /**
@@ -229,7 +230,7 @@ public class ActiveObjectsService {
     public Map<String, List<String>> getEventPlansSortedByDomain() {
         Map<String, List<String>> result = new HashMap<String, List<String>>();
 
-        for (Domain eachDomain : get(Domain.class)) {
+        for (Domain eachDomain : get(Domain.class, Query.select())) {
             List<String> plansNames = new ArrayList<String>();
             for (Plan eachPlan : eachDomain.getPlans()) {
                 plansNames.add(eachPlan.getName());

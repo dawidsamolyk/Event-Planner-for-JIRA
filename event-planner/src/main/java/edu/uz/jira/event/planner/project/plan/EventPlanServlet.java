@@ -4,7 +4,6 @@ import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import com.atlassian.templaterenderer.TemplateRenderer;
-import edu.uz.jira.event.planner.project.plan.model.*;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServlet;
@@ -12,14 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Servlet which handles Event Plan Configuration page.
  */
 public final class EventPlanServlet extends HttpServlet {
-    private final ActiveObjectsService activeObjectsService;
     private final TemplateRenderer templateRenderer;
     private final UserManager userManager;
     private final LoginUriProvider loginUriProvider;
@@ -27,16 +23,13 @@ public final class EventPlanServlet extends HttpServlet {
     /**
      * Constructor.
      *
-     * @param activeObjectsService Injected {@code ActiveObjectsService} implementation.
      * @param templateRenderer Injected {@code TemplateRenderer} implementation.
      * @param userManager      Injected {@code UserManager} implementation.
      * @param loginUriProvider Injected {@code LoginUriProvider} implementation.
      */
-    public EventPlanServlet(@Nonnull final ActiveObjectsService activeObjectsService,
-                            @Nonnull final TemplateRenderer templateRenderer,
+    public EventPlanServlet(@Nonnull final TemplateRenderer templateRenderer,
                             @Nonnull final UserManager userManager,
                             @Nonnull final LoginUriProvider loginUriProvider) {
-        this.activeObjectsService = activeObjectsService;
         this.templateRenderer = templateRenderer;
         this.userManager = userManager;
         this.loginUriProvider = loginUriProvider;
@@ -49,12 +42,8 @@ public final class EventPlanServlet extends HttpServlet {
             redirectToLogin(request, response);
             return;
         }
-
-        Map<String, Object> context = new HashMap<String, Object>();
-        context.put("PLANS", activeObjectsService.get(Plan.class));
-
         response.setContentType("text/html;charset=utf-8");
-        templateRenderer.render("/templates/admin/event-plans.vm", context, response.getWriter());
+        templateRenderer.render("/templates/admin/event-plans.vm", response.getWriter());
     }
 
     private void redirectToLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {

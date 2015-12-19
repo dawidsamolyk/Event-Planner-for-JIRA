@@ -39,28 +39,27 @@ public class EventSubTaskRestManager extends RestManager {
     }
 
     /**
-     * @param id      Id of SubTask to get. If not specified, all SubTasks will be returned.
+     * @param id      Id of SubTask to post. If not specified, all SubTasks will be returned.
      * @param request Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
-     * @see {@link RestManager#get(String, HttpServletRequest)}
+     * @see {@link RestManager#post(String, HttpServletRequest)}
      */
-    @GET
+    @POST
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(final String id, @Context final HttpServletRequest request) {
-        return super.get(id, request);
+    public Response post(final String id, @Context final HttpServletRequest request) {
+        return super.post(id, request);
     }
-
 
     /**
      * @param request Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
-     * @see {@link RestManager#get(String, HttpServletRequest)}
+     * @see {@link RestManager#get(HttpServletRequest)}
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response get(@Context final HttpServletRequest request) {
-        return super.get(null, request);
+        return super.get(request);
     }
 
     /**

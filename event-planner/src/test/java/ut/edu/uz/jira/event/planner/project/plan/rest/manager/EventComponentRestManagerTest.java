@@ -94,7 +94,7 @@ public class EventComponentRestManagerTest {
         testHelper.createDomain(testName, testDescription);
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        fixture.get(null, mockRequest);
+        fixture.post(null, mockRequest);
 
         EventDomainRestManager.Configuration expected = new EventDomainRestManager.Configuration();
         expected.setName(testName);
@@ -108,7 +108,7 @@ public class EventComponentRestManagerTest {
         testHelper.createDomain("Domain 2", "Description");
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        fixture.get(null, mockRequest);
+        fixture.post(null, mockRequest);
 
         assertTrue(transactionResult.length == 2);
     }
@@ -117,7 +117,7 @@ public class EventComponentRestManagerTest {
     public void shouldGetEmptyDomainsArrayWhenThereIsNoDomainsInDatabase() {
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        fixture.get(null, mockRequest);
+        fixture.post(null, mockRequest);
 
         assertTrue(transactionResult.length == 0);
     }
