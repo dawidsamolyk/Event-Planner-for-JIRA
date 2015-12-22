@@ -12,6 +12,8 @@ import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventComponentRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
@@ -84,7 +86,7 @@ public class EventDomainRestManagerTest {
 
         activeObjects = mock(ActiveObjects.class);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.migrate(Domain.class, Plan.class, Component.class, Plan.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
         planService = new ActiveObjectsService(activeObjects);
         planService.clearDatabase();
 
@@ -139,5 +141,29 @@ public class EventDomainRestManagerTest {
         Response result = fixture.post(configuration, mockRequest);
 
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void on_Delete_should_remove_entity_with_specified_id() throws SQLException {
+        Domain domain = testHelper.createDomainNamed("test name");
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response response = fixture.delete(Integer.toString(domain.getID()), mockRequest);
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals(0, activeObjects.count(Domain.class));
+    }
+
+    @Test
+    public void on_Post_should_get_entity_with_specified_id() throws SQLException {
+        Domain domain = testHelper.createDomainNamed("test name");
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response response = fixture.post(Integer.toString(domain.getID()), mockRequest);
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+
+        EventRestConfiguration expected = EventDomainRestManager.Configuration.createEmpty().fill(domain);
+        assertEquals(expected, transactionResult[0]);
     }
 }

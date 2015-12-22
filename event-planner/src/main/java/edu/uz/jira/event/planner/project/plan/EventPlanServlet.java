@@ -15,7 +15,7 @@ import java.net.URI;
 /**
  * Servlet which handles Event Plan Configuration page.
  */
-public final class EventPlanServlet extends HttpServlet {
+public class EventPlanServlet extends HttpServlet {
     private final TemplateRenderer templateRenderer;
     private final UserManager userManager;
     private final LoginUriProvider loginUriProvider;
@@ -46,11 +46,11 @@ public final class EventPlanServlet extends HttpServlet {
         templateRenderer.render("/templates/admin/event-plans.vm", response.getWriter());
     }
 
-    private void redirectToLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void redirectToLogin(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         response.sendRedirect(loginUriProvider.getLoginUri(getUri(request)).toASCIIString());
     }
 
-    private URI getUri(HttpServletRequest request) {
+    private URI getUri(final HttpServletRequest request) {
         StringBuffer builder = request.getRequestURL();
         if (request.getQueryString() != null) {
             builder.append("?");

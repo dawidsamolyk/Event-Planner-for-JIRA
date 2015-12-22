@@ -12,7 +12,10 @@ import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
+import edu.uz.jira.event.planner.project.plan.rest.manager.EventComponentRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
 import net.java.ao.EntityManager;
 import net.java.ao.test.converters.NameConverters;
@@ -79,7 +82,7 @@ public class EventComponentRestManagerTest {
 
         activeObjects = mock(ActiveObjects.class);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.migrate(Domain.class, Plan.class, Component.class, Plan.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class,SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
         planService = new ActiveObjectsService(activeObjects);
         planService.clearDatabase();
 
@@ -131,5 +134,29 @@ public class EventComponentRestManagerTest {
         Response result = fixture.post(configuration, mockRequest);
 
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void on_Delete_should_remove_entity_with_specified_id() throws SQLException {
+        Component component = testHelper.createComponentNamed("test name");
+        EventComponentRestManager fixture = new EventComponentRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response response = fixture.delete(Integer.toString(component.getID()), mockRequest);
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals(0, activeObjects.count(Component.class));
+    }
+
+    @Test
+    public void on_Post_should_get_entity_with_specified_id() throws SQLException {
+        Component component = testHelper.createComponentNamed("test name");
+        EventComponentRestManager fixture = new EventComponentRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response response = fixture.post(Integer.toString(component.getID()), mockRequest);
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+
+        EventRestConfiguration expected = EventComponentRestManager.Configuration.createEmpty().fill(component);
+        assertEquals(expected, transactionResult[0]);
     }
 }

@@ -22,7 +22,7 @@ import net.java.ao.schema.Table;
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
 @Table("EventPlan")
-public interface Plan extends Entity, NamedEntityWithDescription, TimeframedEntity {
+public interface Plan extends Entity, NamedEntityWithDescription, TimeFramedEntity {
     String DOMAINS = "DOMAINS";
     String COMPONENTS = "COMPONENTS";
 

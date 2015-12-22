@@ -12,6 +12,8 @@ import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventTaskRestManager;
 import net.java.ao.EntityManager;
@@ -80,7 +82,7 @@ public class EventTaskRestManagerTest {
 
         activeObjects = mock(ActiveObjects.class);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.migrate(Domain.class, Plan.class, Component.class, Plan.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class,  SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
         planService = new ActiveObjectsService(activeObjects);
         planService.clearDatabase();
 
@@ -90,7 +92,7 @@ public class EventTaskRestManagerTest {
     @Test
     public void should_Get_Task_From_Database() throws SQLException {
         String testName = "Test name";
-        String testTime = "Test time";
+        int testTime = 123;
         testHelper.createTask(testName, testTime);
         EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
@@ -104,8 +106,8 @@ public class EventTaskRestManagerTest {
 
     @Test
     public void should_Get_Many_Tasks_From_Database() throws SQLException {
-        testHelper.createTask("Task 1", "Test time");
-        testHelper.createTask("Task 2", "Test time");
+        testHelper.createTask("Task 1", 123);
+        testHelper.createTask("Task 2", 123);
         EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
@@ -128,10 +130,34 @@ public class EventTaskRestManagerTest {
         EventTaskRestManager.Configuration configuration = new EventTaskRestManager.Configuration();
         configuration.setName("Test name");
         configuration.setDescription("Test description");
-        configuration.setTime("Test time");
+        configuration.setTime(123);
 
         Response result = fixture.post(configuration, mockRequest);
 
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void on_Delete_should_remove_entity_with_specified_id() throws SQLException {
+        Task task = testHelper.createTaskNamed("test name");
+        EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response response = fixture.delete(Integer.toString(task.getID()), mockRequest);
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals(0, activeObjects.count(Domain.class));
+    }
+
+    @Test
+    public void on_Post_should_get_entity_with_specified_id() throws SQLException {
+        Task task = testHelper.createTaskNamed("test name");
+        EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response response = fixture.post(Integer.toString(task.getID()), mockRequest);
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+
+        EventRestConfiguration expected = EventTaskRestManager.Configuration.createEmpty().fill(task);
+        assertEquals(expected, transactionResult[0]);
     }
 }

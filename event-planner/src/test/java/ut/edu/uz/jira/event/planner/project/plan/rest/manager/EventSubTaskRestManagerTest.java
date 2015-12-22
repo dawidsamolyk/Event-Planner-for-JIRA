@@ -12,6 +12,8 @@ import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventSubTaskRestManager;
 import net.java.ao.EntityManager;
@@ -80,7 +82,7 @@ public class EventSubTaskRestManagerTest {
 
         activeObjects = mock(ActiveObjects.class);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.migrate(Domain.class, Plan.class, Component.class, Plan.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class,  SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
         planService = new ActiveObjectsService(activeObjects);
         planService.clearDatabase();
 
@@ -90,7 +92,7 @@ public class EventSubTaskRestManagerTest {
     @Test
     public void should_Get_Sub_Task_From_Database() throws SQLException {
         String testName = "Test name";
-        String testTime = "Test time";
+        int testTime = 123;
         testHelper.createSubTask(testName, testTime);
         EventSubTaskRestManager fixture = new EventSubTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
@@ -103,8 +105,8 @@ public class EventSubTaskRestManagerTest {
 
     @Test
     public void should_Get_Many_Sub_Tasks_From_Database() throws SQLException {
-        testHelper.createSubTask("SubTask 1", "Test time");
-        testHelper.createSubTask("SubTask 2", "Test time");
+        testHelper.createSubTask("SubTask 1", 123);
+        testHelper.createSubTask("SubTask 2", 123);
         EventSubTaskRestManager fixture = new EventSubTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
@@ -127,10 +129,34 @@ public class EventSubTaskRestManagerTest {
         EventSubTaskRestManager.Configuration configuration = new EventSubTaskRestManager.Configuration();
         configuration.setName("Test name");
         configuration.setDescription("Test description");
-        configuration.setTime("Test time");
+        configuration.setTime(123);
 
         Response result = fixture.post(configuration, mockRequest);
 
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void on_Delete_should_remove_entity_with_specified_id() throws SQLException {
+        SubTask subTask = testHelper.createSubTaskNamed("test name");
+        EventSubTaskRestManager fixture = new EventSubTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response response = fixture.delete(Integer.toString(subTask.getID()), mockRequest);
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals(0, activeObjects.count(SubTask.class));
+    }
+
+    @Test
+    public void on_Post_should_get_entity_with_specified_id() throws SQLException {
+        SubTask subTask = testHelper.createSubTaskNamed("test name");
+        EventSubTaskRestManager fixture = new EventSubTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response response = fixture.post(Integer.toString(subTask.getID()), mockRequest);
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+
+        EventRestConfiguration expected = EventSubTaskRestManager.Configuration.createEmpty().fill(subTask);
+        assertEquals(expected, transactionResult[0]);
     }
 }

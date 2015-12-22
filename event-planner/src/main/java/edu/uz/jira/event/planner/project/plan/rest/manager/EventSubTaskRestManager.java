@@ -96,7 +96,7 @@ public class EventSubTaskRestManager extends RestManager {
         @XmlElement
         private String description;
         @XmlElement
-        private String time;
+        private long time;
 
         /**
          * Constructor.
@@ -105,7 +105,6 @@ public class EventSubTaskRestManager extends RestManager {
         public Configuration() {
             setName("");
             setDescription("");
-            setTime("");
         }
 
         /**
@@ -144,7 +143,7 @@ public class EventSubTaskRestManager extends RestManager {
         public boolean isFullfilled() {
             return StringUtils.isNotBlank(getName())
                     && getDescription() != null
-                    && StringUtils.isNotBlank(getTime());
+                    && getTime() > 0;
         }
 
         /**
@@ -179,16 +178,12 @@ public class EventSubTaskRestManager extends RestManager {
             }
         }
 
-        public String getTime() {
+        public long getTime() {
             return time;
         }
 
-        public void setTime(@Nonnull String time) {
-            if (time == null) {
-                this.time = "";
-            } else {
-                this.time = time;
-            }
+        public void setTime(@Nonnull long time) {
+            this.time = time;
         }
 
         /**
@@ -201,10 +196,9 @@ public class EventSubTaskRestManager extends RestManager {
 
             Configuration that = (Configuration) o;
 
+            if (getTime() != that.getTime()) return false;
             if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
-            if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
-                return false;
-            return !(getTime() != null ? !getTime().equals(that.getTime()) : that.getTime() != null);
+            return !(getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null);
         }
 
         /**

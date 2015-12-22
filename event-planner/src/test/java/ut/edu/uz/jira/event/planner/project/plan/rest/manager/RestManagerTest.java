@@ -12,6 +12,8 @@ import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
@@ -85,7 +87,7 @@ public class RestManagerTest {
 
         activeObjects = mock(ActiveObjects.class);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.migrate(Domain.class, Plan.class, Component.class, Plan.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
         planService = new ActiveObjectsService(activeObjects);
         planService.clearDatabase();
 
@@ -98,6 +100,16 @@ public class RestManagerTest {
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.get(mockRequest);
+
+        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void on_Post_with_id_Should_Response_Unauthorized_When_User_Is_Null() {
+        Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response result = fixture.post("123", mockRequest);
 
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }
@@ -138,6 +150,16 @@ public class RestManagerTest {
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.post(getEmptyDomain(), mockRequest);
+
+        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void on_Post_with_id_Should_Response_Unauthorized_When_User_Is_Not_Admin() {
+        Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response result = fixture.post("123", mockRequest);
 
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
     }
@@ -199,7 +221,7 @@ public class RestManagerTest {
 
     @Test
     public void should_deletes_entity() {
-        Task task = testHelper.createTask("test", "test");
+        Task task = testHelper.createTask("test", 123);
         EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.delete(Integer.toString(task.getID()), mockRequest);
@@ -216,7 +238,7 @@ public class RestManagerTest {
         invalidConfig.setDescription("Test description");
         invalidConfig.setDomains(new String[]{"Test domain"});
         invalidConfig.setComponents(new String[]{"Test component"});
-        invalidConfig.setTime("Test time");
+        invalidConfig.setTime(123);
 
         Response result = fixture.post(invalidConfig, mockRequest);
 
@@ -250,5 +272,56 @@ public class RestManagerTest {
         assertEquals(2, doGetTransactionResult.length);
         assertEquals(firstDomain.getName(), ((EventDomainRestManager.Configuration) doGetTransactionResult[0]).getName());
         assertEquals(secondDomain.getName(), ((EventDomainRestManager.Configuration) doGetTransactionResult[1]).getName());
+    }
+
+    @Test
+    public void on_Delete_with_unknown_id_should_response_not_found() throws SQLException {
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response response = fixture.delete("1251252", mockRequest);
+
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void on_Delete_should_remove_entity_with_specified_id() throws SQLException {
+        Domain domain = testHelper.createDomainNamed("test name");
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response response = fixture.delete(Integer.toString(domain.getID()), mockRequest);
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals(0, activeObjects.count(Domain.class));
+    }
+
+    @Test
+    public void on_Post_should_get_entity_with_specified_id() throws SQLException {
+        Domain domain = testHelper.createDomainNamed("test name");
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response response = fixture.post(Integer.toString(domain.getID()), mockRequest);
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+
+        EventRestConfiguration expected = EventDomainRestManager.Configuration.createEmpty().fill(domain);
+        assertEquals(expected, doGetTransactionResult[0]);
+    }
+
+    @Test
+    public void on_Post_with_null_id_should_response_not_acceptable() {
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response result = fixture.post((String) null, mockRequest);
+
+        assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void on_Post_with_empty_id_should_response_not_acceptable() {
+        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+
+        Response result = fixture.post("", mockRequest);
+
+        assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), result.getStatus());
     }
 }

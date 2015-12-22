@@ -1,5 +1,5 @@
-var DUE_DATE_QUERY_KEY = 'event-duedate';
-var EVENT_TYPE_QUERY_KEY = 'event-type';
+var DUE_DATE_ID = 'event-duedate';
+var EVENT_TYPE_ID = 'event-type';
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -9,19 +9,19 @@ function getParameterByName(name) {
 }
 
 function isDueDateEmpty() {
-    var dueDate = document.getElementById(DUE_DATE_QUERY_KEY).value;
+    var dueDate = document.getElementById(DUE_DATE_ID).value;
     return dueDate.valueOf() == "".valueOf();
 }
 
 function sendPostRequest() {
-    var dueDateValue = document.getElementById(DUE_DATE_QUERY_KEY).value;
-    var eventTypeValue = document.getElementById(EVENT_TYPE_QUERY_KEY).value;
+    var dueDateValue = document.getElementById(DUE_DATE_ID).value;
+    var eventTypeValue = document.getElementById(EVENT_TYPE_ID).value;
 
     window.location.replace(document.URL +
                                         "&" +
-                                        DUE_DATE_QUERY_KEY + "=" + dueDateValue +
+                                        DUE_DATE_ID + "=" + dueDateValue +
                                         "&" +
-                                        EVENT_TYPE_QUERY_KEY + "=" + eventTypeValue);
+                                        EVENT_TYPE_ID + "=" + eventTypeValue);
 }
 
 function configureDatePicker() {

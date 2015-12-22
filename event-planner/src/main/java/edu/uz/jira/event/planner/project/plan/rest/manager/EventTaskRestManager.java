@@ -101,7 +101,7 @@ public class EventTaskRestManager extends RestManager {
         @XmlElement
         private String description;
         @XmlElement
-        private String time;
+        private long time;
         @XmlElement
         private String[] subtasks;
 
@@ -112,7 +112,6 @@ public class EventTaskRestManager extends RestManager {
         public Configuration() {
             setName("");
             setDescription("");
-            setTime("");
             setSubtasks(new String[]{});
         }
 
@@ -166,7 +165,7 @@ public class EventTaskRestManager extends RestManager {
         public boolean isFullfilled() {
             return StringUtils.isNotBlank(getName())
                     && getDescription() != null
-                    && StringUtils.isNotBlank(getTime());
+                    && getTime() > 0;
         }
 
         /**
@@ -201,16 +200,12 @@ public class EventTaskRestManager extends RestManager {
             }
         }
 
-        public String getTime() {
+        public long getTime() {
             return time;
         }
 
-        public void setTime(@Nonnull String time) {
-            if (time == null) {
-                this.time = "";
-            } else {
-                this.time = time;
-            }
+        public void setTime(@Nonnull long time) {
+            this.time = time;
         }
 
         public String[] getSubtasks() {
@@ -235,10 +230,10 @@ public class EventTaskRestManager extends RestManager {
 
             Configuration that = (Configuration) o;
 
+            if (getTime() != that.getTime()) return false;
             if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
             if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
                 return false;
-            if (getTime() != null ? !getTime().equals(that.getTime()) : that.getTime() != null) return false;
             return Arrays.equals(getSubtasks(), that.getSubtasks());
         }
 

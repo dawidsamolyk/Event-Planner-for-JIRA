@@ -68,14 +68,16 @@ public class EventOrganizationProjectHook implements AddProjectHook {
         Project project = configureData.project();
         JiraWorkflow workflow = configureData.createdWorkflows().get(WorkflowConstants.EVENT_ORGANIZATION_WORKFLOW_KEY);
 
+        configureProjectCategory(project);
+        configureFieldLayout(project);
+
         try {
-            configureProjectCategory(project);
-            configureFieldLayout(project);
             configureWorkflow(workflow);
+
         } catch (JiraException e) {
             return ConfigureResponse.create().setRedirect(REDIRECT_URL);
         }
-
+        
         return ConfigureResponse.create().setRedirect(REDIRECT_URL + String.format(REDIRECT_URL_ARGUMENTS, project.getKey()));
     }
 

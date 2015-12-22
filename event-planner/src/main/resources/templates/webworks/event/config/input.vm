@@ -595,27 +595,28 @@
     </header>
     <div class="aui-dialog2-content">
         <form class="aui" id="event-configuration" action="#" method="post">
-            <div class="field-group" id="event-duedate-group">
-                <label for="event-duedate">Event date<span class="aui-icon icon-required">(required)</span></label>
-                <input id="event-duedate" name="event-duedate" type="text">
-
-                <div class="description" id="event-duedate-description">Date of an event.</div>
-            </div>
             <div class="field-group">
                 <label for="event-type">Event type</label>
                 <select class="select" id="event-type" name="event-type" title="Event type">
                     <option>Undefined</option>
                     #set ($eventPlans = $action.getEventPlans())
                     #foreach($eachPlan in $eventPlans.keySet())
-                    <optgroup label="$eachPlan">
-                        #foreach($eachValue in $eventPlans.get($eachPlan))
-                        <option>$eachValue</option>
-                        #end
-                    </optgroup>
+                        <optgroup label="$eachPlan">
+                            #foreach($eachValue in $eventPlans.get($eachPlan))
+                                <option>$eachValue</option>
+                            #end
+                        </optgroup>
                     #end
                 </select>
 
                 <div class="description">Type of an event.</div>
+            </div>
+
+            <div class="field-group" id="event-duedate-group">
+                <label for="event-duedate">Event date<span class="aui-icon icon-required">(required)</span></label>
+                <input id="event-duedate" name="event-duedate" type="text">
+
+                <div class="description" id="event-duedate-description">Date of an event.</div>
             </div>
         </form>
     </div>

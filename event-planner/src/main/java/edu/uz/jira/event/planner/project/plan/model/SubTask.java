@@ -1,6 +1,8 @@
 package edu.uz.jira.event.planner.project.plan.model;
 
+import edu.uz.jira.event.planner.project.plan.model.relation.SubTaskToTaskRelation;
 import net.java.ao.Entity;
+import net.java.ao.ManyToMany;
 import net.java.ao.schema.Table;
 
 /**
@@ -18,10 +20,9 @@ import net.java.ao.schema.Table;
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
 @Table("SubTask")
-public interface SubTask extends Entity, NamedEntityWithDescription, TimeframedEntity {
-    String Domain = "PARENT_TASK";
+public interface SubTask extends Entity, NamedEntityWithDescription, TimeFramedEntity {
+    String PARENT_TASKS = "PARENT_TASKS";
 
-    Task getParentTask();
-
-    void setParentTask(Task task);
+    @ManyToMany(value = SubTaskToTaskRelation.class)
+    Task[] getParentTasks();
 }

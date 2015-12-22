@@ -5,6 +5,8 @@ import com.atlassian.activeobjects.tx.Transactional;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.*;
 import net.java.ao.Entity;
@@ -40,6 +42,9 @@ public class ActiveObjectsService {
     }
 
     public Entity addFrom(@Nonnull final EventRestConfiguration resource) {
+        if (resource == null || !resource.isFullfilled()) {
+            return null;
+        }
         if (resource instanceof EventPlanRestManager.Configuration) {
             return addFrom((EventPlanRestManager.Configuration) resource);
         }
@@ -58,14 +63,7 @@ public class ActiveObjectsService {
         return null;
     }
 
-    /**
-     * @param resource Configuration of Event Organization Plan.
-     * @return Newly created and added to database Event Organization Plan. Null if not created.
-     */
-    public Plan addFrom(@Nonnull final EventPlanRestManager.Configuration resource) {
-        if (resource == null || !resource.isFullfilled()) {
-            return null;
-        }
+    private Plan addFrom(@Nonnull final EventPlanRestManager.Configuration resource) {
         Plan result = activeObjectsService.create(Plan.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
@@ -87,14 +85,7 @@ public class ActiveObjectsService {
         return result;
     }
 
-    /**
-     * @param resource Configuration of Event Organization Domain.
-     * @return Newly created and added to database Event Organization Domain.
-     */
-    public Domain addFrom(@Nonnull final EventDomainRestManager.Configuration resource) {
-        if (resource == null || !resource.isFullfilled()) {
-            return null;
-        }
+    private Domain addFrom(@Nonnull final EventDomainRestManager.Configuration resource) {
         Domain result = activeObjectsService.create(Domain.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
@@ -102,10 +93,7 @@ public class ActiveObjectsService {
         return result;
     }
 
-    public Component addFrom(@Nonnull final EventComponentRestManager.Configuration resource) {
-        if (resource == null || !resource.isFullfilled()) {
-            return null;
-        }
+    private Component addFrom(@Nonnull final EventComponentRestManager.Configuration resource) {
         Component result = activeObjectsService.create(Component.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
@@ -120,10 +108,7 @@ public class ActiveObjectsService {
         return result;
     }
 
-    public Task addFrom(EventTaskRestManager.Configuration resource) {
-        if (resource == null || !resource.isFullfilled()) {
-            return null;
-        }
+    private Task addFrom(EventTaskRestManager.Configuration resource) {
         Task result = activeObjectsService.create(Task.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
@@ -139,10 +124,7 @@ public class ActiveObjectsService {
         return result;
     }
 
-    public SubTask addFrom(EventSubTaskRestManager.Configuration resource) {
-        if (resource == null || !resource.isFullfilled()) {
-            return null;
-        }
+    private SubTask addFrom(EventSubTaskRestManager.Configuration resource) {
         SubTask result = activeObjectsService.create(SubTask.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
@@ -185,40 +167,10 @@ public class ActiveObjectsService {
 
     private void deleteWithRelations(@Nonnull final RawEntity... entities) {
         for (RawEntity each : entities) {
-            RawEntity[] relations = getRelations(each);
+            RawEntity[] relations = relationsManager.getRelations(each);
             activeObjectsService.delete(relations);
         }
         activeObjectsService.delete(entities);
-    }
-
-    private RawEntity[] getRelations(RawEntity entity) {
-        if (entity instanceof Plan) {
-            return getRelations((Plan) entity);
-        }
-        if (entity instanceof Domain) {
-            return getRelations((Domain) entity);
-        }
-        if (entity instanceof Component) {
-            return getRelations((Component) entity);
-        }
-        return new RawEntity[]{};
-    }
-
-    private RawEntity[] getRelations(@Nonnull final Plan entity) {
-        List<RawEntity> result = new ArrayList<RawEntity>();
-
-        result.addAll(Arrays.asList(activeObjectsService.find(PlanToDomainRelation.class, Query.select().where(PlanToDomainRelation.PLAN + "_ID = ?", entity.getID()))));
-        result.addAll(Arrays.asList(activeObjectsService.find(PlanToComponentRelation.class, Query.select().where(PlanToComponentRelation.PLAN + "_ID = ?", entity.getID()))));
-
-        return result.toArray(new RawEntity[result.size()]);
-    }
-
-    private RawEntity[] getRelations(@Nonnull final Domain entity) {
-        return activeObjectsService.find(PlanToDomainRelation.class, Query.select().where(PlanToDomainRelation.DOMAIN + "_ID = ?", entity.getID()));
-    }
-
-    private RawEntity[] getRelations(@Nonnull final Component entity) {
-        return activeObjectsService.find(PlanToComponentRelation.class, Query.select().where(PlanToComponentRelation.COMPONENT + "_ID = ?", entity.getID()));
     }
 
     /**
@@ -244,6 +196,8 @@ public class ActiveObjectsService {
     public void clearDatabase() {
         deleteAll(PlanToDomainRelation.class);
         deleteAll(PlanToComponentRelation.class);
+        deleteAll(SubTaskToTaskRelation.class);
+        deleteAll(TaskToComponentRelation.class);
 
         deleteAll(SubTask.class);
         deleteAll(Task.class);

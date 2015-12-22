@@ -4,9 +4,14 @@ import com.atlassian.activeobjects.external.ActiveObjects;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.TaskToComponentRelation;
+import net.java.ao.Query;
+import net.java.ao.RawEntity;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,10 +32,7 @@ class RelationsManager {
         helper = new ActiveObjectsHelper(activeObjectsService);
     }
 
-    PlanToDomainRelation associate(@Nonnull final Plan plan, @Nonnull final Domain domain) {
-        if (plan == null || domain == null) {
-            return null;
-        }
+    private PlanToDomainRelation associate(@Nonnull final Plan plan, @Nonnull final Domain domain) {
         PlanToDomainRelation result = activeObjectsService.create(PlanToDomainRelation.class);
         result.setDomain(domain);
         result.setPlan(plan);
@@ -39,9 +41,6 @@ class RelationsManager {
     }
 
     private PlanToComponentRelation associate(@Nonnull final Plan plan, @Nonnull final Component component) {
-        if (plan == null || component == null) {
-            return null;
-        }
         PlanToComponentRelation result = activeObjectsService.create(PlanToComponentRelation.class);
         result.setPlan(plan);
         result.setComponent(component);
@@ -49,22 +48,20 @@ class RelationsManager {
         return result;
     }
 
-    private Task associate(@Nonnull final Component component, @Nonnull final Task task) {
-        if (component == null || task == null) {
-            return null;
-        }
-        task.setComponent(component);
-        task.save();
-        return task;
+    private TaskToComponentRelation associate(@Nonnull final Component component, @Nonnull final Task task) {
+        TaskToComponentRelation result = activeObjectsService.create(TaskToComponentRelation.class);
+        result.setComponent(component);
+        result.setTask(task);
+        result.save();
+        return result;
     }
 
-    private SubTask associate(@Nonnull final Task task, @Nonnull final SubTask subTask) {
-        if (task == null || subTask == null) {
-            return null;
-        }
-        subTask.setParentTask(task);
-        subTask.save();
-        return subTask;
+    private SubTaskToTaskRelation associate(@Nonnull final Task task, @Nonnull final SubTask subTask) {
+        SubTaskToTaskRelation result = activeObjectsService.create(SubTaskToTaskRelation.class);
+        result.setSubTask(subTask);
+        result.setTask(task);
+        result.save();
+        return result;
     }
 
     Collection<PlanToComponentRelation> associatePlanWithComponents(@Nonnull final Plan plan, @Nonnull final String[] componentsNames) {
@@ -117,5 +114,35 @@ class RelationsManager {
             associate(task, each);
         }
         return true;
+    }
+
+    RawEntity[] getRelations(RawEntity entity) {
+        if (entity instanceof Plan) {
+            return getRelations((Plan) entity);
+        }
+        if (entity instanceof Domain) {
+            return getRelations((Domain) entity);
+        }
+        if (entity instanceof Component) {
+            return getRelations((Component) entity);
+        }
+        return new RawEntity[]{};
+    }
+
+    private RawEntity[] getRelations(@Nonnull final Plan entity) {
+        List<RawEntity> result = new ArrayList<RawEntity>();
+
+        result.addAll(Arrays.asList(activeObjectsService.find(PlanToDomainRelation.class, Query.select().where(PlanToDomainRelation.PLAN + "_ID = ?", entity.getID()))));
+        result.addAll(Arrays.asList(activeObjectsService.find(PlanToComponentRelation.class, Query.select().where(PlanToComponentRelation.PLAN + "_ID = ?", entity.getID()))));
+
+        return result.toArray(new RawEntity[result.size()]);
+    }
+
+    private RawEntity[] getRelations(@Nonnull final Domain entity) {
+        return activeObjectsService.find(PlanToDomainRelation.class, Query.select().where(PlanToDomainRelation.DOMAIN + "_ID = ?", entity.getID()));
+    }
+
+    private RawEntity[] getRelations(@Nonnull final Component entity) {
+        return activeObjectsService.find(PlanToComponentRelation.class, Query.select().where(PlanToComponentRelation.COMPONENT + "_ID = ?", entity.getID()));
     }
 }

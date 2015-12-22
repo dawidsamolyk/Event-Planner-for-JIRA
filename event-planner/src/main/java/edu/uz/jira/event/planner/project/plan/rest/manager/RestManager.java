@@ -78,11 +78,11 @@ public abstract class RestManager {
         if (!isAdminUser(userManager.getRemoteUser(request))) {
             return buildStatus(Response.Status.UNAUTHORIZED);
         }
+        if (id == null || id.isEmpty()) {
+            return buildStatus(Response.Status.NOT_ACCEPTABLE);
+        }
         return Response.ok(transactionTemplate.execute(new TransactionCallback<EventRestConfiguration[]>() {
             public EventRestConfiguration[] doInTransaction() {
-                if (id == null || id.isEmpty()) {
-                    return new EventRestConfiguration[]{};
-                }
                 return getEntities(entityType, Query.select().where("ID = ?", id));
             }
         })).build();

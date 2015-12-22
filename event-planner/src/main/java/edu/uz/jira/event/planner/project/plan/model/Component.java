@@ -1,9 +1,9 @@
 package edu.uz.jira.event.planner.project.plan.model;
 
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.TaskToComponentRelation;
 import net.java.ao.Entity;
 import net.java.ao.ManyToMany;
-import net.java.ao.OneToMany;
 import net.java.ao.schema.Table;
 
 /**
@@ -22,11 +22,11 @@ import net.java.ao.schema.Table;
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
 @Table("Component")
-public interface Component extends Entity, NamedEntityWithDescription, TimeframedEntity {
+public interface Component extends Entity, NamedEntityWithDescription, TimeFramedEntity {
     String TASKS = "TASKS";
     String PLANS = "PLANS";
 
-    @OneToMany
+    @ManyToMany(value = TaskToComponentRelation.class)
     Task[] getTasks();
 
     @ManyToMany(value = PlanToComponentRelation.class)

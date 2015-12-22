@@ -103,7 +103,7 @@ public class EventPlanRestManager extends RestManager {
         @XmlElement
         private String description;
         @XmlElement
-        private String time;
+        private long time;
         @XmlElement
         private String[] domains;
         @XmlElement
@@ -116,7 +116,6 @@ public class EventPlanRestManager extends RestManager {
         public Configuration() {
             setName("");
             setDescription("");
-            setTime("");
             setDomains(new String[]{});
             setComponents(new String[]{});
         }
@@ -160,7 +159,7 @@ public class EventPlanRestManager extends RestManager {
         public boolean isFullfilled() {
             return StringUtils.isNotBlank(getName())
                     && getDescription() != null
-                    && StringUtils.isNotBlank(getTime())
+                    && getTime() > 0
                     && TEXT_UTILS.isNotBlank(getDomains())
                     && TEXT_UTILS.isNotBlank(getComponents());
         }
@@ -197,16 +196,12 @@ public class EventPlanRestManager extends RestManager {
             }
         }
 
-        public String getTime() {
+        public long getTime() {
             return time;
         }
 
-        public void setTime(@Nonnull final String time) {
-            if (time == null) {
-                this.time = "";
-            } else {
-                this.time = time;
-            }
+        public void setTime(@Nonnull final long time) {
+            this.time = time;
         }
 
         public String[] getDomains() {
@@ -252,10 +247,10 @@ public class EventPlanRestManager extends RestManager {
             Configuration that = (Configuration) o;
 
             if (getId() != that.getId()) return false;
+            if (getTime() != that.getTime()) return false;
             if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
             if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
                 return false;
-            if (getTime() != null ? !getTime().equals(that.getTime()) : that.getTime() != null) return false;
             if (!Arrays.equals(getDomains(), that.getDomains())) return false;
             return Arrays.equals(getComponents(), that.getComponents());
         }

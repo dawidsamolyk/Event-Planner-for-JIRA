@@ -4,6 +4,8 @@ import com.atlassian.activeobjects.external.ActiveObjects;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.TaskToComponentRelation;
 
 import java.sql.SQLException;
 
@@ -23,10 +25,10 @@ public class ActiveObjectsTestHelper {
     }
 
     public SubTask createSubTaskNamed(String name) {
-        return createSubTask(name, "");
+        return createSubTask(name, 100);
     }
 
-    public SubTask createSubTask(String name, String time) {
+    public SubTask createSubTask(String name, int time) {
         SubTask result = activeObjects.create(SubTask.class);
         result.setName(name);
         result.setTimeToComplete(time);
@@ -43,7 +45,7 @@ public class ActiveObjectsTestHelper {
     }
 
     public Task createTaskNamed(String name) {
-        return createTask(name, "");
+        return createTask(name, 100);
     }
 
     public Component createComponent(String name, String description) {
@@ -54,7 +56,7 @@ public class ActiveObjectsTestHelper {
         return result;
     }
 
-    public Task createTask(String name, String time) {
+    public Task createTask(String name, int time) {
         Task result = activeObjects.create(Task.class);
         result.setName(name);
         result.setTimeToComplete(time);
@@ -62,7 +64,7 @@ public class ActiveObjectsTestHelper {
         return result;
     }
 
-    public void createPlanWithDomainAndComponent(String planName, String planDescription, String planTime, String domainName, String componentName) throws SQLException {
+    public void createPlanWithDomainAndComponent(String planName, String planDescription, int planTime, String domainName, String componentName) throws SQLException {
         Domain domain = createDomainNamed(domainName);
 
         Component component = createComponentNamed(componentName);
@@ -80,12 +82,48 @@ public class ActiveObjectsTestHelper {
         relation2.save();
     }
 
-    public Plan createPlan(String planName, String planDescription, String planTime) {
+    public PlanToDomainRelation associate(Plan plan, Domain domain) {
+        PlanToDomainRelation relation = activeObjects.create(PlanToDomainRelation.class);
+        relation.setPlan(plan);
+        relation.setDomain(domain);
+        relation.save();
+        return relation;
+    }
+
+    public PlanToComponentRelation associate(Plan plan, Component component) {
+        PlanToComponentRelation relation = activeObjects.create(PlanToComponentRelation.class);
+        relation.setPlan(plan);
+        relation.setComponent(component);
+        relation.save();
+        return relation;
+    }
+
+    public Plan createPlan(String planName, String planDescription, int planTime) {
         Plan plan = activeObjects.create(Plan.class);
         plan.setName(planName);
         plan.setDescription(planDescription);
         plan.setTimeToComplete(planTime);
         plan.save();
         return plan;
+    }
+
+    public Plan createPlanNamed(String name) {
+        return createPlan(name, "", 100);
+    }
+
+    public SubTaskToTaskRelation associate(Task thirdTask, SubTask thirdSubTask) {
+        SubTaskToTaskRelation result = activeObjects.create(SubTaskToTaskRelation.class);
+        result.setSubTask(thirdSubTask);
+        result.setTask(thirdTask);
+        result.save();
+        return result;
+    }
+
+    public TaskToComponentRelation associate(Component secondComponent, Task fourthTask) {
+        TaskToComponentRelation result = activeObjects.create(TaskToComponentRelation.class);
+        result.setComponent(secondComponent);
+        result.setTask(fourthTask);
+        result.save();
+        return result;
     }
 }

@@ -10,13 +10,16 @@ function Plan() {
     this.getJson = function() {
         return '{ "name": "' + this.getName().attr("value") +
                '", "description": "' + this.getDescription().attr("value") +
-               '", "time": "' + this.getTimeToComplete().attr("value") +
-               '", "domains": ' + JSON.stringify(this.getDomains().val()) +
+               '", "time": ' + this.getTimeToComplete().attr("value") +
+               ', "domains": ' + JSON.stringify(this.getDomains().val()) +
                ', "components": ' + JSON.stringify(this.getComponents().val()) +
                ' }';
     };
 
     this.setFromJson = function(resources) {
+        if(resources.length === 0) {
+            return;
+        }
         var isComponent = (resources.length > 0 && resources[0].hasOwnProperty('tasks'));
         var isPlan = (resources.length > 0 && resources[0].hasOwnProperty('domains') && resources[0].hasOwnProperty('components'));
 

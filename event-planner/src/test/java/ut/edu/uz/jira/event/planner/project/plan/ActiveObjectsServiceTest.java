@@ -6,6 +6,8 @@ import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.model.*;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.project.plan.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.rest.manager.*;
 import net.java.ao.EntityManager;
 import net.java.ao.Query;
@@ -42,7 +44,7 @@ public class ActiveObjectsServiceTest {
     public void setUp() throws Exception {
         assertNotNull(entityManager);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.migrate(Domain.class, Plan.class, Component.class, Plan.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
         service = new ActiveObjectsService(activeObjects);
         activeObjects.flushAll();
         service.clearDatabase();
@@ -137,7 +139,7 @@ public class ActiveObjectsServiceTest {
         EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setTime("Test time");
+        config.setTime(689);
         config.setDomains(new String[]{"Test domain"});
         config.setComponents(new String[]{"Test component"});
 
@@ -153,7 +155,7 @@ public class ActiveObjectsServiceTest {
         EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setTime("Test time");
+        config.setTime(123);
         config.setDomains(new String[]{domain.getName()});
         config.setComponents(new String[]{component.getName()});
 
@@ -180,7 +182,7 @@ public class ActiveObjectsServiceTest {
         EventTaskRestManager.Configuration config = new EventTaskRestManager.Configuration();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setTime("Test time");
+        config.setTime(123);
         config.setSubtasks(new String[]{firstSubTask.getName(), secondSubTask.getName()});
 
         service.addFrom(config);
@@ -224,7 +226,7 @@ public class ActiveObjectsServiceTest {
         EventSubTaskRestManager.Configuration config = new EventSubTaskRestManager.Configuration();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setTime("Test time");
+        config.setTime(123);
 
         service.addFrom(config);
 
@@ -237,7 +239,7 @@ public class ActiveObjectsServiceTest {
         EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
         config.setName("Name");
         config.setDescription("Description");
-        config.setTime("Time");
+        config.setTime(123);
         config.setDomains(new String[]{"Nonexistent domain"});
         config.setComponents(new String[]{component.getName()});
 
@@ -252,7 +254,7 @@ public class ActiveObjectsServiceTest {
         EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
         config.setName("Name");
         config.setDescription("Description");
-        config.setTime("Time");
+        config.setTime(123);
         config.setComponents(new String[]{"Nonexistent component"});
         config.setDomains(new String[]{domain.getName()});
 
@@ -278,7 +280,7 @@ public class ActiveObjectsServiceTest {
         EventTaskRestManager.Configuration config = new EventTaskRestManager.Configuration();
         config.setName("Name");
         config.setDescription("Description");
-        config.setTime("time");
+        config.setTime(123);
         config.setSubtasks(new String[]{"Nonexistent subtask"});
 
         service.addFrom(config);
@@ -288,7 +290,7 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void any_Entity_Should_Be_Deleted_By_Id() {
-        Task task = activeObjectsHelper.createTask("Name", "Description");
+        Task task = activeObjectsHelper.createTask("Name", 123);
 
         service.delete(Task.class, Integer.toString(task.getID()));
 
@@ -299,7 +301,7 @@ public class ActiveObjectsServiceTest {
     public void any_Entity_Related_With_Others_Should_Be_Deleted_By_Id() {
         Domain domain = activeObjectsHelper.createDomainNamed("test name");
         Component component = activeObjectsHelper.createComponentNamed("test name");
-        Plan plan = activeObjectsHelper.createPlan("Name", "description", "time");
+        Plan plan = activeObjectsHelper.createPlan("Name", "description", 123);
         PlanToDomainRelation relation = activeObjects.create(PlanToDomainRelation.class);
         relation.setDomain(domain);
         relation.setPlan(plan);
@@ -320,13 +322,13 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void should_Clear_Database() {
-        Task task = activeObjectsHelper.createTask("test name", "test description");
-        SubTask subTask = activeObjectsHelper.createSubTask("name", "");
-        subTask.setParentTask(task);
+        Task task = activeObjectsHelper.createTask("test name", 123);
+        SubTask subTask = activeObjectsHelper.createSubTask("name", 123);
+        activeObjectsHelper.associate(task, subTask);
         Domain domain = activeObjectsHelper.createDomainNamed("test name");
         Component component = activeObjectsHelper.createComponentNamed("test name");
-        task.setComponent(component);
-        Plan plan = activeObjectsHelper.createPlan("Name", "description", "time");
+        activeObjectsHelper.associate(component, task);
+        Plan plan = activeObjectsHelper.createPlan("Name", "description", 123);
         PlanToDomainRelation relation = activeObjects.create(PlanToDomainRelation.class);
         relation.setDomain(domain);
         relation.setPlan(plan);
@@ -345,5 +347,7 @@ public class ActiveObjectsServiceTest {
         assertEquals(0, activeObjects.count(Task.class));
         assertEquals(0, activeObjects.count(PlanToComponentRelation.class));
         assertEquals(0, activeObjects.count(PlanToDomainRelation.class));
+        assertEquals(0, activeObjects.count(SubTaskToTaskRelation.class));
+        assertEquals(0, activeObjects.count(TaskToComponentRelation.class));
     }
 }

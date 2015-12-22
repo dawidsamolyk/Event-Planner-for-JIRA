@@ -7,7 +7,7 @@ function SubTask() {
     this.getJson = function() {
         return '{ "name": "' + this.getName().attr("value") +
                '", "description": "' + this.getDescription().attr("value") +
-               '", "time": "' + this.getTimeToComplete().attr("value") +
+               '", "time": ' + this.getTimeToComplete().attr("value") +
                ' }';
     };
 };
