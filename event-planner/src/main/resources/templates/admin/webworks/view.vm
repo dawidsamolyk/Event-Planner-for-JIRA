@@ -58,7 +58,7 @@
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
+    };
 
     #include("templates/admin/model/plan.js")
     var plan = new Plan();

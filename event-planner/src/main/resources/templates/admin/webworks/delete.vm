@@ -34,7 +34,7 @@
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
+    };
 
     #include("templates/admin/rest-manager.js")
     var rest = new RESTManager();
@@ -49,7 +49,7 @@
 
             AJS.dialog2("#plan-delete-dialog").hide();
             window.history.back(-1);
-        }
+        };
     );
 
     AJS.$("#delete-plan-cancel-button").click(
@@ -58,7 +58,7 @@
 
             AJS.dialog2("#plan-delete-dialog").hide();
             window.history.back(-1);
-        }
+        };
     );
 </script>
 </body>
