@@ -5,6 +5,7 @@ import com.atlassian.jira.avatar.Avatar;
 import com.atlassian.jira.bc.project.component.ProjectComponent;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.Issue;
+import com.atlassian.jira.issue.status.Status;
 import com.atlassian.jira.issue.status.category.StatusCategory;
 import com.atlassian.jira.user.ApplicationUser;
 import edu.uz.jira.event.planner.project.issue.DueDateIndicator;
@@ -26,7 +27,7 @@ import java.util.Iterator;
 public class IssueDecorator {
     private final static DueDateIndicator DUE_DATE_INDICATOR = new DueDateIndicator();
     @XmlElement
-    private final Long id;
+    private final String key;
     @XmlElement
     private boolean done;
     @XmlElement
@@ -39,16 +40,16 @@ public class IssueDecorator {
     private int daysAwayFromDueDate;
 
     public IssueDecorator(@Nonnull final Issue source) {
-        id = source.getId();
+        key = source.getKey();
         summary = source.getSummary();
         setComponents(source);
         setDone(source);
         setAvatarId(source);
-        daysAwayFromDueDate = DUE_DATE_INDICATOR.getDaysAwayFromDueDate(source.getDueDate()) - 1;
+        daysAwayFromDueDate = DUE_DATE_INDICATOR.getDaysAwayFromDueDate(source.getDueDate());
     }
 
-    public Long getId() {
-        return id;
+    public String getKey() {
+        return key;
     }
 
     private void setComponents(@Nonnull final Issue source) {
@@ -72,7 +73,9 @@ public class IssueDecorator {
     }
 
     private void setDone(@Nonnull final Issue source) {
-        done = source.getStatusObject().getStatusCategory().getName().equals(StatusCategory.COMPLETE);
+        Status statusObject = source.getStatusObject();
+        StatusCategory statusCategory = statusObject.getStatusCategory();
+        done = statusCategory.getKey().equals(StatusCategory.COMPLETE);
     }
 
     public String getSummary() {
@@ -118,13 +121,13 @@ public class IssueDecorator {
         if (isDone() != that.isDone()) return false;
         if (getAvatarId() != that.getAvatarId()) return false;
         if (getDaysAwayFromDueDate() != that.getDaysAwayFromDueDate()) return false;
-        if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) return false;
+        if (getKey() != null ? !getKey().equals(that.getKey()) : that.getKey() != null) return false;
         if (getSummary() != null ? !getSummary().equals(that.getSummary()) : that.getSummary() != null) return false;
         return Arrays.equals(getComponentsNames(), that.getComponentsNames());
     }
 
     @Override
     public int hashCode() {
-        return getId().hashCode();
+        return getKey().hashCode();
     }
 }

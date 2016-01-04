@@ -59,4 +59,18 @@ function RESTManager() {
             }
         });
     }
+
+    this.getIssues = function(projectKey, timeLine) {
+        jQuery.ajax({
+            url: this.baseUrl + "issues?project-key=" + projectKey,
+            type: "GET",
+            dataType: "json",
+            success: function (data, status, request) {
+                timeLine.fill(data);
+            },
+            error: function (request, status, error) {
+                // Wyświetlenie komunikatu o błędzie
+            }
+        });
+    }
 };

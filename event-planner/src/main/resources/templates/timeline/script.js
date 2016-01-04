@@ -6,7 +6,7 @@ function getParameterByName(name) {
 };
 
 function TaskGadgetCreator() {
-    this.create = function(gadgetClass, titleText, avatarId, summaryText) {
+    this.create = function(gadgetClass, titleText, avatarId, summaryText, issueKey) {
         var taskGadget = this.createElement('DIV', gadgetClass);
         taskGadget.style.position = 'relative';
         taskGadget.id = titleText;
@@ -30,7 +30,7 @@ function TaskGadgetCreator() {
         summaryElement.appendChild(avatar);
 
         var summaryTextElement = this.createElement('A');
-        summaryTextElement.href = "#";
+        summaryTextElement.href = AJS.contextPath() + "/browse/" + issueKey;
         summaryTextElement.appendChild(document.createTextNode(summaryText));
         summaryElement.appendChild(summaryTextElement);
 
@@ -43,16 +43,16 @@ function TaskGadgetCreator() {
         return result;
     };
 
-    this.createToDo = function(titleText, avatarId, summaryText) {
-         return this.create('gadget color1', titleText, avatarId, summaryText);
+    this.createToDo = function(titleText, avatarId, summaryText, issueKey) {
+         return this.create('gadget color1', titleText, avatarId, summaryText, issueKey);
     };
 
-    this.createDone = function(titleText, avatarId, summaryText) {
-        return this.create('gadget color7', titleText, avatarId, summaryText);
+    this.createDone = function(titleText, avatarId, summaryText, issueKey) {
+        return this.create('gadget color7', titleText, avatarId, summaryText, issueKey);
     };
 
-    this.createLate = function(titleText, avatarId, summaryText){
-        var result = this.create('gadget', titleText, avatarId, summaryText);
+    this.createLate = function(titleText, avatarId, summaryText, issueKey){
+        var result = this.create('gadget', titleText, avatarId, summaryText, issueKey);
         var headerElement = result.getElementsByClassName('dashboard-item-header')[0];
         headerElement.style.background = '#333333';
         return result;
@@ -71,8 +71,19 @@ function TimeLineDateCreator(datesId) {
         return result;
     };
 
-    this.createLateDateCell = function() {
-        var result = this.createDateCell(0, "1 day late");
+    this.createLateDateCell = function(numberOfLateDays) {
+        var result;
+
+        if(numberOfLateDays === 0) {
+            result = this.createDateCell(0, "No late");
+        }
+        else if(numberOfLateDays === 1) {
+            result = this.createDateCell(0, "1 day late");
+        }
+        else {
+            result = this.createDateCell(0, Math.abs(numberOfLateDays) + " days late");
+        }
+
         result.style.color = '#d04437';
         return result;
     };
@@ -166,42 +177,64 @@ function TimeLine() {
         }
     };
 
-    this.fillLate = function() {
-        this.datesCreator.createLateDateCell();
-
+    this.fill = function(dataSource) {
+        console.log(dataSource);
         var lateCell = this.tasksCreator.createLateTaskCell(0);
-        lateCell.appendChild(this.taskGadgetCreator.createLate("Presentation", 10122, "Prepare pres..."));
-
         this.tasksCreator.createLateDoneTaskCell();
+        var todayCell = this.tasksCreator.createTodayTaskCell(1);
+        var todayDoneCell = this.tasksCreator.createTodayDoneTaskCell(1);
+
+        var maximumLate = 0;
+
+        for(eachIssueKey in dataSource) {
+            var eachIssue = dataSource[eachIssueKey];
+            var daysAwayFromDueDate = eachIssue.daysAwayFromDueDate;
+            var componentName = eachIssue.componentsNames[0];
+            var avatarId = eachIssue.avatarId;
+            var summary = eachIssue.summary;
+            var issueKey = eachIssue.key;
+
+            if(daysAwayFromDueDate < 0 && eachIssue.done === false) {
+                lateCell.appendChild(this.taskGadgetCreator.createLate(componentName, avatarId, summary, issueKey));
+            }
+            else if(daysAwayFromDueDate == 0 && eachIssue.done === false) {
+                todayCell.appendChild(this.taskGadgetCreator.createToDo(componentName, avatarId, summary, issueKey));
+            }
+            else if(daysAwayFromDueDate == 0 && eachIssue.done === true) {
+                todayDoneCell.appendChild(this.taskGadgetCreator.createDone(componentName, avatarId, summary, issueKey));
+            }
+
+            if(daysAwayFromDueDate < maximumLate) {
+                maximumLate = daysAwayFromDueDate;
+            }
+        }
+
+        this.datesCreator.createLateDateCell(maximumLate);
+        timeLine.fillDates();
     };
 
-    this.fillToday = function(currentDate) {
+    this.fillDates = function() {
+        var currentDate = new Date();
         this.datesCreator.createTodayDateCell(1, currentDate.toDateString());
 
-        var todayCell = this.tasksCreator.createTodayTaskCell(1);
-        todayCell.appendChild(this.taskGadgetCreator.createToDo("Costam", 10122, "test test"));
-        todayCell.appendChild(this.taskGadgetCreator.createToDo("gasd", 10122, "qwe test"));
-        todayCell.appendChild(this.taskGadgetCreator.createToDo("gasdas", 10122, "gqwads test"));
-
-        var todayDoneCell = this.tasksCreator.createTodayDoneTaskCell(1);
-        todayDoneCell.appendChild(this.taskGadgetCreator.createDone("Costam", 10122, "test test"));
-    };
-
-    this.fillNextDays = function(currentDate, numberOfNextDays) {
+        var numberOfNextDays = 6;
         for(index = 2; index < numberOfNextDays + 2; index++) {
             this.datesCreator.createDateCell(index, this.datesCreator.setNextDayAndGetDateString(currentDate));
-
-            this.tasksCreator.createTaskCell(index);
-
-            this.tasksCreator.createDoneTaskCell(index);
         }
     };
 };
 
-var currentDate = new Date();
-
 var timeLine = new TimeLine();
 timeLine.clear();
-timeLine.fillLate();
-timeLine.fillToday(currentDate);
-timeLine.fillNextDays(currentDate, 6);
+
+var projectKey = getParameterByName('project-key');
+
+var pageTitle = projectKey + " - Event Organization Time Line";
+document.title = pageTitle;
+document.getElementById("time-line-name").innerHTML = pageTitle;
+
+AJS.$(document).ready(
+    function() {
+        var rest = new RESTManager();
+        rest.getIssues(projectKey, timeLine);
+});

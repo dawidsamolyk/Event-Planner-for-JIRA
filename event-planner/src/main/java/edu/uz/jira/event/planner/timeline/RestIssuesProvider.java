@@ -63,7 +63,9 @@ public class RestIssuesProvider {
             }
 
             for (Issue eachIssue : issueManager.getIssueObjects(issueIds)) {
-                result.add(new IssueDecorator(eachIssue));
+                if(!eachIssue.isSubTask()) {
+                    result.add(new IssueDecorator(eachIssue));
+                }
             }
         }
         return result;

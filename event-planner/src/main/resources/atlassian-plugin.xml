@@ -148,10 +148,10 @@
     <servlet name="Event Plan Timeline Servlet" i18n-name-key="event.plan.timeline.servlet.name"
              key="event-plan-timeline-servlet" class="edu.uz.jira.event.planner.timeline.EventPlanTimelineServlet">
         <description key="event.plan.timeline.servlet.description">The Event Plan Timeline Servlet Plugin</description>
-        <url-pattern>/event/plan/timeline</url-pattern>
+        <url-pattern>/event/plan/time-line</url-pattern>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
-        <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <resource type="velocity" name="view" location="/templates/timeline/view.vm"/>
         <resource type="download" name="script.js" location="/templates/timeline/script.jp"/>
+        <resource type="download" name="rest-manager.js" location="/templates/admin/rest-manager.js"/>
     </servlet>
 </atlassian-plugin>

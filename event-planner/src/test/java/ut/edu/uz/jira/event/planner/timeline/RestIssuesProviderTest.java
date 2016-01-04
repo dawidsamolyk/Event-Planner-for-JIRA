@@ -170,7 +170,7 @@ public class RestIssuesProviderTest {
         Response result = fixture.get(mockRequest);
 
         assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
-        assertEquals(mockIssueId, transactionResult[0].getId());
+        assertEquals(mockIssueId, transactionResult[0].getKey());
     }
 
     @Test

@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ASUS ROG DAY timeline</title>
-
     <meta name="decorator" content="atl.general">
 
     <link type="text/css" rel="stylesheet" href="/jira/s/d41d8cd98f00b204e9800998ecf8427e-CDN/pl_PL-l42oyd/64022/3/3.10.10/_/download/resources/com.atlassian.gadgets.dashboard:dashboard/gadget-chrome.css" media="all">
@@ -12,7 +10,7 @@
     <header class="aui-page-header" style="padding: 20px 20px 20px 20px;">
         <div class="aui-page-header-inner" >
             <div class="aui-page-header-main">
-                <h1 id="project-name">ASUS ROG DAY timeline</h1>
+                <h1 id="time-line-name"></h1>
             </div>
                 <div class="aui-page-header-actions">
                     <a href="weekview" aria-owns="dwarfers" aria-haspopup="true" aria-disabled="true" class="aui-button aui-style-default aui-dropdown2-trigger">Week view</a>
@@ -40,6 +38,7 @@
         </div>
     </div>
     <script type="text/javascript">
+        #include("templates/admin/rest-manager.js")
         #include("templates/timeline/script.js")
     </script>
 </body>
