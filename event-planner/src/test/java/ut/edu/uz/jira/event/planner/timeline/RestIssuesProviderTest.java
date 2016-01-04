@@ -16,6 +16,7 @@ import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.MockApplicationUser;
+import com.atlassian.jira.user.MockUser;
 import com.atlassian.jira.user.util.MockUserManager;
 import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
@@ -136,6 +137,7 @@ public class RestIssuesProviderTest {
         Mockito.when(mockIssue.getKey()).thenReturn(mockIssueKey);
         Mockito.when(mockIssue.getId()).thenReturn(mockIssueId);
         Mockito.when(mockIssue.getStatusObject()).thenReturn(IssueDecoratorTest.getMockStatus());
+        Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser("test"));
         mockIssuesIds.add(mockIssueId);
         mockIssues.add(mockIssue);
 
@@ -160,6 +162,7 @@ public class RestIssuesProviderTest {
             Issue mockIssue = mock(Issue.class);
             Mockito.when(mockIssue.getId()).thenReturn(eachMockIssueId);
             Mockito.when(mockIssue.getStatusObject()).thenReturn(IssueDecoratorTest.getMockStatus());
+            Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser("test"));
             mockIssuesIds.add(eachMockIssueId);
             mockIssues.add(mockIssue);
         }

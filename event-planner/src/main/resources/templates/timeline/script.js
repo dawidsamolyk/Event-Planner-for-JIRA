@@ -6,7 +6,7 @@ function getParameterByName(name) {
 };
 
 function TaskGadgetCreator() {
-    this.create = function(gadgetClass, titleText, avatarId, summaryText, issueKey) {
+    this.create = function(gadgetClass, titleText, avatarId, summaryText, issueKey, assigneeName) {
         var taskGadget = this.createElement('DIV', gadgetClass);
         taskGadget.style.position = 'relative';
         taskGadget.id = titleText;
@@ -23,13 +23,15 @@ function TaskGadgetCreator() {
         var summaryElement = this.createElement('DIV', 'dashboard-item-content');
         gadgetItem.appendChild(summaryElement);
 
-        if(avatarId != 0) {
-            var avatar = this.createElement('IMG');
-            avatar.src = "/jira/secure/useravatar?avatarId=" + avatarId + "&amp;s=32";
-            avatar.height = 32;
-            avatar.width = 32;
-            summaryElement.appendChild(avatar);
-        }
+        var avatarLink = this.createElement('A');
+        avatarLink.href = "/jira/secure/ViewProfile.jspa?name=" + assigneeName;
+
+        var avatarImage = this.createElement('IMG');
+        avatarImage.src = "/jira/secure/useravatar?avatarId=" + avatarId + "&amp;s=32";
+        avatarImage.height = 32;
+        avatarImage.width = 32;
+        avatarLink.appendChild(avatarImage);
+        summaryElement.appendChild(avatarLink);
 
         var summaryTextElement = this.createElement('A');
         summaryTextElement.href = AJS.contextPath() + "/browse/" + issueKey;
@@ -45,16 +47,16 @@ function TaskGadgetCreator() {
         return result;
     };
 
-    this.createToDo = function(titleText, avatarId, summaryText, issueKey) {
-         return this.create('gadget color1', titleText, avatarId, summaryText, issueKey);
+    this.createToDo = function(titleText, avatarId, summaryText, issueKey, assigneeName) {
+         return this.create('gadget color1', titleText, avatarId, summaryText, issueKey, assigneeName);
     };
 
-    this.createDone = function(titleText, avatarId, summaryText, issueKey) {
-        return this.create('gadget color7', titleText, avatarId, summaryText, issueKey);
+    this.createDone = function(titleText, avatarId, summaryText, issueKey, assigneeName) {
+        return this.create('gadget color7', titleText, avatarId, summaryText, issueKey, assigneeName);
     };
 
-    this.createLate = function(titleText, avatarId, summaryText, issueKey){
-        var result = this.create('gadget', titleText, avatarId, summaryText, issueKey);
+    this.createLate = function(titleText, avatarId, summaryText, issueKey, assigneeName){
+        var result = this.create('gadget', titleText, avatarId, summaryText, issueKey, assigneeName);
         var headerElement = result.getElementsByClassName('dashboard-item-header')[0];
         headerElement.style.background = '#333333';
         return result;
@@ -114,7 +116,6 @@ function TimeLineTasksCreator(tasksToDoId, doneTasksId) {
         var result = tasksToDo.insertCell(index);
         result.style.verticalAlign = 'bottom';
         result.style.padding = 0;
-        result.width = '12%';
         return result;
     };
 
@@ -137,7 +138,6 @@ function TimeLineTasksCreator(tasksToDoId, doneTasksId) {
         var result = doneTasks.insertCell(index);
         result.style.verticalAlign = 'bottom';
         result.style.padding = 0;
-        result.width = '12%';
         result.style.textDecoration = 'line-through';
         return result;
     };
@@ -203,21 +203,26 @@ function TimeLine() {
             var avatarId = eachIssue.avatarId;
             var summary = eachIssue.summary;
             var issueKey = eachIssue.key;
+            var assigneeName = eachIssue.assigneeName;
+
+            if(daysAwayFromDueDate > numberOfNextDays) {
+                continue;
+            }
 
             if(daysAwayFromDueDate < 0 && eachIssue.done === false) {
-                lateCell.appendChild(this.taskGadgetCreator.createLate(componentName, avatarId, summary, issueKey));
+                lateCell.appendChild(this.taskGadgetCreator.createLate(componentName, avatarId, summary, issueKey, assigneeName));
             }
             else if(daysAwayFromDueDate == 0 && eachIssue.done === false) {
-                todayCell.appendChild(this.taskGadgetCreator.createToDo(componentName, avatarId, summary, issueKey));
+                todayCell.appendChild(this.taskGadgetCreator.createToDo(componentName, avatarId, summary, issueKey, assigneeName));
             }
             else if(daysAwayFromDueDate == 0 && eachIssue.done === true) {
-                todayDoneCell.appendChild(this.taskGadgetCreator.createDone(componentName, avatarId, summary, issueKey));
+                todayDoneCell.appendChild(this.taskGadgetCreator.createDone(componentName, avatarId, summary, issueKey, assigneeName));
             }
             else if(daysAwayFromDueDate > 0 && eachIssue.done === true) {
-                nextDaysDoneCells[daysAwayFromDueDate].appendChild(this.taskGadgetCreator.createDone(componentName, avatarId, summary, issueKey));
+                nextDaysDoneCells[daysAwayFromDueDate].appendChild(this.taskGadgetCreator.createDone(componentName, avatarId, summary, issueKey, assigneeName));
             }
             else if(daysAwayFromDueDate > 0 && eachIssue.done === false) {
-                nextDaysCells[daysAwayFromDueDate].appendChild(this.taskGadgetCreator.createToDo(componentName, avatarId, summary, issueKey));
+                nextDaysCells[daysAwayFromDueDate].appendChild(this.taskGadgetCreator.createToDo(componentName, avatarId, summary, issueKey, assigneeName));
             }
 
             if(daysAwayFromDueDate < maximumLate) {

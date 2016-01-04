@@ -36,12 +36,14 @@ function PlansList() {
         this.insertCell(newRow, 2).appendChild(this.createListFrom(plan.components));
         this.insertCell(newRow, 3).appendChild(document.createTextNode(plan.time));
 
-        var editLink = this.createLink(document.createTextNode('Edit'), contextPath + "/secure/EditEventOrganizationPlan.jspa?id=" + plan.id, "Edit Event Organization Plan", "edit-plan");
+        // TODO odkomentuj dopiero, gdy zostanie zaimplementowana akacja edycji planu eventu
+        //var editLink = this.createLink(document.createTextNode('Edit'), contextPath + "/secure/EditEventOrganizationPlan.jspa?id=" + plan.id, "Edit Event Organization Plan", "edit-plan");
         var deleteLink = this.createLink(document.createTextNode('Delete'), contextPath + "/secure/DeleteEventOrganizationPlan.jspa?id=" + plan.id, "Delete Event Organization Plan", "delete-plan");
 
         var operationsList = this.createList();
             operationsList.className = "operations-list";
-            this.addToList(operationsList, editLink);
+            // TODO odkomentuj dopiero, gdy zostanie zaimplementowana akacja edycji planu eventu
+            //this.addToList(operationsList, editLink);
             this.addToList(operationsList, deleteLink);
 
         var operationsCell = this.insertCell(newRow, 4);

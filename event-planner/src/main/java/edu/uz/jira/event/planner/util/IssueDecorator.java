@@ -39,6 +39,8 @@ public class IssueDecorator {
     private long avatarId;
     @XmlElement
     private int daysAwayFromDueDate;
+    @XmlElement
+    private String assigneeName;
 
     /**
      * Constructor.
@@ -52,6 +54,11 @@ public class IssueDecorator {
         setDone(source);
         setAvatarId(source);
         daysAwayFromDueDate = DUE_DATE_INDICATOR.getDaysAwayFromDueDate(source.getDueDate());
+        assigneeName = source.getAssignee().getName();
+    }
+
+    public String getAssigneeName() {
+        return assigneeName;
     }
 
     public String getKey() {

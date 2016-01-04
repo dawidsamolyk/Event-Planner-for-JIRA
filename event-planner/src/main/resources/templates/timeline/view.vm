@@ -18,7 +18,7 @@
     <div class="aui-page-panel">
         <div class="aui-page-panel-inner">
             <section class="aui-page-panel-content">
-                <table id="time-line" class="aui">
+                <table id="time-line" class="aui" style="table-layout: fixed;">
                     <tbody>
                         <tr id="tasks-todo"></tr>
                         <tr id="dates"></tr>

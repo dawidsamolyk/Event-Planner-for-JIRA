@@ -70,6 +70,7 @@ public class IssueDecoratorTest {
         Issue mockIssue = mock(Issue.class);
         Mockito.when(mockIssue.getSummary()).thenReturn(testSummary);
         Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
+        Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser("test"));
 
         String result = new IssueDecorator(mockIssue).getSummary();
 
@@ -81,9 +82,11 @@ public class IssueDecoratorTest {
         String testComponentName = "test component";
         Issue mockIssue = mock(Issue.class);
         Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
+        Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser("test"));
         Collection<ProjectComponent> mockComponents = new ArrayList<ProjectComponent>();
         mockComponents.add(new MockProjectComponent(123l, testComponentName));
         Mockito.when(mockIssue.getComponentObjects()).thenReturn(mockComponents);
+
 
         String[] result = new IssueDecorator(mockIssue).getComponentsNames();
 
@@ -95,6 +98,7 @@ public class IssueDecoratorTest {
         String[] testComponentsNames = {"test component 1", "test component 2", "test component 3"};
         Issue mockIssue = mock(Issue.class);
         Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
+        Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser("test"));
         Collection<ProjectComponent> mockComponents = new ArrayList<ProjectComponent>();
         for (int index = 0; index < testComponentsNames.length; index++) {
             mockComponents.add(new MockProjectComponent((long) index, testComponentsNames[index]));
@@ -114,6 +118,7 @@ public class IssueDecoratorTest {
         Mockito.when(mockStatus.getStatusCategory()).thenReturn(mockStatusCategory);
         Issue mockIssue = mock(Issue.class);
         Mockito.when(mockIssue.getStatusObject()).thenReturn(mockStatus);
+        Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser("test"));
 
         boolean result = new IssueDecorator(mockIssue).isDone();
 
@@ -128,6 +133,7 @@ public class IssueDecoratorTest {
         Mockito.when(mockStatus.getStatusCategory()).thenReturn(mockStatusCategory);
         Issue mockIssue = mock(Issue.class);
         Mockito.when(mockIssue.getStatusObject()).thenReturn(mockStatus);
+        Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser("test"));
 
         boolean result = new IssueDecorator(mockIssue).isDone();
 
@@ -147,20 +153,10 @@ public class IssueDecoratorTest {
     }
 
     @Test
-    public void should_provide_default_avatar_id_if_there_is_no_issue_assignee() {
-        Issue mockIssue = mock(Issue.class);
-        Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
-        Mockito.when(mockIssue.getAssignee()).thenReturn(null);
-
-        long result = new IssueDecorator(mockIssue).getAvatarId();
-
-        assertEquals(defaultUserAvatarId, result);
-    }
-
-    @Test
     public void should_provide_zero_days_before_today_if_issue_due_date_is_today() {
         Issue mockIssue = mock(Issue.class);
         Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
+        Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser("test"));
         Mockito.when(mockIssue.getDueDate()).thenReturn(new Timestamp(new Date().getTime()));
 
         int result = new IssueDecorator(mockIssue).getDaysAwayFromDueDate();
@@ -172,6 +168,7 @@ public class IssueDecoratorTest {
     public void should_provide_1_day_before_today_if_issue_was_due_yesterday() {
         Issue mockIssue = mock(Issue.class);
         Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
+        Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser("test"));
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, -1);
         Mockito.when(mockIssue.getDueDate()).thenReturn(new Timestamp(calendar.getTimeInMillis()));
@@ -185,6 +182,7 @@ public class IssueDecoratorTest {
     public void should_provide_1_day_after_today_if_issue_is_due_tomorrow() {
         Issue mockIssue = mock(Issue.class);
         Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
+        Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser("test"));
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, 1);
         Mockito.when(mockIssue.getDueDate()).thenReturn(new Timestamp(calendar.getTimeInMillis()));
@@ -198,6 +196,7 @@ public class IssueDecoratorTest {
     public void should_indicate_that_issue_is_late_if_was_due_yesterday() {
         Issue mockIssue = mock(Issue.class);
         Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
+        Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser("test"));
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, -2);
         Mockito.when(mockIssue.getDueDate()).thenReturn(new Timestamp(calendar.getTimeInMillis()));
@@ -211,6 +210,7 @@ public class IssueDecoratorTest {
     public void should_not_indicate_that_issue_is_late_when_due_date_is_tomorrow() {
         Issue mockIssue = mock(Issue.class);
         Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
+        Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser("test"));
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, 1);
         Mockito.when(mockIssue.getDueDate()).thenReturn(new Timestamp(calendar.getTimeInMillis()));
@@ -224,6 +224,7 @@ public class IssueDecoratorTest {
     public void should_not_indicate_that_issue_is_late_when_due_date_is_today() {
         Issue mockIssue = mock(Issue.class);
         Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
+        Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser("test"));
         Mockito.when(mockIssue.getDueDate()).thenReturn(new Timestamp(new Date().getTime()));
 
         boolean result = new IssueDecorator(mockIssue).isLate();
