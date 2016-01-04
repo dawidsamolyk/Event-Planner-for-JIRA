@@ -8,6 +8,7 @@ import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.status.Status;
 import com.atlassian.jira.issue.status.category.StatusCategory;
 import com.atlassian.jira.user.ApplicationUser;
+import com.atlassian.jira.user.ApplicationUsers;
 import edu.uz.jira.event.planner.project.issue.DueDateIndicator;
 
 import javax.annotation.Nonnull;
@@ -39,6 +40,11 @@ public class IssueDecorator {
     @XmlElement
     private int daysAwayFromDueDate;
 
+    /**
+     * Constructor.
+     *
+     * @param source Source of data.
+     */
     public IssueDecorator(@Nonnull final Issue source) {
         key = source.getKey();
         summary = source.getSummary();
@@ -95,13 +101,14 @@ public class IssueDecorator {
 
         if (assignee != null) {
             ApplicationUser remoteUser = ComponentAccessor.getJiraAuthenticationContext().getUser();
-            ApplicationUser assigneeUser = ComponentAccessor.getUserManager().getUserByName(assignee.getName());
+            ApplicationUser assigneeUser = ApplicationUsers.from(assignee);
 
             Avatar assigneeAvatar = ComponentAccessor.getAvatarService().getAvatar(remoteUser, assigneeUser);
             if (assigneeAvatar != null) {
                 avatarId = assigneeAvatar.getId();
             }
-        } else {
+        }
+        if (assignee == null || avatarId == 0) {
             Long defaultUserAvatarId = ComponentAccessor.getAvatarManager().getDefaultAvatarId(Avatar.Type.USER);
             avatarId = defaultUserAvatarId;
         }

@@ -23,11 +23,13 @@ function TaskGadgetCreator() {
         var summaryElement = this.createElement('DIV', 'dashboard-item-content');
         gadgetItem.appendChild(summaryElement);
 
-        var avatar = this.createElement('IMG');
-        avatar.src = "/jira/secure/useravatar?avatarId=" + avatarId + "&amp;s=32";
-        avatar.height = 32;
-        avatar.width = 32;
-        summaryElement.appendChild(avatar);
+        if(avatarId != 0) {
+            var avatar = this.createElement('IMG');
+            avatar.src = "/jira/secure/useravatar?avatarId=" + avatarId + "&amp;s=32";
+            avatar.height = 32;
+            avatar.width = 32;
+            summaryElement.appendChild(avatar);
+        }
 
         var summaryTextElement = this.createElement('A');
         summaryTextElement.href = AJS.contextPath() + "/browse/" + issueKey;

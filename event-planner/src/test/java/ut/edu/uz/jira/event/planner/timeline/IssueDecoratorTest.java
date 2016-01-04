@@ -109,7 +109,7 @@ public class IssueDecoratorTest {
     @Test
     public void should_indicate_done_if_issue_is_complete() {
         StatusCategory mockStatusCategory = mock(StatusCategory.class);
-        Mockito.when(mockStatusCategory.getName()).thenReturn(StatusCategory.COMPLETE);
+        Mockito.when(mockStatusCategory.getKey()).thenReturn(StatusCategory.COMPLETE);
         Status mockStatus = mock(Status.class);
         Mockito.when(mockStatus.getStatusCategory()).thenReturn(mockStatusCategory);
         Issue mockIssue = mock(Issue.class);
@@ -123,7 +123,7 @@ public class IssueDecoratorTest {
     @Test
     public void should_indicate_not_done_if_issue_is_not_complete() {
         StatusCategory mockStatusCategory = mock(StatusCategory.class);
-        Mockito.when(mockStatusCategory.getName()).thenReturn(StatusCategory.IN_PROGRESS);
+        Mockito.when(mockStatusCategory.getKey()).thenReturn(StatusCategory.IN_PROGRESS);
         Status mockStatus = mock(Status.class);
         Mockito.when(mockStatus.getStatusCategory()).thenReturn(mockStatusCategory);
         Issue mockIssue = mock(Issue.class);
@@ -165,7 +165,7 @@ public class IssueDecoratorTest {
 
         int result = new IssueDecorator(mockIssue).getDaysAwayFromDueDate();
 
-        assertEquals(0, result);
+        assertEquals(0 + 1, result);
     }
 
     @Test
@@ -178,7 +178,7 @@ public class IssueDecoratorTest {
 
         int result = new IssueDecorator(mockIssue).getDaysAwayFromDueDate();
 
-        assertEquals(-1, result);
+        assertEquals(-1 + 1, result);
     }
 
     @Test
@@ -191,7 +191,7 @@ public class IssueDecoratorTest {
 
         int result = new IssueDecorator(mockIssue).getDaysAwayFromDueDate();
 
-        assertEquals(1, result);
+        assertEquals(1 + 1, result);
     }
 
     @Test
@@ -199,7 +199,7 @@ public class IssueDecoratorTest {
         Issue mockIssue = mock(Issue.class);
         Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, -1);
+        calendar.add(Calendar.DATE, -2);
         Mockito.when(mockIssue.getDueDate()).thenReturn(new Timestamp(calendar.getTimeInMillis()));
 
         boolean result = new IssueDecorator(mockIssue).isLate();

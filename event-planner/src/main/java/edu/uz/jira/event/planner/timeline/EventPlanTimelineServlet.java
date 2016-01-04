@@ -38,7 +38,7 @@ public class EventPlanTimelineServlet extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         UserProfile user = userManager.getRemoteUser(request);
-        if (user == null || !userManager.isSystemAdmin(user.getUserKey())) {
+        if (user == null) {
             redirectToLogin(request, response);
             return;
         }
