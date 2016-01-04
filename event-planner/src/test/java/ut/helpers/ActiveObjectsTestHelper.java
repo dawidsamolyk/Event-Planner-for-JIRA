@@ -56,7 +56,7 @@ public class ActiveObjectsTestHelper {
         return result;
     }
 
-    public Task createTask(String name, int time) {
+    public Task createTask(String name, long time) {
         Task result = activeObjects.create(Task.class);
         result.setName(name);
         result.setTimeToComplete(time);

@@ -59,26 +59,9 @@ function TaskGadgetCreator() {
     };
 };
 
-function TimeLine() {
-    this.taskGadgetCreator = new TaskGadgetCreator();
-    this.id = 'time-line';
-    this.tasksToDoId = 'tasks-todo';
-    this.datesId = 'dates';
-    this.doneTasksId = 'done-tasks';
+function TimeLineDateCreator(datesId) {
+    this.datesId = datesId;
     this.getElementById = function(id) { return document.getElementById(id); };
-
-    this.clear = function() {
-        this.clearTable(this.tasksToDoId);
-        this.clearTable(this.datesId);
-        this.clearTable(this.doneTasksId);
-    };
-
-    this.clearTable = function(id) {
-        var table = this.getElementById(id);
-        while(table.cells.length > 0) {
-            table.deleteCell(0);
-        }
-    };
 
     this.createTodayDateCell = function(index, date) {
         var result = this.createDateCell(index, date);
@@ -102,16 +85,16 @@ function TimeLine() {
         return result;
     };
 
-    this.fillDates = function() {
-        this.createLateDateCell();
-        this.createTodayDateCell(1, "3-sty");
-        this.createDateCell(2, "4-sty");
-        this.createDateCell(3, "5-sty");
-        this.createDateCell(4, "6-sty");
-        this.createDateCell(5, "7-sty");
-        this.createDateCell(6, "8-sty");
-        this.createDateCell(7, "9-sty");
+    this.setNextDayAndGetDateString = function(date) {
+        date.setDate(date.getDate() + 1);
+        return date.toDateString();
     };
+};
+
+function TimeLineTasksCreator(tasksToDoId, doneTasksId) {
+    this.tasksToDoId = tasksToDoId;
+    this.doneTasksId = doneTasksId;
+    this.getElementById = function(id) { return document.getElementById(id); };
 
     this.createTaskCell = function(index) {
         var tasksToDo = this.getElementById(this.tasksToDoId);
@@ -158,36 +141,67 @@ function TimeLine() {
         result.style.background = '#d04437';
         return result;
     };
+};
 
-    this.insertMockTasks = function() {
-        var lateCell = this.createLateTaskCell(0);
+function TimeLine() {
+    this.id = 'time-line';
+    this.tasksToDoId = 'tasks-todo';
+    this.datesId = 'dates';
+    this.doneTasksId = 'done-tasks';
+    this.datesCreator = new TimeLineDateCreator(this.datesId);
+    this.tasksCreator = new TimeLineTasksCreator(this.tasksToDoId, this.doneTasksId);
+    this.taskGadgetCreator = new TaskGadgetCreator();
+    this.getElementById = function(id) { return document.getElementById(id); };
+
+    this.clear = function() {
+        this.clearTable(this.tasksToDoId);
+        this.clearTable(this.datesId);
+        this.clearTable(this.doneTasksId);
+    };
+
+    this.clearTable = function(id) {
+        var table = this.getElementById(id);
+        while(table.cells.length > 0) {
+            table.deleteCell(0);
+        }
+    };
+
+    this.fillLate = function() {
+        this.datesCreator.createLateDateCell();
+
+        var lateCell = this.tasksCreator.createLateTaskCell(0);
         lateCell.appendChild(this.taskGadgetCreator.createLate("Presentation", 10122, "Prepare pres..."));
 
-        var todayCell = this.createTodayTaskCell(1);
+        this.tasksCreator.createLateDoneTaskCell();
+    };
+
+    this.fillToday = function(currentDate) {
+        this.datesCreator.createTodayDateCell(1, currentDate.toDateString());
+
+        var todayCell = this.tasksCreator.createTodayTaskCell(1);
         todayCell.appendChild(this.taskGadgetCreator.createToDo("Costam", 10122, "test test"));
         todayCell.appendChild(this.taskGadgetCreator.createToDo("gasd", 10122, "qwe test"));
         todayCell.appendChild(this.taskGadgetCreator.createToDo("gasdas", 10122, "gqwads test"));
 
-        this.createTaskCell(2);
-        this.createTaskCell(3);
-        this.createTaskCell(4);
-        this.createTaskCell(5);
-        this.createTaskCell(6);
-
-        this.createLateDoneTaskCell();
-
-        var todayDoneCell = this.createTodayDoneTaskCell(1);
+        var todayDoneCell = this.tasksCreator.createTodayDoneTaskCell(1);
         todayDoneCell.appendChild(this.taskGadgetCreator.createDone("Costam", 10122, "test test"));
+    };
 
-        this.createDoneTaskCell(2);
-        this.createDoneTaskCell(3);
-        this.createDoneTaskCell(4);
-        this.createDoneTaskCell(5).appendChild(this.taskGadgetCreator.createDone("Costam", 10122, "test test"));
-        this.createDoneTaskCell(6);
+    this.fillNextDays = function(currentDate, numberOfNextDays) {
+        for(index = 2; index < numberOfNextDays + 2; index++) {
+            this.datesCreator.createDateCell(index, this.datesCreator.setNextDayAndGetDateString(currentDate));
+
+            this.tasksCreator.createTaskCell(index);
+
+            this.tasksCreator.createDoneTaskCell(index);
+        }
     };
 };
 
+var currentDate = new Date();
+
 var timeLine = new TimeLine();
 timeLine.clear();
-timeLine.fillDates();
-timeLine.insertMockTasks();
+timeLine.fillLate();
+timeLine.fillToday(currentDate);
+timeLine.fillNextDays(currentDate, 6);

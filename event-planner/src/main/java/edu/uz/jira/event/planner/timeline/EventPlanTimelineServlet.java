@@ -15,7 +15,7 @@ import java.net.URI;
 /**
  * Servlet which handles Event Plan Timeline view.
  */
-public class EventPlanTimelineServlet extends HttpServlet{
+public class EventPlanTimelineServlet extends HttpServlet {
     private final TemplateRenderer templateRenderer;
     private final UserManager userManager;
     private final LoginUriProvider loginUriProvider;
@@ -28,8 +28,8 @@ public class EventPlanTimelineServlet extends HttpServlet{
      * @param loginUriProvider Injected {@code LoginUriProvider} implementation.
      */
     public EventPlanTimelineServlet(@Nonnull final TemplateRenderer templateRenderer,
-                            @Nonnull final UserManager userManager,
-                            @Nonnull final LoginUriProvider loginUriProvider) {
+                                    @Nonnull final UserManager userManager,
+                                    @Nonnull final LoginUriProvider loginUriProvider) {
         this.templateRenderer = templateRenderer;
         this.userManager = userManager;
         this.loginUriProvider = loginUriProvider;
