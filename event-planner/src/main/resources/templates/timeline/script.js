@@ -142,6 +142,7 @@ function TimeLineTasksCreator(tasksToDoId, doneTasksId) {
 
     this.createTodayDoneTaskCell = function(index) {
         var result = this.createDoneTaskCell(index);
+        result.style.background = '#f5f5f5';
         result.style.borderLeft = '3px solid #205081';
         result.style.borderRight = '3px solid #205081';
         return result;
@@ -178,11 +179,18 @@ function TimeLine() {
     };
 
     this.fill = function(dataSource) {
-        console.log(dataSource);
         var lateCell = this.tasksCreator.createLateTaskCell(0);
         this.tasksCreator.createLateDoneTaskCell();
         var todayCell = this.tasksCreator.createTodayTaskCell(1);
         var todayDoneCell = this.tasksCreator.createTodayDoneTaskCell(1);
+
+        var nextDaysCells = [];
+        var nextDaysDoneCells = [];
+        var numberOfNextDays = 6;
+        for(index = 1; index < numberOfNextDays + 1; index++) {
+            nextDaysCells[index] = this.tasksCreator.createTaskCell(index + 1);
+            nextDaysDoneCells[index] = this.tasksCreator.createDoneTaskCell(index + 1);
+        }
 
         var maximumLate = 0;
 
@@ -202,6 +210,12 @@ function TimeLine() {
             }
             else if(daysAwayFromDueDate == 0 && eachIssue.done === true) {
                 todayDoneCell.appendChild(this.taskGadgetCreator.createDone(componentName, avatarId, summary, issueKey));
+            }
+            else if(daysAwayFromDueDate > 0 && eachIssue.done === true) {
+                nextDaysDoneCells[daysAwayFromDueDate].appendChild(this.taskGadgetCreator.createDone(componentName, avatarId, summary, issueKey));
+            }
+            else if(daysAwayFromDueDate > 0 && eachIssue.done === false) {
+                nextDaysCells[daysAwayFromDueDate].appendChild(this.taskGadgetCreator.createToDo(componentName, avatarId, summary, issueKey));
             }
 
             if(daysAwayFromDueDate < maximumLate) {
