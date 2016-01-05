@@ -37,6 +37,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 public class IssueDecoratorTest {
+    private AvatarService mockAvatarService;
     private long mockAvatarId = 1002;
     private long defaultUserAvatarId = 1;
 
@@ -45,7 +46,7 @@ public class IssueDecoratorTest {
         MockUserManager mockUserManager = new MockUserManager();
         mockUserManager.addUser(new MockApplicationUser("test"));
 
-        AvatarService mockAvatarService = Mockito.mock(AvatarService.class);
+        mockAvatarService = Mockito.mock(AvatarService.class);
         Mockito.when(mockAvatarService.getAvatar(Mockito.any(ApplicationUser.class), Mockito.any(ApplicationUser.class))).thenReturn(new MockAvatar(mockAvatarId, "avatar.png", "image", Avatar.Type.USER, "test", true));
 
         AvatarManager mockAvatarManager = mock(AvatarManager.class);
@@ -150,6 +151,31 @@ public class IssueDecoratorTest {
         long result = new IssueDecorator(mockIssue).getAvatarId();
 
         assertEquals(mockAvatarId, result);
+    }
+
+    @Test
+    public void if_assignee_avatar_id_is_zero_then_should_return_default_avatar_id() {
+        long mockAvatarId = 0;
+        Mockito.when(mockAvatarService.getAvatar(Mockito.any(ApplicationUser.class), Mockito.any(ApplicationUser.class))).thenReturn(new MockAvatar(mockAvatarId, "avatar.png", "image", Avatar.Type.USER, "test", true));
+        Issue mockIssue = mock(Issue.class);
+        Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
+        User mockUser = new MockUser("test");
+        Mockito.when(mockIssue.getAssignee()).thenReturn(mockUser);
+
+        long result = new IssueDecorator(mockIssue).getAvatarId();
+
+        assertEquals(defaultUserAvatarId, result);
+    }
+
+    @Test
+    public void if_assignee_is_null_then_should_return_default_avatar_id() {
+        Issue mockIssue = mock(Issue.class);
+        Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
+        Mockito.when(mockIssue.getAssignee()).thenReturn(null);
+
+        long result = new IssueDecorator(mockIssue).getAvatarId();
+
+        assertEquals(defaultUserAvatarId, result);
     }
 
     @Test

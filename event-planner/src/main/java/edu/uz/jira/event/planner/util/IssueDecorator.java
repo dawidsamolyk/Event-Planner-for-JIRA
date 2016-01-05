@@ -50,11 +50,16 @@ public class IssueDecorator {
     public IssueDecorator(@Nonnull final Issue source) {
         key = source.getKey();
         summary = source.getSummary();
+        daysAwayFromDueDate = DUE_DATE_INDICATOR.getDaysAwayFromDueDate(source.getDueDate());
+
         setComponents(source);
         setDone(source);
-        setAvatarId(source);
-        daysAwayFromDueDate = DUE_DATE_INDICATOR.getDaysAwayFromDueDate(source.getDueDate());
-        assigneeName = source.getAssignee().getName();
+
+        User assignee = source.getAssignee();
+        if (assignee != null) {
+            assigneeName = assignee.getName();
+        }
+        setAvatarId(assignee);
     }
 
     public String getAssigneeName() {
@@ -103,9 +108,7 @@ public class IssueDecorator {
         return avatarId;
     }
 
-    private void setAvatarId(@Nonnull final Issue source) {
-        User assignee = source.getAssignee();
-
+    private void setAvatarId(final User assignee) {
         if (assignee != null) {
             ApplicationUser remoteUser = ComponentAccessor.getJiraAuthenticationContext().getUser();
             ApplicationUser assigneeUser = ApplicationUsers.from(assignee);
@@ -137,7 +140,9 @@ public class IssueDecorator {
         if (getDaysAwayFromDueDate() != that.getDaysAwayFromDueDate()) return false;
         if (getKey() != null ? !getKey().equals(that.getKey()) : that.getKey() != null) return false;
         if (getSummary() != null ? !getSummary().equals(that.getSummary()) : that.getSummary() != null) return false;
-        return Arrays.equals(getComponentsNames(), that.getComponentsNames());
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(getComponentsNames(), that.getComponentsNames())) return false;
+        return !(getAssigneeName() != null ? !getAssigneeName().equals(that.getAssigneeName()) : that.getAssigneeName() != null);
     }
 
     @Override
