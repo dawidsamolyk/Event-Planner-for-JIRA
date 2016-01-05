@@ -15,16 +15,16 @@ function TimeLineTasksCreator(tasksToDoId, doneTasksId) {
         return result;
     };
 
-    this.createTodayTaskCell = function(index) {
-        var result = this.createTaskCell(index);
+    this.createTodayTaskCell = function() {
+        var result = this.createTaskCell(1);
         result.style.background = '#f5f5f5';
         result.style.borderLeft = '3px solid #205081';
         result.style.borderRight = '3px solid #205081';
         return result;
     };
 
-    this.createLateTaskCell = function(index) {
-        var result = this.createTaskCell(index);
+    this.createLateTaskCell = function() {
+        var result = this.createTaskCell(0);
         result.style.background = '#d04437';
         return result;
     };
@@ -40,15 +40,15 @@ function TimeLineTasksCreator(tasksToDoId, doneTasksId) {
         return result;
     };
 
-    this.createTodayDoneTaskCell = function(index) {
-        var result = this.createDoneTaskCell(index);
+    this.createTodayDoneTaskCell = function() {
+        var result = this.createDoneTaskCell(1);
         result.style.background = '#f5f5f5';
         result.style.borderLeft = '3px solid #205081';
         result.style.borderRight = '3px solid #205081';
         return result;
     };
 
-    this.createLateDoneTaskCell = function(index) {
+    this.createLateDoneTaskCell = function() {
         var result = this.createDoneTaskCell(0);
         result.style.background = '#d04437';
         return result;

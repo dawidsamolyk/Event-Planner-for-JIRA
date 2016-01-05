@@ -25,33 +25,39 @@ function TimeLine() {
         }
     };
 
+    this.isViewingCurrentWeek = function() {
+        return this.datesCreator.dateUtil.isTheSameDay(new Date(), this.timeLineStartDate);
+    };
+
+    this.isDeadlineToday = function() {
+        this.datesCreator.deadlineDateCellIndex === 1;
+    };
+
     this.refresh = function() {
         this.clear();
 
-        var lateCell = this.tasksCreator.createLateTaskCell(0);
-        this.tasksCreator.createLateDoneTaskCell();
+        var tasksCellsStartIndex = 0;
+        if(this.isViewingCurrentWeek()) {
+            var lateCell = this.tasksCreator.createLateTaskCell();
+            this.tasksCreator.createLateDoneTaskCell();
 
-        var firstDayCell;
-        var firstDayDoneCell;
-        if(this.datesCreator.dateUtil.isTheSameDay(new Date(), this.timeLineStartDate)) {
-            firstDayCell = this.tasksCreator.createTodayTaskCell(1);
-            todayDoneCell = this.tasksCreator.createTodayDoneTaskCell(1);
-        } else {
-            firstDayCell = this.tasksCreator.createTaskCell(1);
-            firstDayDoneCell = this.tasksCreator.createDoneTaskCell(1);
-        }
+            var todayTasksCell = this.tasksCreator.createTodayTaskCell();
+            var todayDoneTasksCell = this.tasksCreator.createTodayDoneTaskCell();
 
-        if(this.datesCreator.deadlineDateCellIndex === 1) {
-            todayCell.setAsDeadline();
-            todayDoneCell.setAsDeadline();
+            if(this.isDeadlineToday()) {
+                todayCell.setAsDeadline();
+                todayDoneCell.setAsDeadline();
+            }
+
+            tasksCellsStartIndex = 1;
         }
 
         var nextDaysCells = [];
         var nextDaysDoneCells = [];
-        var numberOfNextDays = 6;
-        for(index = 1; index < numberOfNextDays + 1; index++) {
-            nextDaysCells[index] = this.tasksCreator.createTaskCell(index + 1);
-            nextDaysDoneCells[index] = this.tasksCreator.createDoneTaskCell(index + 1);
+        var numberOfNextDaysToShow = 7 - tasksCellsStartIndex;
+        for(index = tasksCellsStartIndex; index < numberOfNextDaysToShow; index++) {
+            nextDaysCells[index] = this.tasksCreator.createTaskCell(index + tasksCellsStartIndex);
+            nextDaysDoneCells[index] = this.tasksCreator.createDoneTaskCell(index + tasksCellsStartIndex);
 
             if(this.datesCreator.deadlineDateCellIndex === index) {
                 nextDaysCells[index].setAsDeadline();
@@ -66,25 +72,25 @@ function TimeLine() {
 
         for(eachIssueKey in this.issues) {
             var eachIssue = this.issues[eachIssueKey];
-            var daysAwayFromDueDate = eachIssue.daysAwayFromDueDate - daysDifference;
+            var daysAwayFromDueDate = (eachIssue.daysAwayFromDueDate - daysDifference);
             var componentName = eachIssue.componentsNames[0];
             var avatarId = eachIssue.avatarId;
             var summary = eachIssue.summary;
             var issueKey = eachIssue.key;
             var assigneeName = eachIssue.assigneeName;
 
-            if(daysAwayFromDueDate > numberOfNextDays) {
+            if(daysAwayFromDueDate > numberOfNextDaysToShow) {
                 continue;
             }
 
-            if(daysAwayFromDueDate < 0 && eachIssue.done === false) {
+            if(lateCell != undefined && daysAwayFromDueDate < 0 && eachIssue.done === false) {
                 lateCell.appendChild(this.taskGadgetCreator.createLate(componentName, avatarId, summary, issueKey, assigneeName));
             }
             else if(daysAwayFromDueDate == 0 && eachIssue.done === false) {
-                firstDayCell.appendChild(this.taskGadgetCreator.createToDo(componentName, avatarId, summary, issueKey, assigneeName));
+                todayTasksCell.appendChild(this.taskGadgetCreator.createToDo(componentName, avatarId, summary, issueKey, assigneeName));
             }
             else if(daysAwayFromDueDate == 0 && eachIssue.done === true) {
-                firstDayDoneCell.appendChild(this.taskGadgetCreator.createDone(componentName, avatarId, summary, issueKey, assigneeName));
+                todayDoneTasksCell.appendChild(this.taskGadgetCreator.createDone(componentName, avatarId, summary, issueKey, assigneeName));
             }
             else if(daysAwayFromDueDate > 0 && eachIssue.done === true) {
                 nextDaysDoneCells[daysAwayFromDueDate].appendChild(this.taskGadgetCreator.createDone(componentName, avatarId, summary, issueKey, assigneeName));
@@ -98,23 +104,33 @@ function TimeLine() {
             }
         }
 
-        this.datesCreator.createLateDateCell(maximumLate);
+        if(this.isViewingCurrentWeek()) {
+            this.datesCreator.createLateDateCell(maximumLate);
+        }
+
         this.fillDates(this.timeLineStartDate);
         this.markDeadlineDateCells();
     };
 
+    this.isBeforeToday = function(date) {
+        var today = new Date();
+        return date < today && date.getDate() != today.getDate();
+    };
+
     this.fillDates = function(timeLineStartDate) {
         var timeLineStartDate = new Date(timeLineStartDate);
-
-        if(this.datesCreator.dateUtil.isTheSameDay(new Date(), this.timeLineStartDate)) {
+        var showingWeekBeforeCurrent = this.isBeforeToday(timeLineStartDate);
+    console.log(timeLineStartDate);
+console.log(showingWeekBeforeCurrent);
+        var daysStartIndex = 0;
+        if(this.isViewingCurrentWeek()) {
             this.datesCreator.createTodayDateCell(1, timeLineStartDate.toDateString());
-        } else {
-            this.datesCreator.createDateCell(1, timeLineStartDate.toDateString());
+            daysStartIndex = 1;
         }
 
-        var numberOfNextDays = 6;
-        for(index = 2; index < numberOfNextDays + 2; index++) {
-            this.datesCreator.createDateCell(index, this.datesCreator.dateUtil.setNextDayAndGetDateString(timeLineStartDate));
+        var numberOfNextDaysToShow = 7 - daysStartIndex;
+        for(index = daysStartIndex; index < numberOfNextDaysToShow + daysStartIndex; index++) {
+            this.datesCreator.createDateCell(index + daysStartIndex, this.datesCreator.dateUtil.setNextDayAndGetDateString(timeLineStartDate), showingWeekBeforeCurrent);
         }
     };
 

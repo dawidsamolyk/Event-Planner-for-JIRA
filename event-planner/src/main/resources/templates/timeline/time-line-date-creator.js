@@ -28,11 +28,15 @@ function TimeLineDateCreator(datesId) {
         return result;
     };
 
-    this.createDateCell = function(index, date) {
+    this.createDateCell = function(index, date, showingWeekBeforeCurrent) {
         var dates = this.getElementById(this.datesId);
         var result = dates.insertCell(index);
         result.style.textAlign = 'center';
         result.appendChild(document.createTextNode(date));
+
+        if(showingWeekBeforeCurrent === true) {
+            result.style.color = '#d04437';
+        }
 
         this.createdCells[date] = result;
         return result;
