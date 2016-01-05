@@ -2,7 +2,11 @@
 <html>
 <head>
     <meta name="decorator" content="atl.general">
-
+    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui.js"></script>
+    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-experimental.js"></script>
+    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-datepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui-experimental.css"/>
     <link type="text/css" rel="stylesheet" href="/jira/s/d41d8cd98f00b204e9800998ecf8427e-CDN/pl_PL-l42oyd/64022/3/3.10.10/_/download/resources/com.atlassian.gadgets.dashboard:dashboard/gadget-chrome.css" media="all">
     <link type="text/css" rel="stylesheet" href="/jira/s/d41d8cd98f00b204e9800998ecf8427e-CDN/pl_PL-l42oyd/64022/3/3.10.10/_/download/resources/com.atlassian.gadgets.dashboard:dashboard/gadget-colours.css" media="all">
 </head>
@@ -18,9 +22,15 @@
     <div class="aui-page-panel">
         <div class="aui-page-panel-inner">
             <section class="aui-page-panel-content">
-                <button id="previous-week" class="aui-button"><<</button>
-                <button id="current-week" class="aui-button">CURRENT</button>
-                <button id="next-week" class="aui-button">>></button>
+                <table style="width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left;"><button id="previous-week" class="aui-button" style="width: 200px;"><< Previous week</button></td>
+                            <td style="text-align: center;"><button id="current-week" class="aui-button" style="width: 200px;">Current week</button></td>
+                            <td style="text-align: right;"><button id="next-week" class="aui-button" style="width: 200px;">Next week >></button></td>
+                        </tr>
+                    </tbody>
+                </table>
 
                 <table id="time-line" class="aui" style="table-layout: fixed;">
                     <tbody>

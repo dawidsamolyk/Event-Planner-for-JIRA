@@ -23,7 +23,7 @@
         var projectKey = getParameterByName("project-key");
         var contextPath = AJS.Meta.get("context-path");
 
-        var myFlag = AJS.flag({
+        AJS.flag({
             type: 'success',
             title: 'Event organization project configured successfully.',
             body: '<ul class="aui-nav-actions-list">' +
@@ -32,8 +32,6 @@
                     '<li><a href="' + contextPath + '/plugins/servlet/project-config/' + projectKey + '">Move to project administration</a></li>' +
                   '</ul>'
         });
-
-
 </script>
 </body>
 </html>

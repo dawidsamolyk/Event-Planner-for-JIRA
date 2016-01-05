@@ -13,8 +13,12 @@ var timeLine = new TimeLine();
 var projectKey = getParameterByName('project-key');
 
 var pageTitle = projectKey + " - Event Organization Time Line";
-document.title = pageTitle;
-document.getElementById("time-line-name").innerHTML = pageTitle;
+if(projectKey) {
+    document.title = pageTitle;
+    document.getElementById("time-line-name").innerHTML = pageTitle;
+} else {
+    document.title = "Event Organization Time Line";
+}
 
 AJS.$(document).ready(
     function() {

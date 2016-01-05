@@ -13,7 +13,7 @@
 </head>
 <body>
     <script type="text/javascript">
-        var myFlag = AJS.flag({
+        AJS.flag({
             type: 'error',
             title: 'Error while configuring Event organization project.',
             body: '<ul class="aui-nav-actions-list">' +
