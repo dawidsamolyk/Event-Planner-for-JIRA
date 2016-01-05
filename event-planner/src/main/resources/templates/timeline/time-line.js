@@ -84,7 +84,6 @@ function TimeLine() {
 
         this.datesCreator.createLateDateCell(maximumLate);
         this.fillDates();
-        this.setDueDateCells();
     };
 
     this.fillDates = function() {
@@ -97,7 +96,9 @@ function TimeLine() {
         }
     };
 
-    this.setDueDateCells = function() {
+    this.markDeadlineDateCells = function(dueDate) {
+        this.deadlineDateIndex = this.datesCreator.setDeadlineDate(dueDate);
+
         var createdTasksCount = Object.keys(this.tasksCreator.createdTasksCells).length;
 
         for(index = 0; index < createdTasksCount; index++) {
@@ -106,9 +107,5 @@ function TimeLine() {
                 this.tasksCreator.setAsDeadline(this.tasksCreator.createdDoneTasksCells[index]);
             }
         }
-    };
-
-    this.setDueDate = function(dueDate) {
-        this.deadlineDateIndex = this.datesCreator.setDeadlineDate(dueDate);
     };
 };

@@ -81,7 +81,7 @@ function RESTManager() {
             dataType: "json",
             success: function (data, status, request) {
                 var projectDueDate = new Date(data);
-                timeLine.setDueDate(projectDueDate);
+                timeLine.markDeadlineDateCells(projectDueDate);
             }
         });
     }

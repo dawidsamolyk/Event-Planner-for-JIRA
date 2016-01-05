@@ -55,8 +55,8 @@ function TimeLineTasksCreator(tasksToDoId, doneTasksId) {
     };
 
     this.setAsDeadline = function(cell) {
-        result.style.borderLeft = '3px solid #14892c';
-        result.style.borderRight = '3px solid #14892c';
-        result.style.background = '#14892c';
+        cell.style.borderLeft = '3px solid #14892c';
+        cell.style.borderRight = '3px solid #14892c';
+        cell.style.background = '#f5f5f5';
     };
 };
