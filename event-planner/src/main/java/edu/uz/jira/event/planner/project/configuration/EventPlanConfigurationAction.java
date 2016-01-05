@@ -21,7 +21,6 @@ import java.util.Map;
  * Webwork action for configuring Event Plan Organization project.
  */
 public class EventPlanConfigurationAction extends JiraWebActionSupport {
-
     private final EventPlanConfigurationValidator validator;
     private final ProjectConfigurator projectConfigurator;
     private final ActiveObjectsService activeObjectsService;

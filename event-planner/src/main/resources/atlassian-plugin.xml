@@ -151,7 +151,12 @@
         <url-pattern>/event/plan/time-line</url-pattern>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <resource type="velocity" name="view" location="/templates/timeline/view.vm"/>
-        <resource type="download" name="script.js" location="/templates/timeline/script.jp"/>
+        <resource type="download" name="script.js" location="/templates/timeline/script.js"/>
+        <resource type="download" name="script.js" location="/templates/timeline/time-line.js"/>
+        <resource type="download" name="script.js" location="/templates/timeline/time-line-date-creator.js"/>
+        <resource type="download" name="script.js" location="/templates/timeline/time-line-tasks-creator.js"/>
+        <resource type="download" name="script.js" location="/templates/timeline/task-gadget-creator.js"/>
+        <resource type="download" name="script.js" location="/templates/timeline/date-util.js"/>
         <resource type="download" name="rest-manager.js" location="/templates/admin/rest-manager.js"/>
     </servlet>
 </atlassian-plugin>

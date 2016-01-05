@@ -73,4 +73,16 @@ function RESTManager() {
             }
         });
     }
+
+    this.getProjectDueDate = function(projectKey, timeLine) {
+        jQuery.ajax({
+            url: this.baseUrl + "project/release-date?project-key=" + projectKey,
+            type: "GET",
+            dataType: "json",
+            success: function (data, status, request) {
+                var projectDueDate = new Date(data);
+                timeLine.setDueDate(projectDueDate);
+            }
+        });
+    }
 };

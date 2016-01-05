@@ -29,6 +29,11 @@
         </div>
     </div>
     <script type="text/javascript">
+        #include("templates/timeline/task-gadget-creator.js")
+        #include("templates/timeline/date-util.js")
+        #include("templates/timeline/time-line-date-creator.js")
+        #include("templates/timeline/time-line-tasks-creator.js")
+        #include("templates/timeline/time-line.js")
         #include("templates/admin/rest-manager.js")
         #include("templates/timeline/script.js")
     </script>
