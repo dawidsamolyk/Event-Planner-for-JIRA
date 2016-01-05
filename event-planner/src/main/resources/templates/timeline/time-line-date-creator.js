@@ -15,10 +15,10 @@ function TimeLineDateCreator(datesId) {
     this.createLateDateCell = function(numberOfLateDays) {
         var result;
 
-        if(numberOfLateDays === 1) {
+        if(numberOfLateDays === 0) {
             result = this.createDateCell(0, "No late");
         }
-        else if(numberOfLateDays === 2) {
+        else if(numberOfLateDays === -1) {
             result = this.createDateCell(0, "1 day late");
         }
         else {

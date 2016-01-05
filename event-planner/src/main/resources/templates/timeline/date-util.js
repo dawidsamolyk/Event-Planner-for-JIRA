@@ -7,7 +7,15 @@ function DateUtil() {
     };
 
     this.setNextDayAndGetDateString = function(date) {
-        date.setDate(date.getDate() + 1);
+        this.addDaysToDate(date, 1);
         return date.toDateString();
+    };
+
+    this.addDaysToDate = function(date, numberOfDays) {
+        date.setDate(date.getDate() + numberOfDays);
+    };
+
+    this.substractDaysFromDate = function(date, numberOfDays) {
+        date.setDate(date.getDate() - numberOfDays);
     };
 };

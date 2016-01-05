@@ -3,7 +3,10 @@ function TimeLine() {
     this.tasksToDoId = 'tasks-todo';
     this.datesId = 'dates';
     this.doneTasksId = 'done-tasks';
+    this.deadlineDate;
     this.deadlineDateIndex;
+    this.timeLineStartDate;
+    this.issues;
     this.datesCreator = new TimeLineDateCreator(this.datesId);
     this.tasksCreator = new TimeLineTasksCreator(this.tasksToDoId, this.doneTasksId);
     this.taskGadgetCreator = new TaskGadgetCreator();
@@ -22,11 +25,21 @@ function TimeLine() {
         }
     };
 
-    this.fill = function(dataSource) {
+    this.refresh = function() {
+        this.clear();
+
         var lateCell = this.tasksCreator.createLateTaskCell(0);
         this.tasksCreator.createLateDoneTaskCell();
-        var todayCell = this.tasksCreator.createTodayTaskCell(1);
-        var todayDoneCell = this.tasksCreator.createTodayDoneTaskCell(1);
+
+        var firstDayCell;
+        var firstDayDoneCell;
+        if(this.datesCreator.dateUtil.isTheSameDay(new Date(), this.timeLineStartDate)) {
+            firstDayCell = this.tasksCreator.createTodayTaskCell(1);
+            todayDoneCell = this.tasksCreator.createTodayDoneTaskCell(1);
+        } else {
+            firstDayCell = this.tasksCreator.createTaskCell(1);
+            firstDayDoneCell = this.tasksCreator.createDoneTaskCell(1);
+        }
 
         if(this.datesCreator.deadlineDateCellIndex === 1) {
             todayCell.setAsDeadline();
@@ -46,11 +59,15 @@ function TimeLine() {
             }
         }
 
+        // TODO wylicz różnicę biorąc pod uwagę miesiąc i rok!!!
+        var differenceBetweenCurrentTimeLineStartDateAndToday = this.timeLineStartDate.getDate() - new Date().getDate();
+        console.log(differenceBetweenCurrentTimeLineStartDateAndToday);
+
         var maximumLate = 0;
 
-        for(eachIssueKey in dataSource) {
-            var eachIssue = dataSource[eachIssueKey];
-            var daysAwayFromDueDate = eachIssue.daysAwayFromDueDate;
+        for(eachIssueKey in this.issues) {
+            var eachIssue = this.issues[eachIssueKey];
+            var daysAwayFromDueDate = eachIssue.daysAwayFromDueDate - differenceBetweenCurrentTimeLineStartDateAndToday;
             var componentName = eachIssue.componentsNames[0];
             var avatarId = eachIssue.avatarId;
             var summary = eachIssue.summary;
@@ -65,10 +82,10 @@ function TimeLine() {
                 lateCell.appendChild(this.taskGadgetCreator.createLate(componentName, avatarId, summary, issueKey, assigneeName));
             }
             else if(daysAwayFromDueDate == 0 && eachIssue.done === false) {
-                todayCell.appendChild(this.taskGadgetCreator.createToDo(componentName, avatarId, summary, issueKey, assigneeName));
+                firstDayCell.appendChild(this.taskGadgetCreator.createToDo(componentName, avatarId, summary, issueKey, assigneeName));
             }
             else if(daysAwayFromDueDate == 0 && eachIssue.done === true) {
-                todayDoneCell.appendChild(this.taskGadgetCreator.createDone(componentName, avatarId, summary, issueKey, assigneeName));
+                firstDayDoneCell.appendChild(this.taskGadgetCreator.createDone(componentName, avatarId, summary, issueKey, assigneeName));
             }
             else if(daysAwayFromDueDate > 0 && eachIssue.done === true) {
                 nextDaysDoneCells[daysAwayFromDueDate].appendChild(this.taskGadgetCreator.createDone(componentName, avatarId, summary, issueKey, assigneeName));
@@ -83,21 +100,27 @@ function TimeLine() {
         }
 
         this.datesCreator.createLateDateCell(maximumLate);
-        this.fillDates();
+        this.fillDates(this.timeLineStartDate);
+        this.markDeadlineDateCells();
     };
 
-    this.fillDates = function() {
-        var currentDate = new Date();
-        this.datesCreator.createTodayDateCell(1, currentDate.toDateString());
+    this.fillDates = function(timeLineStartDate) {
+        var timeLineStartDate = new Date(timeLineStartDate);
+
+        if(this.datesCreator.dateUtil.isTheSameDay(new Date(), this.timeLineStartDate)) {
+            this.datesCreator.createTodayDateCell(1, timeLineStartDate.toDateString());
+        } else {
+            this.datesCreator.createDateCell(1, timeLineStartDate.toDateString());
+        }
 
         var numberOfNextDays = 6;
         for(index = 2; index < numberOfNextDays + 2; index++) {
-            this.datesCreator.createDateCell(index, this.datesCreator.dateUtil.setNextDayAndGetDateString(currentDate));
+            this.datesCreator.createDateCell(index, this.datesCreator.dateUtil.setNextDayAndGetDateString(timeLineStartDate));
         }
     };
 
-    this.markDeadlineDateCells = function(dueDate) {
-        this.deadlineDateIndex = this.datesCreator.setDeadlineDate(dueDate);
+    this.markDeadlineDateCells = function() {
+        this.deadlineDateIndex = this.datesCreator.setDeadlineDate(this.deadlineDate);
 
         var createdTasksCount = Object.keys(this.tasksCreator.createdTasksCells).length;
 
@@ -108,4 +131,8 @@ function TimeLine() {
             }
         }
     };
+
+    this.setDeadlineDate = function(dueDate) {
+        this.deadlineDate = dueDate;
+    }
 };

@@ -66,7 +66,8 @@ function RESTManager() {
             type: "GET",
             dataType: "json",
             success: function (data, status, request) {
-                timeLine.fill(data);
+                timeLine.issues = data;
+                timeLine.refresh();
             },
             error: function (request, status, error) {
                 // Wyświetlenie komunikatu o błędzie
@@ -81,7 +82,8 @@ function RESTManager() {
             dataType: "json",
             success: function (data, status, request) {
                 var projectDueDate = new Date(data);
-                timeLine.markDeadlineDateCells(projectDueDate);
+                timeLine.setDeadlineDate(projectDueDate);
+                timeLine.markDeadlineDateCells();
             }
         });
     }

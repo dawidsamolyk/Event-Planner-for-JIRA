@@ -18,6 +18,10 @@
     <div class="aui-page-panel">
         <div class="aui-page-panel-inner">
             <section class="aui-page-panel-content">
+                <button id="previous-week" class="aui-button"><<</button>
+                <button id="current-week" class="aui-button">CURRENT</button>
+                <button id="next-week" class="aui-button">>></button>
+
                 <table id="time-line" class="aui" style="table-layout: fixed;">
                     <tbody>
                         <tr id="tasks-todo"></tr>
@@ -29,8 +33,9 @@
         </div>
     </div>
     <script type="text/javascript">
-        #include("templates/timeline/task-gadget-creator.js")
         #include("templates/timeline/date-util.js")
+        #include("templates/timeline/time-line-buttons-listener.js")
+        #include("templates/timeline/task-gadget-creator.js")
         #include("templates/timeline/time-line-date-creator.js")
         #include("templates/timeline/time-line-tasks-creator.js")
         #include("templates/timeline/time-line.js")

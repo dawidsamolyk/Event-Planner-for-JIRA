@@ -5,8 +5,10 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 };
 
+var currentTimeLineStartDate = new Date();
+
 var timeLine = new TimeLine();
-timeLine.clear();
+    timeLine.timeLineStartDate = currentTimeLineStartDate;
 
 var projectKey = getParameterByName('project-key');
 
@@ -20,3 +22,8 @@ AJS.$(document).ready(
         rest.getIssues(projectKey, timeLine);
         rest.getProjectDueDate(projectKey, timeLine);
 });
+
+var buttonsListener = new TimeLineButtonsListener();
+    buttonsListener.onPreviousWeekChangeWeekView(currentTimeLineStartDate);
+    buttonsListener.onNextWeekChangeWeekView(currentTimeLineStartDate);
+    buttonsListener.onCurrentWeekChangeWeekView(currentTimeLineStartDate);
