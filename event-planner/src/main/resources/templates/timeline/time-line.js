@@ -59,15 +59,14 @@ function TimeLine() {
             }
         }
 
-        // TODO wylicz różnicę biorąc pod uwagę miesiąc i rok!!!
-        var differenceBetweenCurrentTimeLineStartDateAndToday = this.timeLineStartDate.getDate() - new Date().getDate();
-        console.log(differenceBetweenCurrentTimeLineStartDateAndToday);
+        var timeDifference = this.timeLineStartDate.getTime() - new Date().getTime();
+        var daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
 
         var maximumLate = 0;
 
         for(eachIssueKey in this.issues) {
             var eachIssue = this.issues[eachIssueKey];
-            var daysAwayFromDueDate = eachIssue.daysAwayFromDueDate - differenceBetweenCurrentTimeLineStartDateAndToday;
+            var daysAwayFromDueDate = eachIssue.daysAwayFromDueDate - daysDifference;
             var componentName = eachIssue.componentsNames[0];
             var avatarId = eachIssue.avatarId;
             var summary = eachIssue.summary;

@@ -73,6 +73,7 @@ function RESTManager() {
                 // Wyświetlenie komunikatu o błędzie
             }
         });
+
     }
 
     this.getProjectDueDate = function(projectKey, timeLine) {

@@ -1,7 +1,7 @@
 function TimeLineButtonsListener() {
     this.dateUtil = new DateUtil();
 
-    this.onPreviousWeekChangeWeekView = function(currentTimeLineStartDate) {
+    this.onPreviousWeekChangeWeekView = function() {
         var dateUtil = this.dateUtil;
 
         AJS.$("#previous-week").click(
@@ -13,7 +13,7 @@ function TimeLineButtonsListener() {
         );
     };
 
-    this.onNextWeekChangeWeekView = function(currentTimeLineStartDate) {
+    this.onNextWeekChangeWeekView = function() {
         var dateUtil = this.dateUtil;
 
         AJS.$("#next-week").click(
@@ -25,13 +25,14 @@ function TimeLineButtonsListener() {
         );
     };
 
-    this.onCurrentWeekChangeWeekView = function(currentTimeLineStartDate) {
+    this.onCurrentWeekChangeWeekView = function() {
         var dateUtil = this.dateUtil;
 
         AJS.$("#current-week").click(
             function(e) {
                 e.preventDefault();
                 currentTimeLineStartDate = new Date();
+                timeLine.timeLineStartDate = currentTimeLineStartDate;
                 timeLine.refresh();
             }
         );
