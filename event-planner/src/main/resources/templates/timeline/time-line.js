@@ -120,8 +120,7 @@ function TimeLine() {
     this.fillDates = function(timeLineStartDate) {
         var timeLineStartDate = new Date(timeLineStartDate);
         var showingWeekBeforeCurrent = this.isBeforeToday(timeLineStartDate);
-    console.log(timeLineStartDate);
-console.log(showingWeekBeforeCurrent);
+
         var daysStartIndex = 0;
         if(this.isViewingCurrentWeek()) {
             this.datesCreator.createTodayDateCell(1, timeLineStartDate.toDateString());
