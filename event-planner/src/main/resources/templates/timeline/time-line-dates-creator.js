@@ -31,7 +31,7 @@ function TimeLineDatesCreator() {
     this.createDateCell = function(index, date) {
         var result = this.getDatesRow().insertCell(index);
         result.style.textAlign = 'center';
-        result.appendChild(document.createTextNode(date));
+        result.appendChild(document.createTextNode(date.toDateString()));
         return result;
     };
 
