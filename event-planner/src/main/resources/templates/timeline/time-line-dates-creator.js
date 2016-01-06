@@ -17,7 +17,7 @@ function TimeLineDatesCreator() {
             if(this.dateUtil.isTheSameDay(date, today)) {
                 this.createTodayDateCell(currentCellIndex);
             } else {
-                this.createDateCell(currentCellIndex, date);
+                this.createDateCell(currentCellIndex, date.toDateString());
             }
 
             if(this.dateUtil.isTheSameDay(date, deadlineDate)) {
@@ -31,7 +31,7 @@ function TimeLineDatesCreator() {
     this.createDateCell = function(index, date) {
         var result = this.getDatesRow().insertCell(index);
         result.style.textAlign = 'center';
-        result.appendChild(document.createTextNode(date.toDateString()));
+        result.appendChild(document.createTextNode(date));
         return result;
     };
 
@@ -51,7 +51,7 @@ function TimeLineDatesCreator() {
 
     this.createTodayDateCell = function(index) {
         var today = new Date();
-        var result = this.createDateCell(index, today);
+        var result = this.createDateCell(index, today.toDateString());
         result.style.borderLeft = '3px solid #205081';
         result.style.borderRight = '3px solid #205081';
         result.style.color = '#205081';
