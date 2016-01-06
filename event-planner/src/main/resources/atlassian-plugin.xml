@@ -153,8 +153,8 @@
         <resource type="velocity" name="view" location="/templates/timeline/view.vm"/>
         <resource type="download" name="script.js" location="/templates/timeline/script.js"/>
         <resource type="download" name="time-line.js" location="/templates/timeline/time-line.js"/>
-        <resource type="download" name="time-line-date-creator.js"
-                  location="/templates/timeline/time-line-date-creator.js"/>
+        <resource type="download" name="time-line-dates-creator.js"
+                  location="/templates/timeline/time-line-dates-creator.js"/>
         <resource type="download" name="time-line-tasks-creator.js"
                   location="/templates/timeline/time-line-tasks-creator.js"/>
         <resource type="download" name="task-gadget-creator.js" location="/templates/timeline/task-gadget-creator.js"/>

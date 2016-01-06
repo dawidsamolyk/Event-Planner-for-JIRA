@@ -173,8 +173,7 @@ function RESTManager() {
             type: "GET",
             dataType: "json",
             success: function (data, status, request) {
-                timeLine.issues = data;
-                timeLine.refresh();
+                timeLine.setIssues(data);
             },
             error: function (request, status, error) {
                 AJS.flag({
@@ -184,10 +183,9 @@ function RESTManager() {
                 });
             }
         });
-
     }
 
-    this.getProjectDueDate = function(projectKey, timeLine) {
+    this.getProjectDeadline = function(projectKey, timeLine) {
         if(!projectKey || 0 === projectKey.length) {
                 AJS.flag({
                     type: 'error',
@@ -208,9 +206,8 @@ function RESTManager() {
             type: "GET",
             dataType: "json",
             success: function (data, status, request) {
-                var projectDueDate = new Date(data);
-                timeLine.setDeadlineDate(projectDueDate);
-                timeLine.markDeadlineDateCells();
+                var projectDeadline = new Date(data);
+                timeLine.setProjectDeadline(projectDeadline);
             },
             error: function (request, status, error) {
                     AJS.flag({

@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -41,6 +42,8 @@ public class IssueDecorator {
     private int daysAwayFromDueDate;
     @XmlElement
     private String assigneeName;
+    @XmlElement
+    private Long dueDate;
 
     /**
      * Constructor.
@@ -50,7 +53,10 @@ public class IssueDecorator {
     public IssueDecorator(@Nonnull final Issue source) {
         key = source.getKey();
         summary = source.getSummary();
-        daysAwayFromDueDate = DUE_DATE_INDICATOR.getDaysAwayFromDueDate(source.getDueDate());
+
+        Timestamp sourceDueDate = source.getDueDate();
+        dueDate = sourceDueDate.getTime();
+        daysAwayFromDueDate = DUE_DATE_INDICATOR.getDaysAwayFromDueDate(sourceDueDate);
 
         setComponents(source);
         setDone(source);
@@ -60,6 +66,10 @@ public class IssueDecorator {
             assigneeName = assignee.getName();
         }
         setAvatarId(assignee);
+    }
+
+    public Long getDueDate() {
+        return dueDate;
     }
 
     public String getAssigneeName() {
@@ -142,7 +152,9 @@ public class IssueDecorator {
         if (getSummary() != null ? !getSummary().equals(that.getSummary()) : that.getSummary() != null) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(getComponentsNames(), that.getComponentsNames())) return false;
-        return !(getAssigneeName() != null ? !getAssigneeName().equals(that.getAssigneeName()) : that.getAssigneeName() != null);
+        if (getAssigneeName() != null ? !getAssigneeName().equals(that.getAssigneeName()) : that.getAssigneeName() != null)
+            return false;
+        return !(getDueDate() != null ? !getDueDate().equals(that.getDueDate()) : that.getDueDate() != null);
     }
 
     @Override
