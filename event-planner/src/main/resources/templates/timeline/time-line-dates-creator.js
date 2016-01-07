@@ -1,6 +1,9 @@
 function TimeLineDatesCreator() {
     var that = this;
     that.dateUtil = new DateUtil();
+    that.todayLabel = '<br>Today';
+    that.deadlineLabel = '<br>Deadline';
+    that.todayDeadlineLabel = '<br>Deadline is today!';
 
     that.createLateDateCell = function(maximumIssueLate) {
         if(maximumIssueLate != 0) {
@@ -29,10 +32,10 @@ function TimeLineDatesCreator() {
         }
     };
 
-    that.createDateCell = function(index, date) {
+    that.createDateCell = function(index, label) {
         var result = that.getDatesRow().insertCell(index);
         result.style.textAlign = 'center';
-        result.appendChild(document.createTextNode(date));
+        result.innerHTML = label;
         return result;
     };
 
@@ -52,7 +55,7 @@ function TimeLineDatesCreator() {
 
     that.createTodayDateCell = function(index) {
         var today = new Date();
-        var result = that.createDateCell(index, today.toDateString());
+        var result = that.createDateCell(index, today.toDateString() + that.todayLabel);
         result.style.borderLeft = '3px solid #205081';
         result.style.borderRight = '3px solid #205081';
         result.style.color = '#205081';
@@ -65,6 +68,13 @@ function TimeLineDatesCreator() {
         cell.style.borderLeft = '3px solid #14892c';
         cell.style.borderRight = '3px solid #14892c';
         cell.style.color = '#14892c';
+
+        if(cell.innerHTML.includes(that.todayLabel)) {
+            cell.innerHTML = cell.innerHTML.replace(that.todayLabel, that.todayDeadlineLabel);
+        } else {
+            cell.innerHTML += that.deadlineLabel;
+        }
+
         return cell;
     };
 };

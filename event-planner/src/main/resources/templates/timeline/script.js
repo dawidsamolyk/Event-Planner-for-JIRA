@@ -6,7 +6,7 @@ function getParameterByName(name) {
 };
 
 var project = getParameterByName('project');
-var projectKey = project.substring(9, project.length);
+var projectKey = project.substring('Project: '.length, project.length);
 
 if(projectKey) {
     var pageTitle = projectKey + " - Event Organization Time Line";
