@@ -55,8 +55,10 @@ public class IssueDecorator {
         summary = source.getSummary();
 
         Timestamp sourceDueDate = source.getDueDate();
-        dueDate = sourceDueDate.getTime();
-        daysAwayFromDueDate = DUE_DATE_INDICATOR.getDaysAwayFromDueDate(sourceDueDate);
+        if(sourceDueDate != null) {
+            dueDate = sourceDueDate.getTime();
+            daysAwayFromDueDate = DUE_DATE_INDICATOR.getDaysAwayFromDueDate(sourceDueDate);
+        }
 
         setComponents(source);
         setDone(source);

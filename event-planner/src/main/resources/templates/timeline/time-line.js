@@ -1,44 +1,46 @@
 function TimeLine() {
-    this.issues = {};
-    this.deadlineDate = new Date();
-    this.maximumIssueLate = 0;
+    var that = this;
+    that.issues = {};
+    that.deadlineDate = new Date();
+    that.maximumIssueLate = 0;
 
-    this.tasksToDoId = 'tasks-todo';
-    this.datesId = 'dates';
-    this.doneTasksId = 'done-tasks';
+    that.tasksToDoId = 'tasks-todo';
+    that.datesId = 'dates';
+    that.doneTasksId = 'done-tasks';
 
-    this.allTimeLineWeeks = {};
-    this.showingWeekIndex = 0;
+    that.allTimeLineWeeks = {};
+    that.showingWeekIndex = 0;
 
-    this.datesCreator = new TimeLineDatesCreator();
-    this.tasksCreator = new TimeLineTasksCreator();
+    that.datesCreator = new TimeLineDatesCreator();
+    that.tasksCreator = new TimeLineTasksCreator();
 
-    this.dateUtil = new DateUtil();
-    this.weeksCalculator = new WeeksCalculator();
+    that.dateUtil = new DateUtil();
+    that.weeksCalculator = new WeeksCalculator();
 
-    this.setIssues = function(sourceIssues) {
-        this.issues = sourceIssues;
-        this.maximumIssueLate = this.getMaximumIssueLate();
+    that.setIssues = function(sourceIssues) {
+        that.issues = sourceIssues;
+        that.maximumIssueLate = that.getMaximumIssueLate();
+        that.showCurrentWeek();
     };
 
-    this.setProjectDeadline = function(sourceDeadlineDate) {
-        this.deadlineDate = sourceDeadlineDate;
-        this.allTimeLineWeeks = this.getTimeLineWeeks();
-        this.showCurrentWeek();
+    that.setProjectDeadline = function(sourceDeadlineDate) {
+        that.deadlineDate = sourceDeadlineDate;
+        that.allTimeLineWeeks = that.getTimeLineWeeks();
+        that.showCurrentWeek();
     };
 
-    this.getTimeLineWeeks = function() {
-        return this.weeksCalculator.getWeeks(this.getMostLateTaskDueDate(), this.deadlineDate);
+    that.getTimeLineWeeks = function() {
+        return that.weeksCalculator.getWeeks(that.getMostLateTaskDueDate(), that.deadlineDate);
     };
 
-    this.getMostLateTaskDueDate = function() {
-        return this.dateUtil.getDateWithSubstractedDays(new Date(), this.maximumIssueLate);
+    that.getMostLateTaskDueDate = function() {
+        return that.dateUtil.getDateWithSubstractedDays(new Date(), that.maximumIssueLate);
     };
 
-    this.getMaximumIssueLate = function() {
+    that.getMaximumIssueLate = function() {
         var result = 0;
-        for(eachIssue in this.issues) {
-            var issue = this.issues[eachIssue];
+        for(eachIssue in that.issues) {
+            var issue = that.issues[eachIssue];
             var daysAwayFromDueDate = issue.daysAwayFromDueDate;
 
             if(daysAwayFromDueDate < result && issue.done === false) {
@@ -48,70 +50,70 @@ function TimeLine() {
         return Math.abs(result);
     };
 
-    this.showNextWeek = function() {
-        this.show(++this.showingWeekIndex);
+    that.showNextWeek = function() {
+        that.show(++that.showingWeekIndex);
     };
 
-    this.showPreviousWeek = function() {
-        this.show(--this.showingWeekIndex);
+    that.showPreviousWeek = function() {
+        that.show(--that.showingWeekIndex);
     };
 
-    this.showCurrentWeek = function() {
-        this.show(0);
+    that.showCurrentWeek = function() {
+        that.show(0);
     };
 
-    this.show = function(weekToShowIndex) {
-        this.clearTimeLine();
+    that.show = function(weekToShowIndex) {
+        that.clearTimeLine();
 
-        if(this.allTimeLineWeeks.length === 0) {
+        if(that.allTimeLineWeeks.length === 0) {
             // TODO wyświetl komunikat o błędzie
             return;
         }
-        this.showingWeekIndex = weekToShowIndex;
-        var weekToShow = this.allTimeLineWeeks[weekToShowIndex];
+        that.showingWeekIndex = weekToShowIndex;
+        var weekToShow = that.allTimeLineWeeks[weekToShowIndex];
 
-        this.createDatesCells(weekToShow);
-        this.createNavigationButtons();
+        that.createDatesCells(weekToShow);
+        that.createNavigationButtons();
 
-        this.createLateTasksCells();
-        this.createTasksCells(weekToShow);
+        that.createLateTasksCells();
+        that.createTasksCells(weekToShow);
     };
 
-    this.createDatesCells = function(weekToShow) {
-        if(this.showingCurrentWeek() && this.maximumIssueLate != 0) {
-            this.datesCreator.createLateDateCell(this.maximumIssueLate);
+    that.createDatesCells = function(weekToShow) {
+        if(that.showingCurrentWeek() && that.maximumIssueLate != 0) {
+            that.datesCreator.createLateDateCell(that.maximumIssueLate);
         }
-        this.datesCreator.createCells(weekToShow, this.deadlineDate);
+        that.datesCreator.createCells(weekToShow, that.deadlineDate);
     };
 
-    this.showingCurrentWeek = function() {
-        return this.showingWeekIndex === 0;
+    that.showingCurrentWeek = function() {
+        return that.showingWeekIndex === 0;
     };
 
-    this.createNavigationButtons = function() {
-        var timeLineNavigationButtons = new TimeLineNavigationButtons(this.allTimeLineWeeks, this.showingWeekIndex);
+    that.createNavigationButtons = function() {
+        var timeLineNavigationButtons = new TimeLineNavigationButtons(that.allTimeLineWeeks, that.showingWeekIndex);
         timeLineNavigationButtons.create();
     };
 
-    this.createLateTasksCells = function() {
-        if(this.showingCurrentWeek() && this.maximumIssueLate != 0) {
-            var lateCell = this.tasksCreator.createLateTaskCell();
-            this.tasksCreator.fillLateCellByIssues(lateCell, this.issues);
+    that.createLateTasksCells = function() {
+        if(that.showingCurrentWeek() && that.maximumIssueLate != 0) {
+            var lateCell = that.tasksCreator.createLateTaskCell();
+            that.tasksCreator.fillLateCellByIssues(lateCell, that.issues);
         }
     };
 
-    this.createTasksCells = function(weekToShow) {
-        var cells = this.tasksCreator.createTasksCells(weekToShow, this.deadlineDate);
-        this.tasksCreator.fillCellsByIssues(cells, this.issues);
+    that.createTasksCells = function(weekToShow) {
+        var cells = that.tasksCreator.createTasksCells(weekToShow, that.deadlineDate);
+        that.tasksCreator.fillCellsByIssues(cells, that.issues);
     };
 
-    this.clearTimeLine = function() {
-        this.clearTable(this.tasksToDoId);
-        this.clearTable(this.datesId);
-        this.clearTable(this.doneTasksId);
+    that.clearTimeLine = function() {
+        that.clearTable(that.tasksToDoId);
+        that.clearTable(that.datesId);
+        that.clearTable(that.doneTasksId);
     };
 
-    this.clearTable = function(id) {
+    that.clearTable = function(id) {
         var table = document.getElementById(id);
         while(table.cells.length > 0) {
             table.deleteCell(0);

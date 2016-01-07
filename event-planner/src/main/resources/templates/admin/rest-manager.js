@@ -1,7 +1,8 @@
 function RESTManager() {
-    this.baseUrl = AJS.contextPath() + "/rest/event-plans/1.0/";
+    var that = this;
+    that.baseUrl = AJS.contextPath() + "/rest/event-plans/1.0/";
 
-    this.post = function(resource) {
+    that.post = function(resource) {
         if(resource === undefined) {
                 AJS.flag({
                     type: 'error',
@@ -25,7 +26,7 @@ function RESTManager() {
         }
 
         jQuery.ajax({
-            url: this.baseUrl + resource.id,
+            url: that.baseUrl + resource.id,
             type: "POST",
             contentType: "application/json",
             data: resource.getJson(),
@@ -40,7 +41,7 @@ function RESTManager() {
         });
     };
 
-    this.get = function(sourceId, destinationResource) {
+    that.get = function(sourceId, destinationResource) {
         if(!sourceId || 0 === sourceId.length) {
                 AJS.flag({
                     type: 'error',
@@ -57,7 +58,7 @@ function RESTManager() {
         }
 
         jQuery.ajax({
-            url: this.baseUrl + sourceId,
+            url: that.baseUrl + sourceId,
             type: "GET",
             dataType: "json",
             success: function (data, status, request) {
@@ -73,7 +74,7 @@ function RESTManager() {
         });
     };
 
-    this.getAsPost = function(sourceId, destinationResource, objectId) {
+    that.getAsPost = function(sourceId, destinationResource, objectId) {
         if(!sourceId || 0 === sourceId.length) {
                 AJS.flag({
                     type: 'error',
@@ -97,7 +98,7 @@ function RESTManager() {
         }
 
             jQuery.ajax({
-                url: this.baseUrl + sourceId,
+                url: that.baseUrl + sourceId,
                 type: "POST",
                 dataType: "json",
                 contentType: "text/plain",
@@ -115,7 +116,7 @@ function RESTManager() {
             });
     };
 
-    this.doDelete = function(resourceId, objectId) {
+    that.doDelete = function(resourceId, objectId) {
         if(!resourceId || 0 === resourceId.length) {
                 AJS.flag({
                     type: 'error',
@@ -132,7 +133,7 @@ function RESTManager() {
         }
 
         jQuery.ajax({
-            url: this.baseUrl + resourceId,
+            url: that.baseUrl + resourceId,
             type: "DELETE",
             contentType: "text/plain",
             data: objectId,
@@ -152,7 +153,7 @@ function RESTManager() {
         });
     }
 
-    this.getIssues = function(projectKey, timeLine) {
+    that.getIssues = function(projectKey, timeLine) {
         if(!projectKey || 0 === projectKey.length) {
                 AJS.flag({
                     type: 'error',
@@ -169,7 +170,7 @@ function RESTManager() {
         }
 
         jQuery.ajax({
-            url: this.baseUrl + "issues?project-key=" + projectKey,
+            url: that.baseUrl + "issues?project-key=" + projectKey,
             type: "GET",
             dataType: "json",
             success: function (data, status, request) {
@@ -185,7 +186,7 @@ function RESTManager() {
         });
     }
 
-    this.getProjectDeadline = function(projectKey, timeLine) {
+    that.getProjectDeadline = function(projectKey, timeLine) {
         if(!projectKey || 0 === projectKey.length) {
                 AJS.flag({
                     type: 'error',
@@ -202,7 +203,7 @@ function RESTManager() {
         }
 
         jQuery.ajax({
-            url: this.baseUrl + "project/release-date?project-key=" + projectKey,
+            url: that.baseUrl + "project/release-date?project-key=" + projectKey,
             type: "GET",
             dataType: "json",
             success: function (data, status, request) {

@@ -1,22 +1,23 @@
 function TimeLineNavigationButtons(allTimeLineWeeks, weekToShowIndex) {
-    currentWeekIndex = 0;
-    previousWeekButtonId = 'previous-week';
-    nextWeekButtonId = 'next-week';
-    currentWeekButtonId = 'current-week';
+    var that = this;
+    that.currentWeekIndex = 0;
+    that.previousWeekButtonId = 'previous-week';
+    that.nextWeekButtonId = 'next-week';
+    that.currentWeekButtonId = 'current-week';
 
-    canMoveToNextWeek = function() {
+    that.canMoveToNextWeek = function() {
         return allTimeLineWeeks[weekToShowIndex + 1] != undefined;
     };
 
-    canMoveToPreviousWeek = function() {
+    that.canMoveToPreviousWeek = function() {
         return allTimeLineWeeks[weekToShowIndex - 1] != undefined;
     };
 
-    isShowingCurrentWeek = function() {
-        return weekToShowIndex == currentWeekIndex;
+    that.isShowingCurrentWeek = function() {
+        return weekToShowIndex == that.currentWeekIndex;
     };
 
-    getVisibility = function(condition) {
+    that.getVisibility = function(condition) {
         if(condition === true) {
             return 'visible';
         } else {
@@ -24,13 +25,18 @@ function TimeLineNavigationButtons(allTimeLineWeeks, weekToShowIndex) {
         }
     };
 
-    getStyleByElementId = function(id) {
+    that.getStyleByElementId = function(id) {
         return document.getElementById(id).style;
     }
 
-    this.create = function() {
-        getStyleByElementId(nextWeekButtonId).visibility = getVisibility(canMoveToNextWeek());
-        getStyleByElementId(previousWeekButtonId).visibility = getVisibility(canMoveToPreviousWeek());
-        getStyleByElementId(currentWeekButtonId).visibility = getVisibility(!isShowingCurrentWeek());
+    that.create = function() {
+        var nextWeekButtonStyle = that.getStyleByElementId(that.nextWeekButtonId);
+        nextWeekButtonStyle.visibility = that.getVisibility(that.canMoveToNextWeek());
+
+        var previousWeekButtonStyle = that.getStyleByElementId(that.previousWeekButtonId);
+        previousWeekButtonStyle.visibility = that.getVisibility(that.canMoveToPreviousWeek());
+
+        var currentWeekButtonStyle = that.getStyleByElementId(that.currentWeekButtonId);
+        currentWeekButtonStyle.visibility = that.getVisibility(!that.isShowingCurrentWeek());
     };
 };

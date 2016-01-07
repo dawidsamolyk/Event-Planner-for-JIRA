@@ -1,58 +1,59 @@
 function TimeLineTasksCreator() {
-    this.taskGadgetCreator = new TaskGadgetCreator();
-    this.dateUtil = new DateUtil();
+    var that = this;
+    that.taskGadgetCreator = new TaskGadgetCreator();
+    that.dateUtil = new DateUtil();
 
-    this.getElementById = function(id) {
+    that.getElementById = function(id) {
         return document.getElementById(id);
     };
 
-    this.getTasksToDoRow = function() {
-        return this.getElementById('tasks-todo');
+    that.getTasksToDoRow = function() {
+        return that.getElementById('tasks-todo');
     };
 
-    this.getDoneTasksRow = function() {
-        return this.getElementById('done-tasks');
+    that.getDoneTasksRow = function() {
+        return that.getElementById('done-tasks');
     };
 
-    this.createLateTaskCell = function() {
-        var lateCell = this.createTaskCell(0);
+    that.createLateTaskCell = function() {
+        var lateCell = that.createTaskCell(0);
         lateCell.style.background = '#d04437';
-        var lateDoneCell = this.createDoneTaskCell(0);
+        var lateDoneCell = that.createDoneTaskCell(0);
         lateDoneCell.style.background = '#d04437';
 
         return lateCell;
     };
 
-    this.fillLateCellByIssues = function(lateCell, issues) {
+    that.fillLateCellByIssues = function(lateCell, issues) {
         for(eachIssue in issues) {
             var issue = issues[eachIssue];
 
             if(issue.daysAwayFromDueDate < 0 && issue.done === false) {
-                var lateTaskGadget = this.taskGadgetCreator.createLate(issue);
+                var lateTaskGadget = that.taskGadgetCreator.createLate(issue);
                 lateCell.appendChild(lateTaskGadget);
             }
         }
     };
 
-    this.createTasksCells = function(weekDaysDates, deadlineDate) {
+    that.createTasksCells = function(weekDaysDates, deadlineDate) {
         var result = {};
         var today = new Date();
-        var currentCellIndex = this.getTasksToDoRow().cells.length;
+        var currentCellIndex = that.getTasksToDoRow().cells.length;
 
         var cell, doneCell;
         for(eachDate in weekDaysDates) {
             var date = weekDaysDates[eachDate];
 
-            if(this.dateUtil.isTheSameDay(date, today)) {
-                cell = this.createTodayTaskCell(currentCellIndex);
-                doneCell = this.createTodayDoneTaskCell(currentCellIndex);
+            if(that.dateUtil.isTheSameDay(date, today)) {
+                cell = that.createTodayTaskCell(currentCellIndex);
+                doneCell = that.createTodayDoneTaskCell(currentCellIndex);
             } else {
-                cell = this.createTaskCell(currentCellIndex);
-                doneCell = this.createDoneTaskCell(currentCellIndex);
+                cell = that.createTaskCell(currentCellIndex);
+                doneCell = that.createDoneTaskCell(currentCellIndex);
             }
 
-            if(this.dateUtil.isTheSameDay(date, deadlineDate)) {
-                this.setAsDeadlineTaskCellAtIndex(currentCellIndex);
+            if(that.dateUtil.isTheSameDay(date, deadlineDate)) {
+                that.setAsDeadlineTaskCellAtIndex(currentCellIndex);
             }
 
             result[date] = { 'toDo' : cell, 'done' : doneCell };
@@ -62,65 +63,65 @@ function TimeLineTasksCreator() {
         return result;
     };
 
-    this.fillCellsByIssues = function(cells, issues) {
+    that.fillCellsByIssues = function(cells, issues) {
         for(eachIssue in issues) {
             var issue = issues[eachIssue];
             var issueDueDate = new Date(issue.dueDate);
 
             for(eachDate in cells) {
-                if(this.dateUtil.isTheSameDay(issueDueDate, new Date(eachDate))) {
+                if(that.dateUtil.isTheSameDay(issueDueDate, new Date(eachDate))) {
                     var cell = cells[eachDate];
 
                     if(issue.done === true) {
-                        cell.done.appendChild(this.taskGadgetCreator.createDone(issue));
+                        cell.done.appendChild(that.taskGadgetCreator.createDone(issue));
                     } else {
-                        cell.toDo.appendChild(this.taskGadgetCreator.createToDo(issue));
+                        cell.toDo.appendChild(that.taskGadgetCreator.createToDo(issue));
                     }
                 }
             }
         }
     };
 
-    this.createTaskCell = function(index) {
-        var result = this.getTasksToDoRow().insertCell(index);
+    that.createTaskCell = function(index) {
+        var result = that.getTasksToDoRow().insertCell(index);
         result.style.verticalAlign = 'bottom';
         result.style.padding = 0;
         return result;
     };
 
-    this.createTodayTaskCell = function(index) {
-        var result = this.createTaskCell(index);
+    that.createTodayTaskCell = function(index) {
+        var result = that.createTaskCell(index);
         result.style.background = '#f5f5f5';
         result.style.borderLeft = '3px solid #205081';
         result.style.borderRight = '3px solid #205081';
         return result;
     };
 
-    this.createDoneTaskCell = function(index) {
-        var result = this.getDoneTasksRow().insertCell(index);
+    that.createDoneTaskCell = function(index) {
+        var result = that.getDoneTasksRow().insertCell(index);
         result.style.verticalAlign = 'bottom';
         result.style.padding = 0;
         result.style.textDecoration = 'line-through';
         return result;
     };
 
-    this.createTodayDoneTaskCell = function(index) {
-        var result = this.createDoneTaskCell(index);
+    that.createTodayDoneTaskCell = function(index) {
+        var result = that.createDoneTaskCell(index);
         result.style.background = '#f5f5f5';
         result.style.borderLeft = '3px solid #205081';
         result.style.borderRight = '3px solid #205081';
         return result;
     };
 
-    this.setAsDeadlineTaskCellAtIndex = function(index) {
-        var toDoTasksRow = this.getTasksToDoRow();
-        this.setDeadlineStyle(toDoTasksRow.cells[index]);
+    that.setAsDeadlineTaskCellAtIndex = function(index) {
+        var toDoTasksRow = that.getTasksToDoRow();
+        that.setDeadlineStyle(toDoTasksRow.cells[index]);
 
-        var doneTasksRow = this.getDoneTasksRow();
-        this.setDeadlineStyle(doneTasksRow.cells[index]);
+        var doneTasksRow = that.getDoneTasksRow();
+        that.setDeadlineStyle(doneTasksRow.cells[index]);
     };
 
-    this.setDeadlineStyle = function(cell) {
+    that.setDeadlineStyle = function(cell) {
         cell.style.borderLeft = '3px solid #14892c';
         cell.style.borderRight = '3px solid #14892c';
         cell.style.background = '#f5f5f5';

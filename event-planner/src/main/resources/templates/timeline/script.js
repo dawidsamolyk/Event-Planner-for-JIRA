@@ -5,7 +5,8 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 };
 
-var projectKey = getParameterByName('project-key');
+var project = getParameterByName('project');
+var projectKey = project.substring(9, project.length);
 
 if(projectKey) {
     var pageTitle = projectKey + " - Event Organization Time Line";
