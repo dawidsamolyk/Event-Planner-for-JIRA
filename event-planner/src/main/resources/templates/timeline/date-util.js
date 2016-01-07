@@ -15,7 +15,7 @@ function DateUtil() {
 
     that.isBeforeToday = function(date) {
         var today = new Date();
-        return that.isDateBeforeDate(date, today);
+        return date < today && today.getDate() != date.getDate();
     };
 
     that.isDateBeforeOrSameDate = function(firstDate, secondDate) {

@@ -3,6 +3,7 @@ function TimeLine() {
     that.issues = {};
     that.deadlineDate = new Date();
     that.maximumIssueLate = 0;
+    that.percentDoneTasks = 0;
 
     that.tasksToDoId = 'tasks-todo';
     that.datesId = 'dates';
@@ -20,6 +21,7 @@ function TimeLine() {
     that.setIssues = function(sourceIssues) {
         that.issues = sourceIssues;
         that.maximumIssueLate = that.getMaximumIssueLate();
+        that.percentDoneTasks = that.getPercentOfDoneTasks();console.log(that.percentDoneTasks);
         that.showCurrentWeek();
     };
 
@@ -27,6 +29,45 @@ function TimeLine() {
         that.deadlineDate = sourceDeadlineDate;
         that.allTimeLineWeeks = that.getTimeLineWeeks();
         that.showCurrentWeek();
+
+        var today = new Date();
+        var daysToDeadline = that.dateUtil.getDaysDifference(that.deadlineDate, today);
+
+        if(that.dateUtil.isBeforeToday(that.deadlineDate) && that.percentDoneTasks < 100) {
+            var todayDateString = today.toDateString();
+            var deadlineDateString = that.deadlineDate.toDateString();
+            var message = '<li>Deadline date: ' + deadlineDateString + '.</li>';
+
+            if(that.percentDoneTasks < 100) message += '<li>Currently there is ' + that.percentDoneTasks + '% of done tasks.</li>';
+            if(that.maximumIssueLate > 0) message += '<li style="color: #d04437;">The most delayed task should be done ' + that.maximumIssueLate + ' days ago!</li>';
+
+            AJS.flag({
+                type: 'error',
+                title: 'Deadline was exceeded by ' + Math.abs(daysToDeadline) + ' days!',
+                body: message
+            });
+        }
+        if(that.percentDoneTasks === 100 && that.maximumIssueLate === 0) {
+            AJS.flag({
+                type: 'success',
+                title: 'Congratulations!',
+                body: 'All tasks are done! <br />Have a chocolate!'
+            });
+        }
+        else if(daysToDeadline >= 0) {
+            var message = '';
+
+            if(daysToDeadline > 0) message += '<li>There are ' + daysToDeadline + ' days to deadline.</li>';
+            else if(daysToDeadline === 0) message += '<li style="color: #14892c;">Deadline is today!</li>';
+
+            if(that.percentDoneTasks < 100) message += '<li>Currently there is ' + that.percentDoneTasks + '% of done tasks.</li>';
+            if(that.maximumIssueLate > 0) message += '<li style="color: #d04437;">The most delayed task should be done ' + that.maximumIssueLate + ' days ago!</li>';
+
+            AJS.flag({
+                type: 'info',
+                body: message
+            });
+        }
     };
 
     that.getTimeLineWeeks = function() {
@@ -35,6 +76,18 @@ function TimeLine() {
 
     that.getMostLateTaskDueDate = function() {
         return that.dateUtil.getDateWithSubstractedDays(new Date(), that.maximumIssueLate);
+    };
+
+    that.getPercentOfDoneTasks = function() {
+        var result = 0;
+        for(eachIssue in that.issues) {
+            var issue = that.issues[eachIssue];
+
+            if(issue.done === true) {
+                result++;
+            }
+        }
+        return (100 * result) / that.issues.length;
     };
 
     that.getMaximumIssueLate = function() {
@@ -66,7 +119,11 @@ function TimeLine() {
         that.clearTimeLine();
 
         if(that.allTimeLineWeeks.length === 0) {
-            // TODO wyświetl komunikat o błędzie
+            AJS.flag({
+                type: 'error',
+                title: 'Deadline was exceeded by ' + Math.abs(daysToDeadline) + ' days!',
+                body: message
+            });
             return;
         }
         that.showingWeekIndex = weekToShowIndex;
