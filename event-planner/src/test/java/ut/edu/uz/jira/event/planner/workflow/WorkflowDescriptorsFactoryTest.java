@@ -1,7 +1,6 @@
 package ut.edu.uz.jira.event.planner.workflow;
 
 import com.opensymphony.workflow.loader.ConditionDescriptor;
-import com.opensymphony.workflow.loader.FunctionDescriptor;
 import com.opensymphony.workflow.loader.ValidatorDescriptor;
 import edu.uz.jira.event.planner.workflow.WorkflowDescriptorsFactory;
 import org.junit.Test;
@@ -53,14 +52,6 @@ public class WorkflowDescriptorsFactoryTest {
     public void sub_Task_Blocking_Condition_Should_Not_Be_Null() {
         WorkflowDescriptorsFactory fixture = new WorkflowDescriptorsFactory();
         ConditionDescriptor result = fixture.createSubTaskBlockingConditionDescriptor(null);
-
-        assertNotNull(result);
-    }
-
-    @Test
-    public void update_Due_Date_Post_Function_Should_Not_Be_Null() {
-        WorkflowDescriptorsFactory fixture = new WorkflowDescriptorsFactory();
-        FunctionDescriptor result = fixture.createUpdateDueDatePostFunctionDescriptor();
 
         assertNotNull(result);
     }

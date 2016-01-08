@@ -10,14 +10,13 @@ import com.atlassian.jira.project.ProjectCategory;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.opensymphony.workflow.loader.ConditionDescriptor;
-import com.opensymphony.workflow.loader.FunctionDescriptor;
 import com.opensymphony.workflow.loader.ValidatorDescriptor;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.project.issue.fields.IssueFieldsConfigurator;
+import edu.uz.jira.event.planner.util.WorkflowUtils;
 import edu.uz.jira.event.planner.workflow.WorkflowConfigurator;
 import edu.uz.jira.event.planner.workflow.WorkflowConstants;
 import edu.uz.jira.event.planner.workflow.WorkflowDescriptorsFactory;
-import edu.uz.jira.event.planner.util.WorkflowUtils;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -77,7 +76,7 @@ public class EventOrganizationProjectHook implements AddProjectHook {
         } catch (JiraException e) {
             return ConfigureResponse.create().setRedirect(REDIRECT_URL);
         }
-        
+
         return ConfigureResponse.create().setRedirect(REDIRECT_URL + String.format(REDIRECT_URL_ARGUMENTS, project.getKey()));
     }
 
@@ -99,12 +98,10 @@ public class EventOrganizationProjectHook implements AddProjectHook {
             ValidatorDescriptor validator = workflowDescriptorsFactory.createIssueDueDateValidatorDescriptor();
             workflowConfigurator.addToDraft(workflow, validator, WorkflowConstants.CREATE_WORKFLOW_ACTION_NAME);
 
-            FunctionDescriptor postFunction = workflowDescriptorsFactory.createUpdateDueDatePostFunctionDescriptor();
-            workflowConfigurator.addToDraft(workflow, postFunction, WorkflowConstants.POST_FUNCTION_TRANSITION_NAME);
-
             List<String> statusesWhichBlocks = utils.getStatusesFromCategory(workflow, WorkflowConstants.COMPLETE_STATUS_CATEGORY_NAME);
             ConditionDescriptor condition = workflowDescriptorsFactory.createSubTaskBlockingConditionDescriptor(statusesWhichBlocks);
             workflowConfigurator.addToDraft(workflow, condition, WorkflowConstants.DONE_STATUS_NAME);
+            workflowConfigurator.addToDraft(workflow, condition, WorkflowConstants.RESOLVED_STATUS_NAME);
 
             workflowConfigurator.publishDraft(workflow);
         } else {

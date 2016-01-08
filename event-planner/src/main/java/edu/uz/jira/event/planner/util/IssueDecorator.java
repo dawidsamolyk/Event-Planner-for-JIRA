@@ -55,7 +55,7 @@ public class IssueDecorator {
         summary = source.getSummary();
 
         Timestamp sourceDueDate = source.getDueDate();
-        if(sourceDueDate != null) {
+        if (sourceDueDate != null) {
             dueDate = sourceDueDate.getTime();
             daysAwayFromDueDate = DUE_DATE_INDICATOR.getDaysAwayFromDueDate(sourceDueDate);
         }
@@ -86,11 +86,14 @@ public class IssueDecorator {
         Collection<ProjectComponent> components = source.getComponentObjects();
 
         if (components != null && !components.isEmpty()) {
-            Iterator<ProjectComponent> componentsIterator = components.iterator();
             componentsNames = new String[components.size()];
+
+            Iterator<ProjectComponent> componentsIterator = components.iterator();
             for (int index = 0; index < components.size(); index++) {
                 componentsNames[index] = componentsIterator.next().getName();
             }
+        } else {
+            componentsNames = new String[]{};
         }
     }
 

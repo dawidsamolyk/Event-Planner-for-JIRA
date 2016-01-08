@@ -130,18 +130,6 @@
         <resource type="download" name="jquery.js" location="/libs/js/jquery.js"/>
         <resource type="download" name="jquery.datetimepicker.css" location="/style/jquery.datetimepicker.css"/>
     </webwork1>
-    <workflow-function key="update-due-date-post-function" name="Update Due Date Post Function"
-                       i18n-name-key="update.due.date.post.function.name"
-                       class="com.atlassian.jira.plugin.workflow.WorkflowNoInputPluginFactory">
-        <description key="update.due.date.post.function.description">Updates issue due date to current date. No
-            parameters are required.
-        </description>
-        <function-class>edu.uz.jira.event.planner.workflow.postfunctions.UpdateDueDatePostFunction</function-class>
-        <orderable>true</orderable>
-        <unique>true</unique>
-        <deletable>true</deletable>
-        <resource type="velocity" name="view" location="templates/postfunctions/update-due-date-post-function.vm"/>
-    </workflow-function>
     <workflow-validator key="issue-due-date-validator" name="Issue Due Date Validator"
                         i18n-name-key="issue.due.date.validator.name"
                         class="edu.uz.jira.event.planner.workflow.validators.WorkflowNoInputValidatorFactory">

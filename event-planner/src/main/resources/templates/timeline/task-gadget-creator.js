@@ -15,7 +15,10 @@ function TaskGadgetCreator() {
         gadgetItem.appendChild(titleElement);
 
         var titleTextElement = that.createElement('H3', 'dashboard-item-title');
-        titleTextElement.appendChild(document.createTextNode(issue.componentsNames[0]));
+        var componentsNames = issue.componentsNames;
+        if(componentsNames.length > 0 && componentsNames[0] && componentsNames[0].length > 0) {
+            titleTextElement.appendChild(document.createTextNode(componentsNames[0]));
+        }
         titleElement.appendChild(titleTextElement);
 
         var summaryElement = that.createElement('DIV', 'dashboard-item-content');

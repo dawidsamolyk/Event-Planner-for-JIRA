@@ -613,7 +613,7 @@
             </div>
 
             <div class="field-group" id="event-duedate-group">
-                <label for="event-duedate">Event date<span class="aui-icon icon-required">(required)</span></label>
+                <label for="event-duedate">Event deadline<span class="aui-icon icon-required">(required)</span></label>
                 <input id="event-duedate" name="event-duedate" type="text">
 
                 <div class="description" id="event-duedate-description">Date of an event.</div>

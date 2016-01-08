@@ -71,7 +71,7 @@ public class IssueDueDateValidator implements Validator {
             throw new InvalidInputException("Issue Due Date cannot be empty!");
         }
         if (projectReleaseDate != null && issueDueDate != null && issueDueDate.after(projectReleaseDate)) {
-            throw new InvalidInputException("Issue Due Date cannot be after Project Due Date!");
+            throw new InvalidInputException("Issue Due Date cannot be after Event deadline!");
         }
     }
 }

@@ -1,6 +1,5 @@
 package ut.edu.uz.jira.event.planner.project;
 
-import com.atlassian.jira.bc.JiraServiceContext;
 import com.atlassian.jira.bc.workflow.WorkflowService;
 import com.atlassian.jira.bc.workflow.WorkflowTransitionService;
 import com.atlassian.jira.blueprint.api.ConfigureData;
@@ -24,13 +23,10 @@ import com.atlassian.jira.scheme.Scheme;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.MockApplicationUser;
-import com.atlassian.jira.util.SimpleErrorCollection;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.jira.workflow.WorkflowManager;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.opensymphony.workflow.loader.ActionDescriptor;
-import com.opensymphony.workflow.loader.ConditionDescriptor;
-import com.opensymphony.workflow.loader.FunctionDescriptor;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.project.EventOrganizationProjectHook;
 import edu.uz.jira.event.planner.util.text.Internationalization;
@@ -44,11 +40,9 @@ import org.mockito.stubbing.Answer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 
 public class EventOrganizationProjectHookTest {
@@ -112,57 +106,6 @@ public class EventOrganizationProjectHookTest {
         ConfigureResponse result = hook.configure(configureData);
 
         assertNotNull(result);
-    }
-
-    @Test
-    public void event_Organization_Workflow_Should_Has_Added_Update_Due_Date_Post_Function() throws NullArgumentException {
-        final String transitionName = "Deadline exceeded";
-        String mockWorkflowName = "EVENT-ORGANIZATION-WORKFLOW";
-
-        final JiraWorkflow mockWorkflow = mock(JiraWorkflow.class);
-        Mockito.when(mockWorkflow.getName()).thenReturn(mockWorkflowName);
-
-        ActionDescriptor mockAction = mock(ActionDescriptor.class);
-        Mockito.when(mockAction.getName()).thenReturn(transitionName);
-        final List<FunctionDescriptor> mockPostFunctions = new ArrayList<FunctionDescriptor>();
-        Mockito.when(mockAction.getPostFunctions()).thenReturn(mockPostFunctions);
-
-        Collection<ActionDescriptor> mockActionDescriptors = new ArrayList<ActionDescriptor>();
-        mockActionDescriptors.add(mockAction);
-        Mockito.when(mockWorkflow.getActionsByName(transitionName)).thenReturn(mockActionDescriptors);
-        HashMap<String, JiraWorkflow> createdWorkflows = new HashMap<String, JiraWorkflow>();
-
-        createdWorkflows.put(mockWorkflowName, mockWorkflow);
-        ConfigureData configureData = ConfigureData.create(mock(Project.class), mock(Scheme.class), createdWorkflows, mock(FieldConfigScheme.class), new HashMap<String, IssueType>());
-
-        Mockito.when(mockWorkflowService.getDraftWorkflow(Mockito.any(JiraServiceContext.class), Mockito.anyString())).thenReturn(mockWorkflow);
-        Mockito.when(mockWorkflowService.createDraftWorkflow(Mockito.any(JiraServiceContext.class), Mockito.anyString())).thenReturn(mockWorkflow);
-
-        Mockito.when(mockWorkflowTransitionService.addConditionToWorkflow(Mockito.anyString(), Mockito.any(ConditionDescriptor.class), Mockito.any(JiraWorkflow.class))).thenReturn(new SimpleErrorCollection());
-        Mockito.when(mockWorkflowTransitionService.addPostFunctionToWorkflow(Mockito.anyString(), Mockito.any(FunctionDescriptor.class), Mockito.any(JiraWorkflow.class))).thenAnswer(
-                new Answer<Object>() {
-                    @Override
-                    public Object answer(InvocationOnMock invocation) throws Throwable {
-                        Object[] arguments = invocation.getArguments();
-                        String transitionName = (String) arguments[0];
-                        FunctionDescriptor function = (FunctionDescriptor) arguments[1];
-                        JiraWorkflow workflow = (JiraWorkflow) arguments[2];
-
-                        for (ActionDescriptor each : workflow.getActionsByName(transitionName)) {
-                            each.getPostFunctions().add(0, function);
-                        }
-
-                        return new SimpleErrorCollection();
-                    }
-                });
-
-        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService);
-
-        hook.configure(configureData);
-
-        for (ActionDescriptor eachWorkflowAction : mockWorkflow.getActionsByName(transitionName)) {
-            assertFalse(eachWorkflowAction.getPostFunctions().isEmpty());
-        }
     }
 
     @Test
