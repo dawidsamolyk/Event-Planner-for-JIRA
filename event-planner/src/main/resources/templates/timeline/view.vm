@@ -16,13 +16,6 @@
             <div class="aui-page-header-main">
                 <h1 id="time-line-name"></h1>
             </div>
-            <div class="aui-page-header-actions">
-                <div class="aui-buttons">
-                    <a id="add_project" class="aui-button add-project-trigger" href="/jira/secure/admin/AddProject!default.jspa?src=adminprojectslist&amp;atl_token=BSQO-LWB7-7WJV-LVX4%7C3afb034601e4e4fc9d64bf33b7d71fd4d9491cca%7Clin">
-                        <span class="aui-icon aui-icon-small aui-iconfont-info">Insert meaningful text here for accessibility</span>
-                    </a>
-                </div>
-            </div>
         </div>
     </header>
 
@@ -59,6 +52,8 @@
 
         #include("templates/timeline/time-line-dates-creator.js")
         #include("templates/timeline/time-line-tasks-creator.js")
+
+        #include("templates/timeline/time-line-info.js")
 
         #include("templates/timeline/time-line.js")
 

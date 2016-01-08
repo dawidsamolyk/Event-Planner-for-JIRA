@@ -1,22 +1,23 @@
 function Plan() {
-    this.id = 'plan';
-    this.elementsTag = 'option';
-    this.getName = function() { return AJS.$("#plan-name") };
-    this.getDescription = function() { return AJS.$("#plan-description") };
-    this.getTimeToComplete = function() { return AJS.$("#plan-time") };
-    this.getDomains = function() { return AJS.$("#plan-domains") };
-    this.getComponents = function() { return AJS.$("#plan-components") };
+    var that = this;
+    that.id = 'plan';
+    that.elementsTag = 'option';
+    that.getName = function() { return AJS.$("#plan-name") };
+    that.getDescription = function() { return AJS.$("#plan-description") };
+    that.getTimeToComplete = function() { return AJS.$("#plan-time") };
+    that.getDomains = function() { return AJS.$("#plan-domains") };
+    that.getComponents = function() { return AJS.$("#plan-components") };
 
-    this.getJson = function() {
-        return '{ "name": "' + this.getName().attr("value") +
-               '", "description": "' + this.getDescription().attr("value") +
-               '", "time": ' + this.getTimeToComplete().attr("value") +
-               ', "domains": ' + JSON.stringify(this.getDomains().val()) +
-               ', "components": ' + JSON.stringify(this.getComponents().val()) +
+    that.getJson = function() {
+        return '{ "name": "' + that.getName().attr("value") +
+               '", "description": "' + that.getDescription().attr("value") +
+               '", "time": ' + that.getTimeToComplete().attr("value") +
+               ', "domains": ' + JSON.stringify(that.getDomains().val()) +
+               ', "components": ' + JSON.stringify(that.getComponents().val()) +
                ' }';
     };
 
-    this.setFromJson = function(resources) {
+    that.setFromJson = function(resources) {
         if(resources.length === 0) {
             return;
         }
@@ -24,43 +25,43 @@ function Plan() {
         var isPlan = (resources.length > 0 && resources[0].hasOwnProperty('domains') && resources[0].hasOwnProperty('components'));
 
         if(isPlan === true) {
-            this.setFromPlanObject(resources);
+            that.setFromPlanObject(resources);
             return;
         }
 
         if(isComponent === true) {
-            this.getComponents().empty();
+            that.getComponents().empty();
         } else {
-            this.getDomains().empty();
+            that.getDomains().empty();
         }
 
         for(eachKey in resources) {
-            var eachElement = this.getElement(resources[eachKey].name);
+            var eachElement = that.getElement(resources[eachKey].name);
 
             if(isComponent) {
-                this.getComponents().append(eachElement);
+                that.getComponents().append(eachElement);
             } else {
-                this.getDomains().append(eachElement);
+                that.getDomains().append(eachElement);
             }
         }
     };
 
-    this.getElement = function(value) {
-        return "<".concat(this.elementsTag).concat(">").concat(value).concat("</").concat(this.elementsTag).concat(">");
+    that.getElement = function(value) {
+        return "<".concat(that.elementsTag).concat(">").concat(value).concat("</").concat(that.elementsTag).concat(">");
     };
 
-    this.setFromPlanObject = function(plans) {
+    that.setFromPlanObject = function(plans) {
         var plan = plans[0];
 
-        this.getName().append(plan.name);
-        this.getDescription().append(plan.description);
-        this.getTimeToComplete().append(plan.time);
+        that.getName().append(plan.name);
+        that.getDescription().append(plan.description);
+        that.getTimeToComplete().append(plan.time);
 
         for(eachKey in plan.domains) {
-            this.getDomains().append(this.getElement(plan.domains[eachKey]));
+            that.getDomains().append(that.getElement(plan.domains[eachKey]));
         }
         for(eachKey in plan.components) {
-            this.getComponents().append(this.getElement(plan.components[eachKey]));
+            that.getComponents().append(that.getElement(plan.components[eachKey]));
         }
     };
 };

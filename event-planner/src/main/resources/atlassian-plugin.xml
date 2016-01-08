@@ -155,10 +155,13 @@
         <resource type="download" name="date-util.js" location="/templates/timeline/date-util.js"/>
         <resource type="download" name="time-line-buttons-listener.js"
                   location="/templates/timeline/time-line-buttons-listener.js"/>
+        <resource type="download" name="time-line-info.js"
+                  location="/templates/timeline/time-line-info.js"/>
         <resource type="download" name="rest-manager.js" location="/templates/admin/rest-manager.js"/>
     </servlet>
 
-    <web-item key="my_links_link" name="Event Organization Time Line" i18n-name-key="event.plan.timeline.menu.name" section="system.top.navigation.bar" weight="50">
+    <web-item key="my_links_link" name="Event Organization Time Line" i18n-name-key="event.plan.timeline.menu.name"
+              section="system.top.navigation.bar" weight="50">
         <label>Time Line</label>
         <link linkId="event_organization_time_line">/plugins/servlet/event/plan/time-line?project=$project</link>
         <condition class="edu.uz.jira.event.planner.timeline.ShowTimeLineButtonCondition"/>

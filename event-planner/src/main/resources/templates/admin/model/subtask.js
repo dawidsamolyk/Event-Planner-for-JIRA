@@ -1,13 +1,14 @@
 function SubTask() {
-    this.id = 'subtask';
-    this.getName = function() { return AJS.$("#subtask-name") };
-    this.getDescription = function() { return AJS.$("#subtask-description") };
-    this.getTimeToComplete = function() { return AJS.$("#subtask-time") };
+    var that = this;
+    that.id = 'subtask';
+    that.getName = function() { return AJS.$("#subtask-name") };
+    that.getDescription = function() { return AJS.$("#subtask-description") };
+    that.getTimeToComplete = function() { return AJS.$("#subtask-time") };
 
-    this.getJson = function() {
-        return '{ "name": "' + this.getName().attr("value") +
-               '", "description": "' + this.getDescription().attr("value") +
-               '", "time": ' + this.getTimeToComplete().attr("value") +
+    that.getJson = function() {
+        return '{ "name": "' + that.getName().attr("value") +
+               '", "description": "' + that.getDescription().attr("value") +
+               '", "time": ' + that.getTimeToComplete().attr("value") +
                ' }';
     };
 };

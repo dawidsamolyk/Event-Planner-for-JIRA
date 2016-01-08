@@ -1,22 +1,23 @@
 function Component() {
-    this.id = 'component';
-    this.getName = function() { return AJS.$("#component-name") };
-    this.getDescription = function() { return AJS.$("#component-description") };
-    this.getTasks = function() { return AJS.$("#component-tasks") };
+    var that = this;
+    that.id = 'component';
+    that.getName = function() { return AJS.$("#component-name") };
+    that.getDescription = function() { return AJS.$("#component-description") };
+    that.getTasks = function() { return AJS.$("#component-tasks") };
 
-    this.getJson = function() {
-        return '{ "name": "' + this.getName().attr("value") +
-               '", "description": "' + this.getDescription().attr("value") +
-               '", "tasks": ' + JSON.stringify(this.getTasks().val()) +
+    that.getJson = function() {
+        return '{ "name": "' + that.getName().attr("value") +
+               '", "description": "' + that.getDescription().attr("value") +
+               '", "tasks": ' + JSON.stringify(that.getTasks().val()) +
                ' }';
     };
 
-    this.setFromJson = function(allTasks) {
-        this.getTasks().empty();
+    that.setFromJson = function(allTasks) {
+        that.getTasks().empty();
 
         for(eachKey in allTasks) {
             var eachTask = allTasks[eachKey];
-            this.getTasks().append("<option>" + eachTask.name + "</option>");
+            that.getTasks().append("<option>" + eachTask.name + "</option>");
         }
     };
 };

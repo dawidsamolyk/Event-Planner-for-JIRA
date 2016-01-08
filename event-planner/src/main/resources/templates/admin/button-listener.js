@@ -1,21 +1,22 @@
 function ButtonListener(resource) {
-    this.resource = resource;
-    this.rest = new RESTManager();
+    var that = this;
+    that.resource = resource;
+    that.rest = new RESTManager();
 
-    this.getResourceId = function() {
+    that.getResourceId = function() {
         return resource.id;
     };
-    this.getDialogId = function() {
-        return "#event-".concat(this.getResourceId()).concat("-dialog");
+    that.getDialogId = function() {
+        return "#event-".concat(that.getResourceId()).concat("-dialog");
     };
-    this.getSaveButtonId = function() {
-        return "#event-".concat(this.getResourceId()).concat("-dialog-save-button");
+    that.getSaveButtonId = function() {
+        return "#event-".concat(that.getResourceId()).concat("-dialog-save-button");
     };
 
-    this.onAddShowDialog = function() {
-        var addButtonId = "#add-".concat(this.getResourceId()).concat("-button");
-        var formId = "event-".concat(this.getResourceId()).concat("-configuration");
-        var dialogId = this.getDialogId();
+    that.onAddShowDialog = function() {
+        var addButtonId = "#add-".concat(that.getResourceId()).concat("-button");
+        var formId = "event-".concat(that.getResourceId()).concat("-configuration");
+        var dialogId = that.getDialogId();
 
         AJS.$(addButtonId).click(
             function(e) {
@@ -25,41 +26,41 @@ function ButtonListener(resource) {
             }
         );
     };
-    this.onSaveDoGetAndSaveInto = function(destinationResource) {
-            var rest = this.rest;
-            var resource = this.resource;
+    that.onSaveDoGetAndSaveInto = function(destinationResource) {
+            var rest = that.rest;
+            var resource = that.resource;
 
-            AJS.$(this.getSaveButtonId()).click(
+            AJS.$(that.getSaveButtonId()).click(
                 function(e) {
                     e.preventDefault();
                     rest.get(resource.id, destinationResource);
                 }
             );
     };
-    this.onSaveDoPostResource = function() {
-        var rest = this.rest;
-        var resource = this.resource;
+    that.onSaveDoPostResource = function() {
+        var rest = that.rest;
+        var resource = that.resource;
 
-        AJS.$(this.getSaveButtonId()).click(
+        AJS.$(that.getSaveButtonId()).click(
             function(e) {
                 e.preventDefault();
                 rest.post(resource);
             }
         );
     };
-    this.onSaveHideDialog = function() {
-        var dialogId = this.getDialogId();
+    that.onSaveHideDialog = function() {
+        var dialogId = that.getDialogId();
 
-        AJS.$(this.getSaveButtonId()).click(
+        AJS.$(that.getSaveButtonId()).click(
             function(e) {
                 e.preventDefault();
                 AJS.dialog2(dialogId).hide();
             }
         );
     };
-    this.onCancelCloseDialog = function() {
-        var cancelButtonId = "#event-".concat(this.getResourceId()).concat("-dialog-cancel-button");
-        var dialogId = this.getDialogId();
+    that.onCancelCloseDialog = function() {
+        var cancelButtonId = "#event-".concat(that.getResourceId()).concat("-dialog-cancel-button");
+        var dialogId = that.getDialogId();
 
         AJS.$(cancelButtonId).click(
             function(e) {
@@ -68,11 +69,11 @@ function ButtonListener(resource) {
             }
         );
     };
-    this.onShowDoGet = function(resources) {
-        var rest = this.rest;
-        var resource = this.resource;
+    that.onShowDoGet = function(resources) {
+        var rest = that.rest;
+        var resource = that.resource;
 
-        AJS.dialog2(this.getDialogId()).on("show",
+        AJS.dialog2(that.getDialogId()).on("show",
             function() {
                 for(eachKey in resources) {
                     var eachResource = resources[eachKey];
