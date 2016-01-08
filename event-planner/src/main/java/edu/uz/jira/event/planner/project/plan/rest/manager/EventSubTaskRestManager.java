@@ -2,8 +2,8 @@ package edu.uz.jira.event.planner.project.plan.rest.manager;
 
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
-import edu.uz.jira.event.planner.database.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.model.SubTask;
+import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.active.objects.model.SubTask;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import net.java.ao.Entity;
 import org.apache.commons.lang3.StringUtils;
@@ -95,8 +95,6 @@ public class EventSubTaskRestManager extends RestManager {
         private String name;
         @XmlElement
         private String description;
-        @XmlElement
-        private long time;
 
         /**
          * Constructor.
@@ -123,7 +121,6 @@ public class EventSubTaskRestManager extends RestManager {
                 SubTask subtask = (SubTask) entity;
                 setName(subtask.getName());
                 setDescription(subtask.getDescription());
-                setTime(subtask.getTimeToComplete());
             }
             return this;
         }
@@ -142,8 +139,7 @@ public class EventSubTaskRestManager extends RestManager {
         @Override
         public boolean isFullfilled() {
             return StringUtils.isNotBlank(getName())
-                    && getDescription() != null
-                    && getTime() > 0;
+                    && getDescription() != null;
         }
 
         /**
@@ -178,14 +174,6 @@ public class EventSubTaskRestManager extends RestManager {
             }
         }
 
-        public long getTime() {
-            return time;
-        }
-
-        public void setTime(@Nonnull long time) {
-            this.time = time;
-        }
-
         /**
          * @see {@link Object#equals(Object)}
          */
@@ -196,7 +184,6 @@ public class EventSubTaskRestManager extends RestManager {
 
             Configuration that = (Configuration) o;
 
-            if (getTime() != that.getTime()) return false;
             if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
             return !(getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null);
         }

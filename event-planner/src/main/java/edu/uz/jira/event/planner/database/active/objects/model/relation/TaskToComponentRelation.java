@@ -1,7 +1,7 @@
-package edu.uz.jira.event.planner.database.model.relation;
+package edu.uz.jira.event.planner.database.active.objects.model.relation;
 
-import edu.uz.jira.event.planner.database.model.Component;
-import edu.uz.jira.event.planner.database.model.Task;
+import edu.uz.jira.event.planner.database.active.objects.model.Component;
+import edu.uz.jira.event.planner.database.active.objects.model.Task;
 import net.java.ao.Entity;
 import net.java.ao.schema.Table;
 
@@ -10,8 +10,6 @@ import net.java.ao.schema.Table;
  */
 @Table("TaskToComponent")
 public interface TaskToComponentRelation extends Entity {
-    String TASK = "PLAN";
-    String COMPONENT = "COMPONENT";
 
     Task getTask();
 

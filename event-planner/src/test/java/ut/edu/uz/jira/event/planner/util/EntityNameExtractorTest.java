@@ -1,6 +1,6 @@
 package ut.edu.uz.jira.event.planner.util;
 
-import edu.uz.jira.event.planner.database.model.NamedEntityWithDescription;
+import edu.uz.jira.event.planner.database.active.objects.model.NamedEntityWithDescription;
 import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
 import org.junit.Test;
 import org.mockito.Mockito;

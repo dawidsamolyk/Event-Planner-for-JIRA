@@ -8,12 +8,12 @@ import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
-import edu.uz.jira.event.planner.database.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.model.*;
-import edu.uz.jira.event.planner.database.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.model.relation.PlanToDomainRelation;
-import edu.uz.jira.event.planner.database.model.relation.SubTaskToTaskRelation;
-import edu.uz.jira.event.planner.database.model.relation.TaskToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.active.objects.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
@@ -221,7 +221,7 @@ public class RestManagerTest {
 
     @Test
     public void should_deletes_entity() {
-        Task task = testHelper.createTask("test", 123);
+        Task task = testHelper.createTask("test", 0, 10);
         EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.delete(Integer.toString(task.getID()), mockRequest);
@@ -238,7 +238,8 @@ public class RestManagerTest {
         invalidConfig.setDescription("Test description");
         invalidConfig.setDomains(new String[]{"Test domain"});
         invalidConfig.setComponents(new String[]{"Test component"});
-        invalidConfig.setTime(123);
+        invalidConfig.setNeededMonths(0);
+        invalidConfig.setNeededDays(12);
 
         Response result = fixture.post(invalidConfig, mockRequest);
 

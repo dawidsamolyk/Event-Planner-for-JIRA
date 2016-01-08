@@ -1,7 +1,7 @@
-package edu.uz.jira.event.planner.database.model.relation;
+package edu.uz.jira.event.planner.database.active.objects.model.relation;
 
-import edu.uz.jira.event.planner.database.model.Domain;
-import edu.uz.jira.event.planner.database.model.Plan;
+import edu.uz.jira.event.planner.database.active.objects.model.Domain;
+import edu.uz.jira.event.planner.database.active.objects.model.Plan;
 import net.java.ao.Entity;
 import net.java.ao.schema.Table;
 

@@ -2,8 +2,8 @@ package edu.uz.jira.event.planner.project.plan.rest.manager;
 
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
-import edu.uz.jira.event.planner.database.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.model.Plan;
+import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.active.objects.model.Plan;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
 import edu.uz.jira.event.planner.util.text.TextUtils;
@@ -103,7 +103,9 @@ public class EventPlanRestManager extends RestManager {
         @XmlElement
         private String description;
         @XmlElement
-        private long time;
+        private int neededMonths;
+        @XmlElement
+        private int neededDays;
         @XmlElement
         private String[] domains;
         @XmlElement
@@ -137,7 +139,8 @@ public class EventPlanRestManager extends RestManager {
                 setId(plan.getID());
                 setName(plan.getName());
                 setDescription(plan.getDescription());
-                setTime(plan.getTimeToComplete());
+                setNeededMonths(plan.getNeededMonthsToComplete());
+                setNeededDays(plan.getNeededDaysToComplete());
                 setDomains(ENTITY_NAME_EXTRACTOR.getNames(plan.getDomains()));
                 setComponents(ENTITY_NAME_EXTRACTOR.getNames(plan.getComponents()));
             }
@@ -159,9 +162,9 @@ public class EventPlanRestManager extends RestManager {
         public boolean isFullfilled() {
             return StringUtils.isNotBlank(getName())
                     && getDescription() != null
-                    && getTime() > 0
                     && TEXT_UTILS.isNotBlank(getDomains())
-                    && TEXT_UTILS.isNotBlank(getComponents());
+                    && TEXT_UTILS.isNotBlank(getComponents())
+                    && (getNeededMonths() > 0) || (getNeededMonths() == 0 && getNeededDays() > 0);
         }
 
         /**
@@ -196,13 +199,6 @@ public class EventPlanRestManager extends RestManager {
             }
         }
 
-        public long getTime() {
-            return time;
-        }
-
-        public void setTime(@Nonnull final long time) {
-            this.time = time;
-        }
 
         public String[] getDomains() {
             return domains;
@@ -247,11 +243,14 @@ public class EventPlanRestManager extends RestManager {
             Configuration that = (Configuration) o;
 
             if (getId() != that.getId()) return false;
-            if (getTime() != that.getTime()) return false;
+            if (getNeededMonths() != that.getNeededMonths()) return false;
+            if (getNeededDays() != that.getNeededDays()) return false;
             if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
             if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
                 return false;
+            // Probably incorrect - comparing Object[] arrays with Arrays.equals
             if (!Arrays.equals(getDomains(), that.getDomains())) return false;
+            // Probably incorrect - comparing Object[] arrays with Arrays.equals
             return Arrays.equals(getComponents(), that.getComponents());
         }
 
@@ -263,6 +262,22 @@ public class EventPlanRestManager extends RestManager {
             int result = getId();
             result = 31 * result + (getName() != null ? getName().hashCode() : 0);
             return result;
+        }
+
+        public int getNeededDays() {
+            return neededDays;
+        }
+
+        public void setNeededDays(int neededDays) {
+            this.neededDays = neededDays;
+        }
+
+        public int getNeededMonths() {
+            return neededMonths;
+        }
+
+        public void setNeededMonths(int neededMonths) {
+            this.neededMonths = neededMonths;
         }
     }
 }

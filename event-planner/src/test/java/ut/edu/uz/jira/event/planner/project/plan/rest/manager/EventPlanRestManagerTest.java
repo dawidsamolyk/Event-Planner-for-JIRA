@@ -8,12 +8,12 @@ import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
-import edu.uz.jira.event.planner.database.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.model.*;
-import edu.uz.jira.event.planner.database.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.model.relation.PlanToDomainRelation;
-import edu.uz.jira.event.planner.database.model.relation.SubTaskToTaskRelation;
-import edu.uz.jira.event.planner.database.model.relation.TaskToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.active.objects.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
 import net.java.ao.EntityManager;
@@ -97,9 +97,9 @@ public class EventPlanRestManagerTest {
         String testPlanName = "Test name";
         String testPlanDescription = "Test description";
         String testDomainName = "Test domain";
-        int testTime = 123;
+        int testDays = 123;
         String testComponentName = "Test component";
-        testHelper.createPlanWithDomainAndComponent(testPlanName, testPlanDescription, testTime, testDomainName, testComponentName);
+        testHelper.createPlanWithDomainAndComponent(testPlanName, testPlanDescription, 0, testDays, testDomainName, testComponentName);
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
@@ -109,15 +109,15 @@ public class EventPlanRestManagerTest {
         expected.setDescription(testPlanDescription);
         expected.setDomains(new String[]{testDomainName});
         expected.setComponents(new String[]{testComponentName});
-        expected.setTime(testTime);
-        expected.setId(((EventPlanRestManager.Configuration)transactionResult[0]).getId());
+        expected.setNeededDays(testDays);
+        expected.setId(((EventPlanRestManager.Configuration) transactionResult[0]).getId());
         assertEquals(expected, transactionResult[0]);
     }
 
     @Test
     public void should_Get_Many_Plans_From_Database() throws SQLException {
-        testHelper.createPlanWithDomainAndComponent("Plan 1", "Description", 123, "Domain 1", "Component 1");
-        testHelper.createPlanWithDomainAndComponent("Plan 2", "Description", 123, "Domain 2", "Component 1");
+        testHelper.createPlanWithDomainAndComponent("Plan 1", "Description", 1, 0, "Domain 1", "Component 1");
+        testHelper.createPlanWithDomainAndComponent("Plan 2", "Description", 1, 0, "Domain 2", "Component 1");
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
@@ -143,7 +143,7 @@ public class EventPlanRestManagerTest {
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
         EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
         config.setName("Test name");
-        config.setTime(123);
+        config.setNeededDays(14);
         config.setDomains(new String[]{domain.getName()});
         config.setComponents(new String[]{firstComponent.getName(), secondComponent.getName(), thirdComponent.getName()});
 

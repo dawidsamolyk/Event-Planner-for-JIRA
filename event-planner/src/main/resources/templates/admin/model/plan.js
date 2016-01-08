@@ -4,14 +4,16 @@ function Plan() {
     that.elementsTag = 'option';
     that.getName = function() { return AJS.$("#plan-name") };
     that.getDescription = function() { return AJS.$("#plan-description") };
-    that.getTimeToComplete = function() { return AJS.$("#plan-time") };
+    that.getNeededMonthsToComplete = function() { return AJS.$("#plan-needed-months") };
+    that.getNeededDaysToComplete = function() { return AJS.$("#plan-needed-days") };
     that.getDomains = function() { return AJS.$("#plan-domains") };
     that.getComponents = function() { return AJS.$("#plan-components") };
 
     that.getJson = function() {
         return '{ "name": "' + that.getName().attr("value") +
                '", "description": "' + that.getDescription().attr("value") +
-               '", "time": ' + that.getTimeToComplete().attr("value") +
+               '", "neededMonths": ' + that.getNeededMonthsToComplete().attr("value") +
+               ', "neededDays": ' + that.getNeededDaysToComplete().attr("value") +
                ', "domains": ' + JSON.stringify(that.getDomains().val()) +
                ', "components": ' + JSON.stringify(that.getComponents().val()) +
                ' }';
@@ -55,7 +57,8 @@ function Plan() {
 
         that.getName().append(plan.name);
         that.getDescription().append(plan.description);
-        that.getTimeToComplete().append(plan.time);
+        that.getNeededMonthsToComplete().append(plan.neededMonths);
+        that.getNeededDaysToComplete().append(plan.neededDays);
 
         for(eachKey in plan.domains) {
             that.getDomains().append(that.getElement(plan.domains[eachKey]));

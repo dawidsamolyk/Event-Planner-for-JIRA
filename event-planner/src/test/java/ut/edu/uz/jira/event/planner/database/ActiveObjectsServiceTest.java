@@ -2,12 +2,12 @@ package ut.edu.uz.jira.event.planner.database;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.tx.Transactional;
-import edu.uz.jira.event.planner.database.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.model.*;
-import edu.uz.jira.event.planner.database.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.model.relation.PlanToDomainRelation;
-import edu.uz.jira.event.planner.database.model.relation.SubTaskToTaskRelation;
-import edu.uz.jira.event.planner.database.model.relation.TaskToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.active.objects.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.rest.manager.*;
 import net.java.ao.EntityManager;
 import net.java.ao.Query;
@@ -139,7 +139,7 @@ public class ActiveObjectsServiceTest {
         EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setTime(689);
+        config.setNeededDays(689);
         config.setDomains(new String[]{"Test domain"});
         config.setComponents(new String[]{"Test component"});
 
@@ -155,7 +155,7 @@ public class ActiveObjectsServiceTest {
         EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setTime(123);
+        config.setNeededDays(123);
         config.setDomains(new String[]{domain.getName()});
         config.setComponents(new String[]{component.getName()});
 
@@ -182,7 +182,7 @@ public class ActiveObjectsServiceTest {
         EventTaskRestManager.Configuration config = new EventTaskRestManager.Configuration();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setTime(123);
+        config.setNeededDays(123);
         config.setSubtasks(new String[]{firstSubTask.getName(), secondSubTask.getName()});
 
         service.addFrom(config);
@@ -226,7 +226,6 @@ public class ActiveObjectsServiceTest {
         EventSubTaskRestManager.Configuration config = new EventSubTaskRestManager.Configuration();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setTime(123);
 
         service.addFrom(config);
 
@@ -239,7 +238,7 @@ public class ActiveObjectsServiceTest {
         EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
         config.setName("Name");
         config.setDescription("Description");
-        config.setTime(123);
+        config.setNeededDays(123);
         config.setDomains(new String[]{"Nonexistent domain"});
         config.setComponents(new String[]{component.getName()});
 
@@ -254,7 +253,7 @@ public class ActiveObjectsServiceTest {
         EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
         config.setName("Name");
         config.setDescription("Description");
-        config.setTime(123);
+        config.setNeededDays(123);
         config.setComponents(new String[]{"Nonexistent component"});
         config.setDomains(new String[]{domain.getName()});
 
@@ -280,7 +279,7 @@ public class ActiveObjectsServiceTest {
         EventTaskRestManager.Configuration config = new EventTaskRestManager.Configuration();
         config.setName("Name");
         config.setDescription("Description");
-        config.setTime(123);
+        config.setNeededDays(123);
         config.setSubtasks(new String[]{"Nonexistent subtask"});
 
         service.addFrom(config);
@@ -290,7 +289,7 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void any_Entity_Should_Be_Deleted_By_Id() {
-        Task task = activeObjectsHelper.createTask("Name", 123);
+        Task task = activeObjectsHelper.createTask("Name", 0, 12);
 
         service.delete(Task.class, Integer.toString(task.getID()));
 
@@ -301,7 +300,7 @@ public class ActiveObjectsServiceTest {
     public void any_Entity_Related_With_Others_Should_Be_Deleted_By_Id() {
         Domain domain = activeObjectsHelper.createDomainNamed("test name");
         Component component = activeObjectsHelper.createComponentNamed("test name");
-        Plan plan = activeObjectsHelper.createPlan("Name", "description", 123);
+        Plan plan = activeObjectsHelper.createPlan("Name", "description", 0, 12);
         PlanToDomainRelation relation = activeObjects.create(PlanToDomainRelation.class);
         relation.setDomain(domain);
         relation.setPlan(plan);
@@ -322,13 +321,13 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void should_Clear_Database() {
-        Task task = activeObjectsHelper.createTask("test name", 123);
-        SubTask subTask = activeObjectsHelper.createSubTask("name", 123);
+        Task task = activeObjectsHelper.createTask("test name", 0, 13);
+        SubTask subTask = activeObjectsHelper.createSubTaskNamed("name");
         activeObjectsHelper.associate(task, subTask);
         Domain domain = activeObjectsHelper.createDomainNamed("test name");
         Component component = activeObjectsHelper.createComponentNamed("test name");
         activeObjectsHelper.associate(component, task);
-        Plan plan = activeObjectsHelper.createPlan("Name", "description", 123);
+        Plan plan = activeObjectsHelper.createPlan("Name", "description", 0, 14);
         PlanToDomainRelation relation = activeObjects.create(PlanToDomainRelation.class);
         relation.setDomain(domain);
         relation.setPlan(plan);

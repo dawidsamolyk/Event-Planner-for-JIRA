@@ -35,7 +35,18 @@ function PlansList() {
 
         that.insertCell(newRow, 1).appendChild(that.createListFrom(plan.domains));
         that.insertCell(newRow, 2).appendChild(that.createListFrom(plan.components));
-        that.insertCell(newRow, 3).appendChild(document.createTextNode(plan.time));
+
+        var neededTime = '';
+        if(plan.neededMonths > 0) {
+            neededTime += plan.neededMonths + ' month(s) ';
+        }
+        if(plan.neededMonths > 0 && plan.neededDays > 0) {
+            neededTime += '+';
+        }
+        if(plan.neededDays > 0) {
+            neededTime += plan.neededDays + ' day(s) ';
+        }
+        that.insertCell(newRow, 3).appendChild(document.createTextNode(neededTime));
 
         // TODO odkomentuj dopiero, gdy zostanie zaimplementowana akacja edycji planu eventu
         //var editLink = that.createLink(document.createTextNode('Edit'), contextPath + "/secure/EditEventOrganizationPlan.jspa?id=" + plan.id, "Edit Event Organization Plan", "edit-plan");

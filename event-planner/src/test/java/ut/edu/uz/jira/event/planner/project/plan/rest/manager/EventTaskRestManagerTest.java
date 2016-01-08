@@ -8,12 +8,12 @@ import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
-import edu.uz.jira.event.planner.database.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.model.*;
-import edu.uz.jira.event.planner.database.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.model.relation.PlanToDomainRelation;
-import edu.uz.jira.event.planner.database.model.relation.SubTaskToTaskRelation;
-import edu.uz.jira.event.planner.database.model.relation.TaskToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.active.objects.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventTaskRestManager;
 import net.java.ao.EntityManager;
@@ -92,22 +92,22 @@ public class EventTaskRestManagerTest {
     @Test
     public void should_Get_Task_From_Database() throws SQLException {
         String testName = "Test name";
-        int testTime = 123;
-        testHelper.createTask(testName, testTime);
+        int testDays = 123;
+        testHelper.createTask(testName, 0,testDays);
         EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
 
         EventTaskRestManager.Configuration expected = new EventTaskRestManager.Configuration();
         expected.setName(testName);
-        expected.setTime(testTime);
+        expected.setNeededDays(testDays);
         assertEquals(expected, transactionResult[0]);
     }
 
     @Test
     public void should_Get_Many_Tasks_From_Database() throws SQLException {
-        testHelper.createTask("Task 1", 123);
-        testHelper.createTask("Task 2", 123);
+        testHelper.createTask("Task 1", 0, 2);
+        testHelper.createTask("Task 2", 0, 5);
         EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
@@ -130,7 +130,7 @@ public class EventTaskRestManagerTest {
         EventTaskRestManager.Configuration configuration = new EventTaskRestManager.Configuration();
         configuration.setName("Test name");
         configuration.setDescription("Test description");
-        configuration.setTime(123);
+        configuration.setNeededDays(12);
 
         Response result = fixture.post(configuration, mockRequest);
 

@@ -86,11 +86,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.jvnet.hyperjaxb3</groupId>
-            <artifactId>maven-hyperjaxb3-plugin</artifactId>
-            <version>0.6.1</version>
-        </dependency>
-        <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-tests</artifactId>
             <version>${jira.tests.version}</version>

@@ -1,12 +1,14 @@
-package edu.uz.jira.event.planner.database.model;
+package edu.uz.jira.event.planner.database.active.objects.model;
 
-import edu.uz.jira.event.planner.database.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import net.java.ao.Entity;
 import net.java.ao.ManyToMany;
 import net.java.ao.schema.Table;
 
 /**
- * Sub-Task of the Event Organization Plan.
+ * Component of the Event Organization Project.
+ * <p>
  * <ul>Best practices for developing with Active Objects (from Atlassian):</ul>
  * <li>The Active Objects framework does not know about renaming.
  * So if you change the name of an entity, it will remove the other entity and create a new one.
@@ -19,10 +21,12 @@ import net.java.ao.schema.Table;
  * Instead, create a new column and migrate the data during the upgrade process.</li>
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
-@Table("SubTask")
-public interface SubTask extends Entity, NamedEntityWithDescription, TimeFramedEntity {
-    String PARENT_TASKS = "PARENT_TASKS";
+@Table("Component")
+public interface Component extends Entity, NamedEntityWithDescription, TimeFramedEntity {
 
-    @ManyToMany(value = SubTaskToTaskRelation.class)
-    Task[] getParentTasks();
+    @ManyToMany(value = TaskToComponentRelation.class)
+    Task[] getTasks();
+
+    @ManyToMany(value = PlanToComponentRelation.class)
+    Plan[] getPlans();
 }

@@ -1,12 +1,12 @@
-package edu.uz.jira.event.planner.database;
+package edu.uz.jira.event.planner.database.active.objects;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.tx.Transactional;
-import edu.uz.jira.event.planner.database.model.*;
-import edu.uz.jira.event.planner.database.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.model.relation.PlanToDomainRelation;
-import edu.uz.jira.event.planner.database.model.relation.SubTaskToTaskRelation;
-import edu.uz.jira.event.planner.database.model.relation.TaskToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.*;
 import net.java.ao.Entity;
@@ -67,7 +67,8 @@ public class ActiveObjectsService {
         Plan result = activeObjectsService.create(Plan.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
-        result.setTimeToComplete(resource.getTime());
+        result.setNeededDaysToComplete(resource.getNeededDays());
+        result.setNeededMonthsToComplete(resource.getNeededMonths());
 
         Collection<PlanToDomainRelation> planToDomainRelations = relationsManager.associatePlanWithDomains(result, resource.getDomains());
         if (planToDomainRelations.isEmpty()) {
@@ -112,7 +113,8 @@ public class ActiveObjectsService {
         Task result = activeObjectsService.create(Task.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
-        result.setTimeToComplete(resource.getTime());
+        result.setNeededDaysToComplete(resource.getNeededDays());
+        result.setNeededMonthsToComplete(resource.getNeededMonths());
 
         boolean valid = relationsManager.associate(result, resource.getSubtasks());
         if (!valid) {
@@ -128,7 +130,6 @@ public class ActiveObjectsService {
         SubTask result = activeObjectsService.create(SubTask.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
-        result.setTimeToComplete(resource.getTime());
         result.save();
         return result;
     }

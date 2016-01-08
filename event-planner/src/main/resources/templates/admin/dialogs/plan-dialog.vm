@@ -17,11 +17,14 @@
                 <div class="description" id="plan-description-description">Description of the plan.</div>
             </div>
             <div class="field-group" id="event-time-group">
-                <label for="plan-time">Time to completion
+                <label for="plan-needed-time">Time for completion
                     <span class="aui-icon icon-required">(required)</span></label>
-                <input id="plan-time" name="plan-time" type="text">
+                <span id="plan-needed-time">
+                    <input id="plan-needed-months" name="plan-needed-months" type="number" min="0" placeholder="Months" style="width: 60px;"> months +
+                    <input id="plan-needed-days" name="plan-needed-days" type="number" min="1" max="31" placeholder="Days" style="width: 60px;"> days
+                </span>
 
-                <div class="description" id="plan-time-description">Estimated time for event organization.</div>
+                <div class="description" id="plan-time-description">Estimated number of months and days needed to complete event organization.</div>
             </div>
             <div class="field-group">
                 <label for="plan-domains">Domains<span

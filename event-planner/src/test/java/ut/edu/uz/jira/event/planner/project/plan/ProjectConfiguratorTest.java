@@ -30,13 +30,13 @@ import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.MockApplicationUser;
 import com.atlassian.jira.util.ErrorCollection;
 import com.atlassian.sal.api.message.I18nResolver;
-import edu.uz.jira.event.planner.database.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.ProjectConfigurator;
-import edu.uz.jira.event.planner.database.model.*;
-import edu.uz.jira.event.planner.database.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.model.relation.PlanToDomainRelation;
-import edu.uz.jira.event.planner.database.model.relation.SubTaskToTaskRelation;
-import edu.uz.jira.event.planner.database.model.relation.TaskToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import net.java.ao.EntityManager;
 import net.java.ao.test.converters.NameConverters;
 import net.java.ao.test.jdbc.Hsql;
@@ -264,10 +264,10 @@ public class ProjectConfiguratorTest {
         Plan plan = testHelper.createPlanNamed("Test plan name");
         Component component = testHelper.createComponentNamed("test 1");
         testHelper.associate(plan, component);
-        testHelper.associate(component, testHelper.createTask("test task", 1214));
-        testHelper.associate(component, testHelper.createTask("test task 2", 1214));
+        testHelper.associate(component, testHelper.createTask("test task", 0, 1));
+        testHelper.associate(component, testHelper.createTask("test task 2", 0, 2));
         Component secondComponent = testHelper.createComponentNamed("test 2");
-        testHelper.associate(secondComponent, testHelper.createTask("test task 3", 1214));
+        testHelper.associate(secondComponent, testHelper.createTask("test task 3", 0, 3));
         testHelper.associate(plan, secondComponent);
         ProjectConfigurator fixture = new ProjectConfigurator(mocki18nResolver);
 
@@ -281,9 +281,9 @@ public class ProjectConfiguratorTest {
         Plan plan = testHelper.createPlanNamed("Test plan name");
         Component component = testHelper.createComponentNamed("test 1");
         testHelper.associate(plan, component);
-        Task firstTask = testHelper.createTask("test task", 1214);
+        Task firstTask = testHelper.createTask("test task", 0, 1);
         testHelper.associate(component, firstTask);
-        Task secondTask = testHelper.createTask("test task 2", 1214);
+        Task secondTask = testHelper.createTask("test task 2", 0, 5);
         testHelper.associate(component, secondTask);
         secondTask.save();
 
@@ -299,11 +299,11 @@ public class ProjectConfiguratorTest {
         Plan plan = testHelper.createPlanNamed("Test plan name");
         Component component = testHelper.createComponentNamed("test 1");
         testHelper.associate(plan, component);
-        Task task = testHelper.createTask("test task", 1214);
+        Task task = testHelper.createTask("test task", 0, 6);
         testHelper.associate(component, task);
-        SubTask firstSubTask = testHelper.createSubTask("test sub-task", 123);
+        SubTask firstSubTask = testHelper.createSubTaskNamed("test sub-task");
         testHelper.associate(task, firstSubTask);
-        SubTask secondSubTask = testHelper.createSubTask("test sub-task 2", 12133);
+        SubTask secondSubTask = testHelper.createSubTaskNamed("test sub-task 2");
         testHelper.associate(task, secondSubTask);
 
         ProjectConfigurator fixture = new ProjectConfigurator(mocki18nResolver);
@@ -318,7 +318,7 @@ public class ProjectConfiguratorTest {
         Plan plan = testHelper.createPlanNamed("Test plan name");
         Component component = testHelper.createComponentNamed("test 1");
         testHelper.associate(plan, component);
-        Task task = testHelper.createTask("test task", 1214);
+        Task task = testHelper.createTask("test task", 0, 8);
         testHelper.associate(component, task);
         task.save();
         Mockito.when(mockIssueService.validateCreate(Mockito.any(ApplicationUser.class), Mockito.any(IssueInputParameters.class))).thenAnswer(new Answer<IssueService.CreateValidationResult>() {
@@ -342,22 +342,22 @@ public class ProjectConfiguratorTest {
         Plan plan = testHelper.createPlanNamed("Complex plan name");
         Component firstComponent = testHelper.createComponentNamed("test 1");
         testHelper.associate(plan, firstComponent);
-        Task firstTask = testHelper.createTask("test task", 1214);
+        Task firstTask = testHelper.createTask("test task", 1, 9);
         testHelper.associate(firstComponent, firstTask);
-        SubTask firstSubTask = testHelper.createSubTask("test sub-task", 123);
+        SubTask firstSubTask = testHelper.createSubTaskNamed("test sub-task");
         testHelper.associate(firstTask, firstSubTask);
-        SubTask secondSubTask = testHelper.createSubTask("test sub-task 2", 12133);
+        SubTask secondSubTask = testHelper.createSubTaskNamed("test sub-task 2");
         testHelper.associate(firstTask, secondSubTask);
-        Task secondTask = testHelper.createTask("second test task", 73);
+        Task secondTask = testHelper.createTask("second test task", 0, 2);
         testHelper.associate(firstComponent, secondTask);
 
         Component secondComponent = testHelper.createComponentNamed("test 2");
         testHelper.associate(plan, secondComponent);
-        Task thirdTask = testHelper.createTask("test task 123", 1513);
+        Task thirdTask = testHelper.createTask("test task 123", 0, 1);
         testHelper.associate(secondComponent, thirdTask);
-        SubTask thirdSubTask = testHelper.createSubTask("test sub-task 1232", 123);
+        SubTask thirdSubTask = testHelper.createSubTaskNamed("test sub-task 1232");
         testHelper.associate(thirdTask, thirdSubTask);
-        Task fourthTask = testHelper.createTask("second test task", 73);
+        Task fourthTask = testHelper.createTask("second test task", 0, 3);
         testHelper.associate(secondComponent, fourthTask);
 
         // This should not be associated because hasn't any Task
@@ -370,8 +370,8 @@ public class ProjectConfiguratorTest {
 
         assertEquals(4, result.size());
         int subTasksCount = 0;
-        for(Issue eachTask : result) {
-            subTasksCount =+ eachTask.getSubTaskObjects().size();
+        for (Issue eachTask : result) {
+            subTasksCount = +eachTask.getSubTaskObjects().size();
         }
         assertEquals(3, subTasksCount);
         assertEquals(2, mockProject.getProjectComponents().size());

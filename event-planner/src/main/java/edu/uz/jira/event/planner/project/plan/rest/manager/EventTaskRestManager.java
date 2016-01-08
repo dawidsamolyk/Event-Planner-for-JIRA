@@ -2,9 +2,9 @@ package edu.uz.jira.event.planner.project.plan.rest.manager;
 
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
-import edu.uz.jira.event.planner.database.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.model.SubTask;
-import edu.uz.jira.event.planner.database.model.Task;
+import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.active.objects.model.SubTask;
+import edu.uz.jira.event.planner.database.active.objects.model.Task;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
 import net.java.ao.Entity;
@@ -101,7 +101,9 @@ public class EventTaskRestManager extends RestManager {
         @XmlElement
         private String description;
         @XmlElement
-        private long time;
+        private int neededMonths;
+        @XmlElement
+        private int neededDays;
         @XmlElement
         private String[] subtasks;
 
@@ -122,6 +124,22 @@ public class EventTaskRestManager extends RestManager {
             return new Configuration();
         }
 
+        public int getNeededDays() {
+            return neededDays;
+        }
+
+        public void setNeededDays(int neededDays) {
+            this.neededDays = neededDays;
+        }
+
+        public int getNeededMonths() {
+            return neededMonths;
+        }
+
+        public void setNeededMonths(int neededMonths) {
+            this.neededMonths = neededMonths;
+        }
+
         /**
          * @see {@link EventRestConfiguration#fill(Entity)}
          */
@@ -131,7 +149,8 @@ public class EventTaskRestManager extends RestManager {
                 Task task = (Task) entity;
                 setName(task.getName());
                 setDescription(task.getDescription());
-                setTime(task.getTimeToComplete());
+                setNeededMonths(task.getNeededMonthsToComplete());
+                setNeededDays(task.getNeededDaysToComplete());
                 setSubTasksNames(task);
             }
             return this;
@@ -165,7 +184,7 @@ public class EventTaskRestManager extends RestManager {
         public boolean isFullfilled() {
             return StringUtils.isNotBlank(getName())
                     && getDescription() != null
-                    && getTime() > 0;
+                    && (getNeededMonths() > 0) || (getNeededMonths() == 0 && getNeededDays() > 0);
         }
 
         /**
@@ -200,14 +219,6 @@ public class EventTaskRestManager extends RestManager {
             }
         }
 
-        public long getTime() {
-            return time;
-        }
-
-        public void setTime(@Nonnull long time) {
-            this.time = time;
-        }
-
         public String[] getSubtasks() {
             return subtasks;
         }
@@ -230,10 +241,12 @@ public class EventTaskRestManager extends RestManager {
 
             Configuration that = (Configuration) o;
 
-            if (getTime() != that.getTime()) return false;
+            if (getNeededMonths() != that.getNeededMonths()) return false;
+            if (getNeededDays() != that.getNeededDays()) return false;
             if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
             if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
                 return false;
+            // Probably incorrect - comparing Object[] arrays with Arrays.equals
             return Arrays.equals(getSubtasks(), that.getSubtasks());
         }
 

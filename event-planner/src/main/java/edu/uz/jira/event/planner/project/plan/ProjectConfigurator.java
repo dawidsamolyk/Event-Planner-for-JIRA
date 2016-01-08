@@ -15,7 +15,7 @@ import com.atlassian.jira.project.version.Version;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.sal.api.message.I18nResolver;
-import edu.uz.jira.event.planner.database.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.*;
 import edu.uz.jira.event.planner.util.text.Internationalization;
 import edu.uz.jira.event.planner.util.text.TextUtils;
 import org.apache.commons.lang.StringUtils;
@@ -57,7 +57,7 @@ public class ProjectConfigurator {
         String name = getInternationalized(Internationalization.PROJECT_VERSION_NAME);
         String description = getInternationalized(Internationalization.PROJECT_VERSION_DESCRIPTION);
 
-        DateFormat format = new SimpleDateFormat(DUE_DATE_FORMAT);
+        DateFormat format = new SimpleDateFormat(DUE_DATE_FORMAT, authenticationContext.getLocale());
         Date releaseDate = format.parse(eventDueDate);
         Long projectId = project.getId();
         Long scheduleAfterVersion = null;
@@ -157,7 +157,6 @@ public class ProjectConfigurator {
                             .setIssueTypeId(issueTypeId)
                             .setProjectId(projectId)
                             .setComponentIds(componentId)
-                            .setDueDate(getFormattedDueDate(eachSubTask))
                             .setSummary(eachSubTask.getName())
                             .setDescription(eachSubTask.getDescription())
                             .setFixVersionIds(versionId)
@@ -185,9 +184,14 @@ public class ProjectConfigurator {
     }
 
     private String getFormattedDueDate(@Nonnull final TimeFramedEntity entity) {
-        Date subTaskDueDate = new Date(new Date().getTime() + entity.getTimeToComplete());
+        Calendar calendar = Calendar.getInstance(authenticationContext.getLocale());
+        calendar.add(Calendar.MONTH, entity.getNeededMonthsToComplete());
+        calendar.add(Calendar.DATE, entity.getNeededDaysToComplete());
+
+        Date resultDueDate = calendar.getTime();
+
         String dateFormat = ComponentAccessor.getApplicationProperties().getDefaultBackedString(APKeys.JIRA_LF_DATE_DMY);
-        return new SimpleDateFormat(dateFormat, authenticationContext.getLocale()).format(subTaskDueDate);
+        return new SimpleDateFormat(dateFormat).format(resultDueDate);
     }
 
 }

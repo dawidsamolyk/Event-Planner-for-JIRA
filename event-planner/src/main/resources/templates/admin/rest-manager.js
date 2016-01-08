@@ -35,7 +35,7 @@ function RESTManager() {
                 AJS.flag({
                     type: 'error',
                     title: 'Cannot save ' + resource.id + '!',
-                    body: 'Status: ' + status
+                    body: 'Status: ' + request.statusText
                 });
             }
         });
@@ -68,7 +68,7 @@ function RESTManager() {
                 AJS.flag({
                     type: 'error',
                     title: 'Cannot get ' + sourceId + '!',
-                    body: 'Status: ' + status
+                    body: 'Status: ' + request.statusText
                 });
             }
         });
@@ -110,7 +110,7 @@ function RESTManager() {
                     AJS.flag({
                         type: 'error',
                         title: 'Cannot get ' + sourceId + '!',
-                        body: 'Status: ' + status
+                        body: 'Status: ' + request.statusText
                     });
                 }
             });
@@ -147,7 +147,7 @@ function RESTManager() {
                     AJS.flag({
                         type: 'error',
                         title: 'Cannot delete ' + resourceId + '!',
-                        body: 'Status: ' + status
+                        body: 'Status: ' + request.statusText
                     });
             }
         });

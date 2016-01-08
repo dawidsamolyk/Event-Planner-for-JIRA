@@ -12,15 +12,15 @@
     <resource type="i18n" name="i18n" location="event-planner"/>
 
     <ao key="active-objects">
-        <entity>edu.uz.jira.event.planner.database.model.Plan</entity>
-        <entity>edu.uz.jira.event.planner.database.model.Domain</entity>
-        <entity>edu.uz.jira.event.planner.database.model.Task</entity>
-        <entity>edu.uz.jira.event.planner.database.model.SubTask</entity>
-        <entity>edu.uz.jira.event.planner.database.model.Component</entity>
-        <entity>edu.uz.jira.event.planner.database.model.relation.PlanToComponentRelation</entity>
-        <entity>edu.uz.jira.event.planner.database.model.relation.PlanToDomainRelation</entity>
-        <entity>edu.uz.jira.event.planner.database.model.relation.TaskToComponentRelation</entity>
-        <entity>edu.uz.jira.event.planner.database.model.relation.SubTaskToTaskRelation</entity>
+        <entity>edu.uz.jira.event.planner.database.active.objects.model.Plan</entity>
+        <entity>edu.uz.jira.event.planner.database.active.objects.model.Domain</entity>
+        <entity>edu.uz.jira.event.planner.database.active.objects.model.Task</entity>
+        <entity>edu.uz.jira.event.planner.database.active.objects.model.SubTask</entity>
+        <entity>edu.uz.jira.event.planner.database.active.objects.model.Component</entity>
+        <entity>edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation</entity>
+        <entity>edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation</entity>
+        <entity>edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation</entity>
+        <entity>edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation</entity>
     </ao>
 
     <component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>
@@ -31,7 +31,7 @@
     <component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/>
 
     <component key="transaction" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor"/>
-    <component key="event-plan-service" class="edu.uz.jira.event.planner.database.ActiveObjectsService"/>
+    <component key="event-plan-service" class="edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService"/>
 
     <rest key="rest" path="/event-plans" version="1.0">
         <description>Provides REST resources for the plugin.</description>

@@ -6,11 +6,11 @@ import com.atlassian.jira.project.version.Version;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
-import edu.uz.jira.event.planner.database.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.configuration.EventPlanConfiguration;
 import edu.uz.jira.event.planner.project.configuration.EventPlanConfigurationValidator;
 import edu.uz.jira.event.planner.project.plan.ProjectConfigurator;
-import edu.uz.jira.event.planner.database.model.Plan;
+import edu.uz.jira.event.planner.database.active.objects.model.Plan;
 import net.java.ao.Query;
 import webwork.action.Action;
 

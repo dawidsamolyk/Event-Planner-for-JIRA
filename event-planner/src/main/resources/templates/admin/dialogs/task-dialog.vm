@@ -17,11 +17,13 @@
                 <div class="description" id="task-description-description">Description of the Task.</div>
             </div>
             <div class="field-group" id="task-time-group">
-                <label for="task-time">Time to complete<span
-                        class="aui-icon icon-required">(required)</span></label>
-                <input id="task-time" name="task-time" type="text">
-
-                <div class="description" id="task-time-description">Estimated time to complete Task.
+                <label for="task-needed-time">Time for completion
+                    <span class="aui-icon icon-required">(required)</span></label>
+                <span id="task-needed-time">
+                    <input id="task-needed-months" name="task-needed-months" type="number" min="0" placeholder="Months" style="width: 60px;"> months +
+                    <input id="task-needed-days" name="task-needed-days" type="number" min="1" max="31" placeholder="Days" style="width: 60px;"> days
+                </span>
+                <div class="description" id="task-time-description">Estimated number of months and days needed to complete this task.
                 </div>
             </div>
             <div class="field-group">
@@ -29,7 +31,8 @@
                 <select class="multi-select" multiple="multiple" id="task-subtasks"
                         name="task-subtasks" title="Sub-Tasks">
                 </select>
-                <br />
+                <br/>
+
                 <div class="aui-buttons">
                     <button id="add-subtask-button" class="aui-button trigger-dialog">
                         <span class="aui-icon aui-icon-small aui-iconfont-add"></span>

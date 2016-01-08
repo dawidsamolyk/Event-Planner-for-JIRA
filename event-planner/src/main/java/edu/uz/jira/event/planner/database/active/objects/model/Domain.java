@@ -1,13 +1,12 @@
-package edu.uz.jira.event.planner.database.model;
+package edu.uz.jira.event.planner.database.active.objects.model;
 
-import edu.uz.jira.event.planner.database.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
 import net.java.ao.Entity;
 import net.java.ao.ManyToMany;
 import net.java.ao.schema.Table;
 
 /**
- * Plan of the Event Organization.
+ * Domain of the Event Organization Plan.
  *
  * <ul>Best practices for developing with Active Objects (from Atlassian):</ul>
  * <li>The Active Objects framework does not know about renaming.
@@ -21,14 +20,9 @@ import net.java.ao.schema.Table;
  * Instead, create a new column and migrate the data during the upgrade process.</li>
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
-@Table("EventPlan")
-public interface Plan extends Entity, NamedEntityWithDescription, TimeFramedEntity {
-    String DOMAINS = "DOMAINS";
-    String COMPONENTS = "COMPONENTS";
+@Table("Domain")
+public interface Domain extends Entity, NamedEntityWithDescription {
 
     @ManyToMany(value = PlanToDomainRelation.class)
-    Domain[] getDomains();
-
-    @ManyToMany(value = PlanToComponentRelation.class)
-    Component[] getComponents();
+    Plan[] getPlans();
 }

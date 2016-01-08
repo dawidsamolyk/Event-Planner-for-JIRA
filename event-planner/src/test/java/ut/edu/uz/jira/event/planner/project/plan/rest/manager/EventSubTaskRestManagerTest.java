@@ -8,12 +8,12 @@ import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
-import edu.uz.jira.event.planner.database.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.model.*;
-import edu.uz.jira.event.planner.database.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.model.relation.PlanToDomainRelation;
-import edu.uz.jira.event.planner.database.model.relation.SubTaskToTaskRelation;
-import edu.uz.jira.event.planner.database.model.relation.TaskToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.active.objects.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventSubTaskRestManager;
 import net.java.ao.EntityManager;
@@ -93,20 +93,19 @@ public class EventSubTaskRestManagerTest {
     public void should_Get_Sub_Task_From_Database() throws SQLException {
         String testName = "Test name";
         int testTime = 123;
-        testHelper.createSubTask(testName, testTime);
+        testHelper.createSubTaskNamed(testName);
         EventSubTaskRestManager fixture = new EventSubTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
 
         EventSubTaskRestManager.Configuration result = (EventSubTaskRestManager.Configuration) transactionResult[0];
         assertEquals(testName, result.getName());
-        assertEquals(testTime, result.getTime());
     }
 
     @Test
     public void should_Get_Many_Sub_Tasks_From_Database() throws SQLException {
-        testHelper.createSubTask("SubTask 1", 123);
-        testHelper.createSubTask("SubTask 2", 123);
+        testHelper.createSubTaskNamed("SubTask 1");
+        testHelper.createSubTaskNamed("SubTask 2");
         EventSubTaskRestManager fixture = new EventSubTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
@@ -129,7 +128,6 @@ public class EventSubTaskRestManagerTest {
         EventSubTaskRestManager.Configuration configuration = new EventSubTaskRestManager.Configuration();
         configuration.setName("Test name");
         configuration.setDescription("Test description");
-        configuration.setTime(123);
 
         Response result = fixture.post(configuration, mockRequest);
 

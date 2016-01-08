@@ -1,11 +1,11 @@
 package ut.helpers;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
-import edu.uz.jira.event.planner.database.model.*;
-import edu.uz.jira.event.planner.database.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.model.relation.PlanToDomainRelation;
-import edu.uz.jira.event.planner.database.model.relation.SubTaskToTaskRelation;
-import edu.uz.jira.event.planner.database.model.relation.TaskToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 
 import java.sql.SQLException;
 
@@ -25,13 +25,8 @@ public class ActiveObjectsTestHelper {
     }
 
     public SubTask createSubTaskNamed(String name) {
-        return createSubTask(name, 100);
-    }
-
-    public SubTask createSubTask(String name, int time) {
         SubTask result = activeObjects.create(SubTask.class);
         result.setName(name);
-        result.setTimeToComplete(time);
         result.save();
         return result;
     }
@@ -45,7 +40,7 @@ public class ActiveObjectsTestHelper {
     }
 
     public Task createTaskNamed(String name) {
-        return createTask(name, 100);
+        return createTask(name, 0, 10);
     }
 
     public Component createComponent(String name, String description) {
@@ -56,20 +51,21 @@ public class ActiveObjectsTestHelper {
         return result;
     }
 
-    public Task createTask(String name, long time) {
+    public Task createTask(String name, int months, int days) {
         Task result = activeObjects.create(Task.class);
         result.setName(name);
-        result.setTimeToComplete(time);
+        result.setNeededMonthsToComplete(months);
+        result.setNeededDaysToComplete(days);
         result.save();
         return result;
     }
 
-    public void createPlanWithDomainAndComponent(String planName, String planDescription, int planTime, String domainName, String componentName) throws SQLException {
+    public void createPlanWithDomainAndComponent(String planName, String planDescription, int months, int days, String domainName, String componentName) throws SQLException {
         Domain domain = createDomainNamed(domainName);
 
         Component component = createComponentNamed(componentName);
 
-        Plan plan = createPlan(planName, planDescription, planTime);
+        Plan plan = createPlan(planName, planDescription, months, days);
 
         PlanToDomainRelation relation = activeObjects.create(PlanToDomainRelation.class);
         relation.setPlan(plan);
@@ -98,17 +94,18 @@ public class ActiveObjectsTestHelper {
         return relation;
     }
 
-    public Plan createPlan(String planName, String planDescription, int planTime) {
+    public Plan createPlan(String planName, String planDescription, int months, int days) {
         Plan plan = activeObjects.create(Plan.class);
         plan.setName(planName);
         plan.setDescription(planDescription);
-        plan.setTimeToComplete(planTime);
+        plan.setNeededMonthsToComplete(months);
+        plan.setNeededDaysToComplete(days);
         plan.save();
         return plan;
     }
 
     public Plan createPlanNamed(String name) {
-        return createPlan(name, "", 100);
+        return createPlan(name, "", 1, 0);
     }
 
     public SubTaskToTaskRelation associate(Task thirdTask, SubTask thirdSubTask) {

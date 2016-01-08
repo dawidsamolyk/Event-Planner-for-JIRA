@@ -1,4 +1,4 @@
-package edu.uz.jira.event.planner.database;
+package edu.uz.jira.event.planner.database.active.objects;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import net.java.ao.Query;
