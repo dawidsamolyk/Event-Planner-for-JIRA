@@ -9,6 +9,8 @@ public class NullArgumentException extends Exception {
     private final static TextUtils textUtils = new TextUtils();
 
     /**
+     * Constructor.
+     *
      * @param className Null argument name (name of class).
      */
     public NullArgumentException(final String className) {

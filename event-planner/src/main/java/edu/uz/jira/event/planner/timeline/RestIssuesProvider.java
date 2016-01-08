@@ -6,6 +6,8 @@ import com.atlassian.jira.issue.IssueManager;
 import com.atlassian.jira.project.Project;
 import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
+import edu.uz.jira.event.planner.exception.IssuesNotFoundException;
+import edu.uz.jira.event.planner.exception.ProjectNotFoundException;
 import edu.uz.jira.event.planner.project.plan.rest.RestManagerHelper;
 import edu.uz.jira.event.planner.util.IssueDecorator;
 import org.apache.commons.lang.StringUtils;
@@ -44,25 +46,31 @@ public class RestIssuesProvider {
         helper = new RestManagerHelper(null);
     }
 
-    private List<IssueDecorator> getIssues(final String projectKey) {
+    private List<IssueDecorator> getIssues(final String projectKey) throws ProjectNotFoundException, IssuesNotFoundException {
         List<IssueDecorator> result = new ArrayList<IssueDecorator>();
 
         Project project = ComponentAccessor.getProjectManager().getProjectByCurrentKeyIgnoreCase(projectKey);
+        if (project == null) {
+            throw new ProjectNotFoundException();
+        }
 
-        if (project != null) {
-            Collection<Long> issueIds;
-            try {
-                issueIds = issueManager.getIssueIdsForProject(project.getId());
-            } catch (GenericEntityException e) {
-                return result;
-            }
+        Collection<Long> issueIds;
+        try {
+            issueIds = issueManager.getIssueIdsForProject(project.getId());
+        } catch (GenericEntityException e) {
+            throw new IssuesNotFoundException();
+        }
 
-            for (Issue eachIssue : issueManager.getIssueObjects(issueIds)) {
-                if(!eachIssue.isSubTask()) {
-                    result.add(new IssueDecorator(eachIssue));
-                }
+        for (Issue eachIssue : issueManager.getIssueObjects(issueIds)) {
+            if (!eachIssue.isSubTask()) {
+                result.add(new IssueDecorator(eachIssue));
             }
         }
+
+        if (result.isEmpty()) {
+            throw new IssuesNotFoundException();
+        }
+
         return result;
     }
 
@@ -73,10 +81,16 @@ public class RestIssuesProvider {
         if (StringUtils.isBlank(projectKey)) {
             return helper.buildStatus(Response.Status.NOT_ACCEPTABLE);
         }
-        final List<IssueDecorator> result = getIssues(projectKey);
-        if (result == null || result.isEmpty()) {
+
+        final List<IssueDecorator> result;
+        try {
+            result = getIssues(projectKey);
+        } catch (ProjectNotFoundException e) {
             return helper.buildStatus(Response.Status.NOT_FOUND);
+        } catch (IssuesNotFoundException e) {
+            return helper.buildStatus(Response.Status.NO_CONTENT);
         }
+
         return Response.ok(transactionTemplate.execute(new TransactionCallback<IssueDecorator[]>() {
             public IssueDecorator[] doInTransaction() {
                 IssueDecorator[] issues = result.toArray(new IssueDecorator[result.size()]);

@@ -7,6 +7,7 @@ import com.atlassian.sal.api.message.I18nResolver;
 import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
+import edu.uz.jira.event.planner.exception.VersionNotFoundException;
 import edu.uz.jira.event.planner.project.plan.rest.RestManagerHelper;
 import edu.uz.jira.event.planner.util.ProjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -51,10 +52,14 @@ public class RestProjectDeadlineProvider {
         if (StringUtils.isBlank(projectKey)) {
             return helper.buildStatus(Response.Status.NOT_ACCEPTABLE);
         }
-        final Date projectReleaseDate = getProjectReleaseDate(projectKey);
-        if (projectReleaseDate == null) {
+
+        final Date projectReleaseDate;
+        try {
+            projectReleaseDate = getProjectReleaseDate(projectKey);
+        } catch (VersionNotFoundException e) {
             return helper.buildStatus(Response.Status.NOT_FOUND);
         }
+
         return Response.ok(transactionTemplate.execute(new TransactionCallback<Long>() {
             public Long doInTransaction() {
                 return projectReleaseDate.getTime();
@@ -62,19 +67,19 @@ public class RestProjectDeadlineProvider {
         })).build();
     }
 
-    public Date getProjectReleaseDate(@Nonnull final String projectKey) {
+    public Date getProjectReleaseDate(@Nonnull final String projectKey) throws VersionNotFoundException {
         Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
 
         Version dueDateVersion;
         try {
             dueDateVersion = projectUtils.getDueDateVersion(project);
         } catch (NullArgumentException e) {
-            return null;
+            throw new VersionNotFoundException();
         }
 
-        if (dueDateVersion != null) {
-            return dueDateVersion.getReleaseDate();
+        if (dueDateVersion == null) {
+            throw new VersionNotFoundException();
         }
-        return null;
+        return dueDateVersion.getReleaseDate();
     }
 }

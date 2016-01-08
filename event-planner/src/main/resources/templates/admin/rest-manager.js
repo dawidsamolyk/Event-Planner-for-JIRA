@@ -174,13 +174,24 @@ function RESTManager() {
             type: "GET",
             dataType: "json",
             success: function (data, status, request) {
+                if(request.statusText.valueOf() === 'No Content') {
+                    AJS.flag({
+                        type: 'info',
+                        title: 'No Tasks for project ' + projectKey + '.'
+                    });
+                }
                 timeLine.setIssues(data);
             },
             error: function (request, status, error) {
+                var flagTitle = 'Error (' + error + ') while getting Tasks for Project ' + projectKey + '!';
+
+                if(error.valueOf() === 'Not Found') {
+                    flagTitle = 'Project ' + projectKey + ' not found.';
+                }
+
                 AJS.flag({
                     type: 'error',
-                    title: 'Error while getting Issues for project ' + projectKey + '!',
-                    body: 'Status: ' + status
+                    title: flagTitle
                 });
             }
         });
@@ -213,8 +224,8 @@ function RESTManager() {
             error: function (request, status, error) {
                     AJS.flag({
                         type: 'error',
-                        title: 'Cannot get project Due Date for project ' + projectKey + '!',
-                        body: 'Status: ' + status
+                        title: 'Deadline for project ' + projectKey + ' is not set!',
+                        body: 'Cannot show project Time Line.'
                     });
             }
         });

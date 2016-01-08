@@ -118,7 +118,7 @@ public class RestIssuesProviderTest {
 
         Response result = fixture.get(mockRequest);
 
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), result.getStatus());
+        assertEquals(Response.Status.NO_CONTENT.getStatusCode(), result.getStatus());
     }
 
     @Test
