@@ -27,6 +27,7 @@
             type: 'success',
             title: 'Event organization project configured successfully.',
             body: '<ul class="aui-nav-actions-list">' +
+                    '<li><a href="' + contextPath + '/plugins/servlet/event/plan/time-line?project=Project: ' + projectKey + '">Show project Time Line</a></li>' +
                     '<li><a href="' + contextPath + '/projects/' + projectKey + '">Show project summary</a></li>' +
                     '<li><a href="' + contextPath + '/projects/' + projectKey + '/issues">Show project issues</a></li>' +
                     '<li><a href="' + contextPath + '/plugins/servlet/project-config/' + projectKey + '">Move to project administration</a></li>' +
