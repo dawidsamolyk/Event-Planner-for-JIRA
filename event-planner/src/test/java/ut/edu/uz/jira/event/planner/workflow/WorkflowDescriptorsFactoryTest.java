@@ -2,7 +2,7 @@ package ut.edu.uz.jira.event.planner.workflow;
 
 import com.opensymphony.workflow.loader.ConditionDescriptor;
 import com.opensymphony.workflow.loader.ValidatorDescriptor;
-import edu.uz.jira.event.planner.workflow.WorkflowDescriptorsFactory;
+import edu.uz.jira.event.planner.workflow.descriptor.WorkflowDescriptorsFactory;
 import org.junit.Test;
 
 import java.util.ArrayList;

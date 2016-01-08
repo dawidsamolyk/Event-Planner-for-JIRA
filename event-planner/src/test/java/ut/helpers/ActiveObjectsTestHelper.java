@@ -1,11 +1,11 @@
 package ut.helpers;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
-import edu.uz.jira.event.planner.project.plan.model.*;
-import edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation;
-import edu.uz.jira.event.planner.project.plan.model.relation.SubTaskToTaskRelation;
-import edu.uz.jira.event.planner.project.plan.model.relation.TaskToComponentRelation;
+import edu.uz.jira.event.planner.database.model.*;
+import edu.uz.jira.event.planner.database.model.relation.PlanToComponentRelation;
+import edu.uz.jira.event.planner.database.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.database.model.relation.TaskToComponentRelation;
 
 import java.sql.SQLException;
 

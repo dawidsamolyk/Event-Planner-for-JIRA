@@ -1,6 +1,6 @@
 package edu.uz.jira.event.planner.util.text;
 
-import edu.uz.jira.event.planner.project.plan.model.NamedEntityWithDescription;
+import edu.uz.jira.event.planner.database.model.NamedEntityWithDescription;
 
 import java.util.ArrayList;
 import java.util.List;

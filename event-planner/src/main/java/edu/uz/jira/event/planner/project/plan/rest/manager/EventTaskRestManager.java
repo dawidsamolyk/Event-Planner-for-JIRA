@@ -2,9 +2,9 @@ package edu.uz.jira.event.planner.project.plan.rest.manager;
 
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
-import edu.uz.jira.event.planner.project.plan.ActiveObjectsService;
-import edu.uz.jira.event.planner.project.plan.model.SubTask;
-import edu.uz.jira.event.planner.project.plan.model.Task;
+import edu.uz.jira.event.planner.database.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.model.SubTask;
+import edu.uz.jira.event.planner.database.model.Task;
 import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
 import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
 import net.java.ao.Entity;

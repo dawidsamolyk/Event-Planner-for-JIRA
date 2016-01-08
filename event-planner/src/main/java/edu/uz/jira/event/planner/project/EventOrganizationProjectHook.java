@@ -13,10 +13,10 @@ import com.opensymphony.workflow.loader.ConditionDescriptor;
 import com.opensymphony.workflow.loader.ValidatorDescriptor;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.project.issue.fields.IssueFieldsConfigurator;
-import edu.uz.jira.event.planner.util.WorkflowUtils;
+import edu.uz.jira.event.planner.workflow.WorkflowUtils;
 import edu.uz.jira.event.planner.workflow.WorkflowConfigurator;
 import edu.uz.jira.event.planner.workflow.WorkflowConstants;
-import edu.uz.jira.event.planner.workflow.WorkflowDescriptorsFactory;
+import edu.uz.jira.event.planner.workflow.descriptor.WorkflowDescriptorsFactory;
 
 import javax.annotation.Nonnull;
 import java.util.List;

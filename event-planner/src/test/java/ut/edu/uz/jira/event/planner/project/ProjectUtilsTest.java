@@ -5,7 +5,7 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.version.Version;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
-import edu.uz.jira.event.planner.util.ProjectUtils;
+import edu.uz.jira.event.planner.project.ProjectUtils;
 import edu.uz.jira.event.planner.util.text.Internationalization;
 import org.junit.Before;
 import org.junit.Rule;

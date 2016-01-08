@@ -21,7 +21,7 @@ import com.atlassian.jira.user.MockApplicationUser;
 import com.atlassian.jira.user.MockUser;
 import com.atlassian.jira.user.util.MockUserManager;
 import com.atlassian.jira.user.util.UserManager;
-import edu.uz.jira.event.planner.util.IssueDecorator;
+import edu.uz.jira.event.planner.timeline.IssueDecorator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -256,5 +256,31 @@ public class IssueDecoratorTest {
         boolean result = new IssueDecorator(mockIssue).isLate();
 
         assertEquals(false, result);
+    }
+
+    @Test
+    public void should_provide_assignee_name() {
+        Issue mockIssue = mock(Issue.class);
+        Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
+        String assigneeName = "test";
+        Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser(assigneeName));
+        Mockito.when(mockIssue.getDueDate()).thenReturn(new Timestamp(new Date().getTime()));
+
+        String result = new IssueDecorator(mockIssue).getAssigneeName();
+
+        assertEquals(assigneeName, result);
+    }
+
+    @Test
+    public void should_provide_due_date_as_miliseconds() {
+        Issue mockIssue = mock(Issue.class);
+        Mockito.when(mockIssue.getStatusObject()).thenReturn(getMockStatus());
+        Mockito.when(mockIssue.getAssignee()).thenReturn(new MockUser("test"));
+        Long dueDateTime = new Date().getTime();
+        Mockito.when(mockIssue.getDueDate()).thenReturn(new Timestamp(dueDateTime));
+
+        Long result = new IssueDecorator(mockIssue).getDueDate();
+
+        assertEquals(dueDateTime, result);
     }
 }

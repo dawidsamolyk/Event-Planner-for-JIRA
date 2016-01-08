@@ -12,15 +12,15 @@
     <resource type="i18n" name="i18n" location="event-planner"/>
 
     <ao key="active-objects">
-        <entity>edu.uz.jira.event.planner.project.plan.model.Plan</entity>
-        <entity>edu.uz.jira.event.planner.project.plan.model.Domain</entity>
-        <entity>edu.uz.jira.event.planner.project.plan.model.Task</entity>
-        <entity>edu.uz.jira.event.planner.project.plan.model.SubTask</entity>
-        <entity>edu.uz.jira.event.planner.project.plan.model.Component</entity>
-        <entity>edu.uz.jira.event.planner.project.plan.model.relation.PlanToComponentRelation</entity>
-        <entity>edu.uz.jira.event.planner.project.plan.model.relation.PlanToDomainRelation</entity>
-        <entity>edu.uz.jira.event.planner.project.plan.model.relation.TaskToComponentRelation</entity>
-        <entity>edu.uz.jira.event.planner.project.plan.model.relation.SubTaskToTaskRelation</entity>
+        <entity>edu.uz.jira.event.planner.database.model.Plan</entity>
+        <entity>edu.uz.jira.event.planner.database.model.Domain</entity>
+        <entity>edu.uz.jira.event.planner.database.model.Task</entity>
+        <entity>edu.uz.jira.event.planner.database.model.SubTask</entity>
+        <entity>edu.uz.jira.event.planner.database.model.Component</entity>
+        <entity>edu.uz.jira.event.planner.database.model.relation.PlanToComponentRelation</entity>
+        <entity>edu.uz.jira.event.planner.database.model.relation.PlanToDomainRelation</entity>
+        <entity>edu.uz.jira.event.planner.database.model.relation.TaskToComponentRelation</entity>
+        <entity>edu.uz.jira.event.planner.database.model.relation.SubTaskToTaskRelation</entity>
     </ao>
 
     <component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>
@@ -31,13 +31,13 @@
     <component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"/>
 
     <component key="transaction" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor"/>
-    <component key="event-plan-service" class="edu.uz.jira.event.planner.project.plan.ActiveObjectsService"/>
+    <component key="event-plan-service" class="edu.uz.jira.event.planner.database.ActiveObjectsService"/>
 
     <rest key="rest" path="/event-plans" version="1.0">
         <description>Provides REST resources for the plugin.</description>
     </rest>
 
-    <servlet name="Event Plans Configuration" class="edu.uz.jira.event.planner.project.plan.EventPlanServlet"
+    <servlet name="Event Plans Configuration" class="edu.uz.jira.event.planner.project.plan.servlet.EventPlanServlet"
              key="event-plans-configuration">
         <url-pattern>/eventPlans/configuration</url-pattern>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
@@ -105,21 +105,21 @@
         </description>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <actions>
-            <action name="edu.uz.jira.event.planner.project.configuration.EventPlanConfigurationAction"
+            <action name="edu.uz.jira.event.planner.project.configuration.webwork.EventPlanConfigurationAction"
                     alias="EventOrganizationPlanConfiguration">
                 <view name="success">/templates/webworks/event/config/success.vm</view>
                 <view name="input">/templates/webworks/event/config/input.vm</view>
                 <view name="error">/templates/webworks/event/config/error.vm</view>
             </action>
-            <action name="edu.uz.jira.event.planner.project.plan.action.OnlyShowInputAction"
+            <action name="edu.uz.jira.event.planner.util.webwork.OnlyShowInputAction"
                     alias="DeleteEventOrganizationPlan">
                 <view name="input">/templates/admin/webworks/delete.vm</view>
             </action>
-            <action name="edu.uz.jira.event.planner.project.plan.action.OnlyShowInputAction"
+            <action name="edu.uz.jira.event.planner.util.webwork.OnlyShowInputAction"
                     alias="EditEventOrganizationPlan">
                 <view name="input">/templates/admin/webworks/edit.vm</view>
             </action>
-            <action name="edu.uz.jira.event.planner.project.plan.action.OnlyShowInputAction"
+            <action name="edu.uz.jira.event.planner.util.webwork.OnlyShowInputAction"
                     alias="ViewEventOrganizationPlan">
                 <view name="input">/templates/admin/webworks/view.vm</view>
             </action>
@@ -140,7 +140,7 @@
         <resource type="velocity" name="view" location="templates/validators/issue-due-date-validator.vm"/>
     </workflow-validator>
     <servlet name="Event Plan Timeline Servlet" i18n-name-key="event.plan.timeline.servlet.name"
-             key="event-plan-timeline-servlet" class="edu.uz.jira.event.planner.timeline.EventPlanTimelineServlet">
+             key="event-plan-timeline-servlet" class="edu.uz.jira.event.planner.timeline.servlet.EventPlanTimelineServlet">
         <description key="event.plan.timeline.servlet.description">The Event Plan Timeline Servlet Plugin</description>
         <url-pattern>/event/plan/time-line</url-pattern>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
@@ -164,6 +164,6 @@
               section="system.top.navigation.bar" weight="50">
         <label>Time Line</label>
         <link linkId="event_organization_time_line">/plugins/servlet/event/plan/time-line?project=$project</link>
-        <condition class="edu.uz.jira.event.planner.timeline.ShowTimeLineButtonCondition"/>
+        <condition class="edu.uz.jira.event.planner.timeline.condition.ShowTimeLineButtonCondition"/>
     </web-item>
 </atlassian-plugin>

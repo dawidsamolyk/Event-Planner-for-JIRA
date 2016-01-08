@@ -15,7 +15,7 @@ import com.atlassian.jira.project.version.Version;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.sal.api.message.I18nResolver;
-import edu.uz.jira.event.planner.project.plan.model.*;
+import edu.uz.jira.event.planner.database.model.*;
 import edu.uz.jira.event.planner.util.text.Internationalization;
 import edu.uz.jira.event.planner.util.text.TextUtils;
 import org.apache.commons.lang.StringUtils;
