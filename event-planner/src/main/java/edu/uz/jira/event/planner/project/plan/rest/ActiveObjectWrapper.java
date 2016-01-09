@@ -3,11 +3,11 @@ package edu.uz.jira.event.planner.project.plan.rest;
 import net.java.ao.Entity;
 
 /**
- * Event Organziation element REST configuration.
+ * Wrapper of Event Organziation element.
  */
-public interface EventRestConfiguration {
+public interface ActiveObjectWrapper {
     /**
-     * @return Type of wrapped object.
+     * @return Type of wrapped Active Object.
      */
     Class getWrappedType();
 
@@ -15,7 +15,7 @@ public interface EventRestConfiguration {
      * @param entity Source of data.
      * @return Fullfilled configuration from input source.
      */
-    EventRestConfiguration fill(Entity entity);
+    ActiveObjectWrapper fill(Entity entity);
 
     /**
      * @return Are all required parameters fullfilled.
@@ -25,5 +25,5 @@ public interface EventRestConfiguration {
     /**
      * @return Copy of object without filled fields.
      */
-    EventRestConfiguration getEmptyCopy();
+    ActiveObjectWrapper getEmptyCopy();
 }

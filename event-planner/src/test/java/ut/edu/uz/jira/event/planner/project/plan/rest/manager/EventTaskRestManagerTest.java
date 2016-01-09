@@ -14,7 +14,7 @@ import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCo
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
-import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
+import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventTaskRestManager;
 import net.java.ao.EntityManager;
 import net.java.ao.test.converters.NameConverters;
@@ -50,7 +50,7 @@ public class EventTaskRestManagerTest {
     private TransactionTemplate mockTransactionTemplateForPut;
     private ActiveObjectsService planService;
     private ActiveObjects activeObjects;
-    private EventRestConfiguration[] transactionResult;
+    private ActiveObjectWrapper[] transactionResult;
     private ActiveObjectsTestHelper testHelper;
 
     @Before
@@ -62,10 +62,10 @@ public class EventTaskRestManagerTest {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(true);
 
         mockTransactionTemplateForGet = mock(TransactionTemplate.class);
-        Mockito.when(mockTransactionTemplateForGet.execute(Mockito.any(TransactionCallback.class))).thenAnswer(new Answer<EventRestConfiguration[]>() {
+        Mockito.when(mockTransactionTemplateForGet.execute(Mockito.any(TransactionCallback.class))).thenAnswer(new Answer<ActiveObjectWrapper[]>() {
             @Override
-            public EventRestConfiguration[] answer(InvocationOnMock invocation) throws Throwable {
-                TransactionCallback<EventRestConfiguration[]> callback = (TransactionCallback<EventRestConfiguration[]>) invocation.getArguments()[0];
+            public ActiveObjectWrapper[] answer(InvocationOnMock invocation) throws Throwable {
+                TransactionCallback<ActiveObjectWrapper[]> callback = (TransactionCallback<ActiveObjectWrapper[]>) invocation.getArguments()[0];
                 transactionResult = callback.doInTransaction();
                 return transactionResult;
             }
@@ -93,12 +93,12 @@ public class EventTaskRestManagerTest {
     public void should_Get_Task_From_Database() throws SQLException {
         String testName = "Test name";
         int testDays = 123;
-        testHelper.createTask(testName, 0,testDays);
+        testHelper.createTask(testName, 0, testDays);
         EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
 
-        EventTaskRestManager.Configuration expected = new EventTaskRestManager.Configuration();
+        edu.uz.jira.event.planner.database.importer.xml.model.Task expected = new edu.uz.jira.event.planner.database.importer.xml.model.Task();
         expected.setName(testName);
         expected.setNeededDays(testDays);
         assertEquals(expected, transactionResult[0]);
@@ -127,7 +127,7 @@ public class EventTaskRestManagerTest {
     @Test
     public void should_Post_New_Task() {
         EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
-        EventTaskRestManager.Configuration configuration = new EventTaskRestManager.Configuration();
+        edu.uz.jira.event.planner.database.importer.xml.model.Task configuration = new edu.uz.jira.event.planner.database.importer.xml.model.Task();
         configuration.setName("Test name");
         configuration.setDescription("Test description");
         configuration.setNeededDays(12);
@@ -157,7 +157,7 @@ public class EventTaskRestManagerTest {
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
-        EventRestConfiguration expected = EventTaskRestManager.Configuration.createEmpty().fill(task);
+        ActiveObjectWrapper expected = edu.uz.jira.event.planner.database.importer.xml.model.Task.createEmpty().fill(task);
         assertEquals(expected, transactionResult[0]);
     }
 }

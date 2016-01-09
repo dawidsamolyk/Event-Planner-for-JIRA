@@ -6,6 +6,9 @@
 //
 package edu.uz.jira.event.planner.database.importer.xml.model;
 
+import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
+import net.java.ao.Entity;
+
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +21,7 @@ import java.util.List;
         "eventPlan"
 })
 @XmlRootElement(name = "event-plans")
-public class AllEventPlans {
+public class AllEventPlans implements ActiveObjectWrapper {
     @XmlElement(name = "event-plan")
     protected List<EventPlan> eventPlan;
 
@@ -46,5 +49,25 @@ public class AllEventPlans {
     @Override
     public int hashCode() {
         return getEventPlan() != null ? getEventPlan().hashCode() : 0;
+    }
+
+    @Override
+    public Class getWrappedType() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ActiveObjectWrapper fill(Entity entity) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isFullfilled() {
+        return !eventPlan.isEmpty();
+    }
+
+    @Override
+    public ActiveObjectWrapper getEmptyCopy() {
+        return new AllEventPlans();
     }
 }

@@ -8,7 +8,7 @@ function Component() {
     that.getJson = function() {
         return '{ "name": "' + that.getName().attr("value") +
                '", "description": "' + that.getDescription().attr("value") +
-               '", "tasks": ' + JSON.stringify(that.getTasks().val()) +
+               '", "tasksNames": ' + JSON.stringify(that.getTasks().val()) +
                ' }';
     };
 

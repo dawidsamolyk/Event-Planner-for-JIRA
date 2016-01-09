@@ -4,7 +4,8 @@ import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
-import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
+import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
+import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.project.plan.rest.RestManagerHelper;
 import net.java.ao.Entity;
 import net.java.ao.Query;
@@ -23,7 +24,7 @@ public abstract class RestManager {
     protected final ActiveObjectsService activeObjectsService;
     protected final Class entityType;
     private final TransactionTemplate transactionTemplate;
-    private final EventRestConfiguration emptyConfiguration;
+    private final ActiveObjectWrapper emptyConfiguration;
     private final UserManager userManager;
     private final RestManagerHelper helper;
 
@@ -33,19 +34,17 @@ public abstract class RestManager {
      * @param userManager          Injected {@code UserManager} implementation.
      * @param transactionTemplate  Injected {@code TransactionTemplate} implementation.
      * @param activeObjectsService Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
-     * @param entityType           Type of Entities which this RestManages can handle.
      * @param emptyConfiguration   Empty configuration of handled Entities.
      */
     public RestManager(@Nonnull final UserManager userManager,
                        @Nonnull final TransactionTemplate transactionTemplate,
                        @Nonnull final ActiveObjectsService activeObjectsService,
-                       @Nonnull final Class entityType,
-                       @Nonnull final EventRestConfiguration emptyConfiguration) {
+                       @Nonnull final ActiveObjectWrapper emptyConfiguration) {
         this.userManager = userManager;
         this.transactionTemplate = transactionTemplate;
         this.activeObjectsService = activeObjectsService;
-        this.entityType = entityType;
         this.emptyConfiguration = emptyConfiguration;
+        this.entityType = emptyConfiguration.getWrappedType();
         helper = new RestManagerHelper(userManager);
     }
 
@@ -56,7 +55,7 @@ public abstract class RestManager {
      * @param request  Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
      */
-    public Response post(final EventRestConfiguration resource, @Context final HttpServletRequest request) {
+    public Response post(final ActiveObjectWrapper resource, @Context final HttpServletRequest request) {
         if (!helper.isAdminUser(userManager.getRemoteUser(request))) {
             return helper.buildStatus(Response.Status.UNAUTHORIZED);
         }
@@ -83,8 +82,8 @@ public abstract class RestManager {
         if (id == null || id.isEmpty()) {
             return helper.buildStatus(Response.Status.NOT_ACCEPTABLE);
         }
-        return Response.ok(transactionTemplate.execute(new TransactionCallback<EventRestConfiguration[]>() {
-            public EventRestConfiguration[] doInTransaction() {
+        return Response.ok(transactionTemplate.execute(new TransactionCallback<ActiveObjectWrapper[]>() {
+            public ActiveObjectWrapper[] doInTransaction() {
                 return getEntities(entityType, Query.select().where("ID = ?", id));
             }
         })).build();
@@ -100,8 +99,8 @@ public abstract class RestManager {
         if (!helper.isAdminUser(userManager.getRemoteUser(request))) {
             return helper.buildStatus(Response.Status.UNAUTHORIZED);
         }
-        return Response.ok(transactionTemplate.execute(new TransactionCallback<EventRestConfiguration[]>() {
-            public EventRestConfiguration[] doInTransaction() {
+        return Response.ok(transactionTemplate.execute(new TransactionCallback<ActiveObjectWrapper[]>() {
+            public ActiveObjectWrapper[] doInTransaction() {
                 return getEntities(entityType, Query.select());
             }
         })).build();
@@ -117,23 +116,28 @@ public abstract class RestManager {
         return helper.buildStatus(Response.Status.OK);
     }
 
-    private Response doPutTransaction(@Nonnull final EventRestConfiguration resource) {
+    private Response doPutTransaction(@Nonnull final ActiveObjectWrapper resource) {
         return transactionTemplate.execute(new TransactionCallback<Response>() {
             public Response doInTransaction() {
                 if (!resource.getWrappedType().equals(entityType)) {
                     return helper.buildStatus(Response.Status.NOT_ACCEPTABLE);
                 }
-                Entity result = activeObjectsService.addFrom(resource);
+                Entity result;
+                try {
+                    result = activeObjectsService.addFrom(resource);
+                } catch (ActiveObjectSavingException e) {
+                    return helper.buildStatus(Response.Status.NOT_ACCEPTABLE);
+                }
                 return checkArgumentAndResponse(result);
             }
         });
     }
 
-    private EventRestConfiguration[] getEntities(@Nonnull final Class<? extends RawEntity> entityType, @Nonnull final Query query) {
+    private ActiveObjectWrapper[] getEntities(@Nonnull final Class<? extends RawEntity> entityType, @Nonnull final Query query) {
         List<? extends RawEntity> entities = activeObjectsService.get(entityType, query);
         int numberOfEntities = entities.size();
 
-        EventRestConfiguration[] result = new EventRestConfiguration[numberOfEntities];
+        ActiveObjectWrapper[] result = new ActiveObjectWrapper[numberOfEntities];
 
         for (int index = 0; index < numberOfEntities; index++) {
             RawEntity eachEntity = entities.get(index);
@@ -145,7 +149,7 @@ public abstract class RestManager {
         return result;
     }
 
-    private EventRestConfiguration createFrom(@Nonnull final Entity entity) {
+    private ActiveObjectWrapper createFrom(@Nonnull final Entity entity) {
         return emptyConfiguration.getEmptyCopy().fill(entity);
     }
 

@@ -14,7 +14,8 @@ import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCo
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
-import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
+import edu.uz.jira.event.planner.database.importer.xml.model.EventPlan;
+import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
 import net.java.ao.EntityManager;
 import net.java.ao.test.converters.NameConverters;
@@ -50,7 +51,7 @@ public class EventPlanRestManagerTest {
     private TransactionTemplate mockTransactionTemplateForPut;
     private ActiveObjectsService planService;
     private ActiveObjects activeObjects;
-    private EventRestConfiguration[] transactionResult;
+    private ActiveObjectWrapper[] transactionResult;
     private ActiveObjectsTestHelper testHelper;
 
     @Before
@@ -62,10 +63,10 @@ public class EventPlanRestManagerTest {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(true);
 
         mockTransactionTemplateForGet = mock(TransactionTemplate.class);
-        Mockito.when(mockTransactionTemplateForGet.execute(Mockito.any(TransactionCallback.class))).thenAnswer(new Answer<EventRestConfiguration[]>() {
+        Mockito.when(mockTransactionTemplateForGet.execute(Mockito.any(TransactionCallback.class))).thenAnswer(new Answer<ActiveObjectWrapper[]>() {
             @Override
-            public EventRestConfiguration[] answer(InvocationOnMock invocation) throws Throwable {
-                TransactionCallback<EventRestConfiguration[]> callback = (TransactionCallback) invocation.getArguments()[0];
+            public ActiveObjectWrapper[] answer(InvocationOnMock invocation) throws Throwable {
+                TransactionCallback<ActiveObjectWrapper[]> callback = (TransactionCallback) invocation.getArguments()[0];
                 transactionResult = callback.doInTransaction();
                 return transactionResult;
             }
@@ -88,8 +89,8 @@ public class EventPlanRestManagerTest {
         testHelper = new ActiveObjectsTestHelper(activeObjects);
     }
 
-    private EventPlanRestManager.Configuration getEmptyPlan() {
-        return EventPlanRestManager.Configuration.createEmpty();
+    private EventPlan getEmptyPlan() {
+        return EventPlan.createEmpty();
     }
 
     @Test
@@ -104,13 +105,13 @@ public class EventPlanRestManagerTest {
 
         fixture.get(mockRequest);
 
-        EventPlanRestManager.Configuration expected = new EventPlanRestManager.Configuration();
+        EventPlan expected = new EventPlan();
         expected.setName(testPlanName);
         expected.setDescription(testPlanDescription);
-        expected.setDomains(new String[]{testDomainName});
-        expected.setComponents(new String[]{testComponentName});
+        expected.setDomainsNames(new String[]{testDomainName});
+        expected.setComponentsNames(new String[]{testComponentName});
         expected.setNeededDays(testDays);
-        expected.setId(((EventPlanRestManager.Configuration) transactionResult[0]).getId());
+        expected.setId(((EventPlan) transactionResult[0]).getId());
         assertEquals(expected, transactionResult[0]);
     }
 
@@ -141,11 +142,11 @@ public class EventPlanRestManagerTest {
         Component secondComponent = testHelper.createComponent("Test component 2", "");
         Component thirdComponent = testHelper.createComponent("Test component 3", "");
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
-        EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
+        EventPlan config = new EventPlan();
         config.setName("Test name");
         config.setNeededDays(14);
-        config.setDomains(new String[]{domain.getName()});
-        config.setComponents(new String[]{firstComponent.getName(), secondComponent.getName(), thirdComponent.getName()});
+        config.setDomainsNames(new String[]{domain.getName()});
+        config.setComponentsNames(new String[]{firstComponent.getName(), secondComponent.getName(), thirdComponent.getName()});
 
         Response result = fixture.post(config, mockRequest);
 
@@ -172,7 +173,7 @@ public class EventPlanRestManagerTest {
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
-        EventRestConfiguration expected = EventPlanRestManager.Configuration.createEmpty().fill(plan);
+        ActiveObjectWrapper expected = EventPlan.createEmpty().fill(plan);
         assertEquals(expected, transactionResult[0]);
     }
 }

@@ -7,14 +7,19 @@ import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCo
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
-import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
-import edu.uz.jira.event.planner.project.plan.rest.manager.*;
+import edu.uz.jira.event.planner.database.importer.xml.model.AllEventPlans;
+import edu.uz.jira.event.planner.database.importer.xml.model.EventPlan;
+import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
+import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import net.java.ao.Entity;
 import net.java.ao.Query;
 import net.java.ao.RawEntity;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -28,6 +33,7 @@ import static com.google.common.collect.Lists.newArrayList;
  */
 @Transactional
 public class ActiveObjectsService {
+    private final ActiveObjectsConverter converter;
     private final ActiveObjects activeObjectsService;
     private final RelationsManager relationsManager;
 
@@ -39,99 +45,32 @@ public class ActiveObjectsService {
     public ActiveObjectsService(@Nonnull final ActiveObjects activeObjectsService) {
         this.activeObjectsService = activeObjectsService;
         relationsManager = new RelationsManager(activeObjectsService);
+        converter = new ActiveObjectsConverter(activeObjectsService, relationsManager);
     }
 
-    public Entity addFrom(@Nonnull final EventRestConfiguration resource) {
+    public Entity addFrom(@Nonnull final ActiveObjectWrapper resource) throws ActiveObjectSavingException {
         if (resource == null || !resource.isFullfilled()) {
-            return null;
+            throw new ActiveObjectSavingException();
         }
-        if (resource instanceof EventPlanRestManager.Configuration) {
-            return addFrom((EventPlanRestManager.Configuration) resource);
+        if (resource instanceof EventPlan) {
+            return converter.addFrom((EventPlan) resource);
         }
-        if (resource instanceof EventDomainRestManager.Configuration) {
-            return addFrom((EventDomainRestManager.Configuration) resource);
+        if (resource instanceof edu.uz.jira.event.planner.database.importer.xml.model.Domain) {
+            return converter.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.Domain) resource);
         }
-        if (resource instanceof EventComponentRestManager.Configuration) {
-            return addFrom((EventComponentRestManager.Configuration) resource);
+        if (resource instanceof edu.uz.jira.event.planner.database.importer.xml.model.Component) {
+            return converter.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.Component) resource);
         }
-        if (resource instanceof EventTaskRestManager.Configuration) {
-            return addFrom((EventTaskRestManager.Configuration) resource);
+        if (resource instanceof edu.uz.jira.event.planner.database.importer.xml.model.Task) {
+            return converter.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.Task) resource);
         }
-        if (resource instanceof EventSubTaskRestManager.Configuration) {
-            return addFrom((EventSubTaskRestManager.Configuration) resource);
+        if (resource instanceof edu.uz.jira.event.planner.database.importer.xml.model.SubTask) {
+            return converter.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.SubTask) resource);
         }
-        return null;
-    }
-
-    private Plan addFrom(@Nonnull final EventPlanRestManager.Configuration resource) {
-        Plan result = activeObjectsService.create(Plan.class);
-        result.setName(resource.getName());
-        result.setDescription(resource.getDescription());
-        result.setNeededDaysToComplete(resource.getNeededDays());
-        result.setNeededMonthsToComplete(resource.getNeededMonths());
-
-        Collection<PlanToDomainRelation> planToDomainRelations = relationsManager.associatePlanWithDomains(result, resource.getDomains());
-        if (planToDomainRelations.isEmpty()) {
-            deleteWithRelations(result);
-            return null;
+        if (resource instanceof AllEventPlans) {
+            return converter.addFrom((AllEventPlans) resource);
         }
-
-        Collection<PlanToComponentRelation> planToComponentRelations = relationsManager.associatePlanWithComponents(result, resource.getComponents());
-        if (planToComponentRelations.isEmpty()) {
-            deleteWithRelations(result);
-            return null;
-        }
-
-        result.save();
-        return result;
-    }
-
-    private Domain addFrom(@Nonnull final EventDomainRestManager.Configuration resource) {
-        Domain result = activeObjectsService.create(Domain.class);
-        result.setName(resource.getName());
-        result.setDescription(resource.getDescription());
-        result.save();
-        return result;
-    }
-
-    private Component addFrom(@Nonnull final EventComponentRestManager.Configuration resource) {
-        Component result = activeObjectsService.create(Component.class);
-        result.setName(resource.getName());
-        result.setDescription(resource.getDescription());
-
-        boolean valid = relationsManager.associate(result, resource.getTasks());
-        if (!valid) {
-            deleteWithRelations(result);
-            return null;
-        }
-
-        result.save();
-        return result;
-    }
-
-    private Task addFrom(EventTaskRestManager.Configuration resource) {
-        Task result = activeObjectsService.create(Task.class);
-        result.setName(resource.getName());
-        result.setDescription(resource.getDescription());
-        result.setNeededDaysToComplete(resource.getNeededDays());
-        result.setNeededMonthsToComplete(resource.getNeededMonths());
-
-        boolean valid = relationsManager.associate(result, resource.getSubtasks());
-        if (!valid) {
-            deleteWithRelations(result);
-            return null;
-        }
-
-        result.save();
-        return result;
-    }
-
-    private SubTask addFrom(EventSubTaskRestManager.Configuration resource) {
-        SubTask result = activeObjectsService.create(SubTask.class);
-        result.setName(resource.getName());
-        result.setDescription(resource.getDescription());
-        result.save();
-        return result;
+        throw new ActiveObjectSavingException();
     }
 
     /**
@@ -162,16 +101,8 @@ public class ActiveObjectsService {
         if (result == null || result.length == 0) {
             return false;
         }
-        deleteWithRelations(result);
+        relationsManager.deleteWithRelations(result);
         return true;
-    }
-
-    private void deleteWithRelations(@Nonnull final RawEntity... entities) {
-        for (RawEntity each : entities) {
-            RawEntity[] relations = relationsManager.getRelations(each);
-            activeObjectsService.delete(relations);
-        }
-        activeObjectsService.delete(entities);
     }
 
     /**

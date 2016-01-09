@@ -12,7 +12,7 @@ function Task() {
                '", "description": "' + that.getDescription().attr("value") +
                '", "neededMonths": ' + that.getNeededMonthsToComplete().attr("value") +
                ', "neededDays": ' + that.getNeededDaysToComplete().attr("value") +
-               ', "subtasks": ' + JSON.stringify(that.getSubTasks().val()) +
+               ', "subTasksNames": ' + JSON.stringify(that.getSubTasks().val()) +
                ' }';
     };
 

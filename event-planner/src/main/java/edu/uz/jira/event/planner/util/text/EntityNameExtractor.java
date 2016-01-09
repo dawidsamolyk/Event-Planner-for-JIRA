@@ -14,7 +14,7 @@ public class EntityNameExtractor {
      * @param entities Named Entities.
      * @return Array of input Entities names.
      */
-    public String[] getNames(final NamedEntityWithDescription[] entities) {
+    public static String[] getNames(final NamedEntityWithDescription[] entities) {
         if (entities == null || entities.length == 0) {
             return new String[]{};
         }

@@ -3,10 +3,8 @@ package edu.uz.jira.event.planner.project.plan.rest.manager;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.active.objects.model.Domain;
-import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
-import net.java.ao.Entity;
-import org.apache.commons.lang.StringUtils;
+import edu.uz.jira.event.planner.database.importer.xml.model.Domain;
+import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
@@ -14,10 +12,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * REST manager for Event Organization Domains.
@@ -35,7 +29,7 @@ public class EventDomainRestManager extends RestManager {
     public EventDomainRestManager(@Nonnull final UserManager userManager,
                                   @Nonnull final TransactionTemplate transactionTemplate,
                                   @Nonnull final ActiveObjectsService activeObjectsService) {
-        super(userManager, transactionTemplate, activeObjectsService, Domain.class, Configuration.createEmpty());
+        super(userManager, transactionTemplate, activeObjectsService, Domain.createEmpty());
     }
 
     /**
@@ -66,11 +60,11 @@ public class EventDomainRestManager extends RestManager {
      * @param resource Resource with data to post.
      * @param request  Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
-     * @see {@link RestManager#post(EventRestConfiguration, HttpServletRequest)}
+     * @see {@link RestManager#post(ActiveObjectWrapper, HttpServletRequest)}
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response post(final Configuration resource, @Context final HttpServletRequest request) {
+    public Response post(final Domain resource, @Context final HttpServletRequest request) {
         return super.post(resource, request);
     }
 
@@ -83,115 +77,5 @@ public class EventDomainRestManager extends RestManager {
     @Consumes(MediaType.TEXT_PLAIN)
     public Response delete(String id, @Context final HttpServletRequest request) {
         return super.delete(entityType, id, request);
-    }
-
-    /**
-     * Event Domain Configuration in XML form.
-     */
-    @XmlRootElement
-    @XmlAccessorType(XmlAccessType.FIELD)
-    public static class Configuration implements EventRestConfiguration {
-        @XmlElement
-        private String name;
-        @XmlElement
-        private String description;
-
-        /**
-         * Constructor.
-         * Fills all fields with an empty String.
-         */
-        public Configuration() {
-            setName("");
-            setDescription("");
-        }
-
-        /**
-         * @return Event Domain Configuration with all empty fields (but not null).
-         */
-        public static Configuration createEmpty() {
-            return new Configuration();
-        }
-
-        /**
-         * @see {@link EventRestConfiguration#getEmptyCopy()}
-         */
-        public EventRestConfiguration getEmptyCopy() {
-            return new Configuration();
-        }
-
-        /**
-         * @see {@link EventRestConfiguration#fill(Entity)}
-         */
-        @Override
-        public EventRestConfiguration fill(@Nonnull final Entity entity) {
-            if (entity instanceof Domain) {
-                Domain domain = (Domain) entity;
-                setName(domain.getName());
-                setDescription(domain.getDescription());
-            }
-            return this;
-        }
-
-        /**
-         * @see {@link EventRestConfiguration#getWrappedType()}
-         */
-        @Override
-        public Class getWrappedType() {
-            return Domain.class;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(@Nonnull String name) {
-            if (name == null) {
-                this.name = "";
-            } else {
-                this.name = name;
-            }
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(@Nonnull String description) {
-            if (description == null) {
-                this.description = "";
-            } else {
-                this.description = description;
-            }
-        }
-
-        /**
-         * @see {@link EventRestConfiguration#isFullfilled()}
-         */
-        @Override
-        public boolean isFullfilled() {
-            return StringUtils.isNotBlank(name) && getDescription() != null;
-        }
-
-        /**
-         * @see {@link Object#equals(Object)}
-         */
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Configuration that = (Configuration) o;
-
-            if (!getName().equals(that.getName())) return false;
-            return !(getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null);
-        }
-
-        /**
-         * @see {@link Object#hashCode()}
-         */
-        @Override
-        public int hashCode() {
-            return getName() != null ? getName().hashCode() : 0;
-        }
     }
 }

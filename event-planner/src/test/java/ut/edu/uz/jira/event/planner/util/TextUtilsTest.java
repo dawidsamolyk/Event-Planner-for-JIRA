@@ -64,7 +64,7 @@ public class TextUtilsTest {
     public void string_Array_Should_Be_Blank_If_It_Is_Null() {
         TextUtils fixture = new TextUtils();
 
-        boolean result = fixture.isNotBlank(null);
+        boolean result = fixture.isEachElementNotBlank(null);
 
         assertEquals(false, result);
     }
@@ -73,7 +73,7 @@ public class TextUtilsTest {
     public void string_Array_Should_Be_Blank_If_Is_Empty() {
         TextUtils fixture = new TextUtils();
 
-        boolean result = fixture.isNotBlank(new String[]{});
+        boolean result = fixture.isEachElementNotBlank(new String[]{});
 
         assertEquals(false, result);
     }
@@ -82,7 +82,7 @@ public class TextUtilsTest {
     public void string_Array_Should_Be_Blank_If_Any_Text_Is_Blank() {
         TextUtils fixture = new TextUtils();
 
-        boolean result = fixture.isNotBlank(new String[]{"Not blank", "", "any text", "test"});
+        boolean result = fixture.isEachElementNotBlank(new String[]{"Not blank", "", "any text", "test"});
 
         assertEquals(false, result);
     }
@@ -91,7 +91,7 @@ public class TextUtilsTest {
     public void string_Array_Sgould_Not_Be_Blank_If_Contains_Only_Texts() {
         TextUtils fixture = new TextUtils();
 
-        boolean result = fixture.isNotBlank(new String[]{"Not blank", "testtesttest", "any text", "test"});
+        boolean result = fixture.isEachElementNotBlank(new String[]{"Not blank", "testtesttest", "any text", "test"});
 
         assertEquals(true, result);
     }

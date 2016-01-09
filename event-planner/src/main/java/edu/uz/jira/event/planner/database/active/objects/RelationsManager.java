@@ -32,6 +32,14 @@ class RelationsManager {
         helper = new ActiveObjectsHelper(activeObjectsService);
     }
 
+    public void deleteWithRelations(@Nonnull final RawEntity... entities) {
+        for (RawEntity each : entities) {
+            RawEntity[] relations = getRelations(each);
+            activeObjectsService.delete(relations);
+        }
+        activeObjectsService.delete(entities);
+    }
+
     private PlanToDomainRelation associate(@Nonnull final Plan plan, @Nonnull final Domain domain) {
         PlanToDomainRelation result = activeObjectsService.create(PlanToDomainRelation.class);
         result.setDomain(domain);

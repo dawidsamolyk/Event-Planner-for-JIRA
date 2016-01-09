@@ -14,7 +14,7 @@ import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCo
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
-import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
+import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventComponentRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
 import net.java.ao.EntityManager;
@@ -50,11 +50,11 @@ public class EventDomainRestManagerTest {
     private TransactionTemplate mockTransactionTemplateForPut;
     private ActiveObjectsService planService;
     private ActiveObjects activeObjects;
-    private EventRestConfiguration[] transactionResult;
+    private ActiveObjectWrapper[] transactionResult;
     private ActiveObjectsTestHelper testHelper;
 
-    private EventDomainRestManager.Configuration getEmptyDomain() {
-        return EventDomainRestManager.Configuration.createEmpty();
+    private edu.uz.jira.event.planner.database.importer.xml.model.Domain getEmptyDomain() {
+        return edu.uz.jira.event.planner.database.importer.xml.model.Domain.createEmpty();
     }
 
     @Before
@@ -66,10 +66,10 @@ public class EventDomainRestManagerTest {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(true);
 
         mockTransactionTemplateForGet = mock(TransactionTemplate.class);
-        Mockito.when(mockTransactionTemplateForGet.execute(Mockito.any(TransactionCallback.class))).thenAnswer(new Answer<EventRestConfiguration[]>() {
+        Mockito.when(mockTransactionTemplateForGet.execute(Mockito.any(TransactionCallback.class))).thenAnswer(new Answer<ActiveObjectWrapper[]>() {
             @Override
-            public EventRestConfiguration[] answer(InvocationOnMock invocation) throws Throwable {
-                TransactionCallback<EventRestConfiguration[]> callback = (TransactionCallback) invocation.getArguments()[0];
+            public ActiveObjectWrapper[] answer(InvocationOnMock invocation) throws Throwable {
+                TransactionCallback<ActiveObjectWrapper[]> callback = (TransactionCallback) invocation.getArguments()[0];
                 transactionResult = callback.doInTransaction();
                 return transactionResult;
             }
@@ -102,7 +102,7 @@ public class EventDomainRestManagerTest {
 
         fixture.get(mockRequest);
 
-        EventComponentRestManager.Configuration expected = new EventComponentRestManager.Configuration();
+        edu.uz.jira.event.planner.database.importer.xml.model.Component expected = new edu.uz.jira.event.planner.database.importer.xml.model.Component();
         expected.setName(testName);
         expected.setDescription(testDescription);
         assertEquals(expected, transactionResult[0]);
@@ -133,10 +133,10 @@ public class EventDomainRestManagerTest {
         Task firstTask = testHelper.createTaskNamed("Test task1");
         Task secondTask = testHelper.createTaskNamed("Test task2");
         EventComponentRestManager fixture = new EventComponentRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
-        EventComponentRestManager.Configuration configuration = new EventComponentRestManager.Configuration();
+        edu.uz.jira.event.planner.database.importer.xml.model.Component configuration = new edu.uz.jira.event.planner.database.importer.xml.model.Component();
         configuration.setName("Test name");
         configuration.setDescription("Test description");
-        configuration.setTasks(new String[]{firstTask.getName(), secondTask.getName()});
+        configuration.setTasksNames(new String[]{firstTask.getName(), secondTask.getName()});
 
         Response result = fixture.post(configuration, mockRequest);
 
@@ -163,7 +163,7 @@ public class EventDomainRestManagerTest {
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
-        EventRestConfiguration expected = EventDomainRestManager.Configuration.createEmpty().fill(domain);
+        ActiveObjectWrapper expected = edu.uz.jira.event.planner.database.importer.xml.model.Domain.createEmpty().fill(domain);
         assertEquals(expected, transactionResult[0]);
     }
 }

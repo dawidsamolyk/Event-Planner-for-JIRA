@@ -14,8 +14,8 @@ function Plan() {
                '", "description": "' + that.getDescription().attr("value") +
                '", "neededMonths": ' + that.getNeededMonthsToComplete().attr("value") +
                ', "neededDays": ' + that.getNeededDaysToComplete().attr("value") +
-               ', "domains": ' + JSON.stringify(that.getDomains().val()) +
-               ', "components": ' + JSON.stringify(that.getComponents().val()) +
+               ', "domainsNames": ' + JSON.stringify(that.getDomains().val()) +
+               ', "componentsNames": ' + JSON.stringify(that.getComponents().val()) +
                ' }';
     };
 
@@ -23,8 +23,8 @@ function Plan() {
         if(resources.length === 0) {
             return;
         }
-        var isComponent = (resources.length > 0 && resources[0].hasOwnProperty('tasks'));
-        var isPlan = (resources.length > 0 && resources[0].hasOwnProperty('domains') && resources[0].hasOwnProperty('components'));
+        var isComponent = (resources.length > 0 && resources[0].hasOwnProperty('tasksNames'));
+        var isPlan = (resources.length > 0 && resources[0].hasOwnProperty('domainsNames') && resources[0].hasOwnProperty('componentsNames'));
 
         if(isPlan === true) {
             that.setFromPlanObject(resources);

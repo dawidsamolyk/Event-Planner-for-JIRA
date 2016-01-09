@@ -10,13 +10,17 @@ import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.Component;
+import edu.uz.jira.event.planner.database.active.objects.model.Domain;
+import edu.uz.jira.event.planner.database.active.objects.model.SubTask;
+import edu.uz.jira.event.planner.database.active.objects.model.Task;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
-import edu.uz.jira.event.planner.project.plan.rest.EventRestConfiguration;
+import edu.uz.jira.event.planner.database.importer.xml.model.*;
+import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
-import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventTaskRestManager;
 import net.java.ao.EntityManager;
 import net.java.ao.test.converters.NameConverters;
@@ -51,11 +55,11 @@ public class RestManagerTest {
     private TransactionTemplate mockTransactionTemplateForPut;
     private ActiveObjectsService planService;
     private ActiveObjects activeObjects;
-    private EventRestConfiguration[] doGetTransactionResult;
+    private ActiveObjectWrapper[] doGetTransactionResult;
     private ActiveObjectsTestHelper testHelper;
 
-    private EventDomainRestManager.Configuration getEmptyDomain() {
-        return EventDomainRestManager.Configuration.createEmpty();
+    private edu.uz.jira.event.planner.database.importer.xml.model.Domain getEmptyDomain() {
+        return edu.uz.jira.event.planner.database.importer.xml.model.Domain.createEmpty();
     }
 
     @Before
@@ -70,7 +74,7 @@ public class RestManagerTest {
         Mockito.when(mockTransactionTemplateForGet.execute(Mockito.any(TransactionCallback.class))).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                TransactionCallback<EventRestConfiguration[]> callback = (TransactionCallback) invocation.getArguments()[0];
+                TransactionCallback<ActiveObjectWrapper[]> callback = (TransactionCallback) invocation.getArguments()[0];
                 doGetTransactionResult = callback.doInTransaction();
                 return doGetTransactionResult;
             }
@@ -178,7 +182,7 @@ public class RestManagerTest {
     public void on_Post_should_Response_No_Content_When_Resource_Is_Null() {
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        Response result = fixture.post((EventRestConfiguration) null, mockRequest);
+        Response result = fixture.post((ActiveObjectWrapper) null, mockRequest);
 
         assertEquals(Response.Status.NO_CONTENT.getStatusCode(), result.getStatus());
     }
@@ -233,11 +237,11 @@ public class RestManagerTest {
     @Test
     public void on_Post_Should_Not_Accept_When_Trying_To_Put_Configuration_Of_Invalid_Resource() throws SQLException {
         EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
-        EventPlanRestManager.Configuration invalidConfig = new EventPlanRestManager.Configuration();
+        EventPlan invalidConfig = new EventPlan();
         invalidConfig.setName("Test name");
         invalidConfig.setDescription("Test description");
-        invalidConfig.setDomains(new String[]{"Test domain"});
-        invalidConfig.setComponents(new String[]{"Test component"});
+        invalidConfig.setDomainsNames(new String[]{"Test domain"});
+        invalidConfig.setComponentsNames(new String[]{"Test component"});
         invalidConfig.setNeededMonths(0);
         invalidConfig.setNeededDays(12);
 
@@ -257,7 +261,7 @@ public class RestManagerTest {
 
         assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
         assertEquals(1, doGetTransactionResult.length);
-        assertEquals(firstDomain.getName(), ((EventDomainRestManager.Configuration) doGetTransactionResult[0]).getName());
+        assertEquals(firstDomain.getName(), ((edu.uz.jira.event.planner.database.importer.xml.model.Domain) doGetTransactionResult[0]).getName());
     }
 
     @Test
@@ -271,8 +275,8 @@ public class RestManagerTest {
 
         assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
         assertEquals(2, doGetTransactionResult.length);
-        assertEquals(firstDomain.getName(), ((EventDomainRestManager.Configuration) doGetTransactionResult[0]).getName());
-        assertEquals(secondDomain.getName(), ((EventDomainRestManager.Configuration) doGetTransactionResult[1]).getName());
+        assertEquals(firstDomain.getName(), ((edu.uz.jira.event.planner.database.importer.xml.model.Domain) doGetTransactionResult[0]).getName());
+        assertEquals(secondDomain.getName(), ((edu.uz.jira.event.planner.database.importer.xml.model.Domain) doGetTransactionResult[1]).getName());
     }
 
     @Test
@@ -304,7 +308,7 @@ public class RestManagerTest {
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
-        EventRestConfiguration expected = EventDomainRestManager.Configuration.createEmpty().fill(domain);
+        ActiveObjectWrapper expected = edu.uz.jira.event.planner.database.importer.xml.model.Domain.createEmpty().fill(domain);
         assertEquals(expected, doGetTransactionResult[0]);
     }
 

@@ -8,7 +8,8 @@ import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCo
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
-import edu.uz.jira.event.planner.project.plan.rest.manager.*;
+import edu.uz.jira.event.planner.database.importer.xml.model.EventPlan;
+import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
 import net.java.ao.EntityManager;
 import net.java.ao.Query;
 import net.java.ao.RawEntity;
@@ -17,7 +18,9 @@ import net.java.ao.test.jdbc.Hsql;
 import net.java.ao.test.jdbc.Jdbc;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import ut.helpers.ActiveObjectsTestHelper;
@@ -39,6 +42,8 @@ public class ActiveObjectsServiceTest {
     private ActiveObjects activeObjects;
     private ActiveObjectsTestHelper activeObjectsHelper;
     private ActiveObjectsService service;
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
@@ -52,65 +57,80 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void should_Not_Add_Any_With_Null_Configuration() {
-        service.addFrom((EventDomainRestManager.Configuration) null);
+    public void should_Not_Add_Any_With_Null_Configuration() throws ActiveObjectSavingException {
+        exception.expect(ActiveObjectSavingException.class);
+        service.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.Domain) null);
         assertEquals(0, activeObjects.count(Domain.class));
 
-        service.addFrom((EventPlanRestManager.Configuration) null);
+        exception.expect(ActiveObjectSavingException.class);
+        service.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.EventPlan) null);
         assertEquals(0, activeObjects.count(Plan.class));
 
-        service.addFrom((EventComponentRestManager.Configuration) null);
+        exception.expect(ActiveObjectSavingException.class);
+        service.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.Component) null);
         assertEquals(0, activeObjects.count(Component.class));
 
-        service.addFrom((EventSubTaskRestManager.Configuration) null);
+        exception.expect(ActiveObjectSavingException.class);
+        service.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.SubTask) null);
         assertEquals(0, activeObjects.count(SubTask.class));
 
-        service.addFrom((EventTaskRestManager.Configuration) null);
+        exception.expect(ActiveObjectSavingException.class);
+        service.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.Task) null);
         assertEquals(0, activeObjects.count(Task.class));
     }
 
     @Test
-    public void should_Not_Add_Any_With_Empty_Configuration() {
-        service.addFrom(EventDomainRestManager.Configuration.createEmpty());
+    public void should_Not_Add_Any_With_Empty_Configuration() throws ActiveObjectSavingException {
+        exception.expect(ActiveObjectSavingException.class);
+        service.addFrom(edu.uz.jira.event.planner.database.importer.xml.model.Domain.createEmpty());
         assertEquals(0, activeObjects.count(Domain.class));
 
-        service.addFrom(EventPlanRestManager.Configuration.createEmpty());
+        exception.expect(ActiveObjectSavingException.class);
+        service.addFrom(EventPlan.createEmpty());
         assertEquals(0, activeObjects.count(Plan.class));
 
-        service.addFrom(EventComponentRestManager.Configuration.createEmpty());
+        exception.expect(ActiveObjectSavingException.class);
+        service.addFrom(edu.uz.jira.event.planner.database.importer.xml.model.Component.createEmpty());
         assertEquals(0, activeObjects.count(Component.class));
 
-        service.addFrom(EventSubTaskRestManager.Configuration.createEmpty());
+        exception.expect(ActiveObjectSavingException.class);
+        service.addFrom(edu.uz.jira.event.planner.database.importer.xml.model.SubTask.createEmpty());
         assertEquals(0, activeObjects.count(SubTask.class));
 
-        service.addFrom(EventTaskRestManager.Configuration.createEmpty());
+        exception.expect(ActiveObjectSavingException.class);
+        service.addFrom(edu.uz.jira.event.planner.database.importer.xml.model.Task.createEmpty());
         assertEquals(0, activeObjects.count(Task.class));
     }
 
     @Test
-    public void should_Not_Add_Any_When_Confugiration_Is_Not_Fullfilled() {
-        EventComponentRestManager.Configuration mockDomainConfig = mock(EventComponentRestManager.Configuration.class);
+    public void should_Not_Add_Any_When_Confugiration_Is_Not_Fullfilled() throws ActiveObjectSavingException {
+        edu.uz.jira.event.planner.database.importer.xml.model.Component mockDomainConfig = mock(edu.uz.jira.event.planner.database.importer.xml.model.Component.class);
         Mockito.when(mockDomainConfig.isFullfilled()).thenReturn(false);
+        exception.expect(ActiveObjectSavingException.class);
         service.addFrom(mockDomainConfig);
         assertEquals(0, activeObjects.count(Domain.class));
 
-        EventPlanRestManager.Configuration mockPlanConfig = mock(EventPlanRestManager.Configuration.class);
+        EventPlan mockPlanConfig = mock(EventPlan.class);
         Mockito.when(mockPlanConfig.isFullfilled()).thenReturn(false);
+        exception.expect(ActiveObjectSavingException.class);
         service.addFrom(mockPlanConfig);
         assertEquals(0, activeObjects.count(Plan.class));
 
-        EventComponentRestManager.Configuration mockComponentConfig = mock(EventComponentRestManager.Configuration.class);
+        edu.uz.jira.event.planner.database.importer.xml.model.Component mockComponentConfig = mock(edu.uz.jira.event.planner.database.importer.xml.model.Component.class);
         Mockito.when(mockComponentConfig.isFullfilled()).thenReturn(false);
+        exception.expect(ActiveObjectSavingException.class);
         service.addFrom(mockComponentConfig);
         assertEquals(0, activeObjects.count(Component.class));
 
-        EventSubTaskRestManager.Configuration mockSubTaskConfig = mock(EventSubTaskRestManager.Configuration.class);
+        edu.uz.jira.event.planner.database.importer.xml.model.SubTask mockSubTaskConfig = mock(edu.uz.jira.event.planner.database.importer.xml.model.SubTask.class);
         Mockito.when(mockSubTaskConfig.isFullfilled()).thenReturn(false);
+        exception.expect(ActiveObjectSavingException.class);
         service.addFrom(mockComponentConfig);
         assertEquals(0, activeObjects.count(SubTask.class));
 
-        EventTaskRestManager.Configuration mockTaskConfig = mock(EventTaskRestManager.Configuration.class);
+        edu.uz.jira.event.planner.database.importer.xml.model.Task mockTaskConfig = mock(edu.uz.jira.event.planner.database.importer.xml.model.Task.class);
         Mockito.when(mockTaskConfig.isFullfilled()).thenReturn(false);
+        exception.expect(ActiveObjectSavingException.class);
         service.addFrom(mockTaskConfig);
         assertEquals(0, activeObjects.count(Task.class));
     }
@@ -135,29 +155,30 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void plan_Should_Not_Be_Added_If_Has_Fullfilled_Configuration_But_No_Related_Objects() {
-        EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
+    public void plan_Should_Not_Be_Added_If_Has_Fullfilled_Configuration_But_No_Related_Objects() throws ActiveObjectSavingException {
+        EventPlan config = new EventPlan();
         config.setName("Test name");
         config.setDescription("Test description");
         config.setNeededDays(689);
-        config.setDomains(new String[]{"Test domain"});
-        config.setComponents(new String[]{"Test component"});
+        config.setDomainsNames(new String[]{"Test domain"});
+        config.setComponentsNames(new String[]{"Test component"});
 
+        exception.expect(ActiveObjectSavingException.class);
         service.addFrom(config);
 
         assertEquals(0, activeObjects.count(Plan.class));
     }
 
     @Test
-    public void plan_Should_Be_Added_If_Has_Fullfilled_Configuration_And_Has_Related_Objects() {
+    public void plan_Should_Be_Added_If_Has_Fullfilled_Configuration_And_Has_Related_Objects() throws ActiveObjectSavingException {
         Domain domain = activeObjectsHelper.createDomainNamed("Test domain");
         Component component = activeObjectsHelper.createComponentNamed("Test component");
-        EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
+        EventPlan config = new EventPlan();
         config.setName("Test name");
         config.setDescription("Test description");
         config.setNeededDays(123);
-        config.setDomains(new String[]{domain.getName()});
-        config.setComponents(new String[]{component.getName()});
+        config.setDomainsNames(new String[]{domain.getName()});
+        config.setComponentsNames(new String[]{component.getName()});
 
         service.addFrom(config);
 
@@ -165,8 +186,8 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void domain_Should_Be_Added_If_Has_Fullfilled_Configuration() {
-        EventDomainRestManager.Configuration configuration = new EventDomainRestManager.Configuration();
+    public void domain_Should_Be_Added_If_Has_Fullfilled_Configuration() throws ActiveObjectSavingException {
+        edu.uz.jira.event.planner.database.importer.xml.model.Domain configuration = new edu.uz.jira.event.planner.database.importer.xml.model.Domain();
         configuration.setName("Test name");
         configuration.setDescription("Test description");
 
@@ -176,14 +197,14 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void task_Should_Be_Added_If_Has_Fullfilled_Configuration_With_Related_Sub_Tasks() {
+    public void task_Should_Be_Added_If_Has_Fullfilled_Configuration_With_Related_Sub_Tasks() throws ActiveObjectSavingException {
         SubTask firstSubTask = activeObjectsHelper.createSubTaskNamed("Test 1");
         SubTask secondSubTask = activeObjectsHelper.createSubTaskNamed("Test 2");
-        EventTaskRestManager.Configuration config = new EventTaskRestManager.Configuration();
+        edu.uz.jira.event.planner.database.importer.xml.model.Task config = new edu.uz.jira.event.planner.database.importer.xml.model.Task();
         config.setName("Test name");
         config.setDescription("Test description");
         config.setNeededDays(123);
-        config.setSubtasks(new String[]{firstSubTask.getName(), secondSubTask.getName()});
+        config.setSubTasksNames(new String[]{firstSubTask.getName(), secondSubTask.getName()});
 
         service.addFrom(config);
 
@@ -193,12 +214,12 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void component_Should_Be_Added_If_Has_Fullfilled_Configuration() {
+    public void component_Should_Be_Added_If_Has_Fullfilled_Configuration() throws ActiveObjectSavingException {
         Task task = activeObjectsHelper.createTaskNamed("Test");
-        EventComponentRestManager.Configuration config = new EventComponentRestManager.Configuration();
+        edu.uz.jira.event.planner.database.importer.xml.model.Component config = new edu.uz.jira.event.planner.database.importer.xml.model.Component();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setTasks(new String[]{task.getName()});
+        config.setTasksNames(new String[]{task.getName()});
 
         service.addFrom(config);
 
@@ -206,13 +227,13 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void component_Should_Be_Added_If_Has_Fullfilled_Configuration_With_Related_Tasks() {
+    public void component_Should_Be_Added_If_Has_Fullfilled_Configuration_With_Related_Tasks() throws ActiveObjectSavingException {
         Task firstTask = activeObjectsHelper.createTaskNamed("Test 1");
         Task secondTask = activeObjectsHelper.createTaskNamed("Test 2");
-        EventComponentRestManager.Configuration config = new EventComponentRestManager.Configuration();
+        edu.uz.jira.event.planner.database.importer.xml.model.Component config = new edu.uz.jira.event.planner.database.importer.xml.model.Component();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setTasks(new String[]{firstTask.getName(), secondTask.getName()});
+        config.setTasksNames(new String[]{firstTask.getName(), secondTask.getName()});
 
         service.addFrom(config);
 
@@ -222,8 +243,8 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void sub_Task_Should_Be_Added_If_Has_Fullfilled_Configuration() {
-        EventSubTaskRestManager.Configuration config = new EventSubTaskRestManager.Configuration();
+    public void sub_Task_Should_Be_Added_If_Has_Fullfilled_Configuration() throws ActiveObjectSavingException {
+        edu.uz.jira.event.planner.database.importer.xml.model.SubTask config = new edu.uz.jira.event.planner.database.importer.xml.model.SubTask();
         config.setName("Test name");
         config.setDescription("Test description");
 
@@ -233,55 +254,59 @@ public class ActiveObjectsServiceTest {
     }
 
     @Test
-    public void plan_Should_Not_Be_Add_If_Cannot_Relate_It_With_Domain() {
+    public void plan_Should_Not_Be_Add_If_Cannot_Relate_It_With_Domain() throws ActiveObjectSavingException {
         Component component = activeObjectsHelper.createComponentNamed("Test componnet");
-        EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
+        EventPlan config = new EventPlan();
         config.setName("Name");
         config.setDescription("Description");
         config.setNeededDays(123);
-        config.setDomains(new String[]{"Nonexistent domain"});
-        config.setComponents(new String[]{component.getName()});
+        config.setDomainsNames(new String[]{"Nonexistent domain"});
+        config.setComponentsNames(new String[]{component.getName()});
 
+        exception.expect(ActiveObjectSavingException.class);
         service.addFrom(config);
 
         assertEquals(0, activeObjects.count(Plan.class));
     }
 
     @Test
-    public void plan_Should_Not_Be_Add_If_Cannot_Relate_It_With_Component() {
+    public void plan_Should_Not_Be_Add_If_Cannot_Relate_It_With_Component() throws ActiveObjectSavingException {
         Domain domain = activeObjectsHelper.createDomainNamed("test domain");
-        EventPlanRestManager.Configuration config = new EventPlanRestManager.Configuration();
+        EventPlan config = new EventPlan();
         config.setName("Name");
         config.setDescription("Description");
         config.setNeededDays(123);
-        config.setComponents(new String[]{"Nonexistent component"});
-        config.setDomains(new String[]{domain.getName()});
+        config.setComponentsNames(new String[]{"Nonexistent component"});
+        config.setDomainsNames(new String[]{domain.getName()});
 
+        exception.expect(ActiveObjectSavingException.class);
         service.addFrom(config);
 
         assertEquals(0, activeObjects.count(Plan.class));
     }
 
     @Test
-    public void component_Should_Not_Be_Add_If_Cannot_Relate_It_With_Tasks() {
-        EventComponentRestManager.Configuration config = new EventComponentRestManager.Configuration();
+    public void component_Should_Not_Be_Add_If_Cannot_Relate_It_With_Tasks() throws ActiveObjectSavingException {
+        edu.uz.jira.event.planner.database.importer.xml.model.Component config = new edu.uz.jira.event.planner.database.importer.xml.model.Component();
         config.setName("Name");
         config.setDescription("Description");
-        config.setTasks(new String[]{"Nonexistent task"});
+        config.setTasksNames(new String[]{"Nonexistent task"});
 
+        exception.expect(ActiveObjectSavingException.class);
         service.addFrom(config);
 
         assertEquals(0, activeObjects.count(Component.class));
     }
 
     @Test
-    public void task_Should_Not_Be_Add_If_Cannot_Relate_It_With_Sub_Tasks() {
-        EventTaskRestManager.Configuration config = new EventTaskRestManager.Configuration();
+    public void task_Should_Not_Be_Add_If_Cannot_Relate_It_With_Sub_Tasks() throws ActiveObjectSavingException {
+        edu.uz.jira.event.planner.database.importer.xml.model.Task config = new edu.uz.jira.event.planner.database.importer.xml.model.Task();
         config.setName("Name");
         config.setDescription("Description");
         config.setNeededDays(123);
-        config.setSubtasks(new String[]{"Nonexistent subtask"});
+        config.setSubTasksNames(new String[]{"Nonexistent subtask"});
 
+        exception.expect(ActiveObjectSavingException.class);
         service.addFrom(config);
 
         assertEquals(0, activeObjects.count(Task.class));

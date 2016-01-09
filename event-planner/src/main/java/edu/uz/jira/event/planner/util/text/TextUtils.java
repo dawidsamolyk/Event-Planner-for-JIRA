@@ -15,7 +15,7 @@ public class TextUtils {
      * @param separator  Separator which joins texts each other.
      * @return Joined text.
      */
-    public String getJoined(final Collection<String> collection, final char separator) {
+    public static String getJoined(final Collection<String> collection, final char separator) {
         if (collection == null || collection.isEmpty()) {
             return new String("");
         }
@@ -27,14 +27,14 @@ public class TextUtils {
      * @param separator Separator which joins texts each other.
      * @return Joined text.
      */
-    public String getJoined(final String[] array, final char separator) {
+    public static String getJoined(final String[] array, final char separator) {
         if (array == null || array.length == 0) {
             return new String("");
         }
         return getJoined(Arrays.asList(array), separator);
     }
 
-    public boolean isNotBlank(final String[] elements) {
+    public static boolean isEachElementNotBlank(final String[] elements) {
         if (elements == null || elements.length < 1) {
             return false;
         }
