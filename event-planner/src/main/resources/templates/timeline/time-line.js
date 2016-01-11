@@ -1,6 +1,6 @@
 function TimeLine() {
     var that = this;
-    that.issues = {};
+    that.tasks = {};
     that.deadlineDate = new Date();
 
     that.tasksToDoId = 'tasks-todo';
@@ -14,14 +14,16 @@ function TimeLine() {
     that.tasksCreator = new TimeLineTasksCreator();
     that.infoProvider = new TimeLineInfoProvider(that);
 
-    that.setIssues = function(sourceIssues) {
-        that.issues = sourceIssues;
+    that.setIssues = function(sourceTasks) {
+        that.tasks = sourceTasks;
 
         that.showCurrentWeek();
     };
 
     that.setProjectDeadline = function(sourceDeadlineDate) {
         that.deadlineDate = sourceDeadlineDate;
+        that.infoProvider = new TimeLineInfoProvider(that);
+
         that.allTimeLineWeeks = that.infoProvider.getTimeLineWeeks();
 
         that.showCurrentWeek();
@@ -67,10 +69,18 @@ function TimeLine() {
     };
 
     that.createDatesCells = function(weekToShow) {
-        if(that.infoProvider.shouldDisplayLateTasksColumn()) {
+        if(that.shouldDisplayLateTasksColumn()) {
             that.datesCreator.createLateDateCell(that.infoProvider.getMaximumIssueLate());
         }
         that.datesCreator.createCells(weekToShow, that.deadlineDate);
+    };
+
+    that.shouldDisplayLateTasksColumn = function() {
+        return that.isDisplayingCurrentWeek() && that.infoProvider.getMaximumIssueLate() != 0;
+    };
+
+    that.isDisplayingCurrentWeek = function() {
+        return that.currentDisplayedWeekIndex === 0;
     };
 
     that.createNavigationButtons = function() {
@@ -79,14 +89,14 @@ function TimeLine() {
     };
 
     that.createLateTasksCells = function() {
-        if(that.infoProvider.shouldDisplayLateTasksColumn()) {
+        if(that.shouldDisplayLateTasksColumn()) {
             var lateCell = that.tasksCreator.createLateTaskCell();
-            that.tasksCreator.fillLateCellByIssues(lateCell, that.issues);
+            that.tasksCreator.fillLateCellByIssues(lateCell, that.tasks);
         }
     };
 
     that.createTasksCells = function(weekToShow) {
         var cells = that.tasksCreator.createTasksCells(weekToShow, that.deadlineDate);
-        that.tasksCreator.fillCellsByIssues(cells, that.issues);
+        that.tasksCreator.fillCellsByIssues(cells, that.tasks);
     };
 };

@@ -1,8 +1,7 @@
 function TimeLineInfoProvider(timeLine) {
     var that = this;
-    that.issues = timeLine.issues;
+    that.tasks = timeLine.tasks;
     that.deadlineDate = timeLine.deadlineDate;
-    that.currentDisplayedWeekIndex = timeLine.currentDisplayedWeekIndex;
     that.weeksCalculator = new WeeksCalculator();
     that.dateUtil = new DateUtil();
 
@@ -16,35 +15,27 @@ function TimeLineInfoProvider(timeLine) {
 
     that.getPercentOfDoneTasks = function() {
         var result = 0;
-        for(eachIssue in that.issues) {
-            var issue = that.issues[eachIssue];
+        for(eachIssue in that.tasks) {
+            var issue = that.tasks[eachIssue];
 
             if(issue.done === true) {
                 result++;
             }
         }
-        return (100 * result) / that.issues.length;
+        return (100 * result) / that.tasks.length;
     };
 
     that.getMaximumIssueLate = function() {
         var result = 0;
-        for(eachIssue in that.issues) {
-            var issue = that.issues[eachIssue];
-            var daysAwayFromDueDate = issue.daysAwayFromDueDate;
+        for(eachIssue in that.tasks) {
+            var task = that.tasks[eachIssue];
+            var daysAwayFromDueDate = task.daysAwayFromDueDate;
 
-            if(daysAwayFromDueDate < result && issue.done === false) {
+            if(daysAwayFromDueDate < result && task.done === false) {
                 result = daysAwayFromDueDate;
             }
         }
         return Math.abs(result);
-    };
-
-    that.shouldDisplayLateTasksColumn = function() {
-        return that.isDisplayingCurrentWeek() && that.getMaximumIssueLate() != 0;
-    };
-
-    that.isDisplayingCurrentWeek = function() {
-        return that.currentDisplayedWeekIndex === 0;
     };
 
     that.showFlagsIfRequired = function() {
