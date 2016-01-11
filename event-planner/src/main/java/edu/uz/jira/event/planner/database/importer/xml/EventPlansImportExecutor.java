@@ -21,17 +21,25 @@ public class EventPlansImportExecutor {
     public static final String NOT_IMPORTED = "FALSE";
     private final ApplicationProperties applicationProperties = ComponentAccessor.getApplicationProperties();
     private final Logger.Log log = Logger.getInstance(EventPlansImportExecutor.class);
+    private final I18nResolver i18nResolver;
+    private final ActiveObjectsService activeObjectsService;
 
     public EventPlansImportExecutor(@Nonnull final I18nResolver i18nResolver,
                                     @Nonnull final ActiveObjectsService activeObjectsService) {
+        this.i18nResolver = i18nResolver;
+        this.activeObjectsService = activeObjectsService;
+    }
+
+    public void startImport() {
         String importedProperty = ComponentAccessor.getApplicationProperties().getText(APPLICATION_PROPERTY_KEY);
 
         if (importedProperty == null || importedProperty.equals(NOT_IMPORTED)) {
-            startImport(new ImportProcess(activeObjectsService, i18nResolver));
+            ImportProcess importProcess = new ImportProcess(activeObjectsService, i18nResolver);
+            runImport(importProcess);
         }
     }
 
-    protected void startImport(@Nonnull ImportProcess importProcess) {
+    protected void runImport(ImportProcess importProcess) {
         importProcess.run();
     }
 

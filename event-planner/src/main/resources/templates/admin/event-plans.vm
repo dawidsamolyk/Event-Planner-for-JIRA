@@ -78,6 +78,8 @@
     #include("templates/admin/model/subtask.js")
     #include("templates/admin/rest-manager.js")
     #include("templates/admin/button-listener.js")
+
+    #include("templates/admin/main.js")
 </script>
 </body>
 </html>

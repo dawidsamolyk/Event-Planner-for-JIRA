@@ -1,5 +1,7 @@
 package ut.edu.uz.jira.event.planner.project;
 
+import com.atlassian.activeobjects.external.ActiveObjects;
+import com.atlassian.activeobjects.tx.Transactional;
 import com.atlassian.jira.bc.workflow.WorkflowService;
 import com.atlassian.jira.bc.workflow.WorkflowTransitionService;
 import com.atlassian.jira.blueprint.api.ConfigureData;
@@ -27,15 +29,29 @@ import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.jira.workflow.WorkflowManager;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.opensymphony.workflow.loader.ActionDescriptor;
+import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.active.objects.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.project.EventOrganizationProjectHook;
 import edu.uz.jira.event.planner.util.text.Internationalization;
+import net.java.ao.EntityManager;
+import net.java.ao.test.converters.NameConverters;
+import net.java.ao.test.jdbc.Hsql;
+import net.java.ao.test.jdbc.Jdbc;
+import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
 import org.apache.commons.collections.MapUtils;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import ut.helpers.TestActiveObjects;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,8 +61,15 @@ import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
+@Transactional
+@RunWith(ActiveObjectsJUnitRunner.class)
+@Jdbc(Hsql.class)
+@NameConverters
 public class EventOrganizationProjectHookTest {
     private I18nResolver mocki18n;
+    private EntityManager entityManager;
+    private ActiveObjects activeObjects;
+    private ActiveObjectsService service;
     private WorkflowTransitionService mockWorkflowTransitionService;
     private WorkflowService mockWorkflowService;
     private WorkflowManager mockWorkflowManager;
@@ -77,6 +100,13 @@ public class EventOrganizationProjectHookTest {
         mockWorkflowTransitionService = mock(WorkflowTransitionService.class);
         mockWorkflowService = Mockito.mock(WorkflowService.class);
 
+        Assert.assertNotNull(entityManager);
+        activeObjects = new TestActiveObjects(entityManager);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        service = new ActiveObjectsService(activeObjects);
+        activeObjects.flushAll();
+        service.clearDatabase();
+
         new MockComponentWorker()
                 .addMock(ComponentAccessor.class, Mockito.mock(ComponentAccessor.class))
                 .addMock(FieldLayoutManager.class, mockFieldLayoutManager)
@@ -90,7 +120,7 @@ public class EventOrganizationProjectHookTest {
 
     @Test
     public void validate_Response_Should_Not_Be_Null() throws NullArgumentException {
-        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService);
+        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService, service);
         ValidateData validateData = new ValidateData("EVENT PLAN", "EVENT", mock(ApplicationUser.class));
 
         ValidateResponse result = hook.validate(validateData);
@@ -100,7 +130,7 @@ public class EventOrganizationProjectHookTest {
 
     @Test
     public void configure_Response_Should_Not_Be_Null() throws NullArgumentException {
-        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService);
+        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService, service);
         ConfigureData configureData = ConfigureData.create(mock(Project.class), mock(Scheme.class), new HashMap<String, JiraWorkflow>(), mock(FieldConfigScheme.class), new HashMap<String, IssueType>());
 
         ConfigureResponse result = hook.configure(configureData);
@@ -110,7 +140,7 @@ public class EventOrganizationProjectHookTest {
 
     @Test
     public void should_Return_Redirect_Without_Arguments_When_Error_Occurs_During_Project_Configuration() throws NullArgumentException {
-        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService);
+        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService, service);
         ConfigureData configureData = ConfigureData.create(mock(Project.class), mock(Scheme.class), MapUtils.EMPTY_MAP, mock(FieldConfigScheme.class), new HashMap<String, IssueType>());
 
         ConfigureResponse response = hook.configure(configureData);

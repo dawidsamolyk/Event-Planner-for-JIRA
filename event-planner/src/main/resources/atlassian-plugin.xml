@@ -40,7 +40,7 @@
 
     <servlet name="Event Plans Configuration" class="edu.uz.jira.event.planner.project.plan.servlet.EventPlanServlet"
              key="event-plans-configuration">
-        <url-pattern>/eventPlans/configuration</url-pattern>
+        <url-pattern>/event/plans/configuration</url-pattern>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <dependency>com.atlassian.auiplugin:aui-form-validation</dependency>
@@ -58,12 +58,13 @@
         <resource type="download" name="task.js" location="/templates/admin/model/task.js"/>
         <resource type="download" name="rest-manager.js" location="/templates/admin/rest-manager.js"/>
         <resource type="download" name="button-listener.js" location="/templates/admin/button-listener.js"/>
+        <resource type="download" name="main.js" location="/templates/admin/main.js"/>
     </servlet>
     <web-item key="event_plans" name="Event Organization Plans Link" i18n-name-key="event.plans.admin.name"
               section="admin_project_menu/project_section" weight="40">
         <description>Link to Event Organiation Plans Configuration page.</description>
         <label key="event.plans.admin.label"/>
-        <link linkId="event_plans">/plugins/servlet/eventPlans/configuration</link>
+        <link linkId="event_plans">/plugins/servlet/event/plans/configuration</link>
         <condition class="com.atlassian.jira.plugin.webfragment.conditions.UserIsAdminCondition"/>
     </web-item>
     <web-resource key="resources" name="Event Planner Web Resources">

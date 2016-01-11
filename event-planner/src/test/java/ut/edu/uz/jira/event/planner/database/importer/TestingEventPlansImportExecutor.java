@@ -22,7 +22,7 @@ public class TestingEventPlansImportExecutor extends EventPlansImportExecutor {
     }
 
     @Override
-    protected void startImport(@Nonnull EventPlansImportExecutor.ImportProcess importProcess) {
+    protected void runImport(EventPlansImportExecutor.ImportProcess importProcess) {
         try {
             new ImportProcess(activeObjectsService).run();
         } catch (MalformedURLException e) {

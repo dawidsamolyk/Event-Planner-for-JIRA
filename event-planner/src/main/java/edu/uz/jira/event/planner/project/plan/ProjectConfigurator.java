@@ -131,25 +131,21 @@ public class ProjectConfigurator {
             Issue task = createIssue(validationResult);
             result.add(task);
 
-            List<Issue> subTasks = createSubTasks(project, eachTask.getSubTasks(), task, componentId, versionId);
-            createLinks(task, subTasks);
+            SubTask[] eachTaskSubTasks = eachTask.getSubTasks();
+            if (eachTaskSubTasks.length > 0) {
+                List<Issue> subTasks = createSubTasks(project, eachTaskSubTasks, task.getId(), componentId, versionId);
+                createLinks(task, subTasks);
+            }
         }
         return result;
     }
 
-    private void createLinks(@Nonnull final Issue task, @Nonnull final List<Issue> subTasks) throws CreateException {
-        for (Issue eachSubTask : subTasks) {
-            ComponentAccessor.getSubTaskManager().createSubTaskIssueLink(task, eachSubTask, getUser().getDirectoryUser());
-        }
-    }
-
-    private List<Issue> createSubTasks(@Nonnull final Project project, @Nonnull final SubTask[] subTasks, @Nonnull final Issue task, @Nonnull final Long componentId, @Nonnull final Long versionId) throws JiraException {
+    private List<Issue> createSubTasks(@Nonnull final Project project, @Nonnull final SubTask[] subTasks, @Nonnull final Long taskId, @Nonnull final Long componentId, @Nonnull final Long versionId) throws JiraException {
         List<Issue> result = new ArrayList<Issue>();
         String issueTypeId = getIssueType(project, true).getId();
         Long projectId = project.getId();
         ApplicationUser user = getUser();
         String userKey = user.getKey();
-        Long taskId = task.getId();
 
         for (SubTask eachSubTask : subTasks) {
             IssueInputParameters inputParameters =
@@ -168,6 +164,12 @@ public class ProjectConfigurator {
             result.add(subTask);
         }
         return result;
+    }
+
+    private void createLinks(@Nonnull final Issue task, @Nonnull final List<Issue> subTasks) throws CreateException {
+        for (Issue eachSubTask : subTasks) {
+            ComponentAccessor.getSubTaskManager().createSubTaskIssueLink(task, eachSubTask, getUser().getDirectoryUser());
+        }
     }
 
     private Issue createIssue(@Nonnull final IssueService.CreateValidationResult validationResult) throws JiraException {

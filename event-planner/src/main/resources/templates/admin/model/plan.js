@@ -23,15 +23,15 @@ function Plan() {
         if(resources.length === 0) {
             return;
         }
-        var isComponent = (resources.length > 0 && resources[0].hasOwnProperty('tasksNames'));
-        var isPlan = (resources.length > 0 && resources[0].hasOwnProperty('domainsNames') && resources[0].hasOwnProperty('componentsNames'));
+        var inputResourceIsComponent = (resources.length > 0 && resources[0].hasOwnProperty('tasksNames'));
+        var inputResourceIsPlan = (resources.length > 0 && resources[0].hasOwnProperty('domainsNames') && resources[0].hasOwnProperty('componentsNames'));
 
-        if(isPlan === true) {
+        if(inputResourceIsPlan === true) {
             that.setFromPlanObject(resources);
             return;
         }
 
-        if(isComponent === true) {
+        if(inputResourceIsComponent === true) {
             that.getComponents().empty();
         } else {
             that.getDomains().empty();
@@ -40,7 +40,7 @@ function Plan() {
         for(eachKey in resources) {
             var eachElement = that.getElement(resources[eachKey].name);
 
-            if(isComponent) {
+            if(inputResourceIsComponent) {
                 that.getComponents().append(eachElement);
             } else {
                 that.getDomains().append(eachElement);
@@ -60,11 +60,11 @@ function Plan() {
         that.getNeededMonthsToComplete().append(plan.neededMonths);
         that.getNeededDaysToComplete().append(plan.neededDays);
 
-        for(eachKey in plan.domains) {
-            that.getDomains().append(that.getElement(plan.domains[eachKey]));
+        for(eachKey in plan.domainsNames) {
+            that.getDomains().append(that.getElement(plan.domainsNames[eachKey]));
         }
-        for(eachKey in plan.components) {
-            that.getComponents().append(that.getElement(plan.components[eachKey]));
+        for(eachKey in plan.componentsNames) {
+            that.getComponents().append(that.getElement(plan.componentsNames[eachKey]));
         }
     };
 };

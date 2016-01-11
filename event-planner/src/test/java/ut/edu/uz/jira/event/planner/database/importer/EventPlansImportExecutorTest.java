@@ -28,9 +28,12 @@ import ut.helpers.TestActiveObjects;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.Arrays;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @Transactional
@@ -69,8 +72,9 @@ public class EventPlansImportExecutorTest {
     @Test
     public void should_not_import_data_when_it_was_imported_earlier() throws MalformedURLException {
         mockApplicationProperties.setText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY, EventPlansImportExecutor.IMPORTED);
+        EventPlansImportExecutor fixture = new TestingEventPlansImportExecutor(mocki18n, service);
 
-        new TestingEventPlansImportExecutor(mocki18n, service);
+        fixture.startImport();
 
         assertEquals(0, activeObjects.count(Plan.class));
         assertEquals(EventPlansImportExecutor.IMPORTED, mockApplicationProperties.getText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY));
@@ -78,7 +82,9 @@ public class EventPlansImportExecutorTest {
 
     @Test
     public void should_import_data_when_it_not_imported() throws MalformedURLException {
-        new TestingEventPlansImportExecutor(mocki18n, service);
+        EventPlansImportExecutor fixture = new TestingEventPlansImportExecutor(mocki18n, service);
+
+        fixture.startImport();
 
         assertEquals(1, activeObjects.count(Plan.class));
         assertEquals(EventPlansImportExecutor.IMPORTED, mockApplicationProperties.getText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY));
@@ -87,7 +93,9 @@ public class EventPlansImportExecutorTest {
     @Test
     public void should_not_import_data_if_source_file_not_found() throws EventPlansImportException, MalformedURLException {
         TestingEventPlansImportExecutor.testFile = new File("non-existent-file");
-        new TestingEventPlansImportExecutor(mocki18n, service);
+        EventPlansImportExecutor fixture = new TestingEventPlansImportExecutor(mocki18n, service);
+
+        fixture.startImport();
 
         assertEquals(0, activeObjects.count(Plan.class));
         assertEquals(EventPlansImportExecutor.NOT_IMPORTED, mockApplicationProperties.getText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY));
@@ -95,11 +103,40 @@ public class EventPlansImportExecutorTest {
 
     @Test
     public void should_not_import_data_twice() throws MalformedURLException {
-        new TestingEventPlansImportExecutor(mocki18n, service);
+        EventPlansImportExecutor fixture = new TestingEventPlansImportExecutor(mocki18n, service);
+
+        fixture.startImport();
         assertEquals(EventPlansImportExecutor.IMPORTED, mockApplicationProperties.getText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY));
 
-        new TestingEventPlansImportExecutor(mocki18n, service);
+        fixture.startImport();
+
         assertEquals(1, activeObjects.count(Plan.class));
         assertEquals(EventPlansImportExecutor.IMPORTED, mockApplicationProperties.getText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY));
+    }
+
+    @Test
+    public void should_import_data_with_all_relations() throws MalformedURLException {
+        EventPlansImportExecutor fixture = new TestingEventPlansImportExecutor(mocki18n, service);
+
+        fixture.startImport();
+        assertEquals(EventPlansImportExecutor.IMPORTED, mockApplicationProperties.getText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY));
+
+        Plan plan = activeObjects.find(Plan.class)[0];
+        Domain domain = activeObjects.find(Domain.class)[0];
+        Component component = activeObjects.find(Component.class)[0];
+        List<Task> tasks = Arrays.asList(activeObjects.find(Task.class));
+
+        PlanToDomainRelation planToDomainRelation = activeObjects.find(PlanToDomainRelation.class)[0];
+        assertEquals(plan, planToDomainRelation.getPlan());
+        assertEquals(domain, planToDomainRelation.getDomain());
+
+        PlanToComponentRelation planToComponentRelation = activeObjects.find(PlanToComponentRelation.class)[0];
+        assertEquals(plan, planToComponentRelation.getPlan());
+        assertEquals(component, planToComponentRelation.getComponent());
+
+        for (TaskToComponentRelation eachRelation : activeObjects.find(TaskToComponentRelation.class)) {
+            assertEquals(component, eachRelation.getComponent());
+            assertTrue(tasks.contains(eachRelation.getTask()));
+        }
     }
 }

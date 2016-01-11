@@ -11,11 +11,13 @@ import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.opensymphony.workflow.loader.ConditionDescriptor;
 import com.opensymphony.workflow.loader.ValidatorDescriptor;
+import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.importer.xml.EventPlansImportExecutor;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.project.issue.fields.IssueFieldsConfigurator;
-import edu.uz.jira.event.planner.workflow.WorkflowUtils;
 import edu.uz.jira.event.planner.workflow.WorkflowConfigurator;
 import edu.uz.jira.event.planner.workflow.WorkflowConstants;
+import edu.uz.jira.event.planner.workflow.WorkflowUtils;
 import edu.uz.jira.event.planner.workflow.descriptor.WorkflowDescriptorsFactory;
 
 import javax.annotation.Nonnull;
@@ -41,12 +43,16 @@ public class EventOrganizationProjectHook implements AddProjectHook {
      * @throws NullArgumentException Thrown when any input argument is null.
      */
     public EventOrganizationProjectHook(@Nonnull final I18nResolver i18nResolver,
-                                        @Nonnull final WorkflowTransitionService workflowTransitionService) throws NullArgumentException {
+                                        @Nonnull final WorkflowTransitionService workflowTransitionService,
+                                        @Nonnull final ActiveObjectsService activeObjectsService) throws NullArgumentException {
         workflowConfigurator = new WorkflowConfigurator(workflowTransitionService);
         workflowDescriptorsFactory = new WorkflowDescriptorsFactory();
         issueFieldsConfigurator = new IssueFieldsConfigurator(i18nResolver);
         projectCategoryConfigurator = new ProjectCategoryConfigurator(i18nResolver);
         utils = new WorkflowUtils();
+
+        EventPlansImportExecutor importExecutor = new EventPlansImportExecutor(i18nResolver, activeObjectsService);
+        importExecutor.startImport();
     }
 
     /**

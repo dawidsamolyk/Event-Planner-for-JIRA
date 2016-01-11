@@ -1,9 +1,12 @@
 package edu.uz.jira.event.planner.project.plan.servlet;
 
 import com.atlassian.sal.api.auth.LoginUriProvider;
+import com.atlassian.sal.api.message.I18nResolver;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import com.atlassian.templaterenderer.TemplateRenderer;
+import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.importer.xml.EventPlansImportExecutor;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServlet;
@@ -29,10 +32,15 @@ public class EventPlanServlet extends HttpServlet {
      */
     public EventPlanServlet(@Nonnull final TemplateRenderer templateRenderer,
                             @Nonnull final UserManager userManager,
-                            @Nonnull final LoginUriProvider loginUriProvider) {
+                            @Nonnull final LoginUriProvider loginUriProvider,
+                            @Nonnull final I18nResolver i18nResolver,
+                            @Nonnull final ActiveObjectsService activeObjectsService) {
         this.templateRenderer = templateRenderer;
         this.userManager = userManager;
         this.loginUriProvider = loginUriProvider;
+
+        EventPlansImportExecutor importExecutor = new EventPlansImportExecutor(i18nResolver, activeObjectsService);
+        importExecutor.startImport();
     }
 
     @Override

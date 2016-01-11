@@ -33,19 +33,28 @@ function PlansList() {
         nameAndDescriptionCell.appendChild(name);
         nameAndDescriptionCell.appendChild(description);
 
-        that.insertCell(newRow, 1).appendChild(that.createListFrom(plan.domains));
-        that.insertCell(newRow, 2).appendChild(that.createListFrom(plan.components));
+        that.insertCell(newRow, 1).appendChild(that.createListFrom(plan.domainsNames));
+        that.insertCell(newRow, 2).appendChild(that.createListFrom(plan.componentsNames));
 
         var neededTime = '';
-        if(plan.neededMonths > 0) {
-            neededTime += plan.neededMonths + ' month(s) ';
+        if(plan.neededMonths === 1) {
+            neededTime += plan.neededMonths + ' month';
         }
+        else if(plan.neededMonths > 1) {
+            neededTime += plan.neededMonths + ' months';
+        }
+
         if(plan.neededMonths > 0 && plan.neededDays > 0) {
-            neededTime += '+';
+            neededTime += ' + ';
         }
-        if(plan.neededDays > 0) {
-            neededTime += plan.neededDays + ' day(s) ';
+
+        if(plan.neededDays === 1) {
+            neededTime += plan.neededDays + ' day ';
         }
+        else if(plan.neededDays > 1) {
+            neededTime += plan.neededDays + ' days ';
+        }
+
         that.insertCell(newRow, 3).appendChild(document.createTextNode(neededTime));
 
         // TODO odkomentuj dopiero, gdy zostanie zaimplementowana akacja edycji planu eventu
