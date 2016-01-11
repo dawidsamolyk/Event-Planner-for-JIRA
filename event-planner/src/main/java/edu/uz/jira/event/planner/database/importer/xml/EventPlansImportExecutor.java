@@ -66,7 +66,7 @@ public class EventPlansImportExecutor {
                 EventPlansImporter importer = new EventPlansImporter(activeObjectsService);
                 AllEventPlans predefinedEventPlans = importer.getPredefinedEventPlans();
                 importer.importEventPlansIntoDatabase(predefinedEventPlans);
-
+                setImported();
             } catch (EventPlansImportException e) {
                 log.error(errorMessage, e);
                 setNotImported();
@@ -74,7 +74,6 @@ public class EventPlansImportExecutor {
                 log.error(errorMessage, e);
                 setNotImported();
             }
-            setImported();
         }
     }
 }
