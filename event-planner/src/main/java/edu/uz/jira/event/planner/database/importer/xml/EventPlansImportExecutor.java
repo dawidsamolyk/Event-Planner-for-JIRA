@@ -19,10 +19,10 @@ public class EventPlansImportExecutor {
     public static final String APPLICATION_PROPERTY_KEY = "EVENT_PLANS_IMPORTER";
     public static final String IMPORTED = "TRUE";
     public static final String NOT_IMPORTED = "FALSE";
-    private final ApplicationProperties applicationProperties = ComponentAccessor.getApplicationProperties();
-    private final Logger.Log log = Logger.getInstance(EventPlansImportExecutor.class);
-    private final I18nResolver i18nResolver;
-    private final ActiveObjectsService activeObjectsService;
+    protected final ApplicationProperties applicationProperties = ComponentAccessor.getApplicationProperties();
+    protected final Logger.Log log = Logger.getInstance(EventPlansImportExecutor.class);
+    protected final I18nResolver i18nResolver;
+    protected final ActiveObjectsService activeObjectsService;
 
     public EventPlansImportExecutor(@Nonnull final I18nResolver i18nResolver,
                                     @Nonnull final ActiveObjectsService activeObjectsService) {
@@ -54,10 +54,12 @@ public class EventPlansImportExecutor {
     protected class ImportProcess implements Runnable {
         private final ActiveObjectsService activeObjectsService;
         private final String errorMessage;
+        private final String successMessage;
 
         public ImportProcess(final ActiveObjectsService activeObjectsService, I18nResolver i18nResolver) {
             this.activeObjectsService = activeObjectsService;
             this.errorMessage = i18nResolver.getText(Internationalization.EVENT_PLANS_IMPORTER_ERROR);
+            this.successMessage = i18nResolver.getText(Internationalization.EVENT_PLANS_IMPORTER_SUCCESS);
         }
 
         @Override
@@ -66,7 +68,9 @@ public class EventPlansImportExecutor {
                 EventPlansImporter importer = new EventPlansImporter(activeObjectsService);
                 AllEventPlans predefinedEventPlans = importer.getPredefinedEventPlans();
                 importer.importEventPlansIntoDatabase(predefinedEventPlans);
+
                 setImported();
+                log.info(successMessage);
             } catch (EventPlansImportException e) {
                 log.error(errorMessage, e);
                 setNotImported();

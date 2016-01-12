@@ -16,8 +16,15 @@ function Component() {
         that.getTasks().empty();
 
         for(eachKey in allTasks) {
-            var eachTask = allTasks[eachKey];
-            that.getTasks().append("<option>" + eachTask.name + "</option>");
+            var task = allTasks[eachKey];
+            if(that.isFullFilled(task) === false) return false;
+
+            that.getTasks().append("<option>" + task.name + "</option>");
         }
+        return true;
+    };
+
+    that.isFullFilled = function(task) {
+        return task != undefined && task.name != undefined;
     };
 };

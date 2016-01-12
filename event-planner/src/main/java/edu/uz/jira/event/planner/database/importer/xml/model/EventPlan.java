@@ -126,6 +126,9 @@ public class EventPlan implements ActiveObjectWrapper {
     }
 
     public String getDescription() {
+        if(description == null) {
+            description = "";
+        }
         return description;
     }
 

@@ -8,11 +8,17 @@ function Task() {
     that.getSubTasks = function() { return AJS.$("#task-subtasks") };
 
     that.getJson = function() {
-        return '{ "name": "' + that.getName().attr("value") +
-               '", "description": "' + that.getDescription().attr("value") +
-               '", "neededMonths": ' + that.getNeededMonthsToComplete().attr("value") +
-               ', "neededDays": ' + that.getNeededDaysToComplete().attr("value") +
-               ', "subTasksNames": ' + JSON.stringify(that.getSubTasks().val()) +
+        var name = that.getName().attr("value");
+        var description = that.getDescription().attr("value");
+        var neededMonths = that.getNeededMonthsToComplete().attr("value");
+        var neededDays = that.getNeededDaysToComplete().attr("value");
+        var subTasksNamesArray = JSON.stringify(that.getSubTasks().val());
+
+        return '{ "name": "' + name +
+               '", "description": "' + description +
+               '", "neededMonths": ' + neededMonths +
+               ', "neededDays": ' + neededDays +
+               ', "subTasksNames": ' + subTasksNamesArray +
                ' }';
     };
 
@@ -21,7 +27,14 @@ function Task() {
 
         for(eachKey in allSubTasks) {
             var eachSubTask = allSubTasks[eachKey];
-            that.getSubTasks().append("<option>" + eachSubTask.name + "</option>");
+            var subTaskName = eachSubTask.name;
+
+            if(subTaskName === undefined) {
+                return false;
+            }
+
+            that.getSubTasks().append("<option>" + subTaskName + "</option>");
         }
+        return true;
     };
 };

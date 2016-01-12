@@ -20,8 +20,8 @@
                 <label for="plan-needed-time">Time for completion
                     <span class="aui-icon icon-required">(required)</span></label>
                 <span id="plan-needed-time">
-                    <input id="plan-needed-months" name="plan-needed-months" type="number" min="0" placeholder="Months" style="width: 60px;"> months +
-                    <input id="plan-needed-days" name="plan-needed-days" type="number" min="1" max="31" placeholder="Days" style="width: 60px;"> days
+                    <input id="plan-needed-months" name="plan-needed-months" type="number" min="0" value="0" placeholder="Months" style="width: 60px;"> months +
+                    <input id="plan-needed-days" name="plan-needed-days" type="number" min="1" max="31" value="0" placeholder="Days" style="width: 60px;"> days
                 </span>
 
                 <div class="description" id="plan-time-description">Estimated number of months and days needed to complete event organization.</div>

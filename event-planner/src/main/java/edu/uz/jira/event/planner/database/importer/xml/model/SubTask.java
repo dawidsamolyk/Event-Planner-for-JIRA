@@ -34,6 +34,9 @@ public class SubTask implements ActiveObjectWrapper {
     }
 
     public String getDescription() {
+        if(description == null) {
+            description = "";
+        }
         return description;
     }
 

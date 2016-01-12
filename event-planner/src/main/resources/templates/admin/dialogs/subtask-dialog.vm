@@ -16,14 +16,6 @@
 
                 <div class="description" id="subtask-description-description">Description of the SubTask.</div>
             </div>
-            <div class="field-group" id="subtask-time-group">
-                <label for="subtask-time">Time to complete<span
-                        class="aui-icon icon-required">(required)</span></label>
-                <input id="subtask-time" name="subtask-time" type="text">
-
-                <div class="description" id="subtask-time-description">Estimated time to complete SubTask.
-                </div>
-            </div>
         </form>
     </div>
     <footer class="aui-dialog2-footer">

@@ -10,25 +10,31 @@ function Plan() {
     that.getComponents = function() { return AJS.$("#plan-components") };
 
     that.getJson = function() {
-        return '{ "name": "' + that.getName().attr("value") +
-               '", "description": "' + that.getDescription().attr("value") +
-               '", "neededMonths": ' + that.getNeededMonthsToComplete().attr("value") +
-               ', "neededDays": ' + that.getNeededDaysToComplete().attr("value") +
-               ', "domainsNames": ' + JSON.stringify(that.getDomains().val()) +
-               ', "componentsNames": ' + JSON.stringify(that.getComponents().val()) +
+        var name = that.getName().attr("value");
+        var description = that.getDescription().attr("value");
+        var neededMonths = that.getNeededMonthsToComplete().attr("value");
+        var neededDays = that.getNeededDaysToComplete().attr("value");
+        var domainsNamesArray = JSON.stringify(that.getDomains().val());
+        var componentsNamesArray = JSON.stringify(that.getComponents().val());
+
+        return '{ "name": "' + name +
+               '", "description": "' + description +
+               '", "neededMonths": ' + neededMonths +
+               ', "neededDays": ' + neededDays +
+               ', "domainsNames": ' + domainsNamesArray +
+               ', "componentsNames": ' + componentsNamesArray +
                ' }';
     };
 
     that.setFromJson = function(resources) {
         if(resources.length === 0) {
-            return;
+            return true;
         }
         var inputResourceIsComponent = (resources.length > 0 && resources[0].hasOwnProperty('tasksNames'));
         var inputResourceIsPlan = (resources.length > 0 && resources[0].hasOwnProperty('domainsNames') && resources[0].hasOwnProperty('componentsNames'));
 
         if(inputResourceIsPlan === true) {
-            that.setFromPlanObject(resources);
-            return;
+            return that.setFromPlanObject(resources);
         }
 
         if(inputResourceIsComponent === true) {
@@ -38,7 +44,11 @@ function Plan() {
         }
 
         for(eachKey in resources) {
-            var eachElement = that.getElement(resources[eachKey].name);
+            var eachName = resources[eachKey].name;
+            if(eachName === undefined) {
+                return false;
+            }
+            var eachElement = that.getElement(eachName);
 
             if(inputResourceIsComponent) {
                 that.getComponents().append(eachElement);
@@ -46,6 +56,7 @@ function Plan() {
                 that.getDomains().append(eachElement);
             }
         }
+        return true;
     };
 
     that.getElement = function(value) {
@@ -55,16 +66,47 @@ function Plan() {
     that.setFromPlanObject = function(plans) {
         var plan = plans[0];
 
+        if(plan.name === undefined || plan.description === undefined || plan.neededMonths === undefined || plan.neededDays === undefined) {
+            return false;
+        }
+
         that.getName().append(plan.name);
         that.getDescription().append(plan.description);
         that.getNeededMonthsToComplete().append(plan.neededMonths);
         that.getNeededDaysToComplete().append(plan.neededDays);
 
-        for(eachKey in plan.domainsNames) {
-            that.getDomains().append(that.getElement(plan.domainsNames[eachKey]));
+        if(that.setDomainsNames(plan.domainsNames) === false) {
+            return false;
         }
+        if(that.setComponentsNames(plan.componentsNames) === false) {
+            return false;
+        }
+        return true;
+    };
+
+    that.setDomainsNames = function(domainsNames) {
+        for(eachKey in domainsNames) {
+            var eachDomainName = domainsNames[eachKey];
+
+            if(eachDomainName === undefined) {
+                return false;
+            }
+
+            that.getDomains().append(that.getElement(eachDomainName));
+        }
+        return true;
+    };
+
+    that.setComponentsNames = function(componentsNames) {
         for(eachKey in plan.componentsNames) {
-            that.getComponents().append(that.getElement(plan.componentsNames[eachKey]));
+            var eachComponentName = plan.componentsNames[eachKey];
+
+            if(eachComponentName === undefined) {
+                return false;
+            }
+
+            that.getComponents().append(that.getElement(eachComponentName));
         }
+        return true;
     };
 };

@@ -51,6 +51,10 @@ public class EventOrganizationProjectHook implements AddProjectHook {
         projectCategoryConfigurator = new ProjectCategoryConfigurator(i18nResolver);
         utils = new WorkflowUtils();
 
+        importPredefinedEventPlansIfRequired(i18nResolver, activeObjectsService);
+    }
+
+    private void importPredefinedEventPlansIfRequired(@Nonnull I18nResolver i18nResolver, @Nonnull ActiveObjectsService activeObjectsService) {
         EventPlansImportExecutor importExecutor = new EventPlansImportExecutor(i18nResolver, activeObjectsService);
         importExecutor.startImport();
     }

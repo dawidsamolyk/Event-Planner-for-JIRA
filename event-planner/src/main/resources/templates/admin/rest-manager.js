@@ -1,6 +1,7 @@
 function RESTManager() {
     var that = this;
     that.baseUrl = AJS.contextPath() + "/rest/event-plans/1.0/";
+    that.maxNumberOfSameRequests = 5;
 
     that.post = function(resource) {
         if(resource === undefined) {
@@ -24,7 +25,7 @@ function RESTManager() {
                 });
                 return;
         }
-
+console.log(resource.getJson());
         jQuery.ajax({
             url: that.baseUrl + resource.id,
             type: "POST",
@@ -62,7 +63,13 @@ function RESTManager() {
             type: "GET",
             dataType: "json",
             success: function (data, status, request) {
-                destinationResource.setFromJson(data);
+                for(numberOfTry = 0 ; numberOfTry < that.maxNumberOfSameRequests ; numberOfTry++) {
+                    if(destinationResource.setFromJson(data)) {
+                        break;
+                    } else {
+                        that.get(sourceId, destinationResource);
+                    }
+                }
             },
             error: function (request, status, error) {
                 AJS.flag({
@@ -104,7 +111,13 @@ function RESTManager() {
                 contentType: "text/plain",
                 data: objectId,
                 success: function (data, status, request) {
-                    destinationResource.setFromJson(data);
+                    for(numberOfTry = 0 ; numberOfTry < that.maxNumberOfSameRequests ; numberOfTry++) {
+                        if(destinationResource.setFromJson(data)) {
+                            break;
+                        } else {
+                            that.getAsPost(sourceId, destinationResource, objectId);
+                        }
+                    }
                 },
                 error: function (request, status, error) {
                     AJS.flag({

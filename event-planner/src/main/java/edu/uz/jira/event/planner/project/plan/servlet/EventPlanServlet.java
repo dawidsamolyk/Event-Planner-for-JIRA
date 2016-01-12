@@ -22,6 +22,8 @@ public class EventPlanServlet extends HttpServlet {
     private final TemplateRenderer templateRenderer;
     private final UserManager userManager;
     private final LoginUriProvider loginUriProvider;
+    private final I18nResolver i18nResolver;
+    private final ActiveObjectsService activeObjectsService;
 
     /**
      * Constructor.
@@ -38,9 +40,8 @@ public class EventPlanServlet extends HttpServlet {
         this.templateRenderer = templateRenderer;
         this.userManager = userManager;
         this.loginUriProvider = loginUriProvider;
-
-        EventPlansImportExecutor importExecutor = new EventPlansImportExecutor(i18nResolver, activeObjectsService);
-        importExecutor.startImport();
+        this.i18nResolver = i18nResolver;
+        this.activeObjectsService = activeObjectsService;
     }
 
     @Override
@@ -50,8 +51,15 @@ public class EventPlanServlet extends HttpServlet {
             redirectToLogin(request, response);
             return;
         }
+        importPredefinedEventPlansIfRequired();
+
         response.setContentType("text/html;charset=utf-8");
         templateRenderer.render("/templates/admin/event-plans.vm", response.getWriter());
+    }
+
+    private void importPredefinedEventPlansIfRequired() {
+        EventPlansImportExecutor importExecutor = new EventPlansImportExecutor(i18nResolver, activeObjectsService);
+        importExecutor.startImport();
     }
 
     private void redirectToLogin(final HttpServletRequest request, final HttpServletResponse response) throws IOException {

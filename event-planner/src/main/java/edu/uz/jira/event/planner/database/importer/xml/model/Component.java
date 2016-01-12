@@ -109,6 +109,9 @@ public class Component implements ActiveObjectWrapper {
     }
 
     public String getDescription() {
+        if(description == null) {
+            description = "";
+        }
         return description;
     }
 

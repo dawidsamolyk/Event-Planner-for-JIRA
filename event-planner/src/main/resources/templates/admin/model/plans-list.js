@@ -8,8 +8,12 @@ function PlansList() {
 
         for(eachKey in allPlans) {
             var eachPlan = allPlans[eachKey];
-            that.insert(eachPlan);
+
+            if(that.insert(eachPlan) === false) {
+                return false;
+            }
         }
+        return true;
     };
 
     that.clearTable = function() {
@@ -20,21 +24,27 @@ function PlansList() {
     };
 
     that.insert = function(plan) {
-        var contextPath = AJS.contextPath();
-
+        if(plan.name === undefined || plan.description === undefined || plan.neededMonths === undefined || plan.neededDays === undefined) {
+            return false;
+        }
         var table = that.getTable();
         var newRow = table.insertRow(table.rows.length);
 
         var nameSpan = that.createDiv(plan.name, "field-name");
-        var name = that.createLink(nameSpan, contextPath + "/secure/ViewEventOrganizationPlan.jspa?id=" + plan.id, "View Event Organization Plan");
+        var name = that.createLink(nameSpan, AJS.contextPath() + "/secure/ViewEventOrganizationPlan.jspa?id=" + plan.id, "View Event Organization Plan");
         var description = that.createDiv(plan.description, "description secondary-text");
 
         var nameAndDescriptionCell = that.insertCell(newRow, 0);
         nameAndDescriptionCell.appendChild(name);
         nameAndDescriptionCell.appendChild(description);
 
-        that.insertCell(newRow, 1).appendChild(that.createListFrom(plan.domainsNames));
-        that.insertCell(newRow, 2).appendChild(that.createListFrom(plan.componentsNames));
+        var domainsNamesList = that.createListFrom(plan.domainsNames);
+        if(domainsNamesList === undefined) return false;
+        that.insertCell(newRow, 1).appendChild(domainsNamesList);
+
+        var componentsNamesList = that.createListFrom(plan.componentsNames);
+        if(componentsNamesList === undefined) return false;
+        that.insertCell(newRow, 2).appendChild(componentsNamesList);
 
         var neededTime = '';
         if(plan.neededMonths === 1) {
@@ -58,8 +68,8 @@ function PlansList() {
         that.insertCell(newRow, 3).appendChild(document.createTextNode(neededTime));
 
         // TODO odkomentuj dopiero, gdy zostanie zaimplementowana akacja edycji planu eventu
-        //var editLink = that.createLink(document.createTextNode('Edit'), contextPath + "/secure/EditEventOrganizationPlan.jspa?id=" + plan.id, "Edit Event Organization Plan", "edit-plan");
-        var deleteLink = that.createLink(document.createTextNode('Delete'), contextPath + "/secure/DeleteEventOrganizationPlan.jspa?id=" + plan.id, "Delete Event Organization Plan", "delete-plan");
+        //var editLink = that.createLink(document.createTextNode('Edit'), AJS.contextPath() + "/secure/EditEventOrganizationPlan.jspa?id=" + plan.id, "Edit Event Organization Plan", "edit-plan");
+        var deleteLink = that.createLink(document.createTextNode('Delete'), AJS.contextPath() + "/secure/DeleteEventOrganizationPlan.jspa?id=" + plan.id, "Delete Event Organization Plan", "delete-plan");
 
         var operationsList = that.createList();
             operationsList.className = "operations-list";
@@ -70,7 +80,7 @@ function PlansList() {
         var operationsCell = that.insertCell(newRow, 4);
         operationsCell.appendChild(operationsList);
 
-        return newRow;
+        return true;
     };
 
     that.insertCell = function(row, index) {
@@ -107,7 +117,11 @@ function PlansList() {
     that.createListFrom = function(array) {
         var result = that.createList();
         for(eachKey in array) {
-            that.addToList(result, document.createTextNode(array[eachKey]));
+            var eachValue = array[eachKey];
+            if(eachValue === undefined) {
+                return undefined;
+            }
+            that.addToList(result, document.createTextNode(eachValue));
         }
         return result;
     };

@@ -14,4 +14,5 @@ public enum Internationalization {
     public static final String PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME = "project.fields.configuration.scheme.name";
     public static final String PROJECT_FIELDS_CONFIGURATION_SCHEME_DESCRIPTION = "project.fields.configuration.scheme.description";
     public static final String EVENT_PLANS_IMPORTER_ERROR = "event.plans.import.error";
+    public static final String EVENT_PLANS_IMPORTER_SUCCESS = "event.plans.import.success";
 }
