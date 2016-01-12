@@ -115,12 +115,14 @@ public class ProjectConfigurator {
         String userKey = user.getKey();
 
         for (Task eachTask : tasks) {
+            String dueDate = getFormattedDueDate(eachTask);
+
             IssueInputParameters inputParameters =
                     issueService.newIssueInputParameters()
                             .setIssueTypeId(issueTypeId)
                             .setProjectId(projectId)
                             .setComponentIds(componentId)
-                            .setDueDate(getFormattedDueDate(eachTask))
+                            .setDueDate(dueDate)
                             .setSummary(eachTask.getName())
                             .setDescription(eachTask.getDescription())
                             .setFixVersionIds(versionId)
@@ -133,14 +135,14 @@ public class ProjectConfigurator {
 
             SubTask[] eachTaskSubTasks = eachTask.getSubTasks();
             if (eachTaskSubTasks.length > 0) {
-                List<Issue> subTasks = createSubTasks(project, eachTaskSubTasks, task.getId(), componentId, versionId);
+                List<Issue> subTasks = createSubTasks(project, eachTaskSubTasks, task.getId(), componentId, versionId, dueDate);
                 createLinks(task, subTasks);
             }
         }
         return result;
     }
 
-    private List<Issue> createSubTasks(@Nonnull final Project project, @Nonnull final SubTask[] subTasks, @Nonnull final Long taskId, @Nonnull final Long componentId, @Nonnull final Long versionId) throws JiraException {
+    private List<Issue> createSubTasks(@Nonnull final Project project, @Nonnull final SubTask[] subTasks, @Nonnull final Long taskId, @Nonnull final Long componentId, @Nonnull final Long versionId, @Nonnull final String dueDate) throws JiraException {
         List<Issue> result = new ArrayList<Issue>();
         String issueTypeId = getIssueType(project, true).getId();
         Long projectId = project.getId();
@@ -153,6 +155,7 @@ public class ProjectConfigurator {
                             .setIssueTypeId(issueTypeId)
                             .setProjectId(projectId)
                             .setComponentIds(componentId)
+                            .setDueDate(dueDate)
                             .setSummary(eachSubTask.getName())
                             .setDescription(eachSubTask.getDescription())
                             .setFixVersionIds(versionId)

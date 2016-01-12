@@ -26,9 +26,9 @@ function sendPostRequest() {
 
 function configureDatePicker() {
    jQuery('#event-duedate').datetimepicker({
-                                            timepicker : true,
-                                            format : 'd-m-Y H:i'
-                                           });
+       timepicker : true,
+       format : 'd-m-Y H:i'
+   });
 }
 
 function configureDialog() {

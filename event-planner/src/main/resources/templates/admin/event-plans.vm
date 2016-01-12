@@ -5,81 +5,113 @@
     <meta name="decorator" content="atl.admin">
     <meta name="admin.active.section" content="admin_project_menu/project_section"/>
     <meta name="admin.active.tab" content="event_plans"/>
-
-    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui.js"></script>
-    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-experimental.js"></script>
-    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-datepicker.js"></script>
-    <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui.css"/>
-    <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui-experimental.css"/>
 </head>
 <body>
-<section class="aui-page-panel-content">
-    <header class="aui-page-header">
-        <div class="aui-page-header-inner">
-            <div class="aui-page-header-main">
-                <h2>View Event Organization Plans</h2>
-            </div>
-            <div class="aui-page-header-actions">
-                <div class="aui-buttons">
-                    <button id="add-plan-button" class="aui-button trigger-dialog">
-                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                        Add Event Organization Plan
-                    </button>
+    <section class="aui-page-panel-content" style="width: 100%;">
+        <header class="aui-page-header">
+            <div class="aui-page-header-inner">
+                <div class="aui-page-header-main">
+                    <h2>View Event Organization Plans</h2>
                 </div>
-
-                <span class="aui-icon aui-icon-small aui-iconfont-help">Get help!</span>
+                <div class="aui-page-header-actions">
+                    <div class="aui-buttons">
+                        <button id="add-plan-button" class="aui-button trigger-dialog">
+                            <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                            Add Event Organization Plan
+                        </button>
+                    </div>
+                </div>
             </div>
+        </header>
+
+        <div class="aui-message info">
+            <span class="aui-icon icon-info"></span>
+
+            <p>Opis...</p>
         </div>
-    </header>
 
-    <div class="aui-message info">
-        <span class="aui-icon icon-info"></span>
+        <table id="plans-table" class="aui aui-table-rowhover">
+            <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Domains
+                </th>
+                <th>
+                    Components
+                </th>
+                <th>
+                    Time to complete
+                </th>
+                <th>
+                    Operations
+                </th>
+            </tr>
+            </thead>
+            <tbody id="plans-table-body">
+            </tbody>
+        </table>
+    </section>
 
-        <p>Opis...</p>
-    </div>
+    #include("templates/admin/dialogs/plan-dialog.vm")
+    #include("templates/admin/dialogs/domain-dialog.vm")
+    #include("templates/admin/dialogs/component-dialog.vm")
+    #include("templates/admin/dialogs/task-dialog.vm")
+    #include("templates/admin/dialogs/subtask-dialog.vm")
 
-    <table id="plans-table" class="aui aui-table-rowhover">
-        <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Domains
-            </th>
-            <th>
-                Components
-            </th>
-            <th>
-                Time to complete
-            </th>
-            <th>
-                Operations
-            </th>
-        </tr>
-        </thead>
-        <tbody id="plans-table-body">
-        </tbody>
-    </table>
-</section>
+    <script type="text/javascript">
+        var plansList = new PlansList();
+        var plan = new Plan();
+        var domain = new Domain();
+        var component = new Component();
+        var task = new Task();
+        var subTask = new SubTask();
 
-#include("templates/admin/dialogs/plan-dialog.vm")
-#include("templates/admin/dialogs/domain-dialog.vm")
-#include("templates/admin/dialogs/component-dialog.vm")
-#include("templates/admin/dialogs/task-dialog.vm")
-#include("templates/admin/dialogs/subtask-dialog.vm")
+        AJS.$(document).ready(
+            function() {
+                var rest = new RESTManager();
+                rest.get(plan.id, plansList);
+        });
 
-<script type="text/javascript">
-    #include("templates/admin/model/plans-list.js")
-    #include("templates/admin/model/component.js")
-    #include("templates/admin/model/domain.js")
-    #include("templates/admin/model/plan.js")
-    #include("templates/admin/model/task.js")
-    #include("templates/admin/model/subtask.js")
-    #include("templates/admin/rest-manager.js")
-    #include("templates/admin/button-listener.js")
+        var subTaskListener = new ButtonListener(subTask);
+            subTaskListener.onAddShowDialog();
+            subTaskListener.onSaveDoPostResource();
+            subTaskListener.onSaveHideDialog();
+            subTaskListener.onSaveDoGetAndSaveInto(task);
+            subTaskListener.onCancelCloseDialog();
 
-    #include("templates/admin/main.js")
-</script>
+        var taskListener = new ButtonListener(task);
+            taskListener.onShowDoGet([subTask]);
+            taskListener.onAddShowDialog();
+            taskListener.onSaveDoPostResource();
+            taskListener.onSaveDoGetAndSaveInto(component);
+            taskListener.onSaveHideDialog();
+            taskListener.onCancelCloseDialog();
+
+        var componentListener = new ButtonListener(component);
+            componentListener.onShowDoGet([task]);
+            componentListener.onAddShowDialog();
+            componentListener.onSaveDoPostResource();
+            componentListener.onSaveDoGetAndSaveInto(plan);
+            componentListener.onSaveHideDialog();
+            componentListener.onCancelCloseDialog();
+
+        var domainListener = new ButtonListener(domain);
+            domainListener.onAddShowDialog();
+            domainListener.onSaveDoPostResource();
+            domainListener.onSaveHideDialog();
+            domainListener.onSaveDoGetAndSaveInto(plan);
+            domainListener.onCancelCloseDialog();
+
+        var planListener = new ButtonListener(plan)
+            planListener.onShowDoGet([domain, component]);
+            planListener.onAddShowDialog();
+            planListener.onSaveDoPostResource();
+            planListener.onSaveHideDialog();
+            planListener.onSaveDoGetAndSaveInto(plansList);
+            planListener.onCancelCloseDialog();
+    </script>
 </body>
 </html>

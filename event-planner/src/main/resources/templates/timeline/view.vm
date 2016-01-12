@@ -2,13 +2,6 @@
 <html>
 <head>
     <meta name="decorator" content="atl.general">
-    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui.js"></script>
-    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-experimental.js"></script>
-    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-datepicker.js"></script>
-    <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui.css"/>
-    <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui-experimental.css"/>
-    <link type="text/css" rel="stylesheet" href="/jira/s/d41d8cd98f00b204e9800998ecf8427e-CDN/pl_PL-l42oyd/64022/3/3.10.10/_/download/resources/com.atlassian.gadgets.dashboard:dashboard/gadget-chrome.css" media="all">
-    <link type="text/css" rel="stylesheet" href="/jira/s/d41d8cd98f00b204e9800998ecf8427e-CDN/pl_PL-l42oyd/64022/3/3.10.10/_/download/resources/com.atlassian.gadgets.dashboard:dashboard/gadget-colours.css" media="all">
 </head>
 <body>
     <header class="aui-page-header" style="padding: 20px 20px 20px 20px;">
@@ -43,23 +36,37 @@
         </div>
     </div>
     <script type="text/javascript">
-        #include("templates/timeline/date-util.js")
-        #include("templates/timeline/weeks-calculator.js")
-        #include("templates/timeline/task-gadget-creator.js")
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        };
 
-        #include("templates/timeline/time-line-navigation-buttons.js")
-        #include("templates/timeline/time-line-buttons-listener.js")
+        var project = getParameterByName('project');
+        var projectKey = project.substring('Project: '.length, project.length);
 
-        #include("templates/timeline/time-line-dates-creator.js")
-        #include("templates/timeline/time-line-tasks-creator.js")
+        if(projectKey) {
+            var pageTitle = projectKey + " - Event Organization Time Line";
+            document.title = pageTitle;
+            document.getElementById("time-line-name").innerHTML = pageTitle;
+        } else {
+            document.title = "Event Organization Time Line";
+        }
 
-        #include("templates/timeline/time-line-info.js")
+        var timeLine = new TimeLine();
 
-        #include("templates/timeline/time-line.js")
+        AJS.$(document).ready(
+            function() {
+                var rest = new RESTManager();
+                rest.getIssues(projectKey, timeLine);
+                rest.getProjectDeadline(projectKey, timeLine);
+        });
 
-        #include("templates/admin/rest-manager.js")
-
-        #include("templates/timeline/script.js")
+        var buttonsListener = new TimeLineButtonsListener();
+            buttonsListener.onPreviousWeekChangeWeekView();
+            buttonsListener.onNextWeekChangeWeekView();
+            buttonsListener.onCurrentWeekChangeWeekView();
     </script>
 </body>
 </html>

@@ -25,7 +25,7 @@ function RESTManager() {
                 });
                 return;
         }
-console.log(resource.getJson());
+
         jQuery.ajax({
             url: that.baseUrl + resource.id,
             type: "POST",

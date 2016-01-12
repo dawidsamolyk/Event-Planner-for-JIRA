@@ -19,6 +19,7 @@ import java.net.URI;
  * Servlet which handles Event Plan Configuration page.
  */
 public class EventPlanServlet extends HttpServlet {
+    public static final String VIEW_TEMPLATE_PATH = "/templates/admin/event-plans.vm";
     private final TemplateRenderer templateRenderer;
     private final UserManager userManager;
     private final LoginUriProvider loginUriProvider;
@@ -54,7 +55,7 @@ public class EventPlanServlet extends HttpServlet {
         importPredefinedEventPlansIfRequired();
 
         response.setContentType("text/html;charset=utf-8");
-        templateRenderer.render("/templates/admin/event-plans.vm", response.getWriter());
+        templateRenderer.render(VIEW_TEMPLATE_PATH, response.getWriter());
     }
 
     private void importPredefinedEventPlansIfRequired() {
