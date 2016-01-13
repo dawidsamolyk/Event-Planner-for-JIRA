@@ -7,16 +7,16 @@
     $webResourceManager.requireResource("edu.uz.jira.event.planner.event-planner:event-plan-configuration-resources")
 </head>
 <body>
-    <script type="text/javascript">
+<script type="text/javascript">
         require('aui/flag')({
             type: 'error',
             title: 'Error while configuring Event organization project.',
             body: '<ul class="aui-nav-actions-list">' +
                     '<li><a href="' + document.location + '">Try again</a></li>' +
-                    '<li><a href="' + AJS.getContextPath() + '">Back to JIRA main page</a></li>' +
+                    '<li><a href="' + AJS.contextPath() + '">Back to JIRA main page</a></li>' +
                   '</ul>'
         });
-    </script>
+</script>
 </body>
 </html>
 
