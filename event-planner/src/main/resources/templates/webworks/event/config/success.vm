@@ -1,15 +1,10 @@
 <html>
 <head>
     <title>Event Organization Plan Configuration</title>
-    <meta name="decorator" content="atl.popup">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/sinon.js/1.15.4/sinon.js"></script>
-    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui.js"></script>
-    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-experimental.js"></script>
-    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-datepicker.js"></script>
-    <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui.css"/>
-    <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui-experimental.css"/>
+    <meta name="decorator" content="atl.admin">
+    <meta name="admin.active.section" content="admin_project_current/project_section"/>
+    <meta name="admin.active.tab" content="view_projects"/>
+    $webResourceManager.requireResource("edu.uz.jira.event.planner.event-planner:event-plan-configuration-resources")
 </head>
 <body>
 <script type="text/javascript">
@@ -21,9 +16,9 @@
         }
 
         var projectKey = getParameterByName("project-key");
-        var contextPath = AJS.Meta.get("context-path");
+        var contextPath = AJS.contextPath();
 
-        AJS.flag({
+        require('aui/flag')({
             type: 'success',
             title: 'Event organization project configured successfully.',
             body: '<ul class="aui-nav-actions-list">' +

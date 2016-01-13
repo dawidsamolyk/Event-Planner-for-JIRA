@@ -45,7 +45,3 @@ function configureDialog() {
         }
     });
 }
-
-configureDialog();
-
-AJS.dialog2("#event-config-dialog").show();

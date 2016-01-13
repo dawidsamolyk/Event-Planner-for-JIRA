@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Event Organization TimeLine</title>
     <meta name="decorator" content="atl.general">
+    $webResourceManager.requireResource("edu.uz.jira.event.planner.event-planner:event-plan-timeline-resources")
 </head>
 <body>
     <header class="aui-page-header" style="padding: 20px 20px 20px 20px;">
@@ -47,11 +49,9 @@
         var projectKey = project.substring('Project: '.length, project.length);
 
         if(projectKey) {
-            var pageTitle = projectKey + " - Event Organization Time Line";
+            var pageTitle = projectKey + " - Event Organization TimeLine";
             document.title = pageTitle;
             document.getElementById("time-line-name").innerHTML = pageTitle;
-        } else {
-            document.title = "Event Organization Time Line";
         }
 
         var timeLine = new TimeLine();

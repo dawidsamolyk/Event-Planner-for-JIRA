@@ -52,14 +52,14 @@ function TimeLineInfoProvider(timeLine) {
             if(percentDoneTasks < 100) message += '<li>Currently there is ' + percentDoneTasks + '% of done tasks.</li>';
             if(that.maximumIssueLate > 0) message += '<li style="color: #d04437;">The most delayed task should be done ' + that.getMaximumIssueLate() + ' days ago!</li>';
 
-            AJS.flag({
+            require('aui/flag')({
                 type: 'error',
                 title: 'Deadline was exceeded by ' + Math.abs(daysToDeadline) + ' days!',
                 body: message
             });
         }
         if(percentDoneTasks === 100) {
-            AJS.flag({
+            require('aui/flag')({
                 type: 'success',
                 title: 'Congratulations!',
                 body: 'All tasks are done! <br />Have a chocolate!'

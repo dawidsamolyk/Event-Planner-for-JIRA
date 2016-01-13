@@ -1,10 +1,10 @@
 <html>
 <head>
     <title>Event Organization Plans Configurations</title>
-
     <meta name="decorator" content="atl.admin">
     <meta name="admin.active.section" content="admin_project_menu/project_section"/>
     <meta name="admin.active.tab" content="event_plans"/>
+    $webResourceManager.requireResource("edu.uz.jira.event.planner.event-planner:event-plans-configuration-resources")
 </head>
 <body>
     <section class="aui-page-panel-content" style="width: 100%;">

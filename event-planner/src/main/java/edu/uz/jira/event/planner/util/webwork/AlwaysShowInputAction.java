@@ -6,7 +6,7 @@ import webwork.action.Action;
 /**
  * Webwork action which always return INPUT.
  */
-public class OnlyShowInputAction extends JiraWebActionSupport {
+public class AlwaysShowInputAction extends JiraWebActionSupport {
 
     /**
      * @return Result view to show.

@@ -47,6 +47,7 @@
         <description key="event.plans.config.resources">Resources for Event Plans Configuration admin UI</description>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
+        <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
         <dependency>com.atlassian.auiplugin:aui-form-validation</dependency>
         <resource type="velocity" name="event-plans-view" location="/templates/admin/event-plans.vm"/>
         <resource type="download" name="component-dialog.vm" location="/templates/admin/dialogs/component-dialog.vm"/>
@@ -68,12 +69,13 @@
 
     <web-item key="event_plans" name="Event Organization Plans Link" i18n-name-key="event.plans.admin.name"
               section="admin_project_menu/project_section" weight="40">
-        <description>Link to Event Organiation Plans Configuration page.</description>
+        <description>Link to Event Organization Plans Configuration page.</description>
         <label key="event.plans.admin.label"/>
         <link linkId="event_plans">/plugins/servlet/event/plans/configuration</link>
         <condition class="com.atlassian.jira.plugin.webfragment.conditions.UserIsAdminCondition"/>
     </web-item>
-    <web-resource key="resources" name="Event Planner Web Resources">
+
+    <web-resource key="event-plan-project-resources" name="Event Organization Plan Project Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <transformation extension="soy">
             <transformer key="soyTransformer"/>
@@ -86,6 +88,7 @@
         <context>atl.general</context>
         <context>atl.admin</context>
     </web-resource>
+
     <project-blueprint key="event-planner-project" weight="90">
         <label key="project.name"/>
         <description key="project.description"/>
@@ -99,6 +102,7 @@
         <component-import key="workflow-transition-service"
                           interface="com.atlassian.jira.bc.workflow.WorkflowTransitionService"/>
     </project-blueprint>
+
     <web-panel name="DueDateIndicator" i18n-name-key="due.date.indicator.name" key="due-date-indicator"
                location="atl.jira.view.issue.right.context" weight="1000">
         <description key="due.date.indicator.description">The Issue Due Date Indicator Plugin</description>
@@ -106,12 +110,14 @@
         <resource name="view" type="velocity" location="templates/issuepage/due-date-indicator.vm"/>
         <label key="due.date.indicator.title"/>
     </web-panel>
+
     <webwork1 key="event-organization-config-webwork" name="Event Organization Plan Webworks"
               i18n-name-key="event.organization.webwork.name">
         <description key="event-organization-config-webwork-description">The Event Organization Configuration Webwork
             Plugin
         </description>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <actions>
             <action name="edu.uz.jira.event.planner.project.configuration.webwork.EventPlanConfigurationAction"
                     alias="EventOrganizationPlanConfiguration">
@@ -119,25 +125,33 @@
                 <view name="input">/templates/webworks/event/config/input.vm</view>
                 <view name="error">/templates/webworks/event/config/error.vm</view>
             </action>
-            <action name="edu.uz.jira.event.planner.util.webwork.OnlyShowInputAction"
+            <action name="edu.uz.jira.event.planner.util.webwork.AlwaysShowInputAction"
                     alias="DeleteEventOrganizationPlan">
                 <view name="input">/templates/admin/webworks/delete.vm</view>
             </action>
-            <action name="edu.uz.jira.event.planner.util.webwork.OnlyShowInputAction"
+            <action name="edu.uz.jira.event.planner.util.webwork.AlwaysShowInputAction"
                     alias="EditEventOrganizationPlan">
                 <view name="input">/templates/admin/webworks/edit.vm</view>
             </action>
-            <action name="edu.uz.jira.event.planner.util.webwork.OnlyShowInputAction"
+            <action name="edu.uz.jira.event.planner.util.webwork.AlwaysShowInputAction"
                     alias="ViewEventOrganizationPlan">
                 <view name="input">/templates/admin/webworks/view.vm</view>
             </action>
         </actions>
-        <resource type="download" name="input.js" location="/templates/webworks/eventConfig/input.js"/>
-        <resource type="download" name="jquery.datetimepicker.full.min.js"
-                  location="/libs/js/jquery.datetimepicker.full.min.js"/>
-        <resource type="download" name="jquery.js" location="/libs/js/jquery.js"/>
-        <resource type="download" name="jquery.datetimepicker.css" location="/style/jquery.datetimepicker.css"/>
     </webwork1>
+
+    <web-resource name="Event Plan Configuration Resources" key="event-plan-configuration-resources">
+        <description key="event.plans.config.resources">Resources for Event Organization Plan Configuration
+        </description>
+        <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
+        <dependency>com.atlassian.auiplugin:aui-form-validation</dependency>
+        <resource type="download" name="jquery.js" location="/libs/jquery/datepicker/js/jquery.js"/>
+        <resource type="download" name="jquery.datetimepicker.full.min.js"
+                  location="/libs/jquery/datepicker/js/jquery.datetimepicker.full.min.js"/>
+        <resource type="download" name="jquery.datetimepicker.full.min.css"
+                  location="/libs/jquery/datepicker/css/jquery.datetimepicker.full.min.css"/>
+        <resource type="download" name="input.js" location="/templates/webworks/event/config/input.js"/>
+    </web-resource>
 
     <workflow-validator key="issue-due-date-validator" name="Issue Due Date Validator"
                         i18n-name-key="issue.due.date.validator.name"
@@ -159,6 +173,7 @@
     <web-resource name="Event Plan TimeLine Resources" key="event-plan-timeline-resources">
         <description key="event.plan.timeline.resources">Resources for Event Plan TimeLine UI</description>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
         <dependency>com.atlassian.gadgets.dashboard:dashboard</dependency>
         <resource type="velocity" name="view" location="/templates/timeline/view.vm"/>
         <resource type="download" name="time-line.js" location="/templates/timeline/time-line.js"/>
@@ -174,7 +189,8 @@
         <resource type="download" name="time-line-info.js"
                   location="/templates/timeline/time-line-info.js"/>
         <resource type="download" name="weeks-calculator.js" location="/templates/timeline/weeks-calculator.js"/>
-        <resource type="download" name="time-line-navigation-buttons.js" location="/templates/timeline/time-line-navigation-buttons.js"/>
+        <resource type="download" name="time-line-navigation-buttons.js"
+                  location="/templates/timeline/time-line-navigation-buttons.js"/>
         <resource type="download" name="rest-manager.js" location="/templates/admin/rest-manager.js"/>
         <context>atl.general</context>
         <context>atl.admin</context>

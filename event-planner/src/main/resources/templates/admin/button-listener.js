@@ -30,6 +30,7 @@ function ButtonListener(resource) {
             var rest = that.rest;
             var resource = that.resource;
 
+
             AJS.$(that.getSaveButtonId()).click(
                 function(e) {
                     e.preventDefault();

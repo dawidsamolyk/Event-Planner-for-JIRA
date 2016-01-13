@@ -5,21 +5,21 @@ function RESTManager() {
 
     that.post = function(resource) {
         if(resource === undefined) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Cannot save undefined resource!'
                 });
                 return;
         }
         if(!resource.id || 0 === resource.id.length) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Cannot save resource with empty name!'
                 });
                 return;
         }
         if(!resource.getJson() || 0 === resource.getJson().length) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Cannot save empty resource (without data)!'
                 });
@@ -33,7 +33,7 @@ function RESTManager() {
             data: resource.getJson(),
             processData: false,
             error: function (request, status, error) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Cannot save ' + resource.id + '!',
                     body: 'Status: ' + request.statusText
@@ -44,14 +44,14 @@ function RESTManager() {
 
     that.get = function(sourceId, destinationResource) {
         if(!sourceId || 0 === sourceId.length) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Cannot get resource with empty name!'
                 });
                 return;
         }
         if(destinationResource === undefined) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Cannot save data into undefined resource!'
                 });
@@ -72,7 +72,7 @@ function RESTManager() {
                 }
             },
             error: function (request, status, error) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Cannot get ' + sourceId + '!',
                     body: 'Status: ' + request.statusText
@@ -83,21 +83,21 @@ function RESTManager() {
 
     that.getAsPost = function(sourceId, destinationResource, objectId) {
         if(!sourceId || 0 === sourceId.length) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Cannot get resource with empty name!'
                 });
                 return;
         }
         if(destinationResource === undefined) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Cannot save data into undefined resource!'
                 });
                 return;
         }
         if(!objectId || 0 === objectId.length) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Cannot get object with empty ID!'
                 });
@@ -120,7 +120,7 @@ function RESTManager() {
                     }
                 },
                 error: function (request, status, error) {
-                    AJS.flag({
+                    require('aui/flag')({
                         type: 'error',
                         title: 'Cannot get ' + sourceId + '!',
                         body: 'Status: ' + request.statusText
@@ -131,14 +131,14 @@ function RESTManager() {
 
     that.doDelete = function(resourceId, objectId) {
         if(!resourceId || 0 === resourceId.length) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Cannot delete resource with empty name!'
                 });
                 return;
         }
         if(!objectId || 0 === objectId.length) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Cannot delete object with empty ID!'
                 });
@@ -151,13 +151,13 @@ function RESTManager() {
             contentType: "text/plain",
             data: objectId,
             success: function (data, status, request) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'success',
                     title: 'Resource ' + resourceId + ' was removed successfully!'
                 });
             },
             error: function (request, status, error) {
-                    AJS.flag({
+                    require('aui/flag')({
                         type: 'error',
                         title: 'Cannot delete ' + resourceId + '!',
                         body: 'Status: ' + request.statusText
@@ -168,14 +168,14 @@ function RESTManager() {
 
     that.getIssues = function(projectKey, timeLine) {
         if(!projectKey || 0 === projectKey.length) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Cannot get Issues for empty project key!'
                 });
                 return;
         }
         if(timeLine === undefined) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Time Line object is undefined!'
                 });
@@ -188,7 +188,7 @@ function RESTManager() {
             dataType: "json",
             success: function (data, status, request) {
                 if(request.statusText.valueOf() === 'No Content') {
-                    AJS.flag({
+                    require('aui/flag')({
                         type: 'info',
                         title: 'No Tasks for project ' + projectKey + '.'
                     });
@@ -202,7 +202,7 @@ function RESTManager() {
                     flagTitle = 'Project ' + projectKey + ' not found.';
                 }
 
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: flagTitle
                 });
@@ -212,14 +212,14 @@ function RESTManager() {
 
     that.getProjectDeadline = function(projectKey, timeLine) {
         if(!projectKey || 0 === projectKey.length) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Cannot get Project Due Date for empty project key!'
                 });
                 return;
         }
         if(timeLine === undefined) {
-                AJS.flag({
+                require('aui/flag')({
                     type: 'error',
                     title: 'Time Line object is undefined!'
                 });
@@ -235,7 +235,7 @@ function RESTManager() {
                 timeLine.setProjectDeadline(projectDeadline);
             },
             error: function (request, status, error) {
-                    AJS.flag({
+                    require('aui/flag')({
                         type: 'error',
                         title: 'Deadline for project ' + projectKey + ' is not set!',
                         body: 'Cannot show project Time Line.'
