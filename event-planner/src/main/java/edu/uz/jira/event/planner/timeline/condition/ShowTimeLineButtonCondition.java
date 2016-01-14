@@ -8,6 +8,7 @@ import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.project.ProjectUtils;
 import edu.uz.jira.event.planner.util.text.Internationalization;
+import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -32,16 +33,33 @@ public class ShowTimeLineButtonCondition implements Condition {
 
         if (project instanceof Project) {
             Project projectObject = (Project) project;
-            ProjectCategory projectCategory = projectObject.getProjectCategoryObject();
 
-            boolean validProjectCategory = projectCategory.getName().equals(eventOrganizationProjectCategoryName);
-
-            try {
-                return validProjectCategory && projectUtils.getDueDateVersion(projectObject) != null;
-            } catch (NullArgumentException e) {
-                return false;
-            }
+            return isValidProjectCategory(projectObject) && hasProjectDeadlineVersion(projectObject);
         }
         return false;
+    }
+
+    private boolean hasProjectDeadlineVersion(final Project project) {
+        try {
+            return projectUtils.getDueDateVersion(project) != null;
+        } catch (NullArgumentException e) {
+            return false;
+        }
+    }
+
+    private boolean isValidProjectCategory(final Project project) {
+        if (project == null) {
+            return false;
+        }
+        ProjectCategory projectCategoryObject = project.getProjectCategoryObject();
+        if (projectCategoryObject == null) {
+            return false;
+        }
+
+        String projectCategoryName = projectCategoryObject.getName();
+        if (StringUtils.isBlank(projectCategoryName)) {
+            return false;
+        }
+        return projectCategoryName.equals(eventOrganizationProjectCategoryName);
     }
 }
