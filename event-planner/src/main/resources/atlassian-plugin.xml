@@ -50,11 +50,6 @@
         <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
         <dependency>com.atlassian.auiplugin:aui-form-validation</dependency>
         <resource type="velocity" name="event-plans-view" location="/templates/admin/event-plans.vm"/>
-        <resource type="download" name="component-dialog.vm" location="/templates/admin/dialogs/component-dialog.vm"/>
-        <resource type="download" name="domain-dialog.vm" location="/templates/admin/dialogs/domain-dialog.vm"/>
-        <resource type="download" name="plan-dialog.vm" location="/templates/admin/dialogs/plan-dialog.vm"/>
-        <resource type="download" name="subtask-dialog.vm" location="/templates/admin/dialogs/subtask-dialog.vm"/>
-        <resource type="download" name="task-dialog.vm" location="/templates/admin/dialogs/task-dialog.vm"/>
         <resource type="download" name="component.js" location="/templates/admin/model/component.js"/>
         <resource type="download" name="domain.js" location="/templates/admin/model/domain.js"/>
         <resource type="download" name="plan.js" location="/templates/admin/model/plan.js"/>
@@ -145,7 +140,6 @@
         </description>
         <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
         <dependency>com.atlassian.auiplugin:aui-form-validation</dependency>
-        <resource type="download" name="jquery.js" location="/libs/jquery/datepicker/js/jquery.js"/>
         <resource type="download" name="jquery.datetimepicker.full.min.js"
                   location="/libs/jquery/datepicker/js/jquery.datetimepicker.full.min.js"/>
         <resource type="download" name="jquery.datetimepicker.full.min.css"

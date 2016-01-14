@@ -102,4 +102,50 @@ public class ShowTimeLineButtonConditionTest {
         assertEquals(true, result);
     }
 
+    @Test
+    public void should_not_display_button_if_project_category_is_empty() {
+        ShowTimeLineButtonCondition fixture = new ShowTimeLineButtonCondition(mocki18nResolver);
+        MockProject mockProject = new MockProject();
+        mockProject.setVersions(Arrays.asList(new Version[]{new MockVersion(123l, PROJECT_VERSION_NAME)}));
+        mockProject.setProjectCategory(null);
+        Map<String, Object> context = new HashMap<String, Object>();
+        context.put(ShowTimeLineButtonCondition.PROJECT_KEY, mockProject);
+
+        boolean result = fixture.shouldDisplay(context);
+
+        assertEquals(false, result);
+    }
+
+    @Test
+    public void should_not_display_button_if_project_category_name_is_empty() {
+        ShowTimeLineButtonCondition fixture = new ShowTimeLineButtonCondition(mocki18nResolver);
+        ProjectCategory mockProjectCategory = mock(ProjectCategory.class);
+        Mockito.when(mockProjectCategory.getName()).thenReturn("");
+        MockProject mockProject = new MockProject();
+        mockProject.setVersions(Arrays.asList(new Version[]{new MockVersion(123l, PROJECT_VERSION_NAME)}));
+        mockProject.setProjectCategory(mockProjectCategory);
+        Map<String, Object> context = new HashMap<String, Object>();
+        context.put(ShowTimeLineButtonCondition.PROJECT_KEY, mockProject);
+
+        boolean result = fixture.shouldDisplay(context);
+
+        assertEquals(false, result);
+    }
+
+    @Test
+    public void should_not_display_button_if_project_category_name_is_null() {
+        ShowTimeLineButtonCondition fixture = new ShowTimeLineButtonCondition(mocki18nResolver);
+        ProjectCategory mockProjectCategory = mock(ProjectCategory.class);
+        Mockito.when(mockProjectCategory.getName()).thenReturn(null);
+        MockProject mockProject = new MockProject();
+        mockProject.setVersions(Arrays.asList(new Version[]{new MockVersion(123l, PROJECT_VERSION_NAME)}));
+        mockProject.setProjectCategory(mockProjectCategory);
+        Map<String, Object> context = new HashMap<String, Object>();
+        context.put(ShowTimeLineButtonCondition.PROJECT_KEY, mockProject);
+
+        boolean result = fixture.shouldDisplay(context);
+
+        assertEquals(false, result);
+    }
+
 }
