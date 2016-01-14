@@ -141,9 +141,9 @@
         <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
         <dependency>com.atlassian.auiplugin:aui-form-validation</dependency>
         <resource type="download" name="jquery.datetimepicker.full.min.js"
-                  location="/libs/jquery/datepicker/js/jquery.datetimepicker.full.min.js"/>
+                  location="/libs/datepicker/jquery.datetimepicker.full.min.js"/>
         <resource type="download" name="jquery.datetimepicker.full.min.css"
-                  location="/libs/jquery/datepicker/css/jquery.datetimepicker.full.min.css"/>
+                  location="/libs/datepicker/jquery.datetimepicker.full.min.css"/>
         <resource type="download" name="input.js" location="/templates/webworks/event/config/input.js"/>
         <context>atl.general</context>
         <context>atl.admin</context>
