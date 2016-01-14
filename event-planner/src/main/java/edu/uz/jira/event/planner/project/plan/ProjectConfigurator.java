@@ -134,7 +134,7 @@ public class ProjectConfigurator {
             result.add(task);
 
             SubTask[] eachTaskSubTasks = eachTask.getSubTasks();
-            if (eachTaskSubTasks.length > 0) {
+            if (eachTaskSubTasks.length > 0 && task != null) {
                 List<Issue> subTasks = createSubTasks(project, eachTaskSubTasks, task.getId(), componentId, versionId, dueDate);
                 createLinks(task, subTasks);
             }
@@ -176,7 +176,7 @@ public class ProjectConfigurator {
     }
 
     private Issue createIssue(@Nonnull final IssueService.CreateValidationResult validationResult) throws JiraException {
-        if (validationResult.isValid()) {
+        if (validationResult != null && validationResult.isValid()) {
             return issueService.create(getUser(), validationResult).getIssue();
         } else {
             Collection<String> errorMessages = validationResult.getErrorCollection().getErrorMessages();
