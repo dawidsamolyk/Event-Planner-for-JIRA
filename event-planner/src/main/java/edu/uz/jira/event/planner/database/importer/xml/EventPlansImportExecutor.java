@@ -19,10 +19,10 @@ public class EventPlansImportExecutor {
     public static final String APPLICATION_PROPERTY_KEY = "EVENT_PLANS_IMPORTER";
     public static final String IMPORTED = "TRUE";
     public static final String NOT_IMPORTED = "FALSE";
-    protected final ApplicationProperties applicationProperties = ComponentAccessor.getApplicationProperties();
-    protected final Logger.Log log = Logger.getInstance(EventPlansImportExecutor.class);
-    protected final I18nResolver i18nResolver;
-    protected final ActiveObjectsService activeObjectsService;
+    private final ApplicationProperties applicationProperties = ComponentAccessor.getApplicationProperties();
+    private final Logger.Log log = Logger.getInstance(EventPlansImportExecutor.class);
+    private final I18nResolver i18nResolver;
+    private final ActiveObjectsService activeObjectsService;
 
     public EventPlansImportExecutor(@Nonnull final I18nResolver i18nResolver,
                                     @Nonnull final ActiveObjectsService activeObjectsService) {

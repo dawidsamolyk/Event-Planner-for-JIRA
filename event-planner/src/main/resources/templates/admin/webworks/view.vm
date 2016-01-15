@@ -73,7 +73,7 @@
         rest.getAsPost('plan', plan, getParameterByName('id'));
 
     AJS.$("#plan-close-button").click(
-        function(e) {
+        function (e) {
             e.preventDefault();
 
             AJS.dialog2("#plan-dialog").hide();

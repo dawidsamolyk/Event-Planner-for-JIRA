@@ -3,7 +3,7 @@ package edu.uz.jira.event.planner.workflow.validators;
 import com.atlassian.jira.plugin.workflow.AbstractWorkflowPluginFactory;
 import com.opensymphony.workflow.loader.AbstractDescriptor;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -23,8 +23,8 @@ public class WorkflowNoInputValidatorFactory extends AbstractWorkflowPluginFacto
     /**
      * @see {@link com.atlassian.jira.plugin.workflow.WorkflowPluginValidatorFactory#getDescriptorParams(Map)}
      */
-    public Map getDescriptorParams(Map conditionParams) {
-        return Collections.EMPTY_MAP;
+    public Map<String, Object> getDescriptorParams(Map conditionParams) {
+        return new HashMap<String, Object>();
     }
 }
 

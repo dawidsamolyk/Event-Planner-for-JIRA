@@ -23,7 +23,6 @@ public class WorkflowConfigurator {
     private final JiraAuthenticationContext jiraAuthenticationContext;
     private final WorkflowTransitionService workflowTransitionService;
     private final WorkflowManager workflowManager;
-    private final TextUtils textUtils;
 
     /**
      * Constructor.
@@ -34,7 +33,6 @@ public class WorkflowConfigurator {
         this.jiraAuthenticationContext = ComponentAccessor.getJiraAuthenticationContext();
         this.workflowTransitionService = workflowTransitionService;
         this.workflowManager = ComponentAccessor.getWorkflowManager();
-        this.textUtils = new TextUtils();
     }
 
     /**
@@ -68,7 +66,7 @@ public class WorkflowConfigurator {
     }
 
     private String getJoined(@Nonnull final ErrorCollection errors) {
-        return textUtils.getJoined(errors.getErrorMessages(), ' ');
+        return TextUtils.getJoined(errors.getErrorMessages(), ' ');
     }
 
     /**

@@ -1,8 +1,8 @@
 <event-plans>
-    <event-plan name="Meeting with personage" neededMonths="1" neededDays="0">
+    <event-plan name="Meeting with person" neededMonths="1" neededDays="0">
         <domain name="Public Relations"></domain>
         <component name="Guests">
-            <task name="Prepare thanks for personage, host etc." neededMonths="0" neededDays="14"></task>
+            <task name="Prepare thanks for person, host etc." neededMonths="0" neededDays="14"></task>
             <task name="Organize some corporate gadgets for guests" neededMonths="0" neededDays="15"></task>
             <task name="Develop a method for calculating the participants" neededMonths="0" neededDays="16"></task>
             <task name="Collect guests opinions and impressions" neededMonths="0" neededDays="17">
@@ -13,9 +13,9 @@
         </component>
         <component name="Presentation">
             <task name="Prepare slideshow" neededMonths="0" neededDays="20">
-                <sub-task name="Consult with personage" description=""></sub-task>
+                <sub-task name="Consult with person" description=""></sub-task>
                 <sub-task name="Agenda" description=""></sub-task>
-                <sub-task name="Short about personage" description=""></sub-task>
+                <sub-task name="Short about person" description=""></sub-task>
                 <sub-task name="Short about host/us" description=""></sub-task>
                 <sub-task name="Content" description=""></sub-task>
                 <sub-task name="Summary" description=""></sub-task>
@@ -35,11 +35,13 @@
             </task>
             <task name="Take care of adequate receipt of information" neededMonths="0" neededDays="23">
                 <sub-task name="Check how you heard in event room" description=""></sub-task>
-                <sub-task name="Check whether slideshow is visible in the farthest corner of event room" description=""></sub-task>
+                <sub-task name="Check whether slideshow is visible in the farthest corner of event room"
+                          description=""></sub-task>
             </task>
             <task name="Presentation pointer" neededMonths="0" neededDays="21"></task>
             <task name="Take care about neat clothes for the host of the event" neededMonths="0" neededDays="29"></task>
-            <task name="Shorted presentation agenda with things to do checklist" neededMonths="0" neededDays="28"></task>
+            <task name="Shorted presentation agenda with things to do checklist" neededMonths="0"
+                  neededDays="28"></task>
         </component>
         <component name="Room">
             <task name="Select suitable room" neededMonths="0" neededDays="1">
@@ -67,7 +69,7 @@
                 <sub-task name="Set the menu" description=""></sub-task>
                 <sub-task name="Sign pre agreement" description=""></sub-task>
             </task>
-            <task name="Provide separate treat for personage and event host" neededMonths="0" neededDays="10"></task>
+            <task name="Provide separate treat for person and event host" neededMonths="0" neededDays="10"></task>
         </component>
         <component name="Promotion">
             <task name="Contests" neededMonths="0" neededDays="14">
@@ -102,7 +104,7 @@
                 <sub-task name="Publish on our website" description=""></sub-task>
             </task>
             <task name="Invitations" neededMonths="0" neededDays="3">
-                <sub-task name="Personage" description=""></sub-task>
+                <sub-task name="person" description=""></sub-task>
                 <sub-task name="Special guest(s)" description=""></sub-task>
                 <sub-task name="Media (TV, radio etc.)" description=""></sub-task>
                 <sub-task name="Host" description=""></sub-task>
@@ -111,7 +113,7 @@
         </component>
         <component name="Transport">
             <task name="Book car park" neededMonths="0" neededDays="7"></task>
-            <task name="Provide a transport for personage" neededMonths="0" neededDays="8"></task>
+            <task name="Provide a transport for person" neededMonths="0" neededDays="8"></task>
         </component>
         <component name="Photographs">
             <task name="Select a photographer" neededMonths="0" neededDays="10"></task>

@@ -7,7 +7,7 @@ import net.java.ao.schema.Table;
 
 /**
  * Domain of the Event Organization Plan.
- *
+ * <p>
  * <ul>Best practices for developing with Active Objects (from Atlassian):</ul>
  * <li>The Active Objects framework does not know about renaming.
  * So if you change the name of an entity, it will remove the other entity and create a new one.

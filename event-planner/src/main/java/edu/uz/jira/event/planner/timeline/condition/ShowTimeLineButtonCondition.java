@@ -16,7 +16,7 @@ import java.util.Map;
 public class ShowTimeLineButtonCondition implements Condition {
     public static final String PROJECT_KEY = "project";
     private final ProjectUtils projectUtils;
-    private String eventOrganizationProjectCategoryName;
+    private final String eventOrganizationProjectCategoryName;
 
     public ShowTimeLineButtonCondition(@Nonnull final I18nResolver i18nResolver) {
         eventOrganizationProjectCategoryName = i18nResolver.getText(Internationalization.PROJECT_CATEGORY_NAME);

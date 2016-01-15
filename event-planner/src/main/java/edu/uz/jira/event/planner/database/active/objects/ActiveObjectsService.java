@@ -75,7 +75,7 @@ public class ActiveObjectsService {
 
     /**
      * @param type  Type of entities to get.
-     * @param query
+     * @param query SQL Query which selects and filters data.
      * @return Database objects of specified type.
      */
     public <T extends RawEntity<Integer>> List<T> get(@Nonnull final Class<T> type, @Nonnull final Query query) {
@@ -141,7 +141,7 @@ public class ActiveObjectsService {
     /**
      * @param type Type of entities to delete.
      */
-    public void deleteAll(@Nonnull final Class<? extends RawEntity> type) {
+    private void deleteAll(@Nonnull final Class<? extends RawEntity> type) {
         activeObjectsService.delete(activeObjectsService.find(type));
     }
 }

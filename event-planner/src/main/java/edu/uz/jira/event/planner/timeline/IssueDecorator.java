@@ -134,8 +134,7 @@ public class IssueDecorator {
             }
         }
         if (assignee == null || avatarId == 0) {
-            Long defaultUserAvatarId = ComponentAccessor.getAvatarManager().getDefaultAvatarId(Avatar.Type.USER);
-            avatarId = defaultUserAvatarId;
+            avatarId = ComponentAccessor.getAvatarManager().getDefaultAvatarId(Avatar.Type.USER);
         }
     }
 

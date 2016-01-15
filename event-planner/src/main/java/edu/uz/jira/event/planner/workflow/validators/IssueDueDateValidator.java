@@ -33,9 +33,9 @@ public class IssueDueDateValidator implements Validator {
     /**
      * Validates Issue Due Date.
      *
-     * @param transientVars
-     * @param args
-     * @param ps
+     * @param transientVars Variables.
+     * @param args          Arguments.
+     * @param ps            Properties.
      * @throws InvalidInputException Thrown when issue's due date is empty or issue's project hasn't Due Date Version or project Due Date Version hasn't release date or issue Due Date is after project Due Date.
      */
     @Override
@@ -55,7 +55,7 @@ public class IssueDueDateValidator implements Validator {
      * @param issue Issue to validate.
      * @throws InvalidInputException Thrown when issue's due date is empty or issue's project hasn't Due Date Version or project Due Date Version hasn't release date or issue Due Date is after project Due Date.
      */
-    public void validate(@Nonnull final Issue issue) throws InvalidInputException, NullArgumentException {
+    private void validate(@Nonnull final Issue issue) throws InvalidInputException, NullArgumentException {
         if (issue == null) {
             throw new NullArgumentException(Issue.class.getName());
         }
@@ -66,7 +66,7 @@ public class IssueDueDateValidator implements Validator {
         validate(issue.getDueDate(), projectReleaseDate);
     }
 
-    public void validate(final Timestamp issueDueDate, final Date projectReleaseDate) throws InvalidInputException {
+    private void validate(final Timestamp issueDueDate, final Date projectReleaseDate) throws InvalidInputException {
         if (issueDueDate == null) {
             throw new InvalidInputException("Issue Due Date cannot be empty!");
         }

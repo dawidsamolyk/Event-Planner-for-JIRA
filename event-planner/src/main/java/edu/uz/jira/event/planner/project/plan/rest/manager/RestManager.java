@@ -21,8 +21,8 @@ import java.util.List;
  * Abstract REST manager which implements common functionalities for concrete REST managers.
  */
 public abstract class RestManager {
-    protected final ActiveObjectsService activeObjectsService;
-    protected final Class entityType;
+    private final ActiveObjectsService activeObjectsService;
+    final Class<? extends RawEntity> entityType;
     private final TransactionTemplate transactionTemplate;
     private final ActiveObjectWrapper emptyConfiguration;
     private final UserManager userManager;
@@ -36,7 +36,7 @@ public abstract class RestManager {
      * @param activeObjectsService Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
      * @param emptyConfiguration   Empty configuration of handled Entities.
      */
-    public RestManager(@Nonnull final UserManager userManager,
+    RestManager(@Nonnull final UserManager userManager,
                        @Nonnull final TransactionTemplate transactionTemplate,
                        @Nonnull final ActiveObjectsService activeObjectsService,
                        @Nonnull final ActiveObjectWrapper emptyConfiguration) {
@@ -56,7 +56,7 @@ public abstract class RestManager {
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
      */
     public Response post(final ActiveObjectWrapper resource, @Context final HttpServletRequest request) {
-        if (!helper.isAdminUser(userManager.getRemoteUser(request))) {
+        if (helper.isNotAdminUser(userManager.getRemoteUser(request))) {
             return helper.buildStatus(Response.Status.UNAUTHORIZED);
         }
         if (resource == null) {
@@ -76,7 +76,7 @@ public abstract class RestManager {
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
      */
     public Response post(final String id, @Context final HttpServletRequest request) {
-        if (!helper.isAdminUser(userManager.getRemoteUser(request))) {
+        if (helper.isNotAdminUser(userManager.getRemoteUser(request))) {
             return helper.buildStatus(Response.Status.UNAUTHORIZED);
         }
         if (id == null || id.isEmpty()) {
@@ -96,7 +96,7 @@ public abstract class RestManager {
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
      */
     public Response get(@Context final HttpServletRequest request) {
-        if (!helper.isAdminUser(userManager.getRemoteUser(request))) {
+        if (helper.isNotAdminUser(userManager.getRemoteUser(request))) {
             return helper.buildStatus(Response.Status.UNAUTHORIZED);
         }
         return Response.ok(transactionTemplate.execute(new TransactionCallback<ActiveObjectWrapper[]>() {
@@ -106,8 +106,8 @@ public abstract class RestManager {
         })).build();
     }
 
-    public Response delete(@Nonnull final Class<? extends RawEntity> type, @Nonnull final String id, @Nonnull final HttpServletRequest request) {
-        if (!helper.isAdminUser(userManager.getRemoteUser(request))) {
+    Response delete(@Nonnull final Class<? extends RawEntity> type, @Nonnull final String id, @Nonnull final HttpServletRequest request) {
+        if (helper.isNotAdminUser(userManager.getRemoteUser(request))) {
             return helper.buildStatus(Response.Status.UNAUTHORIZED);
         }
         if (!activeObjectsService.delete(type, id)) {

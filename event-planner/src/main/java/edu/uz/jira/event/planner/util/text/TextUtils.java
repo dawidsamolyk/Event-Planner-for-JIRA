@@ -17,7 +17,7 @@ public class TextUtils {
      */
     public static String getJoined(final Collection<String> collection, final char separator) {
         if (collection == null || collection.isEmpty()) {
-            return new String("");
+            return "";
         }
         return StringUtils.join(collection, separator);
     }
@@ -29,7 +29,7 @@ public class TextUtils {
      */
     public static String getJoined(final String[] array, final char separator) {
         if (array == null || array.length == 0) {
-            return new String("");
+            return "";
         }
         return getJoined(Arrays.asList(array), separator);
     }

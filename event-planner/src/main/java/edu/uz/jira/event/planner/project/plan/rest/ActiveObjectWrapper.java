@@ -1,6 +1,7 @@
 package edu.uz.jira.event.planner.project.plan.rest;
 
 import net.java.ao.Entity;
+import net.java.ao.RawEntity;
 
 /**
  * Wrapper of Event Organziation element.
@@ -9,7 +10,7 @@ public interface ActiveObjectWrapper {
     /**
      * @return Type of wrapped Active Object.
      */
-    Class getWrappedType();
+    Class<? extends RawEntity> getWrappedType();
 
     /**
      * @param entity Source of data.

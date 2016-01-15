@@ -34,13 +34,11 @@ public class ProjectConfigurator {
     private final I18nResolver internationalization;
     private final IssueService issueService;
     private final JiraAuthenticationContext authenticationContext;
-    private final TextUtils textUtils;
 
     public ProjectConfigurator(@Nonnull final I18nResolver i18nResolver) {
         internationalization = i18nResolver;
         authenticationContext = ComponentAccessor.getJiraAuthenticationContext();
         issueService = ComponentAccessor.getIssueService();
-        textUtils = new TextUtils();
     }
 
     /**
@@ -69,15 +67,13 @@ public class ProjectConfigurator {
         return internationalization.getText(key);
     }
 
-    private IssueType getIssueType(@Nonnull final Project project, final boolean subTask) {
-        Iterator<IssueType> issueTypes = project.getIssueTypes().iterator();
-        while (issueTypes.hasNext()) {
-            IssueType next = issueTypes.next();
-            if (next.isSubTask() == subTask) {
-                return next;
+    private IssueType getIssueType(@Nonnull final Project project, final boolean subTask) throws JiraException {
+        for (IssueType eachIssueType : project.getIssueTypes()) {
+            if (eachIssueType.isSubTask() == subTask) {
+                return eachIssueType;
             }
         }
-        return null;
+        throw new JiraException();
     }
 
     /**
@@ -180,7 +176,7 @@ public class ProjectConfigurator {
             return issueService.create(getUser(), validationResult).getIssue();
         } else {
             Collection<String> errorMessages = validationResult.getErrorCollection().getErrorMessages();
-            throw new JiraException(textUtils.getJoined(errorMessages, ' '));
+            throw new JiraException(TextUtils.getJoined(errorMessages, ' '));
         }
     }
 

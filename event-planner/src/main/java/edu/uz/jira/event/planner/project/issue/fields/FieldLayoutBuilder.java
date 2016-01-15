@@ -6,12 +6,12 @@ import com.atlassian.jira.issue.fields.layout.field.*;
 import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.util.text.Internationalization;
-import org.apache.commons.collections.MapUtils;
 import org.ofbiz.core.entity.GenericValue;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -58,7 +58,7 @@ public class FieldLayoutBuilder {
     }
 
     private GenericValue getGenericValue(String name, String description) {
-        GenericValue genericValue = ofBizDelegator.createValue("FieldLayout", MapUtils.EMPTY_MAP);
+        GenericValue genericValue = ofBizDelegator.createValue("FieldLayout", new HashMap<String, Object>());
         genericValue.setString("name", name);
         genericValue.setString("description", description);
         return genericValue;

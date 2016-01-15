@@ -4,6 +4,7 @@ import edu.uz.jira.event.planner.database.active.objects.model.Plan;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
 import edu.uz.jira.event.planner.util.text.TextUtils;
+import net.java.ao.RawEntity;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -25,17 +26,17 @@ import java.util.List;
 })
 public class EventPlan implements ActiveObjectWrapper {
     @XmlElement(required = true)
-    protected List<Domain> domain;
+    private List<Domain> domain;
     @XmlElement(required = true)
-    protected List<Component> component;
+    private List<Component> component;
     @XmlAttribute(name = "name", required = true)
-    protected String name;
+    private String name;
     @XmlAttribute(name = "description")
-    protected String description;
+    private String description;
     @XmlAttribute(name = "neededMonths", required = true)
-    protected int neededMonths;
+    private int neededMonths;
     @XmlAttribute(name = "neededDays", required = true)
-    protected int neededDays;
+    private int neededDays;
     @XmlElement
     private int id;
     @XmlElement
@@ -72,7 +73,7 @@ public class EventPlan implements ActiveObjectWrapper {
      * @see {@link ActiveObjectWrapper#getWrappedType()}
      */
     @Override
-    public Class getWrappedType() {
+    public Class<? extends RawEntity> getWrappedType() {
         return Plan.class;
     }
 
@@ -126,7 +127,7 @@ public class EventPlan implements ActiveObjectWrapper {
     }
 
     public String getDescription() {
-        if(description == null) {
+        if (description == null) {
             description = "";
         }
         return description;

@@ -15,10 +15,9 @@ import java.util.Map;
  * Provides descriptors for specified workflow events.
  */
 public class WorkflowDescriptorsFactory {
-    public static final String CLASS_NAME_KEY = "class.name";
-    public static final String STATUSES_KEY = "statuses";
-    public static final String TYPE_NAME = "class";
-    public final TextUtils utils = new TextUtils();
+    private static final String CLASS_NAME_KEY = "class.name";
+    private static final String STATUSES_KEY = "statuses";
+    private static final String TYPE_NAME = "class";
 
     /**
      * @param statusesToBlock Workflow statuses to block condition.
@@ -30,7 +29,7 @@ public class WorkflowDescriptorsFactory {
 
         Map functionArguments = result.getArgs();
         functionArguments.put(CLASS_NAME_KEY, SubTaskBlockingCondition.class.getName());
-        functionArguments.put(STATUSES_KEY, utils.getJoined(statusesToBlock, ','));
+        functionArguments.put(STATUSES_KEY, TextUtils.getJoined(statusesToBlock, ','));
 
         return result;
     }

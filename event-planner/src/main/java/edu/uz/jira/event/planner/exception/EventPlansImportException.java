@@ -7,13 +7,6 @@ public class EventPlansImportException extends Exception {
 
     /**
      * Constructor.
-     */
-    public EventPlansImportException() {
-        super();
-    }
-
-    /**
-     * Constructor.
      *
      * @param cause Cause of exception
      */

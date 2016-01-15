@@ -32,34 +32,37 @@
     function getParameterByName(name) {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
+                results = regex.exec(location.search);
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    };
+    }
+    ;
 
-    #include("templates/admin/rest-manager.js")
+        #include("templates/admin/rest-manager.js")
     var rest = new RESTManager();
 
     AJS.dialog2("#plan-delete-dialog").show();
 
     AJS.$("#delete-plan-confirm-button").click(
-        function(e) {
-            e.preventDefault();
+            function (e) {
+                e.preventDefault();
 
-            rest.doDelete('plan', getParameterByName('id'));
+                rest.doDelete('plan', getParameterByName('id'));
 
-            AJS.dialog2("#plan-delete-dialog").hide();
-            window.history.back(-1);
-        };
-    );
+                AJS.dialog2("#plan-delete-dialog").hide();
+                window.history.back(-1);
+            };
+    )
+    ;
 
     AJS.$("#delete-plan-cancel-button").click(
-        function(e) {
-            e.preventDefault();
+            function (e) {
+                e.preventDefault();
 
-            AJS.dialog2("#plan-delete-dialog").hide();
-            window.history.back(-1);
-        };
-    );
+                AJS.dialog2("#plan-delete-dialog").hide();
+                window.history.back(-1);
+            };
+    )
+    ;
 </script>
 </body>
 </html>

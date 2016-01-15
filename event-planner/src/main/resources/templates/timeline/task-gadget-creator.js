@@ -1,7 +1,8 @@
 function TaskGadgetCreator() {
+    "use strict";
     var that = this;
 
-    that.create = function(gadgetClass, issue) {
+    that.create = function (gadgetClass, issue) {
         var issueKey = issue.key;
 
         var taskGadget = that.createElement('DIV', gadgetClass);
@@ -16,7 +17,7 @@ function TaskGadgetCreator() {
 
         var titleTextElement = that.createElement('H3', 'dashboard-item-title');
         var componentsNames = issue.componentsNames;
-        if(componentsNames.length > 0 && componentsNames[0] && componentsNames[0].length > 0) {
+        if (componentsNames.length > 0 && componentsNames[0] && componentsNames[0].length > 0) {
             titleTextElement.appendChild(document.createTextNode(componentsNames[0]));
         }
         titleElement.appendChild(titleTextElement);
@@ -42,23 +43,24 @@ function TaskGadgetCreator() {
         return taskGadget;
     };
 
-    that.createElement = function(elementName, className) {
+    that.createElement = function (elementName, className) {
         var result = document.createElement(elementName);
         result.className = className;
         return result;
     };
 
-    that.createToDo = function(issue) {
-         return that.create('gadget color1', issue);
+    that.createToDo = function (issue) {
+        return that.create('gadget color1', issue);
     };
 
-    that.createDone = function(issue) {
+    that.createDone = function (issue) {
         return that.create('gadget color7', issue);
     };
 
-    that.createLate = function(issue){
-        var result = that.create('gadget', issue);
-        var headerElement = result.getElementsByClassName('dashboard-item-header')[0];
+    that.createLate = function (issue) {
+        var result, headerElement;
+        result = that.create('gadget', issue);
+        headerElement = result.getElementsByClassName('dashboard-item-header')[0];
         headerElement.style.background = '#333333';
         return result;
     };

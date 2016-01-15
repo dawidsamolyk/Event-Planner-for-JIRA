@@ -8,8 +8,8 @@ import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.exception.VersionNotFoundException;
-import edu.uz.jira.event.planner.project.plan.rest.RestManagerHelper;
 import edu.uz.jira.event.planner.project.ProjectUtils;
+import edu.uz.jira.event.planner.project.plan.rest.RestManagerHelper;
 import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -41,7 +41,7 @@ public class RestProjectDeadlineProvider {
     public RestProjectDeadlineProvider(@Nonnull final TransactionTemplate transactionTemplate,
                                        @Nonnull final I18nResolver i18nResolver) {
         this.transactionTemplate = transactionTemplate;
-        helper = new RestManagerHelper(null);
+        helper = new RestManagerHelper();
         projectUtils = new ProjectUtils(i18nResolver);
     }
 
@@ -67,7 +67,7 @@ public class RestProjectDeadlineProvider {
         })).build();
     }
 
-    public Date getProjectReleaseDate(@Nonnull final String projectKey) throws VersionNotFoundException {
+    private Date getProjectReleaseDate(@Nonnull final String projectKey) throws VersionNotFoundException {
         Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
 
         Version dueDateVersion;

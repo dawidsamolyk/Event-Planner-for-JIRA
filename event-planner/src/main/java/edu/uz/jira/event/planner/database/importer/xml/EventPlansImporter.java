@@ -16,7 +16,7 @@ import java.net.URL;
  * Imports into database predefined Event Organization Plans from XML file.
  */
 public class EventPlansImporter {
-    public static final String PREDEFINED_EVENT_PLANS_RESOURCE_NAME = "/database/predefined-event-plans.xml";
+    private static final String PREDEFINED_EVENT_PLANS_RESOURCE_NAME = "/database/predefined-event-plans.xml";
     private final ActiveObjectsService activeObjectsService;
     private final Unmarshaller unmarshaller;
 

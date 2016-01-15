@@ -43,7 +43,7 @@ public class RestIssuesProvider {
     public RestIssuesProvider(@Nonnull final TransactionTemplate transactionTemplate) {
         this.transactionTemplate = transactionTemplate;
         issueManager = ComponentAccessor.getIssueManager();
-        helper = new RestManagerHelper(null);
+        helper = new RestManagerHelper();
     }
 
     private List<IssueDecorator> getIssues(final String projectKey) throws ProjectNotFoundException, IssuesNotFoundException {
@@ -93,8 +93,7 @@ public class RestIssuesProvider {
 
         return Response.ok(transactionTemplate.execute(new TransactionCallback<IssueDecorator[]>() {
             public IssueDecorator[] doInTransaction() {
-                IssueDecorator[] issues = result.toArray(new IssueDecorator[result.size()]);
-                return issues;
+                return result.toArray(new IssueDecorator[result.size()]);
             }
         })).build();
     }

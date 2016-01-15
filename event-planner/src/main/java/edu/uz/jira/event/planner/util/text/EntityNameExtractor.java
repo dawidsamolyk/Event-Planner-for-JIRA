@@ -23,7 +23,7 @@ public class EntityNameExtractor {
         for (NamedEntityWithDescription each : entities) {
             String name = each.getName();
             if (name != null) {
-                result.add(new String(name));
+                result.add(name);
             }
         }
         return result.toArray(new String[result.size()]);

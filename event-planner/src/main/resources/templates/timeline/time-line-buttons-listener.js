@@ -1,27 +1,28 @@
 function TimeLineButtonsListener() {
+    "use strict";
     var that = this;
 
-    that.onPreviousWeekChangeWeekView = function() {
+    that.onPreviousWeekChangeWeekView = function () {
         AJS.$("#previous-week").click(
-            function(e) {
+            function (e) {
                 e.preventDefault();
                 timeLine.showPreviousWeek();
             }
         );
     };
 
-    that.onNextWeekChangeWeekView = function() {
+    that.onNextWeekChangeWeekView = function () {
         AJS.$("#next-week").click(
-            function(e) {
+            function (e) {
                 e.preventDefault();
                 timeLine.showNextWeek();
             }
         );
     };
 
-    that.onCurrentWeekChangeWeekView = function() {
+    that.onCurrentWeekChangeWeekView = function () {
         AJS.$("#current-week").click(
-            function(e) {
+            function (e) {
                 e.preventDefault();
                 timeLine.showCurrentWeek();
             }

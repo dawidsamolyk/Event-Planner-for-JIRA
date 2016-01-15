@@ -31,7 +31,7 @@ public class ProjectUtils {
             throw new NullArgumentException(Project.class.getName());
         }
         Version result = null;
-        String dueDateVersionName = getInternationalized(Internationalization.PROJECT_VERSION_NAME);
+        String dueDateVersionName = internationalization.getText(Internationalization.PROJECT_VERSION_NAME);
 
         for (Version each : project.getVersions()) {
             if (each.getName().equals(dueDateVersionName)) {
@@ -40,9 +40,5 @@ public class ProjectUtils {
         }
 
         return result;
-    }
-
-    private String getInternationalized(String key) {
-        return internationalization.getText(key);
     }
 }

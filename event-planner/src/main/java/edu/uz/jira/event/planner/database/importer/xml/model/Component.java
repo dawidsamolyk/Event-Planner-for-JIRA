@@ -4,6 +4,7 @@ import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
 import edu.uz.jira.event.planner.util.text.TextUtils;
 import net.java.ao.Entity;
+import net.java.ao.RawEntity;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -22,11 +23,11 @@ import java.util.List;
 })
 public class Component implements ActiveObjectWrapper {
     @XmlElement(required = true)
-    protected List<Task> task;
+    private List<Task> task;
     @XmlAttribute(name = "name", required = true)
-    protected String name;
+    private String name;
     @XmlAttribute(name = "description")
-    protected String description;
+    private String description;
     @XmlElement
     private String[] tasksNames;
 
@@ -55,7 +56,7 @@ public class Component implements ActiveObjectWrapper {
      * @see {@link ActiveObjectWrapper#getWrappedType()}
      */
     @Override
-    public Class getWrappedType() {
+    public Class<? extends RawEntity> getWrappedType() {
         return edu.uz.jira.event.planner.database.active.objects.model.Component.class;
     }
 
@@ -109,7 +110,7 @@ public class Component implements ActiveObjectWrapper {
     }
 
     public String getDescription() {
-        if(description == null) {
+        if (description == null) {
             description = "";
         }
         return description;

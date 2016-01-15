@@ -25,13 +25,13 @@ class ActiveObjectsConverter {
      * @param activeObjectsService Injected {@code ActiveObjects} implementation.
      * @param relationsManager     Relations manager.
      */
-    public ActiveObjectsConverter(@Nonnull final ActiveObjects activeObjectsService,
-                                  @Nonnull final RelationsManager relationsManager) {
+    ActiveObjectsConverter(@Nonnull final ActiveObjects activeObjectsService,
+                           @Nonnull final RelationsManager relationsManager) {
         this.activeObjectsService = activeObjectsService;
         this.relationsManager = relationsManager;
     }
 
-    protected Plan addFrom(@Nonnull final EventPlan resource) throws ActiveObjectSavingException {
+    Plan addFrom(@Nonnull final EventPlan resource) throws ActiveObjectSavingException {
         Plan result = activeObjectsService.create(Plan.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
@@ -54,7 +54,7 @@ class ActiveObjectsConverter {
         return result;
     }
 
-    protected Domain addFrom(@Nonnull final edu.uz.jira.event.planner.database.importer.xml.model.Domain resource) {
+    Domain addFrom(@Nonnull final edu.uz.jira.event.planner.database.importer.xml.model.Domain resource) {
         Domain result = activeObjectsService.create(Domain.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
@@ -62,7 +62,7 @@ class ActiveObjectsConverter {
         return result;
     }
 
-    protected Component addFrom(@Nonnull final edu.uz.jira.event.planner.database.importer.xml.model.Component resource) throws ActiveObjectSavingException {
+    Component addFrom(@Nonnull final edu.uz.jira.event.planner.database.importer.xml.model.Component resource) throws ActiveObjectSavingException {
         Component result = activeObjectsService.create(Component.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
@@ -77,7 +77,7 @@ class ActiveObjectsConverter {
         return result;
     }
 
-    protected Task addFrom(edu.uz.jira.event.planner.database.importer.xml.model.Task resource) throws ActiveObjectSavingException {
+    Task addFrom(edu.uz.jira.event.planner.database.importer.xml.model.Task resource) throws ActiveObjectSavingException {
         Task result = activeObjectsService.create(Task.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
@@ -94,7 +94,7 @@ class ActiveObjectsConverter {
         return result;
     }
 
-    protected SubTask addFrom(edu.uz.jira.event.planner.database.importer.xml.model.SubTask resource) {
+    SubTask addFrom(edu.uz.jira.event.planner.database.importer.xml.model.SubTask resource) {
         SubTask result = activeObjectsService.create(SubTask.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
@@ -102,7 +102,7 @@ class ActiveObjectsConverter {
         return result;
     }
 
-    protected Entity addFrom(final AllEventPlans resource) throws ActiveObjectSavingException {
+    Entity addFrom(final AllEventPlans resource) throws ActiveObjectSavingException {
         for (EventPlan eachPlan : resource.getEventPlan()) {
             for (edu.uz.jira.event.planner.database.importer.xml.model.Domain eachDomain : eachPlan.getDomain()) {
                 addFrom(eachDomain);

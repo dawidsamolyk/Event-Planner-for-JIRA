@@ -76,7 +76,7 @@ class RelationsManager {
         Collection<PlanToComponentRelation> result = new ArrayList<PlanToComponentRelation>();
         List<Component> components = helper.get(Component.class, Component.NAME + " = ?", componentsNames);
         if (components != null && components.size() > 0 && plan != null) {
-            for(Component each : components) {
+            for (Component each : components) {
                 result.add(associate(plan, each));
             }
         }
@@ -88,7 +88,7 @@ class RelationsManager {
 
         List<Domain> domains = helper.get(Domain.class, Domain.NAME + " = ?", domainsNames);
         if (domains != null && domains.size() > 0 && plan != null) {
-            for(Domain each : domains) {
+            for (Domain each : domains) {
                 result.add(associate(plan, each));
             }
         }
@@ -103,7 +103,7 @@ class RelationsManager {
         if (tasks == null || tasks.size() == 0) {
             return false;
         }
-        for(Task each : tasks) {
+        for (Task each : tasks) {
             associate(component, each);
         }
         return true;
@@ -118,13 +118,13 @@ class RelationsManager {
         if (subTasks == null || subTasks.size() == 0 || task == null) {
             return false;
         }
-        for(SubTask each : subTasks) {
+        for (SubTask each : subTasks) {
             associate(task, each);
         }
         return true;
     }
 
-    RawEntity[] getRelations(RawEntity entity) {
+    private RawEntity[] getRelations(RawEntity entity) {
         if (entity instanceof Plan) {
             return getRelations((Plan) entity);
         }

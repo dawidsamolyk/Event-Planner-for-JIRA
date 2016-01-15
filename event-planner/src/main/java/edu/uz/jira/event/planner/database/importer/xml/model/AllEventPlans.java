@@ -8,6 +8,7 @@ package edu.uz.jira.event.planner.database.importer.xml.model;
 
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import net.java.ao.Entity;
+import net.java.ao.RawEntity;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.List;
 @XmlRootElement(name = "event-plans")
 public class AllEventPlans implements ActiveObjectWrapper {
     @XmlElement(name = "event-plan")
-    protected List<EventPlan> eventPlan;
+    private List<EventPlan> eventPlan;
 
     public List<EventPlan> getEventPlan() {
         if (eventPlan == null) {
@@ -52,7 +53,7 @@ public class AllEventPlans implements ActiveObjectWrapper {
     }
 
     @Override
-    public Class getWrappedType() {
+    public Class<? extends RawEntity> getWrappedType() {
         throw new UnsupportedOperationException();
     }
 

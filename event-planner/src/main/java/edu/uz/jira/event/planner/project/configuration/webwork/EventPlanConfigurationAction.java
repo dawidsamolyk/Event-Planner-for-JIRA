@@ -5,12 +5,12 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.version.Version;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.sal.api.message.I18nResolver;
-import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.active.objects.model.Plan;
+import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.project.configuration.EventPlanConfiguration;
 import edu.uz.jira.event.planner.project.configuration.EventPlanConfigurationValidator;
 import edu.uz.jira.event.planner.project.plan.ProjectConfigurator;
-import edu.uz.jira.event.planner.database.active.objects.model.Plan;
 import net.java.ao.Query;
 import webwork.action.Action;
 
@@ -41,10 +41,12 @@ public class EventPlanConfigurationAction extends JiraWebActionSupport {
 
     /**
      * @return Result view to show.
-     * @throws Exception Thrown when any error occurs.
+     * @throws JiraException         Thrown when cannot do JIRA action.
+     * @throws ParseException        Thrown when cannot parse data.
+     * @throws NullArgumentException Thrown when any required argument is null.
      */
     @Override
-    public String execute() throws ParseException, JiraException {
+    public String execute() throws ParseException, JiraException, NullArgumentException {
         EventPlanConfiguration config;
         try {
             config = new EventPlanConfiguration(getHttpRequest());

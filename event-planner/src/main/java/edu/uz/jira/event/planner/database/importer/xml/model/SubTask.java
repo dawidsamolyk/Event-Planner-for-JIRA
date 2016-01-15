@@ -2,10 +2,14 @@ package edu.uz.jira.event.planner.database.importer.xml.model;
 
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import net.java.ao.Entity;
+import net.java.ao.RawEntity;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  * XML representation of Event Plan SubTask.
@@ -14,9 +18,9 @@ import javax.xml.bind.annotation.*;
 @XmlType(name = "", propOrder = {})
 public class SubTask implements ActiveObjectWrapper {
     @XmlAttribute(name = "name", required = true)
-    protected String name;
+    private String name;
     @XmlAttribute(name = "description")
-    protected String description;
+    private String description;
 
     /**
      * @return Event SubTask Configuration with all empty fields (but not null).
@@ -34,7 +38,7 @@ public class SubTask implements ActiveObjectWrapper {
     }
 
     public String getDescription() {
-        if(description == null) {
+        if (description == null) {
             description = "";
         }
         return description;
@@ -61,7 +65,7 @@ public class SubTask implements ActiveObjectWrapper {
      * @see {@link ActiveObjectWrapper#getWrappedType()}
      */
     @Override
-    public Class getWrappedType() {
+    public Class<? extends RawEntity> getWrappedType() {
         return edu.uz.jira.event.planner.database.active.objects.model.SubTask.class;
     }
 

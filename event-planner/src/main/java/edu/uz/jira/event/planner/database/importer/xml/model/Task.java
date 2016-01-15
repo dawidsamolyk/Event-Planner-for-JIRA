@@ -3,6 +3,7 @@ package edu.uz.jira.event.planner.database.importer.xml.model;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
 import net.java.ao.Entity;
+import net.java.ao.RawEntity;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -21,15 +22,15 @@ import java.util.List;
 })
 public class Task implements ActiveObjectWrapper {
     @XmlElement(name = "sub-task")
-    protected List<SubTask> subTask;
+    private List<SubTask> subTask;
     @XmlAttribute(name = "name", required = true)
-    protected String name;
+    private String name;
     @XmlAttribute(name = "description")
-    protected String description;
+    private String description;
     @XmlAttribute(name = "neededMonths", required = true)
-    protected int neededMonths;
+    private int neededMonths;
     @XmlAttribute(name = "neededDays", required = true)
-    protected int neededDays;
+    private int neededDays;
     @XmlElement
     private String[] subTasksNames;
 
@@ -60,9 +61,10 @@ public class Task implements ActiveObjectWrapper {
      * @see {@link ActiveObjectWrapper#getWrappedType()}
      */
     @Override
-    public Class getWrappedType() {
+    public Class<? extends RawEntity> getWrappedType() {
         return edu.uz.jira.event.planner.database.active.objects.model.Task.class;
     }
+
     /**
      * @see {@link ActiveObjectWrapper#isFullfilled()}
      */
@@ -100,7 +102,7 @@ public class Task implements ActiveObjectWrapper {
     }
 
     public String getDescription() {
-        if(description == null) {
+        if (description == null) {
             description = "";
         }
         return description;

@@ -78,7 +78,7 @@ public class EventPlanTimelineServletTest {
     }
 
     @Test
-    public void if_admin_user_then_should_render_page() throws IOException {
+    public void if_jira_user_then_should_render_page() throws IOException {
         TestingEventPlanTimelineServlet fixture = new TestingEventPlanTimelineServlet(mockTemplateRenderer, mockUserManager, mockLoginUriProvider);
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getRequestURL()).thenReturn(new StringBuffer("http://localhost:2990/jira/plugins/servlet/test"));

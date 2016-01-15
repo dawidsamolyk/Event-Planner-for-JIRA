@@ -1,15 +1,19 @@
 function Domain() {
+    "use strict";
     var that = this;
     that.id = 'domain';
-    that.getName = function() { return AJS.$("#domain-name") };
-    that.getDescription = function() { return AJS.$("#domain-description") };
 
-    that.getJson = function() {
-        var name = that.getName().attr("value");
-        var description = that.getDescription().attr("value");
+    that.getName = function () {
+        return AJS.$("#domain-name");
+    };
 
-        return '{ "name": "' + name +
-               '", "description": "' + description +
-               '" }';
+    that.getDescription = function () {
+        return AJS.$("#domain-description");
+    };
+
+    that.getJson = function () {
+        return '{ "name": "' + that.getName().attr("value") +
+            '", "description": "' + that.getDescription().attr("value") +
+            '" }';
     };
 };

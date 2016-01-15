@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class EventOrganizationProjectHook implements AddProjectHook {
     public static final String REDIRECT_URL = "/secure/EventOrganizationPlanConfiguration.jspa";
-    public static final String REDIRECT_URL_ARGUMENTS = "?project-key=%s";
+    private static final String REDIRECT_URL_ARGUMENTS = "?project-key=%s";
     private final IssueFieldsConfigurator issueFieldsConfigurator;
     private final WorkflowConfigurator workflowConfigurator;
     private final WorkflowDescriptorsFactory workflowDescriptorsFactory;
