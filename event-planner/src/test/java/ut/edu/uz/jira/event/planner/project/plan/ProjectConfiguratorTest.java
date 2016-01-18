@@ -34,7 +34,7 @@ import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.ProjectConfigurator;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import net.java.ao.EntityManager;
@@ -84,7 +84,7 @@ public class ProjectConfiguratorTest {
     public void setUp() throws Exception {
         assertNotNull(entityManager);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Category.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToCategoryRelation.class);
         service = new ActiveObjectsService(activeObjects);
         activeObjects.flushAll();
         service.clearDatabase();
@@ -270,8 +270,10 @@ public class ProjectConfiguratorTest {
         testHelper.associate(secondComponent, testHelper.createTask("test task 3", 0, 3));
         testHelper.associate(plan, secondComponent);
         ProjectConfigurator fixture = new ProjectConfigurator(mocki18nResolver);
+        Version mockVersion = mock(Version.class);
+        Mockito.when(mockVersion.getReleaseDate()).thenReturn(new Date());
 
-        fixture.configure(mockProject, mock(Version.class), plan);
+        fixture.configure(mockProject, mockVersion, plan);
 
         assertEquals(2, mockProject.getProjectComponents().size());
     }
@@ -286,10 +288,12 @@ public class ProjectConfiguratorTest {
         Task secondTask = testHelper.createTask("test task 2", 0, 5);
         testHelper.associate(component, secondTask);
         secondTask.save();
+        Version mockVersion = mock(Version.class);
+        Mockito.when(mockVersion.getReleaseDate()).thenReturn(new Date());
 
         ProjectConfigurator fixture = new ProjectConfigurator(mocki18nResolver);
 
-        List<Issue> result = fixture.configure(mockProject, mock(Version.class), plan);
+        List<Issue> result = fixture.configure(mockProject, mockVersion, plan);
 
         assertEquals(2, result.size());
     }
@@ -305,10 +309,11 @@ public class ProjectConfiguratorTest {
         testHelper.associate(task, firstSubTask);
         SubTask secondSubTask = testHelper.createSubTaskNamed("test sub-task 2");
         testHelper.associate(task, secondSubTask);
-
+        Version mockVersion = mock(Version.class);
+        Mockito.when(mockVersion.getReleaseDate()).thenReturn(new Date());
         ProjectConfigurator fixture = new ProjectConfigurator(mocki18nResolver);
 
-        List<Issue> result = fixture.configure(mockProject, mock(Version.class), plan);
+        List<Issue> result = fixture.configure(mockProject, mockVersion, plan);
 
         assertEquals(2, result.get(0).getSubTaskObjects().size());
     }
@@ -330,11 +335,12 @@ public class ProjectConfiguratorTest {
                 return result;
             }
         });
-
+        Version mockVersion = mock(Version.class);
+        Mockito.when(mockVersion.getReleaseDate()).thenReturn(new Date());
         ProjectConfigurator fixture = new ProjectConfigurator(mocki18nResolver);
 
         exception.expect(JiraException.class);
-        fixture.configure(mockProject, mock(Version.class), plan);
+        fixture.configure(mockProject, mockVersion, plan);
     }
 
     @Test
@@ -359,14 +365,14 @@ public class ProjectConfiguratorTest {
         testHelper.associate(thirdTask, thirdSubTask);
         Task fourthTask = testHelper.createTask("second test task", 0, 3);
         testHelper.associate(secondComponent, fourthTask);
-
         // This should not be associated because hasn't any Task
         Component thirdComponent = testHelper.createComponentNamed("test 3");
         testHelper.associate(plan, thirdComponent);
-
+        Version mockVersion = mock(Version.class);
+        Mockito.when(mockVersion.getReleaseDate()).thenReturn(new Date());
         ProjectConfigurator fixture = new ProjectConfigurator(mocki18nResolver);
 
-        List<Issue> result = fixture.configure(mockProject, mock(Version.class), plan);
+        List<Issue> result = fixture.configure(mockProject, mockVersion, plan);
 
         assertEquals(4, result.size());
         int subTasksCount = 0;

@@ -11,13 +11,18 @@
     <header class="aui-page-header">
         <div class="aui-page-header-inner">
             <div class="aui-page-header-main">
-                <h2>View Event Organization Plans</h2>
+                <h2>View Event Plan Templates</h2>
             </div>
             <div class="aui-page-header-actions">
                 <div class="aui-buttons">
                     <button id="add-plan-button" class="aui-button trigger-dialog">
                         <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                        Add Event Organization Plan
+                        Add Event Plan Template
+                    </button>
+                </div>
+                <div class="aui-buttons">
+                    <button id="import-plans-button" class="aui-button trigger-dialog">
+                        Import
                     </button>
                 </div>
             </div>
@@ -27,7 +32,7 @@
     <div class="aui-message info">
         <span class="aui-icon icon-info"></span>
 
-        <p>Opis...</p>
+        <p>Description...</p>
     </div>
 
     <table id="plans-table" class="aui aui-table-rowhover">
@@ -37,13 +42,13 @@
                 Name
             </th>
             <th>
-                Domains
+                Assigned Event Categories
             </th>
             <th>
-                Components
+                Component Templates
             </th>
             <th>
-                Time to complete
+                Estimated time to complete
             </th>
             <th>
                 Operations
@@ -56,7 +61,7 @@
 </section>
 
     #include("templates/admin/dialogs/plan-dialog.vm")
-    #include("templates/admin/dialogs/domain-dialog.vm")
+    #include("templates/admin/dialogs/event-category-dialog.vm")
     #include("templates/admin/dialogs/component-dialog.vm")
     #include("templates/admin/dialogs/task-dialog.vm")
     #include("templates/admin/dialogs/subtask-dialog.vm")
@@ -64,7 +69,7 @@
 <script type="text/javascript">
     var plansList = new PlansList();
     var plan = new Plan();
-    var domain = new Domain();
+    var eventCategory = new Category();
     var component = new Component();
     var task = new Task();
     var subTask = new SubTask();
@@ -98,7 +103,7 @@
     componentListener.onSaveHideDialog();
     componentListener.onCancelCloseDialog();
 
-    var domainListener = new ButtonListener(domain);
+    var domainListener = new ButtonListener(eventCategory);
     domainListener.onAddShowDialog();
     domainListener.onSaveDoPostResource();
     domainListener.onSaveHideDialog();
@@ -106,7 +111,7 @@
     domainListener.onCancelCloseDialog();
 
     var planListener = new ButtonListener(plan)
-    planListener.onShowDoGet([domain, component]);
+    planListener.onShowDoGet([eventCategory, component]);
     planListener.onAddShowDialog();
     planListener.onSaveDoPostResource();
     planListener.onSaveHideDialog();

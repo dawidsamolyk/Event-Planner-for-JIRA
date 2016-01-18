@@ -3,7 +3,7 @@ package edu.uz.jira.event.planner.database.active.objects;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import net.java.ao.Query;
@@ -40,9 +40,9 @@ class RelationsManager {
         activeObjectsService.delete(entities);
     }
 
-    private PlanToDomainRelation associate(@Nonnull final Plan plan, @Nonnull final Domain domain) {
-        PlanToDomainRelation result = activeObjectsService.create(PlanToDomainRelation.class);
-        result.setDomain(domain);
+    private PlanToCategoryRelation associate(@Nonnull final Plan plan, @Nonnull final Category category) {
+        PlanToCategoryRelation result = activeObjectsService.create(PlanToCategoryRelation.class);
+        result.setCategory(category);
         result.setPlan(plan);
         result.save();
         return result;
@@ -83,12 +83,12 @@ class RelationsManager {
         return result;
     }
 
-    Collection<PlanToDomainRelation> associatePlanWithDomains(@Nonnull final Plan plan, @Nonnull final String[] domainsNames) {
-        Collection<PlanToDomainRelation> result = new ArrayList<PlanToDomainRelation>();
+    Collection<PlanToCategoryRelation> associatePlanWithDomains(@Nonnull final Plan plan, @Nonnull final String[] domainsNames) {
+        Collection<PlanToCategoryRelation> result = new ArrayList<PlanToCategoryRelation>();
 
-        List<Domain> domains = helper.get(Domain.class, Domain.NAME + " = ?", domainsNames);
-        if (domains != null && domains.size() > 0 && plan != null) {
-            for (Domain each : domains) {
+        List<Category> categories = helper.get(Category.class, Category.NAME + " = ?", domainsNames);
+        if (categories != null && categories.size() > 0 && plan != null) {
+            for (Category each : categories) {
                 result.add(associate(plan, each));
             }
         }
@@ -128,8 +128,8 @@ class RelationsManager {
         if (entity instanceof Plan) {
             return getRelations((Plan) entity);
         }
-        if (entity instanceof Domain) {
-            return getRelations((Domain) entity);
+        if (entity instanceof Category) {
+            return getRelations((Category) entity);
         }
         if (entity instanceof Component) {
             return getRelations((Component) entity);
@@ -140,14 +140,14 @@ class RelationsManager {
     private RawEntity[] getRelations(@Nonnull final Plan entity) {
         List<RawEntity> result = new ArrayList<RawEntity>();
 
-        result.addAll(Arrays.asList(activeObjectsService.find(PlanToDomainRelation.class, Query.select().where(PlanToDomainRelation.PLAN + "_ID = ?", entity.getID()))));
+        result.addAll(Arrays.asList(activeObjectsService.find(PlanToCategoryRelation.class, Query.select().where(PlanToCategoryRelation.PLAN + "_ID = ?", entity.getID()))));
         result.addAll(Arrays.asList(activeObjectsService.find(PlanToComponentRelation.class, Query.select().where(PlanToComponentRelation.PLAN + "_ID = ?", entity.getID()))));
 
         return result.toArray(new RawEntity[result.size()]);
     }
 
-    private RawEntity[] getRelations(@Nonnull final Domain entity) {
-        return activeObjectsService.find(PlanToDomainRelation.class, Query.select().where(PlanToDomainRelation.DOMAIN + "_ID = ?", entity.getID()));
+    private RawEntity[] getRelations(@Nonnull final Category entity) {
+        return activeObjectsService.find(PlanToCategoryRelation.class, Query.select().where(PlanToCategoryRelation.CATEGORY + "_ID = ?", entity.getID()));
     }
 
     private RawEntity[] getRelations(@Nonnull final Component entity) {

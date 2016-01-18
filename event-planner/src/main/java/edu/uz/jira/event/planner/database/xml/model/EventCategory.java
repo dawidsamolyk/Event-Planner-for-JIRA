@@ -1,5 +1,6 @@
-package edu.uz.jira.event.planner.database.importer.xml.model;
+package edu.uz.jira.event.planner.database.xml.model;
 
+import edu.uz.jira.event.planner.database.active.objects.model.Category;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import net.java.ao.Entity;
 import net.java.ao.RawEntity;
@@ -12,11 +13,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * XML representation of Event Plan Domain.
+ * XML representation of Event Plan EventCategory.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {})
-public class Domain implements ActiveObjectWrapper {
+public class EventCategory implements ActiveObjectWrapper {
     @XmlAttribute(name = "name", required = true)
     private String name;
     @XmlAttribute(name = "description")
@@ -42,10 +43,10 @@ public class Domain implements ActiveObjectWrapper {
     }
 
     /**
-     * @return Event Domain Configuration with all empty fields (but not null).
+     * @return Event EventCategory Configuration with all empty fields (but not null).
      */
-    public static Domain createEmpty() {
-        return new Domain();
+    public static EventCategory createEmpty() {
+        return new EventCategory();
     }
 
     /**
@@ -60,10 +61,10 @@ public class Domain implements ActiveObjectWrapper {
      */
     @Override
     public ActiveObjectWrapper fill(@Nonnull final Entity entity) {
-        if (entity instanceof edu.uz.jira.event.planner.database.active.objects.model.Domain) {
-            edu.uz.jira.event.planner.database.active.objects.model.Domain domain = (edu.uz.jira.event.planner.database.active.objects.model.Domain) entity;
-            setName(domain.getName());
-            setDescription(domain.getDescription());
+        if (entity instanceof Category) {
+            Category category = (Category) entity;
+            setName(category.getName());
+            setDescription(category.getDescription());
         }
         return this;
     }
@@ -73,7 +74,7 @@ public class Domain implements ActiveObjectWrapper {
      */
     @Override
     public Class<? extends RawEntity> getWrappedType() {
-        return edu.uz.jira.event.planner.database.active.objects.model.Domain.class;
+        return Category.class;
     }
 
     /**
@@ -89,10 +90,10 @@ public class Domain implements ActiveObjectWrapper {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Domain domain = (Domain) o;
+        EventCategory eventCategory = (EventCategory) o;
 
-        if (getName() != null ? !getName().equals(domain.getName()) : domain.getName() != null) return false;
-        return !(getDescription() != null ? !getDescription().equals(domain.getDescription()) : domain.getDescription() != null);
+        if (getName() != null ? !getName().equals(eventCategory.getName()) : eventCategory.getName() != null) return false;
+        return !(getDescription() != null ? !getDescription().equals(eventCategory.getDescription()) : eventCategory.getDescription() != null);
     }
 
     @Override

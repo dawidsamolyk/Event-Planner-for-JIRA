@@ -11,12 +11,14 @@ import com.atlassian.sal.api.user.UserProfile;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
+import edu.uz.jira.event.planner.database.xml.model.ComponentTemplate;
+import edu.uz.jira.event.planner.database.xml.model.EventCategory;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventComponentRestManager;
-import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
+import edu.uz.jira.event.planner.project.plan.rest.manager.EventCategoryRestManager;
 import net.java.ao.EntityManager;
 import net.java.ao.test.converters.NameConverters;
 import net.java.ao.test.jdbc.Hsql;
@@ -82,7 +84,7 @@ public class EventComponentRestManagerTest {
 
         activeObjects = mock(ActiveObjects.class);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class,SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Category.class, Plan.class, Component.class,SubTask.class, Task.class, PlanToComponentRelation.class, PlanToCategoryRelation.class);
         planService = new ActiveObjectsService(activeObjects);
         planService.clearDatabase();
 
@@ -94,11 +96,11 @@ public class EventComponentRestManagerTest {
         String testName = "Test name";
         String testDescription = "Test description";
         testHelper.createDomain(testName, testDescription);
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
 
-        edu.uz.jira.event.planner.database.importer.xml.model.Domain expected = new edu.uz.jira.event.planner.database.importer.xml.model.Domain();
+        EventCategory expected = new EventCategory();
         expected.setName(testName);
         expected.setDescription(testDescription);
         assertEquals(expected, transactionResult[0]);
@@ -106,9 +108,9 @@ public class EventComponentRestManagerTest {
 
     @Test
     public void should_Get_Many_Domains_From_Database() throws SQLException {
-        testHelper.createDomain("Domain 1", "Description");
-        testHelper.createDomain("Domain 2", "Description");
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        testHelper.createDomain("EventCategory 1", "Description");
+        testHelper.createDomain("EventCategory 2", "Description");
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
 
@@ -117,7 +119,7 @@ public class EventComponentRestManagerTest {
 
     @Test
     public void should_Get_Empty_Domains_Array_When_There_Is_No_Domains_In_Database() {
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get( mockRequest);
 
@@ -126,8 +128,8 @@ public class EventComponentRestManagerTest {
 
     @Test
     public void should_Put_New_Domain() {
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
-        edu.uz.jira.event.planner.database.importer.xml.model.Domain configuration = new edu.uz.jira.event.planner.database.importer.xml.model.Domain();
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
+        EventCategory configuration = new EventCategory();
         configuration.setName("Test name");
         configuration.setDescription("Test description");
 
@@ -156,7 +158,7 @@ public class EventComponentRestManagerTest {
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
-        ActiveObjectWrapper expected = edu.uz.jira.event.planner.database.importer.xml.model.Component.createEmpty().fill(component);
+        ActiveObjectWrapper expected = ComponentTemplate.createEmpty().fill(component);
         assertEquals(expected, transactionResult[0]);
     }
 }

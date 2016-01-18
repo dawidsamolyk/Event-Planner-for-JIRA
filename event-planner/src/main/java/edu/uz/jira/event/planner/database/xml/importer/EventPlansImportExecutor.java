@@ -1,11 +1,11 @@
-package edu.uz.jira.event.planner.database.importer.xml;
+package edu.uz.jira.event.planner.database.xml.importer;
 
 import com.atlassian.extras.common.log.Logger;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.config.properties.ApplicationProperties;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.importer.xml.model.AllEventPlans;
+import edu.uz.jira.event.planner.database.xml.model.EventPlanTemplates;
 import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
 import edu.uz.jira.event.planner.exception.EventPlansImportException;
 import edu.uz.jira.event.planner.util.text.Internationalization;
@@ -66,7 +66,7 @@ public class EventPlansImportExecutor {
         public void run() {
             try {
                 EventPlansImporter importer = new EventPlansImporter(activeObjectsService);
-                AllEventPlans predefinedEventPlans = importer.getPredefinedEventPlans();
+                EventPlanTemplates predefinedEventPlans = importer.getPredefinedEventPlans();
                 importer.importEventPlansIntoDatabase(predefinedEventPlans);
 
                 setImported();

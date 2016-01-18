@@ -1,4 +1,4 @@
-package edu.uz.jira.event.planner.database.importer.xml.model;
+package edu.uz.jira.event.planner.database.xml.model;
 
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
@@ -14,16 +14,16 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * XML representation of Event Plan Component.
+ * XML representation of Event Plan Component Template.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
         "task",
         "tasksNames"
 })
-public class Component implements ActiveObjectWrapper {
+public class ComponentTemplate implements ActiveObjectWrapper {
     @XmlElement(required = true)
-    private List<Task> task;
+    private List<TaskTemplate> task;
     @XmlAttribute(name = "name", required = true)
     private String name;
     @XmlAttribute(name = "description")
@@ -34,15 +34,15 @@ public class Component implements ActiveObjectWrapper {
     /**
      * @return Event Component Configuration with all empty fields (but not null).
      */
-    public static Component createEmpty() {
-        return new Component();
+    public static ComponentTemplate createEmpty() {
+        return new ComponentTemplate();
     }
 
     /**
      * @see {@link ActiveObjectWrapper#fill(Entity)}
      */
     @Override
-    public Component fill(@Nonnull final Entity entity) {
+    public ComponentTemplate fill(@Nonnull final Entity entity) {
         if (entity instanceof edu.uz.jira.event.planner.database.active.objects.model.Component) {
             edu.uz.jira.event.planner.database.active.objects.model.Component component = (edu.uz.jira.event.planner.database.active.objects.model.Component) entity;
             setName(component.getName());
@@ -73,7 +73,7 @@ public class Component implements ActiveObjectWrapper {
      */
     @Override
     public ActiveObjectWrapper getEmptyCopy() {
-        return new Component();
+        return new ComponentTemplate();
     }
 
     public String[] getTasksNames() {
@@ -90,15 +90,15 @@ public class Component implements ActiveObjectWrapper {
         this.tasksNames = tasksNames;
     }
 
-    public List<Task> getTask() {
+    public List<TaskTemplate> getTask() {
         if (task == null) {
-            task = new ArrayList<Task>();
+            task = new ArrayList<TaskTemplate>();
         }
         return this.task;
     }
 
-    public void setTask(List<Task> task) {
-        this.task = task;
+    public void setTask(List<TaskTemplate> taskTemplate) {
+        this.task = taskTemplate;
     }
 
     public String getName() {
@@ -125,13 +125,13 @@ public class Component implements ActiveObjectWrapper {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Component component = (Component) o;
+        ComponentTemplate componentTemplate = (ComponentTemplate) o;
 
-        if (getTask() != null ? !getTask().equals(component.getTask()) : component.getTask() != null) return false;
-        if (getName() != null ? !getName().equals(component.getName()) : component.getName() != null) return false;
-        if (getDescription() != null ? !getDescription().equals(component.getDescription()) : component.getDescription() != null)
+        if (getTask() != null ? !getTask().equals(componentTemplate.getTask()) : componentTemplate.getTask() != null) return false;
+        if (getName() != null ? !getName().equals(componentTemplate.getName()) : componentTemplate.getName() != null) return false;
+        if (getDescription() != null ? !getDescription().equals(componentTemplate.getDescription()) : componentTemplate.getDescription() != null)
             return false;
-        return Arrays.equals(getTasksNames(), component.getTasksNames());
+        return Arrays.equals(getTasksNames(), componentTemplate.getTasksNames());
 
     }
 

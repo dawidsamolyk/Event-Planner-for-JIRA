@@ -1,4 +1,4 @@
-package edu.uz.jira.event.planner.database.importer.xml.model;
+package edu.uz.jira.event.planner.database.xml.model;
 
 import edu.uz.jira.event.planner.database.active.objects.model.Plan;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
@@ -14,41 +14,39 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * XML representation of Event Plan.
+ * XML representation of Event Plan Template.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "domain",
+        "eventCategory",
         "component",
         "id",
-        "domainsNames",
+        "categoriesNames",
         "componentsNames"
 })
-public class EventPlan implements ActiveObjectWrapper {
+public class PlanTemplate implements ActiveObjectWrapper {
     @XmlElement(required = true)
-    private List<Domain> domain;
+    private List<EventCategory> eventCategory;
     @XmlElement(required = true)
-    private List<Component> component;
+    private List<ComponentTemplate> component;
     @XmlAttribute(name = "name", required = true)
     private String name;
     @XmlAttribute(name = "description")
     private String description;
-    @XmlAttribute(name = "neededMonths", required = true)
-    private int neededMonths;
-    @XmlAttribute(name = "neededDays", required = true)
-    private int neededDays;
+    @XmlAttribute(name = "reserveTimeInDays")
+    private int reserveTimeInDays;
     @XmlElement
     private int id;
     @XmlElement
-    private String[] domainsNames;
+    private String[] categoriesNames;
     @XmlElement
     private String[] componentsNames;
 
     /**
      * @return Event Plan Configuration with all empty fields (but not null).
      */
-    public static EventPlan createEmpty() {
-        return new EventPlan();
+    public static PlanTemplate createEmpty() {
+        return new PlanTemplate();
     }
 
     /**
@@ -58,13 +56,13 @@ public class EventPlan implements ActiveObjectWrapper {
     public ActiveObjectWrapper fill(@Nonnull final net.java.ao.Entity entity) {
         if (entity instanceof Plan) {
             Plan plan = (Plan) entity;
+
             setId(plan.getID());
             setName(plan.getName());
             setDescription(plan.getDescription());
-            setNeededMonths(plan.getNeededMonthsToComplete());
-            setNeededDays(plan.getNeededDaysToComplete());
             setDomainsNames(EntityNameExtractor.getNames(plan.getDomains()));
             setComponentsNames(EntityNameExtractor.getNames(plan.getComponents()));
+            setReserveTimeInDays(plan.getReserveTimeInDays());
         }
         return this;
     }
@@ -84,8 +82,7 @@ public class EventPlan implements ActiveObjectWrapper {
     public boolean isFullfilled() {
         return StringUtils.isNotBlank(getName())
                 && TextUtils.isEachElementNotBlank(getDomainsNames())
-                && TextUtils.isEachElementNotBlank(getComponentsNames())
-                && (getNeededMonths() > 0) || (getNeededMonths() == 0 && getNeededDays() > 0);
+                && TextUtils.isEachElementNotBlank(getComponentsNames());
     }
 
     /**
@@ -96,25 +93,25 @@ public class EventPlan implements ActiveObjectWrapper {
         return createEmpty();
     }
 
-    public List<Domain> getDomain() {
-        if (domain == null) {
-            domain = new ArrayList<Domain>();
+    public List<EventCategory> getEventCategory() {
+        if (eventCategory == null) {
+            eventCategory = new ArrayList<EventCategory>();
         }
-        return this.domain;
+        return this.eventCategory;
     }
 
-    public void setDomain(List<Domain> domain) {
-        this.domain = domain;
+    public void setEventCategory(List<EventCategory> eventCategory) {
+        this.eventCategory = eventCategory;
     }
 
-    public List<Component> getComponent() {
+    public List<ComponentTemplate> getComponent() {
         if (component == null) {
-            component = new ArrayList<Component>();
+            component = new ArrayList<ComponentTemplate>();
         }
         return this.component;
     }
 
-    public void setComponent(List<Component> component) {
+    public void setComponent(List<ComponentTemplate> component) {
         this.component = component;
     }
 
@@ -137,22 +134,6 @@ public class EventPlan implements ActiveObjectWrapper {
         this.description = value;
     }
 
-    public int getNeededMonths() {
-        return neededMonths;
-    }
-
-    public void setNeededMonths(int value) {
-        this.neededMonths = value;
-    }
-
-    public int getNeededDays() {
-        return neededDays;
-    }
-
-    public void setNeededDays(int value) {
-        this.neededDays = value;
-    }
-
     public int getId() {
         return id;
     }
@@ -162,17 +143,17 @@ public class EventPlan implements ActiveObjectWrapper {
     }
 
     public String[] getDomainsNames() {
-        if (domainsNames == null && domain != null) {
-            domainsNames = new String[domain.size()];
-            for (int index = 0; index < domain.size(); index++) {
-                domainsNames[index] = domain.get(index).getName();
+        if (categoriesNames == null && eventCategory != null) {
+            categoriesNames = new String[eventCategory.size()];
+            for (int index = 0; index < eventCategory.size(); index++) {
+                categoriesNames[index] = eventCategory.get(index).getName();
             }
         }
-        return domainsNames;
+        return categoriesNames;
     }
 
     public void setDomainsNames(String[] domainsNames) {
-        this.domainsNames = domainsNames;
+        this.categoriesNames = domainsNames;
     }
 
     public String[] getComponentsNames() {
@@ -189,40 +170,44 @@ public class EventPlan implements ActiveObjectWrapper {
         this.componentsNames = componentsNames;
     }
 
+    public int getReserveTimeInDays() {
+        return reserveTimeInDays;
+    }
+
+    public void setReserveTimeInDays(int reserveTimeInDays) {
+        this.reserveTimeInDays = reserveTimeInDays;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        EventPlan eventPlan = (EventPlan) o;
+        PlanTemplate that = (PlanTemplate) o;
 
-        if (getNeededMonths() != eventPlan.getNeededMonths()) return false;
-        if (getNeededDays() != eventPlan.getNeededDays()) return false;
-        if (getId() != eventPlan.getId()) return false;
-        if (getDomain() != null ? !getDomain().equals(eventPlan.getDomain()) : eventPlan.getDomain() != null)
+        if (reserveTimeInDays != that.reserveTimeInDays) return false;
+        if (id != that.id) return false;
+        if (eventCategory != null ? !eventCategory.equals(that.eventCategory) : that.eventCategory != null)
             return false;
-        if (getComponent() != null ? !getComponent().equals(eventPlan.getComponent()) : eventPlan.getComponent() != null)
-            return false;
-        if (getName() != null ? !getName().equals(eventPlan.getName()) : eventPlan.getName() != null) return false;
-        if (getDescription() != null ? !getDescription().equals(eventPlan.getDescription()) : eventPlan.getDescription() != null)
-            return false;
+        if (component != null ? !component.equals(that.component) : that.component != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if (!Arrays.equals(getDomainsNames(), eventPlan.getDomainsNames())) return false;
+        if (!Arrays.equals(categoriesNames, that.categoriesNames)) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        return Arrays.equals(getComponentsNames(), eventPlan.getComponentsNames());
+        return Arrays.equals(componentsNames, that.componentsNames);
     }
 
     @Override
     public int hashCode() {
-        int result = getDomain() != null ? getDomain().hashCode() : 0;
-        result = 31 * result + (getComponent() != null ? getComponent().hashCode() : 0);
-        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
-        result = 31 * result + getNeededMonths();
-        result = 31 * result + getNeededDays();
-        result = 31 * result + getId();
-        result = 31 * result + Arrays.hashCode(getDomainsNames());
-        result = 31 * result + Arrays.hashCode(getComponentsNames());
+        int result = eventCategory != null ? eventCategory.hashCode() : 0;
+        result = 31 * result + (component != null ? component.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + reserveTimeInDays;
+        result = 31 * result + id;
+        result = 31 * result + Arrays.hashCode(categoriesNames);
+        result = 31 * result + Arrays.hashCode(componentsNames);
         return result;
     }
 }

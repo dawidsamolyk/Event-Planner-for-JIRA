@@ -1,8 +1,8 @@
-package edu.uz.jira.event.planner.database.importer.xml;
+package edu.uz.jira.event.planner.database.xml.importer;
 
 import com.atlassian.core.util.ClassLoaderUtils;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.importer.xml.model.AllEventPlans;
+import edu.uz.jira.event.planner.database.xml.model.EventPlanTemplates;
 import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
 import edu.uz.jira.event.planner.exception.EventPlansImportException;
 
@@ -13,7 +13,7 @@ import javax.xml.bind.Unmarshaller;
 import java.net.URL;
 
 /**
- * Imports into database predefined Event Organization Plans from XML file.
+ * Imports into database predefined Event Organization Plan Templates from XML file.
  */
 public class EventPlansImporter {
     private static final String PREDEFINED_EVENT_PLANS_RESOURCE_NAME = "/database/predefined-event-plans.xml";
@@ -47,8 +47,8 @@ public class EventPlansImporter {
      * @return Event Plans.
      * @throws EventPlansImportException Thrown when cannot unmarshall or cast data to Event Plans.
      */
-    public AllEventPlans getPredefinedEventPlans() throws EventPlansImportException {
-        return getEventPlans(getPredefinedEventPlansFileUrl());
+    public EventPlanTemplates getPredefinedEventPlans() throws EventPlansImportException {
+        return getEventPlanTemplates(getPredefinedEventPlansFileUrl());
     }
 
     private URL getPredefinedEventPlansFileUrl() {
@@ -58,12 +58,12 @@ public class EventPlansImporter {
     /**
      * Reads data from source file.
      *
-     * @return Event Plans.
+     * @return Event Plan Templates.
      * @throws EventPlansImportException Thrown when cannot unmarshall or cast data to Event Plans.
      */
-    public AllEventPlans getEventPlans(@Nonnull final URL sourceFileUrl) throws EventPlansImportException {
+    public EventPlanTemplates getEventPlanTemplates(@Nonnull final URL sourceFileUrl) throws EventPlansImportException {
         try {
-            return (AllEventPlans) unmarshaller.unmarshal(sourceFileUrl);
+            return (EventPlanTemplates) unmarshaller.unmarshal(sourceFileUrl);
         } catch (JAXBException e) {
             throw new EventPlansImportException(e);
         } catch (ClassCastException e) {
@@ -74,9 +74,9 @@ public class EventPlansImporter {
     }
 
     /**
-     * @param plans Event Plans to import.
+     * @param plansTemplates Event Plan Templates to import.
      */
-    public void importEventPlansIntoDatabase(final AllEventPlans plans) throws ActiveObjectSavingException {
-        activeObjectsService.addFrom(plans);
+    public void importEventPlansIntoDatabase(final EventPlanTemplates plansTemplates) throws ActiveObjectSavingException {
+        activeObjectsService.addFrom(plansTemplates);
     }
 }

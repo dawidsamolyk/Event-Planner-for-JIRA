@@ -5,11 +5,11 @@ import com.atlassian.activeobjects.tx.Transactional;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
-import edu.uz.jira.event.planner.database.importer.xml.EventPlansImporter;
-import edu.uz.jira.event.planner.database.importer.xml.model.AllEventPlans;
+import edu.uz.jira.event.planner.database.xml.importer.EventPlansImporter;
+import edu.uz.jira.event.planner.database.xml.model.EventPlanTemplates;
 import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
 import edu.uz.jira.event.planner.exception.EventPlansImportException;
 import net.java.ao.EntityManager;
@@ -47,7 +47,7 @@ public class EventPlansImporterTest {
     public void setUp() throws MalformedURLException {
         assertNotNull(entityManager);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Category.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToCategoryRelation.class);
         service = new ActiveObjectsService(activeObjects);
         activeObjects.flushAll();
         service.clearDatabase();
@@ -59,9 +59,9 @@ public class EventPlansImporterTest {
     public void should_read_event_plan() throws EventPlansImportException, MalformedURLException {
         EventPlansImporter fixture = new EventPlansImporter(service);
 
-        AllEventPlans result = fixture.getEventPlans(testFileUrl);
+        EventPlanTemplates result = fixture.getEventPlanTemplates(testFileUrl);
 
-        assertNotNull(result.getEventPlan());
+        assertNotNull(result.getEventPlanTemplate());
     }
 
     @Test
@@ -69,18 +69,18 @@ public class EventPlansImporterTest {
         EventPlansImporter fixture = new EventPlansImporter(service);
 
         exception.expect(EventPlansImportException.class);
-        fixture.getEventPlans(new File("non-existent-file.xml").toURI().toURL());
+        fixture.getEventPlanTemplates(new File("non-existent-file.xml").toURI().toURL());
     }
 
     @Test
     public void should_import_event_plans_into_database() throws EventPlansImportException, ActiveObjectSavingException, MalformedURLException {
         EventPlansImporter fixture = new EventPlansImporter(service);
-        AllEventPlans plans = fixture.getEventPlans(testFileUrl);
+        EventPlanTemplates plans = fixture.getEventPlanTemplates(testFileUrl);
 
         fixture.importEventPlansIntoDatabase(plans);
 
         assertEquals(1, activeObjects.count(Plan.class));
-        assertEquals(1, activeObjects.count(Domain.class));
+        assertEquals(1, activeObjects.count(Category.class));
         assertEquals(1, activeObjects.count(Component.class));
         assertEquals(2, activeObjects.count(Task.class));
         assertEquals(0, activeObjects.count(SubTask.class));

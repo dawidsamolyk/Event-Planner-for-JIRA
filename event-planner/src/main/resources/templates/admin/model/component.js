@@ -29,10 +29,10 @@ function Component() {
 
         for (eachKey in allTasks) {
             task = allTasks[eachKey];
+
             if (that.isFullFilled(task) === false) {
                 return false;
             }
-
             that.getTasks().append("<option>" + task.name + "</option>");
         }
 

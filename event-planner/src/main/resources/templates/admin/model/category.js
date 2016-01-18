@@ -1,14 +1,14 @@
-function Domain() {
+function Category() {
     "use strict";
     var that = this;
-    that.id = 'domain';
+    that.id = 'category';
 
     that.getName = function () {
-        return AJS.$("#domain-name");
+        return AJS.$("#category-name");
     };
 
     that.getDescription = function () {
-        return AJS.$("#domain-description");
+        return AJS.$("#category-description");
     };
 
     that.getJson = function () {

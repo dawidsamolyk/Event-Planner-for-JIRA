@@ -29,8 +29,8 @@
 
                 <div class="description">Predefined Plan of an Event. <a target="_blank"
                                                                          href="$baseurl/plugins/servlet/event/plans/configuration"
-                                                                         title="Will open in new tab"
-                                                                         alt="Will open in new tab">Show all predefined
+                                                                         title="Will open in new tab">Show all
+                    predefined
                     Event Organization Plans.</a></div>
             </div>
 

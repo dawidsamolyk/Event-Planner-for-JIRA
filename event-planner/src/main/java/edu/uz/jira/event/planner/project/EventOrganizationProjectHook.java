@@ -12,7 +12,7 @@ import com.atlassian.sal.api.message.I18nResolver;
 import com.opensymphony.workflow.loader.ConditionDescriptor;
 import com.opensymphony.workflow.loader.ValidatorDescriptor;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.importer.xml.EventPlansImportExecutor;
+import edu.uz.jira.event.planner.database.xml.importer.EventPlansImportExecutor;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.project.issue.fields.IssueFieldsConfigurator;
 import edu.uz.jira.event.planner.workflow.WorkflowConfigurator;

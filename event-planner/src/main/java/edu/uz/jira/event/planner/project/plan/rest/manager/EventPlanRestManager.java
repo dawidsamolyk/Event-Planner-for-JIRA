@@ -3,7 +3,7 @@ package edu.uz.jira.event.planner.project.plan.rest.manager;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.importer.xml.model.EventPlan;
+import edu.uz.jira.event.planner.database.xml.model.PlanTemplate;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ public class EventPlanRestManager extends RestManager {
     public EventPlanRestManager(@Nonnull final UserManager userManager,
                                 @Nonnull final TransactionTemplate transactionTemplate,
                                 @Nonnull final ActiveObjectsService activeObjectsService) {
-        super(userManager, transactionTemplate, activeObjectsService, EventPlan.createEmpty());
+        super(userManager, transactionTemplate, activeObjectsService, PlanTemplate.createEmpty());
     }
 
     /**
@@ -64,7 +64,7 @@ public class EventPlanRestManager extends RestManager {
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response post(final EventPlan resource, @Context final HttpServletRequest request) {
+    public Response post(final PlanTemplate resource, @Context final HttpServletRequest request) {
         return super.post(resource, request);
     }
 

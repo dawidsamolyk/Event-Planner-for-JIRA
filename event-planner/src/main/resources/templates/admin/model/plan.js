@@ -13,16 +13,8 @@ function Plan() {
         return AJS.$("#plan-description");
     };
 
-    that.getNeededMonthsToComplete = function () {
-        return AJS.$("#plan-needed-months");
-    };
-
-    that.getNeededDaysToComplete = function () {
-        return AJS.$("#plan-needed-days");
-    };
-
-    that.getDomains = function () {
-        return AJS.$("#plan-domains");
+    that.getCategories = function () {
+        return AJS.$("#plan-categories");
     };
 
     that.getComponents = function () {
@@ -30,20 +22,16 @@ function Plan() {
     };
 
     that.getJson = function () {
-        var name, description, neededMonths, neededDays, domainsNamesArray, componentsNamesArray;
+        var name, description, categoriesNamesArray, componentsNamesArray;
 
         name = that.getName().attr("value");
         description = that.getDescription().attr("value");
-        neededMonths = that.getNeededMonthsToComplete().attr("value");
-        neededDays = that.getNeededDaysToComplete().attr("value");
-        domainsNamesArray = JSON.stringify(that.getDomains().val());
+        categoriesNamesArray = JSON.stringify(that.getCategories().val());
         componentsNamesArray = JSON.stringify(that.getComponents().val());
 
         return '{ "name": "' + name +
             '", "description": "' + description +
-            '", "neededMonths": ' + neededMonths +
-            ', "neededDays": ' + neededDays +
-            ', "domainsNames": ' + domainsNamesArray +
+            ', "categoriesNames": ' + categoriesNamesArray +
             ', "componentsNames": ' + componentsNamesArray +
             ' }';
     };
@@ -54,7 +42,7 @@ function Plan() {
         }
         var inputResourceIsComponent, inputResourceIsPlan, eachKey, eachName, eachElement;
         inputResourceIsComponent = resources.length > 0 && resources[0].hasOwnProperty('tasksNames');
-        inputResourceIsPlan = resources.length > 0 && resources[0].hasOwnProperty('domainsNames') && resources[0].hasOwnProperty('componentsNames');
+        inputResourceIsPlan = resources.length > 0 && resources[0].hasOwnProperty('categoriesNames') && resources[0].hasOwnProperty('componentsNames');
 
         if (inputResourceIsPlan === true) {
             return that.setFromPlanObject(resources);
@@ -63,7 +51,7 @@ function Plan() {
         if (inputResourceIsComponent === true) {
             that.getComponents().empty();
         } else {
-            that.getDomains().empty();
+            that.getCategories().empty();
         }
 
         for (eachKey in resources) {
@@ -76,7 +64,7 @@ function Plan() {
             if (inputResourceIsComponent) {
                 that.getComponents().append(eachElement);
             } else {
-                that.getDomains().append(eachElement);
+                that.getCategories().append(eachElement);
             }
         }
         return true;
@@ -89,16 +77,14 @@ function Plan() {
     that.setFromPlanObject = function (plans) {
         var plan = plans[0];
 
-        if (plan.name === undefined || plan.description === undefined || plan.neededMonths === undefined || plan.neededDays === undefined) {
+        if (plan.name === undefined || plan.description === undefined) {
             return false;
         }
 
         that.getName().append(plan.name);
         that.getDescription().append(plan.description);
-        that.getNeededMonthsToComplete().append(plan.neededMonths);
-        that.getNeededDaysToComplete().append(plan.neededDays);
 
-        if (that.setDomainsNames(plan.domainsNames) === false) {
+        if (that.setCategoriesNames(plan.categoriesNames) === false) {
             return false;
         }
         if (that.setComponentsNames(plan.componentsNames) === false) {
@@ -107,17 +93,17 @@ function Plan() {
         return true;
     };
 
-    that.setDomainsNames = function (domainsNames) {
-        var eachKey, eachDomainName;
+    that.setCategoriesNames = function (categoriesNames) {
+        var eachKey, categoryName;
 
-        for (eachKey in domainsNames) {
-            eachDomainName = domainsNames[eachKey];
+        for (eachKey in categoriesNames) {
+            categoryName = categoriesNames[eachKey];
 
-            if (eachDomainName === undefined) {
+            if (categoryName === undefined) {
                 return false;
             }
 
-            that.getDomains().append(that.getElement(eachDomainName));
+            that.getCategories().append(that.getElement(categoryName));
         }
         return true;
     };

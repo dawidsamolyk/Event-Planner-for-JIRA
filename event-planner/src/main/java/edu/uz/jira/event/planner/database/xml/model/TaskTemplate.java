@@ -1,4 +1,4 @@
-package edu.uz.jira.event.planner.database.importer.xml.model;
+package edu.uz.jira.event.planner.database.xml.model;
 
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
@@ -13,32 +13,32 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * XML representation of Event Plan Task.
+ * XML representation of Event Plan Task Template.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
         "subTask",
         "subTasksNames"
 })
-public class Task implements ActiveObjectWrapper {
+public class TaskTemplate implements ActiveObjectWrapper {
     @XmlElement(name = "sub-task")
-    private List<SubTask> subTask;
+    private List<SubTaskTemplate> subTask;
     @XmlAttribute(name = "name", required = true)
     private String name;
     @XmlAttribute(name = "description")
     private String description;
-    @XmlAttribute(name = "neededMonths", required = true)
-    private int neededMonths;
-    @XmlAttribute(name = "neededDays", required = true)
-    private int neededDays;
+    @XmlAttribute(name = "neededMonthsBeforeEvent", required = true)
+    private int neededMonthsBeforeEvent;
+    @XmlAttribute(name = "neededDaysBeforeEvent", required = true)
+    private int neededDaysBeforeEvent;
     @XmlElement
     private String[] subTasksNames;
 
     /**
      * @return Event Task Configuration with all empty fields (but not null).
      */
-    public static Task createEmpty() {
-        return new Task();
+    public static TaskTemplate createEmpty() {
+        return new TaskTemplate();
     }
 
     /**
@@ -50,8 +50,8 @@ public class Task implements ActiveObjectWrapper {
             edu.uz.jira.event.planner.database.active.objects.model.Task task = (edu.uz.jira.event.planner.database.active.objects.model.Task) entity;
             setName(task.getName());
             setDescription(task.getDescription());
-            setNeededMonths(task.getNeededMonthsToComplete());
-            setNeededDays(task.getNeededDaysToComplete());
+            setNeededMonthsBeforeEvent(task.getNeededMonthsToComplete());
+            setNeededDaysBeforeEvent(task.getNeededDaysToComplete());
             setSubTasksNames(EntityNameExtractor.getNames(task.getSubTasks()));
         }
         return this;
@@ -71,7 +71,7 @@ public class Task implements ActiveObjectWrapper {
     @Override
     public boolean isFullfilled() {
         return StringUtils.isNotBlank(getName())
-                && (getNeededMonths() > 0) || (getNeededMonths() == 0 && getNeededDays() > 0);
+                && (getNeededDaysBeforeEvent() > 0) || (getNeededMonthsBeforeEvent() == 0 && getNeededMonthsBeforeEvent() > 0);
     }
 
     /**
@@ -82,14 +82,14 @@ public class Task implements ActiveObjectWrapper {
         return createEmpty();
     }
 
-    public List<SubTask> getSubTask() {
+    public List<SubTaskTemplate> getSubTask() {
         if (subTask == null) {
-            subTask = new ArrayList<SubTask>();
+            subTask = new ArrayList<SubTaskTemplate>();
         }
         return this.subTask;
     }
 
-    public void setSubTask(List<SubTask> subTask) {
+    public void setSubTask(List<SubTaskTemplate> subTask) {
         this.subTask = subTask;
     }
 
@@ -112,20 +112,20 @@ public class Task implements ActiveObjectWrapper {
         this.description = value;
     }
 
-    public int getNeededMonths() {
-        return neededMonths;
+    public int getNeededMonthsBeforeEvent() {
+        return neededMonthsBeforeEvent;
     }
 
-    public void setNeededMonths(int value) {
-        this.neededMonths = value;
+    public void setNeededMonthsBeforeEvent(int value) {
+        this.neededMonthsBeforeEvent = value;
     }
 
-    public int getNeededDays() {
-        return neededDays;
+    public int getNeededDaysBeforeEvent() {
+        return neededDaysBeforeEvent;
     }
 
-    public void setNeededDays(int value) {
-        this.neededDays = value;
+    public void setNeededDaysBeforeEvent(int value) {
+        this.neededDaysBeforeEvent = value;
     }
 
     public String[] getSubTasksNames() {
@@ -147,16 +147,16 @@ public class Task implements ActiveObjectWrapper {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Task task = (Task) o;
+        TaskTemplate taskTemplate = (TaskTemplate) o;
 
-        if (getNeededMonths() != task.getNeededMonths()) return false;
-        if (getNeededDays() != task.getNeededDays()) return false;
-        if (getSubTask() != null ? !getSubTask().equals(task.getSubTask()) : task.getSubTask() != null) return false;
-        if (getName() != null ? !getName().equals(task.getName()) : task.getName() != null) return false;
-        if (getDescription() != null ? !getDescription().equals(task.getDescription()) : task.getDescription() != null)
+        if (getNeededMonthsBeforeEvent() != taskTemplate.getNeededMonthsBeforeEvent()) return false;
+        if (getNeededDaysBeforeEvent() != taskTemplate.getNeededDaysBeforeEvent()) return false;
+        if (getSubTask() != null ? !getSubTask().equals(taskTemplate.getSubTask()) : taskTemplate.getSubTask() != null) return false;
+        if (getName() != null ? !getName().equals(taskTemplate.getName()) : taskTemplate.getName() != null) return false;
+        if (getDescription() != null ? !getDescription().equals(taskTemplate.getDescription()) : taskTemplate.getDescription() != null)
             return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        return Arrays.equals(getSubTasksNames(), task.getSubTasksNames());
+        return Arrays.equals(getSubTasksNames(), taskTemplate.getSubTasksNames());
     }
 
     @Override
@@ -164,8 +164,8 @@ public class Task implements ActiveObjectWrapper {
         int result = getSubTask() != null ? getSubTask().hashCode() : 0;
         result = 31 * result + (getName() != null ? getName().hashCode() : 0);
         result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
-        result = 31 * result + getNeededMonths();
-        result = 31 * result + getNeededDays();
+        result = 31 * result + getNeededMonthsBeforeEvent();
+        result = 31 * result + getNeededDaysBeforeEvent();
         result = 31 * result + Arrays.hashCode(getSubTasksNames());
         return result;
     }

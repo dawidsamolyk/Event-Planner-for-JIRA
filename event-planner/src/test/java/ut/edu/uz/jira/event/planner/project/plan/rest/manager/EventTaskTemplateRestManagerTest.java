@@ -10,10 +10,13 @@ import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.SubTask;
+import edu.uz.jira.event.planner.database.active.objects.model.Task;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
+import edu.uz.jira.event.planner.database.xml.model.TaskTemplate;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventTaskRestManager;
 import net.java.ao.EntityManager;
@@ -42,7 +45,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(ActiveObjectsJUnitRunner.class)
 @Jdbc(Hsql.class)
 @NameConverters
-public class EventTaskRestManagerTest {
+public class EventTaskTemplateRestManagerTest {
     private EntityManager entityManager;
     private MockHttpServletRequest mockRequest;
     private UserManager mockUserManager;
@@ -82,7 +85,7 @@ public class EventTaskRestManagerTest {
 
         activeObjects = mock(ActiveObjects.class);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class,  SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Category.class, Plan.class, Component.class,  SubTask.class, Task.class, PlanToComponentRelation.class, PlanToCategoryRelation.class);
         planService = new ActiveObjectsService(activeObjects);
         planService.clearDatabase();
 
@@ -98,9 +101,9 @@ public class EventTaskRestManagerTest {
 
         fixture.get(mockRequest);
 
-        edu.uz.jira.event.planner.database.importer.xml.model.Task expected = new edu.uz.jira.event.planner.database.importer.xml.model.Task();
+        TaskTemplate expected = new TaskTemplate();
         expected.setName(testName);
-        expected.setNeededDays(testDays);
+        expected.setNeededDaysBeforeEvent(testDays);
         assertEquals(expected, transactionResult[0]);
     }
 
@@ -127,10 +130,10 @@ public class EventTaskRestManagerTest {
     @Test
     public void should_Post_New_Task() {
         EventTaskRestManager fixture = new EventTaskRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
-        edu.uz.jira.event.planner.database.importer.xml.model.Task configuration = new edu.uz.jira.event.planner.database.importer.xml.model.Task();
+        TaskTemplate configuration = new TaskTemplate();
         configuration.setName("Test name");
         configuration.setDescription("Test description");
-        configuration.setNeededDays(12);
+        configuration.setNeededDaysBeforeEvent(12);
 
         Response result = fixture.post(configuration, mockRequest);
 
@@ -145,7 +148,7 @@ public class EventTaskRestManagerTest {
         Response response = fixture.delete(Integer.toString(task.getID()), mockRequest);
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        assertEquals(0, activeObjects.count(Domain.class));
+        assertEquals(0, activeObjects.count(Category.class));
     }
 
     @Test
@@ -157,7 +160,7 @@ public class EventTaskRestManagerTest {
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
-        ActiveObjectWrapper expected = edu.uz.jira.event.planner.database.importer.xml.model.Task.createEmpty().fill(task);
+        ActiveObjectWrapper expected = TaskTemplate.createEmpty().fill(task);
         assertEquals(expected, transactionResult[0]);
     }
 }

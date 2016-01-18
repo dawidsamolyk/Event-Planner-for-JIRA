@@ -3,12 +3,11 @@ package edu.uz.jira.event.planner.database.active.objects;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.tx.Transactional;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
-import edu.uz.jira.event.planner.database.importer.xml.model.AllEventPlans;
-import edu.uz.jira.event.planner.database.importer.xml.model.EventPlan;
+import edu.uz.jira.event.planner.database.xml.model.*;
 import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import net.java.ao.Entity;
@@ -52,23 +51,23 @@ public class ActiveObjectsService {
         if (resource == null || !resource.isFullfilled()) {
             throw new ActiveObjectSavingException();
         }
-        if (resource instanceof EventPlan) {
-            return converter.addFrom((EventPlan) resource);
+        if (resource instanceof PlanTemplate) {
+            return converter.addFrom((PlanTemplate) resource);
         }
-        if (resource instanceof edu.uz.jira.event.planner.database.importer.xml.model.Domain) {
-            return converter.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.Domain) resource);
+        if (resource instanceof EventCategory) {
+            return converter.addFrom((EventCategory) resource);
         }
-        if (resource instanceof edu.uz.jira.event.planner.database.importer.xml.model.Component) {
-            return converter.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.Component) resource);
+        if (resource instanceof ComponentTemplate) {
+            return converter.addFrom((ComponentTemplate) resource);
         }
-        if (resource instanceof edu.uz.jira.event.planner.database.importer.xml.model.Task) {
-            return converter.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.Task) resource);
+        if (resource instanceof TaskTemplate) {
+            return converter.addFrom((TaskTemplate) resource);
         }
-        if (resource instanceof edu.uz.jira.event.planner.database.importer.xml.model.SubTask) {
-            return converter.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.SubTask) resource);
+        if (resource instanceof SubTaskTemplate) {
+            return converter.addFrom((SubTaskTemplate) resource);
         }
-        if (resource instanceof AllEventPlans) {
-            return converter.addFrom((AllEventPlans) resource);
+        if (resource instanceof EventPlanTemplates) {
+            return converter.addFrom((EventPlanTemplates) resource);
         }
         throw new ActiveObjectSavingException();
     }
@@ -111,12 +110,12 @@ public class ActiveObjectsService {
     public Map<String, List<String>> getEventPlansSortedByDomain() {
         Map<String, List<String>> result = new HashMap<String, List<String>>();
 
-        for (Domain eachDomain : get(Domain.class, Query.select())) {
+        for (Category eachCategory : get(Category.class, Query.select())) {
             List<String> plansNames = new ArrayList<String>();
-            for (Plan eachPlan : eachDomain.getPlans()) {
+            for (Plan eachPlan : eachCategory.getPlans()) {
                 plansNames.add(eachPlan.getName());
             }
-            result.put(eachDomain.getName(), plansNames);
+            result.put(eachCategory.getName(), plansNames);
         }
 
         return result;
@@ -126,7 +125,7 @@ public class ActiveObjectsService {
      * Deletes all database content related with this plug-in.
      */
     public void clearDatabase() {
-        deleteAll(PlanToDomainRelation.class);
+        deleteAll(PlanToCategoryRelation.class);
         deleteAll(PlanToComponentRelation.class);
         deleteAll(SubTaskToTaskRelation.class);
         deleteAll(TaskToComponentRelation.class);
@@ -134,7 +133,7 @@ public class ActiveObjectsService {
         deleteAll(SubTask.class);
         deleteAll(Task.class);
         deleteAll(Component.class);
-        deleteAll(Domain.class);
+        deleteAll(Category.class);
         deleteAll(Plan.class);
     }
 

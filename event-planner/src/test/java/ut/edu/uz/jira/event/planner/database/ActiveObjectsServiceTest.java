@@ -4,11 +4,11 @@ import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.tx.Transactional;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
-import edu.uz.jira.event.planner.database.importer.xml.model.EventPlan;
+import edu.uz.jira.event.planner.database.xml.model.*;
 import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
 import net.java.ao.EntityManager;
 import net.java.ao.Query;
@@ -49,7 +49,7 @@ public class ActiveObjectsServiceTest {
     public void setUp() throws Exception {
         assertNotNull(entityManager);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Category.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToCategoryRelation.class);
         service = new ActiveObjectsService(activeObjects);
         activeObjects.flushAll();
         service.clearDatabase();
@@ -59,79 +59,79 @@ public class ActiveObjectsServiceTest {
     @Test
     public void should_Not_Add_Any_With_Null_Configuration() throws ActiveObjectSavingException {
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.Domain) null);
-        assertEquals(0, activeObjects.count(Domain.class));
+        service.addFrom((EventCategory) null);
+        assertEquals(0, activeObjects.count(Category.class));
 
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.EventPlan) null);
+        service.addFrom((PlanTemplate) null);
         assertEquals(0, activeObjects.count(Plan.class));
 
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.Component) null);
+        service.addFrom((ComponentTemplate) null);
         assertEquals(0, activeObjects.count(Component.class));
 
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.SubTask) null);
+        service.addFrom((SubTaskTemplate) null);
         assertEquals(0, activeObjects.count(SubTask.class));
 
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom((edu.uz.jira.event.planner.database.importer.xml.model.Task) null);
+        service.addFrom((TaskTemplate) null);
         assertEquals(0, activeObjects.count(Task.class));
     }
 
     @Test
     public void should_Not_Add_Any_With_Empty_Configuration() throws ActiveObjectSavingException {
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(edu.uz.jira.event.planner.database.importer.xml.model.Domain.createEmpty());
-        assertEquals(0, activeObjects.count(Domain.class));
+        service.addFrom(EventCategory.createEmpty());
+        assertEquals(0, activeObjects.count(Category.class));
 
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(EventPlan.createEmpty());
+        service.addFrom(PlanTemplate.createEmpty());
         assertEquals(0, activeObjects.count(Plan.class));
 
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(edu.uz.jira.event.planner.database.importer.xml.model.Component.createEmpty());
+        service.addFrom(ComponentTemplate.createEmpty());
         assertEquals(0, activeObjects.count(Component.class));
 
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(edu.uz.jira.event.planner.database.importer.xml.model.SubTask.createEmpty());
+        service.addFrom(SubTaskTemplate.createEmpty());
         assertEquals(0, activeObjects.count(SubTask.class));
 
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(edu.uz.jira.event.planner.database.importer.xml.model.Task.createEmpty());
+        service.addFrom(TaskTemplate.createEmpty());
         assertEquals(0, activeObjects.count(Task.class));
     }
 
     @Test
     public void should_Not_Add_Any_When_Confugiration_Is_Not_Fullfilled() throws ActiveObjectSavingException {
-        edu.uz.jira.event.planner.database.importer.xml.model.Component mockDomainConfig = mock(edu.uz.jira.event.planner.database.importer.xml.model.Component.class);
+        ComponentTemplate mockDomainConfig = mock(ComponentTemplate.class);
         Mockito.when(mockDomainConfig.isFullfilled()).thenReturn(false);
         exception.expect(ActiveObjectSavingException.class);
         service.addFrom(mockDomainConfig);
-        assertEquals(0, activeObjects.count(Domain.class));
+        assertEquals(0, activeObjects.count(Category.class));
 
-        EventPlan mockPlanConfig = mock(EventPlan.class);
+        PlanTemplate mockPlanConfig = mock(PlanTemplate.class);
         Mockito.when(mockPlanConfig.isFullfilled()).thenReturn(false);
         exception.expect(ActiveObjectSavingException.class);
         service.addFrom(mockPlanConfig);
         assertEquals(0, activeObjects.count(Plan.class));
 
-        edu.uz.jira.event.planner.database.importer.xml.model.Component mockComponentConfig = mock(edu.uz.jira.event.planner.database.importer.xml.model.Component.class);
-        Mockito.when(mockComponentConfig.isFullfilled()).thenReturn(false);
+        ComponentTemplate mockComponentTemplateConfig = mock(ComponentTemplate.class);
+        Mockito.when(mockComponentTemplateConfig.isFullfilled()).thenReturn(false);
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(mockComponentConfig);
+        service.addFrom(mockComponentTemplateConfig);
         assertEquals(0, activeObjects.count(Component.class));
 
-        edu.uz.jira.event.planner.database.importer.xml.model.SubTask mockSubTaskConfig = mock(edu.uz.jira.event.planner.database.importer.xml.model.SubTask.class);
-        Mockito.when(mockSubTaskConfig.isFullfilled()).thenReturn(false);
+        SubTaskTemplate mockSubTaskTemplateConfig = mock(SubTaskTemplate.class);
+        Mockito.when(mockSubTaskTemplateConfig.isFullfilled()).thenReturn(false);
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(mockComponentConfig);
+        service.addFrom(mockComponentTemplateConfig);
         assertEquals(0, activeObjects.count(SubTask.class));
 
-        edu.uz.jira.event.planner.database.importer.xml.model.Task mockTaskConfig = mock(edu.uz.jira.event.planner.database.importer.xml.model.Task.class);
-        Mockito.when(mockTaskConfig.isFullfilled()).thenReturn(false);
+        TaskTemplate mockTaskTemplateConfig = mock(TaskTemplate.class);
+        Mockito.when(mockTaskTemplateConfig.isFullfilled()).thenReturn(false);
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(mockTaskConfig);
+        service.addFrom(mockTaskTemplateConfig);
         assertEquals(0, activeObjects.count(Task.class));
     }
 
@@ -147,7 +147,7 @@ public class ActiveObjectsServiceTest {
         activeObjects.create(Plan.class).save();
         activeObjects.create(Plan.class).save();
         activeObjects.create(Task.class).save();
-        activeObjects.create(Domain.class).save();
+        activeObjects.create(Category.class).save();
 
         List<Plan> result = service.get(Plan.class, Query.select());
 
@@ -156,10 +156,9 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void plan_Should_Not_Be_Added_If_Has_Fullfilled_Configuration_But_No_Related_Objects() throws ActiveObjectSavingException {
-        EventPlan config = new EventPlan();
+        PlanTemplate config = new PlanTemplate();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setNeededDays(689);
         config.setDomainsNames(new String[]{"Test domain"});
         config.setComponentsNames(new String[]{"Test component"});
 
@@ -171,13 +170,12 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void plan_Should_Be_Added_If_Has_Fullfilled_Configuration_And_Has_Related_Objects() throws ActiveObjectSavingException {
-        Domain domain = activeObjectsHelper.createDomainNamed("Test domain");
+        Category category = activeObjectsHelper.createDomainNamed("Test category");
         Component component = activeObjectsHelper.createComponentNamed("Test component");
-        EventPlan config = new EventPlan();
+        PlanTemplate config = new PlanTemplate();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setNeededDays(123);
-        config.setDomainsNames(new String[]{domain.getName()});
+        config.setDomainsNames(new String[]{category.getName()});
         config.setComponentsNames(new String[]{component.getName()});
 
         service.addFrom(config);
@@ -187,23 +185,23 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void domain_Should_Be_Added_If_Has_Fullfilled_Configuration() throws ActiveObjectSavingException {
-        edu.uz.jira.event.planner.database.importer.xml.model.Domain configuration = new edu.uz.jira.event.planner.database.importer.xml.model.Domain();
+        EventCategory configuration = new EventCategory();
         configuration.setName("Test name");
         configuration.setDescription("Test description");
 
         service.addFrom(configuration);
 
-        assertEquals(1, activeObjects.count(Domain.class));
+        assertEquals(1, activeObjects.count(Category.class));
     }
 
     @Test
     public void task_Should_Be_Added_If_Has_Fullfilled_Configuration_With_Related_Sub_Tasks() throws ActiveObjectSavingException {
         SubTask firstSubTask = activeObjectsHelper.createSubTaskNamed("Test 1");
         SubTask secondSubTask = activeObjectsHelper.createSubTaskNamed("Test 2");
-        edu.uz.jira.event.planner.database.importer.xml.model.Task config = new edu.uz.jira.event.planner.database.importer.xml.model.Task();
+        TaskTemplate config = new TaskTemplate();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setNeededDays(123);
+        config.setNeededDaysBeforeEvent(123);
         config.setSubTasksNames(new String[]{firstSubTask.getName(), secondSubTask.getName()});
 
         service.addFrom(config);
@@ -216,7 +214,7 @@ public class ActiveObjectsServiceTest {
     @Test
     public void component_Should_Be_Added_If_Has_Fullfilled_Configuration() throws ActiveObjectSavingException {
         Task task = activeObjectsHelper.createTaskNamed("Test");
-        edu.uz.jira.event.planner.database.importer.xml.model.Component config = new edu.uz.jira.event.planner.database.importer.xml.model.Component();
+        ComponentTemplate config = new ComponentTemplate();
         config.setName("Test name");
         config.setDescription("Test description");
         config.setTasksNames(new String[]{task.getName()});
@@ -230,7 +228,7 @@ public class ActiveObjectsServiceTest {
     public void component_Should_Be_Added_If_Has_Fullfilled_Configuration_With_Related_Tasks() throws ActiveObjectSavingException {
         Task firstTask = activeObjectsHelper.createTaskNamed("Test 1");
         Task secondTask = activeObjectsHelper.createTaskNamed("Test 2");
-        edu.uz.jira.event.planner.database.importer.xml.model.Component config = new edu.uz.jira.event.planner.database.importer.xml.model.Component();
+        ComponentTemplate config = new ComponentTemplate();
         config.setName("Test name");
         config.setDescription("Test description");
         config.setTasksNames(new String[]{firstTask.getName(), secondTask.getName()});
@@ -244,7 +242,7 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void sub_Task_Should_Be_Added_If_Has_Fullfilled_Configuration() throws ActiveObjectSavingException {
-        edu.uz.jira.event.planner.database.importer.xml.model.SubTask config = new edu.uz.jira.event.planner.database.importer.xml.model.SubTask();
+        SubTaskTemplate config = new SubTaskTemplate();
         config.setName("Test name");
         config.setDescription("Test description");
 
@@ -256,10 +254,9 @@ public class ActiveObjectsServiceTest {
     @Test
     public void plan_Should_Not_Be_Add_If_Cannot_Relate_It_With_Domain() throws ActiveObjectSavingException {
         Component component = activeObjectsHelper.createComponentNamed("Test componnet");
-        EventPlan config = new EventPlan();
+        PlanTemplate config = new PlanTemplate();
         config.setName("Name");
         config.setDescription("Description");
-        config.setNeededDays(123);
         config.setDomainsNames(new String[]{"Nonexistent domain"});
         config.setComponentsNames(new String[]{component.getName()});
 
@@ -271,13 +268,12 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void plan_Should_Not_Be_Add_If_Cannot_Relate_It_With_Component() throws ActiveObjectSavingException {
-        Domain domain = activeObjectsHelper.createDomainNamed("test domain");
-        EventPlan config = new EventPlan();
+        Category category = activeObjectsHelper.createDomainNamed("test category");
+        PlanTemplate config = new PlanTemplate();
         config.setName("Name");
         config.setDescription("Description");
-        config.setNeededDays(123);
         config.setComponentsNames(new String[]{"Nonexistent component"});
-        config.setDomainsNames(new String[]{domain.getName()});
+        config.setDomainsNames(new String[]{category.getName()});
 
         exception.expect(ActiveObjectSavingException.class);
         service.addFrom(config);
@@ -287,7 +283,7 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void component_Should_Not_Be_Add_If_Cannot_Relate_It_With_Tasks() throws ActiveObjectSavingException {
-        edu.uz.jira.event.planner.database.importer.xml.model.Component config = new edu.uz.jira.event.planner.database.importer.xml.model.Component();
+        ComponentTemplate config = new ComponentTemplate();
         config.setName("Name");
         config.setDescription("Description");
         config.setTasksNames(new String[]{"Nonexistent task"});
@@ -300,10 +296,10 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void task_Should_Not_Be_Add_If_Cannot_Relate_It_With_Sub_Tasks() throws ActiveObjectSavingException {
-        edu.uz.jira.event.planner.database.importer.xml.model.Task config = new edu.uz.jira.event.planner.database.importer.xml.model.Task();
+        TaskTemplate config = new TaskTemplate();
         config.setName("Name");
         config.setDescription("Description");
-        config.setNeededDays(123);
+        config.setNeededDaysBeforeEvent(123);
         config.setSubTasksNames(new String[]{"Nonexistent subtask"});
 
         exception.expect(ActiveObjectSavingException.class);
@@ -323,11 +319,11 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void any_Entity_Related_With_Others_Should_Be_Deleted_By_Id() {
-        Domain domain = activeObjectsHelper.createDomainNamed("test name");
+        Category category = activeObjectsHelper.createDomainNamed("test name");
         Component component = activeObjectsHelper.createComponentNamed("test name");
         Plan plan = activeObjectsHelper.createPlan("Name", "description", 0, 12);
-        PlanToDomainRelation relation = activeObjects.create(PlanToDomainRelation.class);
-        relation.setDomain(domain);
+        PlanToCategoryRelation relation = activeObjects.create(PlanToCategoryRelation.class);
+        relation.setCategory(category);
         relation.setPlan(plan);
         relation.save();
         PlanToComponentRelation relation2 = activeObjects.create(PlanToComponentRelation.class);
@@ -339,8 +335,8 @@ public class ActiveObjectsServiceTest {
 
         assertEquals(0, activeObjects.count(Plan.class));
         assertEquals(0, activeObjects.count(PlanToComponentRelation.class));
-        assertEquals(0, activeObjects.count(PlanToDomainRelation.class));
-        assertEquals(1, activeObjects.count(Domain.class));
+        assertEquals(0, activeObjects.count(PlanToCategoryRelation.class));
+        assertEquals(1, activeObjects.count(Category.class));
         assertEquals(1, activeObjects.count(Component.class));
     }
 
@@ -349,12 +345,12 @@ public class ActiveObjectsServiceTest {
         Task task = activeObjectsHelper.createTask("test name", 0, 13);
         SubTask subTask = activeObjectsHelper.createSubTaskNamed("name");
         activeObjectsHelper.associate(task, subTask);
-        Domain domain = activeObjectsHelper.createDomainNamed("test name");
+        Category category = activeObjectsHelper.createDomainNamed("test name");
         Component component = activeObjectsHelper.createComponentNamed("test name");
         activeObjectsHelper.associate(component, task);
         Plan plan = activeObjectsHelper.createPlan("Name", "description", 0, 14);
-        PlanToDomainRelation relation = activeObjects.create(PlanToDomainRelation.class);
-        relation.setDomain(domain);
+        PlanToCategoryRelation relation = activeObjects.create(PlanToCategoryRelation.class);
+        relation.setCategory(category);
         relation.setPlan(plan);
         relation.save();
         PlanToComponentRelation relation2 = activeObjects.create(PlanToComponentRelation.class);
@@ -364,13 +360,13 @@ public class ActiveObjectsServiceTest {
 
         service.clearDatabase();
 
-        assertEquals(0, activeObjects.count(Domain.class));
+        assertEquals(0, activeObjects.count(Category.class));
         assertEquals(0, activeObjects.count(Plan.class));
         assertEquals(0, activeObjects.count(Component.class));
         assertEquals(0, activeObjects.count(SubTask.class));
         assertEquals(0, activeObjects.count(Task.class));
         assertEquals(0, activeObjects.count(PlanToComponentRelation.class));
-        assertEquals(0, activeObjects.count(PlanToDomainRelation.class));
+        assertEquals(0, activeObjects.count(PlanToCategoryRelation.class));
         assertEquals(0, activeObjects.count(SubTaskToTaskRelation.class));
         assertEquals(0, activeObjects.count(TaskToComponentRelation.class));
     }

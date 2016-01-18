@@ -30,67 +30,70 @@ function PlansList() {
     };
 
     that.insert = function (plan) {
-        if (plan.name === undefined || plan.description === undefined || plan.neededMonths === undefined || plan.neededDays === undefined) {
+        if (plan.name === undefined || plan.description === undefined) {
             return false;
         }
-        var table, newRow, nameSpan, name, description, nameAndDescriptionCell, domainsNamesList, componentsNamesList, neededTime, deleteLink, operationsList, operationsCell;
+        var table, newRow;
 
         table = that.getTable();
         newRow = table.insertRow(table.rows.length);
+
+        that.insertNameAndDescriptionCell(plan, newRow);
+        that.insertCategoriesList(plan, newRow);
+        that.insertComponentsList(plan, newRow);
+        that.insertEstimatedTimeToComplete(plan, newRow);
+        that.insertOperationsLinksCell(plan, newRow);
+
+        return true;
+    };
+
+    that.insertNameAndDescriptionCell = function (plan, row) {
+        var nameSpan, name, description, nameAndDescriptionCell;
 
         nameSpan = that.createDiv(plan.name, "field-name");
         name = that.createLink(nameSpan, AJS.contextPath() + "/secure/ViewEventOrganizationPlan.jspa?id=" + plan.id, "View Event Organization Plan");
         description = that.createDiv(plan.description, "description secondary-text");
 
-        nameAndDescriptionCell = that.insertCell(newRow, 0);
+        nameAndDescriptionCell = that.insertCell(row, 0);
         nameAndDescriptionCell.appendChild(name);
         nameAndDescriptionCell.appendChild(description);
+    };
 
-        domainsNamesList = that.createListFrom(plan.domainsNames);
-        if (domainsNamesList === undefined) {
+    that.insertCategoriesList = function (plan, row) {
+        var categoriesNamesList = that.createListFrom(plan.categoriesNames);
+        if (categoriesNamesList === undefined) {
             return false;
         }
-        that.insertCell(newRow, 1).appendChild(domainsNamesList);
+        that.insertCell(row, 1).appendChild(categoriesNamesList);
+    };
 
-        componentsNamesList = that.createListFrom(plan.componentsNames);
+    that.insertComponentsList = function (plan, row) {
+        var componentsNamesList = that.createListFrom(plan.componentsNames);
         if (componentsNamesList === undefined) {
             return false;
         }
-        that.insertCell(newRow, 2).appendChild(componentsNamesList);
+        that.insertCell(row, 2).appendChild(componentsNamesList);
+    };
 
-        neededTime = '';
-        if (plan.neededMonths === 1) {
-            neededTime += plan.neededMonths + ' month';
-        } else if (plan.neededMonths > 1) {
-            neededTime += plan.neededMonths + ' months';
-        }
+    that.insertEstimatedTimeToComplete = function (plan, row) {
+        that.insertCell(row, 3).appendChild(document.createTextNode(plan.reserveTimeInDays));
+    };
 
-        if (plan.neededMonths > 0 && plan.neededDays > 0) {
-            neededTime += ' + ';
-        }
+    that.insertOperationsLinksCell = function (plan, row) {
+        var deleteLink, operationsList, operationsCell;
 
-        if (plan.neededDays === 1) {
-            neededTime += plan.neededDays + ' day ';
-        } else if (plan.neededDays > 1) {
-            neededTime += plan.neededDays + ' days ';
-        }
-
-        that.insertCell(newRow, 3).appendChild(document.createTextNode(neededTime));
-
-        // TODO odkomentuj dopiero, gdy zostanie zaimplementowana akacja edycji planu eventu
+        //TODO odkomentuj dopiero, gdy zostanie zaimplementowana akacja edycji planu eventu
         //var editLink = that.createLink(document.createTextNode('Edit'), AJS.contextPath() + "/secure/EditEventOrganizationPlan.jspa?id=" + plan.id, "Edit Event Organization Plan", "edit-plan");
         deleteLink = that.createLink(document.createTextNode('Delete'), AJS.contextPath() + "/secure/DeleteEventOrganizationPlan.jspa?id=" + plan.id, "Delete Event Organization Plan", "delete-plan");
 
         operationsList = that.createList();
         operationsList.className = "operations-list";
-        // TODO odkomentuj dopiero, gdy zostanie zaimplementowana akacja edycji planu eventu
+        //TODO odkomentuj dopiero, gdy zostanie zaimplementowana akacja edycji planu eventu
         //that.addToList(operationsList, editLink);
         that.addToList(operationsList, deleteLink);
 
-        operationsCell = that.insertCell(newRow, 4);
+        operationsCell = that.insertCell(row, 4);
         operationsCell.appendChild(operationsList);
-
-        return true;
     };
 
     that.insertCell = function (row, index) {

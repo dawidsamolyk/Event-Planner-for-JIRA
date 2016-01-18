@@ -1,0 +1,52 @@
+<div id="import-plan-dialog"
+     class="jira-dialog box-shadow jira-dialog-open popup-width-medium jira-dialog-content-ready">
+    <div class="jira-dialog-heading">
+        <h2 title="Import Event Plan Templates From XML">Import Event Plan Templates From XML</h2>
+    </div>
+    <div class="jira-dialog-content">
+        <div class="dialog-title hidden">Import Event Plan Templates From XML</div>
+        <form action="ImportEventPlanTemplatesFromXml.jspa" class="aui" id="import-plan-templates" method="post">
+            <div class="form-body">
+                <fieldset class="group content-toggle">
+                    <legend><span>Event Plan Templates Definition</span></legend>
+                    <div class="radio">
+                        <input class="radio" checked="checked" id="import-workflow-import-xml-file" name="definition"
+                               type="radio" value="file">
+                        <label for="import-workflow-import-xml-file">Provide a full path to an XML file on the server
+                            that contains the workflow definition.</label>
+                    </div>
+                    <div class="radio">
+                        <input class="radio" id="import-workflow-import-xml-definition" name="definition" type="radio"
+                               value="inline">
+                        <label for="import-workflow-import-xml-definition">Paste the workflow XML definition.</label>
+                    </div>
+                </fieldset>
+
+                <div class="field-group" id="definition-file-content">
+                    <label for="import-workflow-definition-file-content-filePath">File Path<span
+                            class="aui-icon icon-required"> required</span></label>
+                    <input class="text long-field" id="import-workflow-definition-file-content-filePath" maxlength="60"
+                           name="filePath" type="text">
+                </div>
+
+                <div class="field-group hidden" id="definition-inline-content">
+                    <label for="import-plan-templates-definition-inline-content">Event Plan Templates Definition
+                        (XML)<span
+                                class="aui-icon icon-required"> required</span>
+                    </label>
+                    <textarea class="textarea long-field" cols="40" id="import-plan-definition-inline-content"
+                              name="eventPlanTemplatesXml" rows="10" type="text"></textarea>
+                </div>
+            </div>
+
+            <div class="buttons-container form-footer">
+                <div class="buttons"><span class="icon throbber"></span>
+                    <input accesskey="s" class="aui-button" id="import-plan-templates-submit" name="Import"
+                           title="Press Alt+s to submit this form" type="submit" value="Import">
+                    <a accesskey="`" class="aui-button aui-button-link cancel" id="import-plan-templates-cancel"
+                       title="Press Alt+` to cancel">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

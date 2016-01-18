@@ -5,7 +5,7 @@ import com.atlassian.sal.api.message.I18nResolver;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.templaterenderer.TemplateRenderer;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.importer.xml.EventPlansImportExecutor;
+import edu.uz.jira.event.planner.database.xml.importer.EventPlansImportExecutor;
 import edu.uz.jira.event.planner.util.ServletHelper;
 
 import javax.annotation.Nonnull;

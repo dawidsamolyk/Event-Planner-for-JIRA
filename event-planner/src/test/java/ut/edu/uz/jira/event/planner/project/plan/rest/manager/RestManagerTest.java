@@ -11,16 +11,17 @@ import com.atlassian.sal.api.user.UserProfile;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
 import edu.uz.jira.event.planner.database.active.objects.model.Component;
-import edu.uz.jira.event.planner.database.active.objects.model.Domain;
+import edu.uz.jira.event.planner.database.active.objects.model.Category;
 import edu.uz.jira.event.planner.database.active.objects.model.SubTask;
 import edu.uz.jira.event.planner.database.active.objects.model.Task;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
-import edu.uz.jira.event.planner.database.importer.xml.model.*;
+import edu.uz.jira.event.planner.database.xml.model.EventCategory;
+import edu.uz.jira.event.planner.database.xml.model.PlanTemplate;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
-import edu.uz.jira.event.planner.project.plan.rest.manager.EventDomainRestManager;
+import edu.uz.jira.event.planner.project.plan.rest.manager.EventCategoryRestManager;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventTaskRestManager;
 import net.java.ao.EntityManager;
 import net.java.ao.test.converters.NameConverters;
@@ -58,8 +59,8 @@ public class RestManagerTest {
     private ActiveObjectWrapper[] doGetTransactionResult;
     private ActiveObjectsTestHelper testHelper;
 
-    private edu.uz.jira.event.planner.database.importer.xml.model.Domain getEmptyDomain() {
-        return edu.uz.jira.event.planner.database.importer.xml.model.Domain.createEmpty();
+    private EventCategory getEmptyDomain() {
+        return EventCategory.createEmpty();
     }
 
     @Before
@@ -91,7 +92,7 @@ public class RestManagerTest {
 
         activeObjects = mock(ActiveObjects.class);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Category.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToCategoryRelation.class);
         planService = new ActiveObjectsService(activeObjects);
         planService.clearDatabase();
 
@@ -101,7 +102,7 @@ public class RestManagerTest {
     @Test
     public void on_Get_Should_Response_Unauthorized_When_User_Is_Null() {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.get(mockRequest);
 
@@ -111,7 +112,7 @@ public class RestManagerTest {
     @Test
     public void on_Post_with_id_Should_Response_Unauthorized_When_User_Is_Null() {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.post("123", mockRequest);
 
@@ -121,7 +122,7 @@ public class RestManagerTest {
     @Test
     public void on_Post_Should_Response_Unauthorized_When_User_Is_Null() {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.post(getEmptyDomain(), mockRequest);
 
@@ -131,7 +132,7 @@ public class RestManagerTest {
     @Test
     public void on_Delete_Should_Response_Unauthorized_When_User_Is_Null() {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.delete("10", mockRequest);
 
@@ -141,7 +142,7 @@ public class RestManagerTest {
     @Test
     public void on_Get_should_Response_Unauthorized_When_User_Is_Not_Admin() {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.get(mockRequest);
 
@@ -151,7 +152,7 @@ public class RestManagerTest {
     @Test
     public void on_Post_Should_Response_Unauthorized_When_User_Is_Not_Admin() {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.post(getEmptyDomain(), mockRequest);
 
@@ -161,7 +162,7 @@ public class RestManagerTest {
     @Test
     public void on_Post_with_id_Should_Response_Unauthorized_When_User_Is_Not_Admin() {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.post("123", mockRequest);
 
@@ -171,7 +172,7 @@ public class RestManagerTest {
     @Test
     public void on_Delete_Should_Response_Unauthorized_When_User_Is_Not_Admin() {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.delete("11", mockRequest);
 
@@ -180,7 +181,7 @@ public class RestManagerTest {
 
     @Test
     public void on_Post_should_Response_No_Content_When_Resource_Is_Null() {
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.post((ActiveObjectWrapper) null, mockRequest);
 
@@ -189,7 +190,7 @@ public class RestManagerTest {
 
     @Test
     public void should_Not_Post_Empty_Configuration() {
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.post(getEmptyDomain(), mockRequest);
 
@@ -198,7 +199,7 @@ public class RestManagerTest {
 
     @Test
     public void should_return_not_found_on_delete_if_id_is_null() {
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.delete(null, mockRequest);
 
@@ -207,7 +208,7 @@ public class RestManagerTest {
 
     @Test
     public void should_return_not_found_on_delete_if_id_is_empty() {
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.delete(null, mockRequest);
 
@@ -216,7 +217,7 @@ public class RestManagerTest {
 
     @Test
     public void should_return_not_found_on_delete_if_entity_not_exists() {
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.delete("9999", mockRequest);
 
@@ -236,14 +237,12 @@ public class RestManagerTest {
 
     @Test
     public void on_Post_Should_Not_Accept_When_Trying_To_Put_Configuration_Of_Invalid_Resource() throws SQLException {
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
-        EventPlan invalidConfig = new EventPlan();
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
+        PlanTemplate invalidConfig = new PlanTemplate();
         invalidConfig.setName("Test name");
         invalidConfig.setDescription("Test description");
         invalidConfig.setDomainsNames(new String[]{"Test domain"});
         invalidConfig.setComponentsNames(new String[]{"Test component"});
-        invalidConfig.setNeededMonths(0);
-        invalidConfig.setNeededDays(12);
 
         Response result = fixture.post(invalidConfig, mockRequest);
 
@@ -252,36 +251,36 @@ public class RestManagerTest {
 
     @Test
     public void on_Post_Should_Return_Only_One_Resource_With_Specified_Id() throws SQLException {
-        Domain firstDomain = testHelper.createDomain("name", "descr");
+        Category firstCategory = testHelper.createDomain("name", "descr");
         testHelper.createDomain("test", "test");
 
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        Response result = fixture.post(Integer.toString(firstDomain.getID()), mockRequest);
+        Response result = fixture.post(Integer.toString(firstCategory.getID()), mockRequest);
 
         assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
         assertEquals(1, doGetTransactionResult.length);
-        assertEquals(firstDomain.getName(), ((edu.uz.jira.event.planner.database.importer.xml.model.Domain) doGetTransactionResult[0]).getName());
+        assertEquals(firstCategory.getName(), ((EventCategory) doGetTransactionResult[0]).getName());
     }
 
     @Test
     public void on_Get_Should_Return_All_Resources() throws SQLException {
-        Domain firstDomain = testHelper.createDomain("name", "descr");
-        Domain secondDomain = testHelper.createDomain("test", "test");
+        Category firstCategory = testHelper.createDomain("name", "descr");
+        Category secondCategory = testHelper.createDomain("test", "test");
 
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.get(mockRequest);
 
         assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
         assertEquals(2, doGetTransactionResult.length);
-        assertEquals(firstDomain.getName(), ((edu.uz.jira.event.planner.database.importer.xml.model.Domain) doGetTransactionResult[0]).getName());
-        assertEquals(secondDomain.getName(), ((edu.uz.jira.event.planner.database.importer.xml.model.Domain) doGetTransactionResult[1]).getName());
+        assertEquals(firstCategory.getName(), ((EventCategory) doGetTransactionResult[0]).getName());
+        assertEquals(secondCategory.getName(), ((EventCategory) doGetTransactionResult[1]).getName());
     }
 
     @Test
     public void on_Delete_with_unknown_id_should_response_not_found() throws SQLException {
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response response = fixture.delete("1251252", mockRequest);
 
@@ -290,31 +289,31 @@ public class RestManagerTest {
 
     @Test
     public void on_Delete_should_remove_entity_with_specified_id() throws SQLException {
-        Domain domain = testHelper.createDomainNamed("test name");
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        Category category = testHelper.createDomainNamed("test name");
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        Response response = fixture.delete(Integer.toString(domain.getID()), mockRequest);
+        Response response = fixture.delete(Integer.toString(category.getID()), mockRequest);
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        assertEquals(0, activeObjects.count(Domain.class));
+        assertEquals(0, activeObjects.count(Category.class));
     }
 
     @Test
     public void on_Post_should_get_entity_with_specified_id() throws SQLException {
-        Domain domain = testHelper.createDomainNamed("test name");
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        Category category = testHelper.createDomainNamed("test name");
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        Response response = fixture.post(Integer.toString(domain.getID()), mockRequest);
+        Response response = fixture.post(Integer.toString(category.getID()), mockRequest);
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
-        ActiveObjectWrapper expected = edu.uz.jira.event.planner.database.importer.xml.model.Domain.createEmpty().fill(domain);
+        ActiveObjectWrapper expected = EventCategory.createEmpty().fill(category);
         assertEquals(expected, doGetTransactionResult[0]);
     }
 
     @Test
     public void on_Post_with_null_id_should_response_not_acceptable() {
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.post((String) null, mockRequest);
 
@@ -323,7 +322,7 @@ public class RestManagerTest {
 
     @Test
     public void on_Post_with_empty_id_should_response_not_acceptable() {
-        EventDomainRestManager fixture = new EventDomainRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
+        EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         Response result = fixture.post("", mockRequest);
 

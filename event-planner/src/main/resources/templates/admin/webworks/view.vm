@@ -35,8 +35,8 @@
 
         </div>
         <div class="field-group">
-            <label for="plan-domains" style="font-weight:bold">Domains:</label>
-            <ul id="plan-domains">
+            <label for="plan-categories" style="font-weight:bold">Domains:</label>
+            <ul id="plan-categories">
 
             </ul>
         </div>

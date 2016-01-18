@@ -10,10 +10,10 @@ import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
-import edu.uz.jira.event.planner.database.importer.xml.EventPlansImportExecutor;
+import edu.uz.jira.event.planner.database.xml.importer.EventPlansImportExecutor;
 import edu.uz.jira.event.planner.exception.EventPlansImportException;
 import net.java.ao.EntityManager;
 import net.java.ao.test.converters.NameConverters;
@@ -55,7 +55,7 @@ public class EventPlansImportExecutorTest {
 
         assertNotNull(entityManager);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Category.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToCategoryRelation.class);
         service = new ActiveObjectsService(activeObjects);
         activeObjects.flushAll();
         service.clearDatabase();
@@ -122,13 +122,13 @@ public class EventPlansImportExecutorTest {
         assertEquals(EventPlansImportExecutor.IMPORTED, mockApplicationProperties.getText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY));
 
         Plan plan = activeObjects.find(Plan.class)[0];
-        Domain domain = activeObjects.find(Domain.class)[0];
+        Category category = activeObjects.find(Category.class)[0];
         Component component = activeObjects.find(Component.class)[0];
         List<Task> tasks = Arrays.asList(activeObjects.find(Task.class));
 
-        PlanToDomainRelation planToDomainRelation = activeObjects.find(PlanToDomainRelation.class)[0];
-        assertEquals(plan, planToDomainRelation.getPlan());
-        assertEquals(domain, planToDomainRelation.getDomain());
+        PlanToCategoryRelation planToCategoryRelation = activeObjects.find(PlanToCategoryRelation.class)[0];
+        assertEquals(plan, planToCategoryRelation.getPlan());
+        assertEquals(category, planToCategoryRelation.getCategory());
 
         PlanToComponentRelation planToComponentRelation = activeObjects.find(PlanToComponentRelation.class)[0];
         assertEquals(plan, planToComponentRelation.getPlan());

@@ -11,12 +11,12 @@
 
     <ao key="active-objects">
         <entity>edu.uz.jira.event.planner.database.active.objects.model.Plan</entity>
-        <entity>edu.uz.jira.event.planner.database.active.objects.model.Domain</entity>
+        <entity>edu.uz.jira.event.planner.database.active.objects.model.Category</entity>
         <entity>edu.uz.jira.event.planner.database.active.objects.model.Task</entity>
         <entity>edu.uz.jira.event.planner.database.active.objects.model.SubTask</entity>
         <entity>edu.uz.jira.event.planner.database.active.objects.model.Component</entity>
         <entity>edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation</entity>
-        <entity>edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation</entity>
+        <entity>edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation</entity>
         <entity>edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation</entity>
         <entity>edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation</entity>
     </ao>
@@ -44,14 +44,14 @@
     </servlet>
 
     <web-resource name="Event Plans Configuration Resources" key="event-plans-configuration-resources">
-        <description key="event.plans.config.resources">Resources for Event Plans Configuration admin UI</description>
+        <description key="event.plans.config.resources">Resources for Event Plan Templates Configuration GUI</description>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
         <dependency>com.atlassian.auiplugin:aui-form-validation</dependency>
         <resource type="velocity" name="event-plans-view" location="/templates/admin/event-plans.vm"/>
         <resource type="download" name="component.js" location="/templates/admin/model/component.js"/>
-        <resource type="download" name="domain.js" location="/templates/admin/model/domain.js"/>
+        <resource type="download" name="category.js" location="/templates/admin/model/category.js"/>
         <resource type="download" name="plan.js" location="/templates/admin/model/plan.js"/>
         <resource type="download" name="plans-list.js" location="/templates/admin/model/plans-list.js"/>
         <resource type="download" name="subtask.js" location="/templates/admin/model/subtask.js"/>
@@ -62,7 +62,7 @@
 
     <web-item key="event_plans" name="Event Organization Plans Link" i18n-name-key="event.plans.admin.name"
               section="admin_project_menu/project_section" weight="40">
-        <description>Link to Event Organization Plans Configuration page.</description>
+        <description>Link to Event Organization Plan Templates Configuration page.</description>
         <label key="event.plans.admin.label"/>
         <link linkId="event_plans">/plugins/servlet/event/plans/configuration</link>
         <condition class="com.atlassian.jira.plugin.webfragment.conditions.UserIsAdminCondition"/>
@@ -106,9 +106,7 @@
 
     <webwork1 key="event-organization-config-webwork" name="Event Organization Plan Webworks"
               i18n-name-key="event.organization.webwork.name">
-        <description key="event-organization-config-webwork-description">The Event Organization Configuration Webwork
-            Plugin
-        </description>
+        <description key="event-organization-config-webwork-description">The Event Organization Configuration Webwork</description>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <actions>
@@ -134,8 +132,10 @@
     </webwork1>
 
     <web-resource name="Event Plan Configuration Resources" key="event-plan-configuration-resources">
-        <description key="event.plans.config.resources">Resources for Event Organization Plan Configuration
+        <description key="event.plans.config.resources">Resources for Event Organization Plan configuration
         </description>
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
         <dependency>com.atlassian.auiplugin:aui-form-validation</dependency>
         <resource type="download" name="jquery.datetimepicker.full.min.js"
@@ -158,12 +158,12 @@
     <servlet name="Event Plan Timeline Servlet" i18n-name-key="event.plan.timeline.servlet.name"
              key="event-plan-timeline-servlet"
              class="edu.uz.jira.event.planner.timeline.servlet.EventPlanTimelineServlet">
-        <description key="event.plan.timeline.servlet.description">The Event Plan Timeline Servlet Plugin</description>
+        <description key="event.plan.timeline.servlet.description">The Event Plan Timeline</description>
         <url-pattern>/event/plan/time-line</url-pattern>
     </servlet>
 
     <web-resource name="Event Plan TimeLine Resources" key="event-plan-timeline-resources">
-        <description key="event.plan.timeline.resources">Resources for Event Plan TimeLine UI</description>
+        <description key="event.plan.timeline.resources">Resources for Event Plan TimeLine</description>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
         <dependency>com.atlassian.gadgets.dashboard:dashboard</dependency>

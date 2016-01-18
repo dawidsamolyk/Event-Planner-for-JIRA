@@ -4,7 +4,7 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2016.01.08 at 06:58:36 PM CET 
 //
-package edu.uz.jira.event.planner.database.importer.xml.model;
+package edu.uz.jira.event.planner.database.xml.model;
 
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import net.java.ao.Entity;
@@ -15,25 +15,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * XML representation of many Event Plans.
+ * XML representation of many Event Plan Templates.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
         "eventPlan"
 })
 @XmlRootElement(name = "event-plans")
-public class AllEventPlans implements ActiveObjectWrapper {
+public class EventPlanTemplates implements ActiveObjectWrapper {
     @XmlElement(name = "event-plan")
-    private List<EventPlan> eventPlan;
+    private List<PlanTemplate> eventPlan;
 
-    public List<EventPlan> getEventPlan() {
+    public List<PlanTemplate> getEventPlanTemplate() {
         if (eventPlan == null) {
-            eventPlan = new ArrayList<EventPlan>();
+            eventPlan = new ArrayList<PlanTemplate>();
         }
         return this.eventPlan;
     }
 
-    public void setEventPlan(List<EventPlan> eventPlan) {
+    public void setEventPlan(List<PlanTemplate> eventPlan) {
         this.eventPlan = eventPlan;
     }
 
@@ -42,14 +42,14 @@ public class AllEventPlans implements ActiveObjectWrapper {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AllEventPlans that = (AllEventPlans) o;
+        EventPlanTemplates that = (EventPlanTemplates) o;
 
-        return !(getEventPlan() != null ? !getEventPlan().equals(that.getEventPlan()) : that.getEventPlan() != null);
+        return !(getEventPlanTemplate() != null ? !getEventPlanTemplate().equals(that.getEventPlanTemplate()) : that.getEventPlanTemplate() != null);
     }
 
     @Override
     public int hashCode() {
-        return getEventPlan() != null ? getEventPlan().hashCode() : 0;
+        return getEventPlanTemplate() != null ? getEventPlanTemplate().hashCode() : 0;
     }
 
     @Override
@@ -69,6 +69,6 @@ public class AllEventPlans implements ActiveObjectWrapper {
 
     @Override
     public ActiveObjectWrapper getEmptyCopy() {
-        return new AllEventPlans();
+        return new EventPlanTemplates();
     }
 }

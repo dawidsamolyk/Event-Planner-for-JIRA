@@ -3,7 +3,7 @@ package ut.helpers;
 import com.atlassian.activeobjects.external.ActiveObjects;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 
@@ -16,12 +16,12 @@ public class ActiveObjectsTestHelper {
         this.activeObjects = activeObjects;
     }
 
-    public Domain createDomain(String name, String description) {
-        Domain domain = activeObjects.create(Domain.class);
-        domain.setName(name);
-        domain.setDescription(description);
-        domain.save();
-        return domain;
+    public Category createDomain(String name, String description) {
+        Category category = activeObjects.create(Category.class);
+        category.setName(name);
+        category.setDescription(description);
+        category.save();
+        return category;
     }
 
     public SubTask createSubTaskNamed(String name) {
@@ -35,7 +35,7 @@ public class ActiveObjectsTestHelper {
         return createComponent(name, "");
     }
 
-    public Domain createDomainNamed(String name) {
+    public Category createDomainNamed(String name) {
         return createDomain(name, "");
     }
 
@@ -61,15 +61,15 @@ public class ActiveObjectsTestHelper {
     }
 
     public void createPlanWithDomainAndComponent(String planName, String planDescription, int months, int days, String domainName, String componentName) throws SQLException {
-        Domain domain = createDomainNamed(domainName);
+        Category category = createDomainNamed(domainName);
 
         Component component = createComponentNamed(componentName);
 
         Plan plan = createPlan(planName, planDescription, months, days);
 
-        PlanToDomainRelation relation = activeObjects.create(PlanToDomainRelation.class);
+        PlanToCategoryRelation relation = activeObjects.create(PlanToCategoryRelation.class);
         relation.setPlan(plan);
-        relation.setDomain(domain);
+        relation.setCategory(category);
         relation.save();
 
         PlanToComponentRelation relation2 = activeObjects.create(PlanToComponentRelation.class);
@@ -78,10 +78,10 @@ public class ActiveObjectsTestHelper {
         relation2.save();
     }
 
-    public PlanToDomainRelation associate(Plan plan, Domain domain) {
-        PlanToDomainRelation relation = activeObjects.create(PlanToDomainRelation.class);
+    public PlanToCategoryRelation associate(Plan plan, Category category) {
+        PlanToCategoryRelation relation = activeObjects.create(PlanToCategoryRelation.class);
         relation.setPlan(plan);
-        relation.setDomain(domain);
+        relation.setCategory(category);
         relation.save();
         return relation;
     }
@@ -98,8 +98,6 @@ public class ActiveObjectsTestHelper {
         Plan plan = activeObjects.create(Plan.class);
         plan.setName(planName);
         plan.setDescription(planDescription);
-        plan.setNeededMonthsToComplete(months);
-        plan.setNeededDaysToComplete(days);
         plan.save();
         return plan;
     }

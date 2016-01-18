@@ -12,11 +12,11 @@ function Task() {
         return AJS.$("#task-description");
     };
 
-    that.getNeededMonthsToComplete = function () {
+    that.getNeededMonthsBeforeEvent = function () {
         return AJS.$("#task-needed-months");
     };
 
-    that.getNeededDaysToComplete = function () {
+    that.getNeededDaysBeforeEvent = function () {
         return AJS.$("#task-needed-days");
     };
 
@@ -25,34 +25,32 @@ function Task() {
     };
 
     that.getJson = function () {
-        var name, description, neededMonths, neededDays, subTasksNamesArray;
+        var name, description, neededMonthsBeforeEvent, neededDaysBeforeEvent, subTasksNamesArray;
         name = that.getName().attr("value");
         description = that.getDescription().attr("value");
-        neededMonths = that.getNeededMonthsToComplete().attr("value");
-        neededDays = that.getNeededDaysToComplete().attr("value");
+        neededMonthsBeforeEvent = that.getNeededMonthsBeforeEvent().attr("value");
+        neededDaysBeforeEvent = that.getNeededDaysBeforeEvent().attr("value");
         subTasksNamesArray = JSON.stringify(that.getSubTasks().val());
 
         return '{ "name": "' + name +
             '", "description": "' + description +
-            '", "neededMonths": ' + neededMonths +
-            ', "neededDays": ' + neededDays +
+            '", "neededMonthsBeforeEvent": ' + neededMonthsBeforeEvent +
+            ', "neededDaysBeforeEvent": ' + neededDaysBeforeEvent +
             ', "subTasksNames": ' + subTasksNamesArray +
             ' }';
     };
 
     that.setFromJson = function (allSubTasks) {
-        var eachKey, subTask, subTaskName;
+        var eachKey, subTask;
         that.getSubTasks().empty();
 
         for (eachKey in allSubTasks) {
             subTask = allSubTasks[eachKey];
-            subTaskName = eachSubTask.name;
 
-            if (subTaskName === undefined) {
+            if (subTask.name === undefined) {
                 return false;
             }
-
-            that.getSubTasks().append("<option>" + subTaskName + "</option>");
+            that.getSubTasks().append("<option>" + subTask.name + "</option>");
         }
         return true;
     };

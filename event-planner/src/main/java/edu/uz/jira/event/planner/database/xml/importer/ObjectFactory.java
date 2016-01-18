@@ -5,9 +5,9 @@
 // Generated on: 2016.01.08 at 06:58:36 PM CET 
 //
 
-package edu.uz.jira.event.planner.database.importer.xml;
+package edu.uz.jira.event.planner.database.xml.importer;
 
-import edu.uz.jira.event.planner.database.importer.xml.model.*;
+import edu.uz.jira.event.planner.database.xml.model.*;
 
 import javax.xml.bind.annotation.XmlRegistry;
 
@@ -34,45 +34,45 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link AllEventPlans }
+     * Create an instance of {@link EventPlanTemplates }
      */
-    public AllEventPlans createEventPlans() {
-        return new AllEventPlans();
+    public EventPlanTemplates createEventPlans() {
+        return new EventPlanTemplates();
     }
 
     /**
-     * Create an instance of {@link EventPlan }
+     * Create an instance of {@link PlanTemplate }
      */
-    public EventPlan createEventPlansEventPlan() {
-        return new EventPlan();
+    public PlanTemplate createEventPlansEventPlan() {
+        return new PlanTemplate();
     }
 
     /**
-     * Create an instance of {@link Component }
+     * Create an instance of {@link ComponentTemplate }
      */
-    public Component createEventPlansEventPlanComponent() {
-        return new Component();
+    public ComponentTemplate createEventPlansEventPlanComponent() {
+        return new ComponentTemplate();
     }
 
     /**
-     * Create an instance of {@link Task }
+     * Create an instance of {@link TaskTemplate }
      */
-    public Task createEventPlansEventPlanComponentTask() {
-        return new Task();
+    public TaskTemplate createEventPlansEventPlanComponentTask() {
+        return new TaskTemplate();
     }
 
     /**
-     * Create an instance of {@link Domain }
+     * Create an instance of {@link EventCategory }
      */
-    public Domain createEventPlansEventPlanDomain() {
-        return new Domain();
+    public EventCategory createEventPlansEventPlanCategory() {
+        return new EventCategory();
     }
 
     /**
-     * Create an instance of {@link SubTask }
+     * Create an instance of {@link SubTaskTemplate }
      */
-    public SubTask createEventPlansEventPlanComponentTaskSubTask() {
-        return new SubTask();
+    public SubTaskTemplate createEventPlansEventPlanComponentTaskSubTask() {
+        return new SubTaskTemplate();
     }
 
 }

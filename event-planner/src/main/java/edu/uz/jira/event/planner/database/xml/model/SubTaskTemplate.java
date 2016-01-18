@@ -1,4 +1,4 @@
-package edu.uz.jira.event.planner.database.importer.xml.model;
+package edu.uz.jira.event.planner.database.xml.model;
 
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import net.java.ao.Entity;
@@ -12,11 +12,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * XML representation of Event Plan SubTask.
+ * XML representation of Event Plan SubTask Template.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {})
-public class SubTask implements ActiveObjectWrapper {
+public class SubTaskTemplate implements ActiveObjectWrapper {
     @XmlAttribute(name = "name", required = true)
     private String name;
     @XmlAttribute(name = "description")
@@ -25,8 +25,8 @@ public class SubTask implements ActiveObjectWrapper {
     /**
      * @return Event SubTask Configuration with all empty fields (but not null).
      */
-    public static SubTask createEmpty() {
-        return new SubTask();
+    public static SubTaskTemplate createEmpty() {
+        return new SubTaskTemplate();
     }
 
     public String getName() {
@@ -90,10 +90,10 @@ public class SubTask implements ActiveObjectWrapper {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SubTask subTask = (SubTask) o;
+        SubTaskTemplate subTaskTemplate = (SubTaskTemplate) o;
 
-        if (getName() != null ? !getName().equals(subTask.getName()) : subTask.getName() != null) return false;
-        return !(getDescription() != null ? !getDescription().equals(subTask.getDescription()) : subTask.getDescription() != null);
+        if (getName() != null ? !getName().equals(subTaskTemplate.getName()) : subTaskTemplate.getName() != null) return false;
+        return !(getDescription() != null ? !getDescription().equals(subTaskTemplate.getDescription()) : subTaskTemplate.getDescription() != null);
     }
 
     @Override

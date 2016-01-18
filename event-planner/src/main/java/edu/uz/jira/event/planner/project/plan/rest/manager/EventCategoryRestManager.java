@@ -3,7 +3,7 @@ package edu.uz.jira.event.planner.project.plan.rest.manager;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
-import edu.uz.jira.event.planner.database.importer.xml.model.Domain;
+import edu.uz.jira.event.planner.database.xml.model.EventCategory;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 
 import javax.annotation.Nonnull;
@@ -16,8 +16,8 @@ import javax.ws.rs.core.Response;
 /**
  * REST manager for Event Organization Domains.
  */
-@Path("/domain")
-public class EventDomainRestManager extends RestManager {
+@Path("/category")
+public class EventCategoryRestManager extends RestManager {
 
     /**
      * Constructor.
@@ -26,14 +26,14 @@ public class EventDomainRestManager extends RestManager {
      * @param transactionTemplate  Injected {@code TransactionTemplate} implementation.
      * @param activeObjectsService Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
      */
-    public EventDomainRestManager(@Nonnull final UserManager userManager,
-                                  @Nonnull final TransactionTemplate transactionTemplate,
-                                  @Nonnull final ActiveObjectsService activeObjectsService) {
-        super(userManager, transactionTemplate, activeObjectsService, Domain.createEmpty());
+    public EventCategoryRestManager(@Nonnull final UserManager userManager,
+                                    @Nonnull final TransactionTemplate transactionTemplate,
+                                    @Nonnull final ActiveObjectsService activeObjectsService) {
+        super(userManager, transactionTemplate, activeObjectsService, EventCategory.createEmpty());
     }
 
     /**
-     * @param id      Id of Domain to post. If not specified, all Domains will be returned.
+     * @param id      Id of EventCategory to post. If not specified, all Domains will be returned.
      * @param request Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
      * @see {@link RestManager#post(String, HttpServletRequest)}
@@ -64,12 +64,12 @@ public class EventDomainRestManager extends RestManager {
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response post(final Domain resource, @Context final HttpServletRequest request) {
+    public Response post(final EventCategory resource, @Context final HttpServletRequest request) {
         return super.post(resource, request);
     }
 
     /**
-     * @param id Id of Domain to delete. If not specified nothing should be deleted.
+     * @param id Id of EventCategory to delete. If not specified nothing should be deleted.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
      * @see {@link RestManager#delete(Class, String, HttpServletRequest)}
      */

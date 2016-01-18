@@ -96,14 +96,14 @@ public class ProjectConfigurator {
             if (eachComponentTasks.length > 0) {
                 ProjectComponent eachCreatedComponent = ComponentAccessor.getProjectComponentManager().create(eachComponent.getName(), eachComponent.getDescription(), project.getLeadUserKey(), AssigneeTypes.PROJECT_DEFAULT, project.getId());
 
-                List<Issue> createdTasks = createTasks(project, eachComponentTasks, eachCreatedComponent.getId(), version.getId());
+                List<Issue> createdTasks = createTasks(project, eachComponentTasks, eachCreatedComponent.getId(), version);
                 result.addAll(createdTasks);
             }
         }
         return result;
     }
 
-    private List<Issue> createTasks(@Nonnull final Project project, @Nonnull final Task[] tasks, @Nonnull final Long componentId, @Nonnull final Long versionId) throws JiraException {
+    private List<Issue> createTasks(@Nonnull final Project project, @Nonnull final Task[] tasks, @Nonnull final Long componentId, @Nonnull final Version version) throws JiraException {
         List<Issue> result = new ArrayList<Issue>();
         String issueTypeId = getIssueType(project, false).getId();
         Long projectId = project.getId();
@@ -111,7 +111,7 @@ public class ProjectConfigurator {
         String userKey = user.getKey();
 
         for (Task eachTask : tasks) {
-            String dueDate = getFormattedDueDate(eachTask);
+            String dueDate = getFormattedDueDate(eachTask, version.getReleaseDate());
 
             IssueInputParameters inputParameters =
                     issueService.newIssueInputParameters()
@@ -121,7 +121,7 @@ public class ProjectConfigurator {
                             .setDueDate(dueDate)
                             .setSummary(eachTask.getName())
                             .setDescription(eachTask.getDescription())
-                            .setFixVersionIds(versionId)
+                            .setFixVersionIds(version.getId())
                             .setReporterId(userKey)
                             .setAssigneeId(userKey);
 
@@ -131,7 +131,7 @@ public class ProjectConfigurator {
 
             SubTask[] eachTaskSubTasks = eachTask.getSubTasks();
             if (eachTaskSubTasks.length > 0 && task != null) {
-                List<Issue> subTasks = createSubTasks(project, eachTaskSubTasks, task.getId(), componentId, versionId, dueDate);
+                List<Issue> subTasks = createSubTasks(project, eachTaskSubTasks, task.getId(), componentId, version.getId(), dueDate);
                 createLinks(task, subTasks);
             }
         }
@@ -184,10 +184,11 @@ public class ProjectConfigurator {
         return authenticationContext.getUser();
     }
 
-    private String getFormattedDueDate(@Nonnull final TimeFramedEntity entity) {
+    private String getFormattedDueDate(@Nonnull final TimeFramedEntity entity, @Nonnull final Date releaseDate) {
         Calendar calendar = Calendar.getInstance(authenticationContext.getLocale());
-        calendar.add(Calendar.MONTH, entity.getNeededMonthsToComplete());
-        calendar.add(Calendar.DATE, entity.getNeededDaysToComplete());
+        calendar.setTime(releaseDate);
+        calendar.add(Calendar.MONTH, -entity.getNeededMonthsToComplete());
+        calendar.add(Calendar.DATE, -entity.getNeededDaysToComplete());
 
         Date resultDueDate = calendar.getTime();
 

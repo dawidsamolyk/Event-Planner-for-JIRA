@@ -8,13 +8,13 @@ function getParameterByName(name) {
     regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
     results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-};
+}
 
 function isDueDateEmpty() {
     "use strict";
     var dueDate = document.getElementById(DUE_DATE_ID).value;
     return dueDate.valueOf() === "".valueOf();
-};
+}
 
 function sendPostRequest() {
     "use strict";
@@ -26,7 +26,7 @@ function sendPostRequest() {
         DUE_DATE_ID + "=" + dueDateValue +
         "&" +
         EVENT_TYPE_ID + "=" + eventTypeValue);
-};
+}
 
 function configureDatePicker() {
     "use strict";
@@ -34,7 +34,7 @@ function configureDatePicker() {
         timepicker: true,
         format: 'd-m-Y H:i'
     });
-};
+}
 
 function configureDialog() {
     "use strict";
@@ -50,4 +50,4 @@ function configureDialog() {
             $('#event-duedate-description').html('<div class="error" data-field="event-duedate">You must specify a date of the event.</div>');
         }
     });
-};
+}

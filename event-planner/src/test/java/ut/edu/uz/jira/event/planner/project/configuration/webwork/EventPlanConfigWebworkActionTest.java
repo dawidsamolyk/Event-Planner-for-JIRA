@@ -34,7 +34,7 @@ import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.project.plan.ProjectConfigurator;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.util.text.Internationalization;
@@ -92,7 +92,7 @@ public class EventPlanConfigWebworkActionTest {
 
         assertNotNull(entityManager);
         activeObjects = new TestActiveObjects(entityManager);
-        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Domain.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToDomainRelation.class);
+        activeObjects.migrate(SubTaskToTaskRelation.class, TaskToComponentRelation.class, Category.class, Plan.class, Component.class, SubTask.class, Task.class, PlanToComponentRelation.class, PlanToCategoryRelation.class);
         activeObjectsService = new ActiveObjectsService(activeObjects);
         activeObjectsService.clearDatabase();
 
@@ -297,12 +297,12 @@ public class EventPlanConfigWebworkActionTest {
     public void should_Return_Event_Plans_Sorted_By_Domains() throws Exception {
         String testPlanName = "Test plan 1";
         String secondTestPlanName = "Test plan 2";
-        String testDomainName = "Test domain";
+        String testDomainName = "Test category";
         Plan plan1 = testHelper.createPlanNamed(testPlanName);
         Plan plan2 = testHelper.createPlanNamed(secondTestPlanName);
-        Domain domain = testHelper.createDomainNamed(testDomainName);
-        testHelper.associate(plan1, domain);
-        testHelper.associate(plan2, domain);
+        Category category = testHelper.createDomainNamed(testDomainName);
+        testHelper.associate(plan1, category);
+        testHelper.associate(plan2, category);
 
         Map<String, List<String>> expectedResult = new HashMap<String, List<String>>();
         List<String> plans = new ArrayList<String>();

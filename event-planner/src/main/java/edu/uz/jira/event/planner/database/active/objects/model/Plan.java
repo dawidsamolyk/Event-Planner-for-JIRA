@@ -1,7 +1,7 @@
 package edu.uz.jira.event.planner.database.active.objects.model;
 
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
 import net.java.ao.Entity;
 import net.java.ao.ManyToMany;
 import net.java.ao.schema.Table;
@@ -22,11 +22,15 @@ import net.java.ao.schema.Table;
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
 @Table("EventPlan")
-public interface Plan extends Entity, NamedEntityWithDescription, TimeFramedEntity {
+public interface Plan extends Entity, NamedEntityWithDescription {
 
-    @ManyToMany(value = PlanToDomainRelation.class)
-    Domain[] getDomains();
+    @ManyToMany(value = PlanToCategoryRelation.class)
+    Category[] getDomains();
 
     @ManyToMany(value = PlanToComponentRelation.class)
     Component[] getComponents();
+
+    int getReserveTimeInDays();
+
+    void setReserveTimeInDays(int reserveTimeInDays);
 }

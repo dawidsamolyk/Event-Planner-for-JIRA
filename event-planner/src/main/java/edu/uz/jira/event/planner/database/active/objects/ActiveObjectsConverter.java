@@ -2,10 +2,10 @@ package edu.uz.jira.event.planner.database.active.objects;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
+import edu.uz.jira.event.planner.database.active.objects.model.SubTask;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToDomainRelation;
-import edu.uz.jira.event.planner.database.importer.xml.model.AllEventPlans;
-import edu.uz.jira.event.planner.database.importer.xml.model.EventPlan;
+import edu.uz.jira.event.planner.database.xml.model.*;
 import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
 import net.java.ao.Entity;
 
@@ -13,33 +13,25 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
- * Converts XML representation of Event Plan elements into Active Objects (database entities).
+ * Converts XML representation of Event Plan Template elements into Active Objects (database entities).
  */
 class ActiveObjectsConverter {
     private final ActiveObjects activeObjectsService;
     private final RelationsManager relationsManager;
 
-    /**
-     * Constructor.
-     *
-     * @param activeObjectsService Injected {@code ActiveObjects} implementation.
-     * @param relationsManager     Relations manager.
-     */
     ActiveObjectsConverter(@Nonnull final ActiveObjects activeObjectsService,
                            @Nonnull final RelationsManager relationsManager) {
         this.activeObjectsService = activeObjectsService;
         this.relationsManager = relationsManager;
     }
 
-    Plan addFrom(@Nonnull final EventPlan resource) throws ActiveObjectSavingException {
+    Plan addFrom(@Nonnull final PlanTemplate resource) throws ActiveObjectSavingException {
         Plan result = activeObjectsService.create(Plan.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
-        result.setNeededDaysToComplete(resource.getNeededDays());
-        result.setNeededMonthsToComplete(resource.getNeededMonths());
 
-        Collection<PlanToDomainRelation> planToDomainRelations = relationsManager.associatePlanWithDomains(result, resource.getDomainsNames());
-        if (planToDomainRelations.isEmpty()) {
+        Collection<PlanToCategoryRelation> planToCategoryRelations = relationsManager.associatePlanWithDomains(result, resource.getDomainsNames());
+        if (planToCategoryRelations.isEmpty()) {
             relationsManager.deleteWithRelations(result);
             throw new ActiveObjectSavingException();
         }
@@ -54,15 +46,15 @@ class ActiveObjectsConverter {
         return result;
     }
 
-    Domain addFrom(@Nonnull final edu.uz.jira.event.planner.database.importer.xml.model.Domain resource) {
-        Domain result = activeObjectsService.create(Domain.class);
+    Category addFrom(@Nonnull final EventCategory resource) {
+        Category result = activeObjectsService.create(Category.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
         result.save();
         return result;
     }
 
-    Component addFrom(@Nonnull final edu.uz.jira.event.planner.database.importer.xml.model.Component resource) throws ActiveObjectSavingException {
+    Component addFrom(@Nonnull final ComponentTemplate resource) throws ActiveObjectSavingException {
         Component result = activeObjectsService.create(Component.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
@@ -77,12 +69,12 @@ class ActiveObjectsConverter {
         return result;
     }
 
-    Task addFrom(edu.uz.jira.event.planner.database.importer.xml.model.Task resource) throws ActiveObjectSavingException {
+    Task addFrom(TaskTemplate resource) throws ActiveObjectSavingException {
         Task result = activeObjectsService.create(Task.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
-        result.setNeededDaysToComplete(resource.getNeededDays());
-        result.setNeededMonthsToComplete(resource.getNeededMonths());
+        result.setNeededDaysToComplete(resource.getNeededDaysBeforeEvent());
+        result.setNeededMonthsToComplete(resource.getNeededMonthsBeforeEvent());
 
         boolean valid = relationsManager.associate(result, resource.getSubTasksNames());
         if (!valid) {
@@ -94,7 +86,7 @@ class ActiveObjectsConverter {
         return result;
     }
 
-    SubTask addFrom(edu.uz.jira.event.planner.database.importer.xml.model.SubTask resource) {
+    SubTask addFrom(SubTaskTemplate resource) {
         SubTask result = activeObjectsService.create(SubTask.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
@@ -102,20 +94,20 @@ class ActiveObjectsConverter {
         return result;
     }
 
-    Entity addFrom(final AllEventPlans resource) throws ActiveObjectSavingException {
-        for (EventPlan eachPlan : resource.getEventPlan()) {
-            for (edu.uz.jira.event.planner.database.importer.xml.model.Domain eachDomain : eachPlan.getDomain()) {
-                addFrom(eachDomain);
+    Entity addFrom(final EventPlanTemplates resource) throws ActiveObjectSavingException {
+        for (PlanTemplate eachPlan : resource.getEventPlanTemplate()) {
+            for (EventCategory eachEventCategory : eachPlan.getEventCategory()) {
+                addFrom(eachEventCategory);
             }
 
-            for (edu.uz.jira.event.planner.database.importer.xml.model.Component eachComponent : eachPlan.getComponent()) {
-                for (edu.uz.jira.event.planner.database.importer.xml.model.Task eachTask : eachComponent.getTask()) {
-                    for (edu.uz.jira.event.planner.database.importer.xml.model.SubTask eachSubTask : eachTask.getSubTask()) {
-                        addFrom(eachSubTask);
+            for (ComponentTemplate eachComponentTemplate : eachPlan.getComponent()) {
+                for (TaskTemplate eachTaskTemplate : eachComponentTemplate.getTask()) {
+                    for (SubTaskTemplate eachSubTaskTemplate : eachTaskTemplate.getSubTask()) {
+                        addFrom(eachSubTaskTemplate);
                     }
-                    addFrom(eachTask);
+                    addFrom(eachTaskTemplate);
                 }
-                addFrom(eachComponent);
+                addFrom(eachComponentTemplate);
             }
 
             addFrom(eachPlan);

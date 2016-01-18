@@ -1,6 +1,6 @@
 <event-plans>
     <event-plan name="Test Event Organization Plan" neededMonths="1" neededDays="7">
-        <domain name="Software Development"></domain>
+        <eventCategory name="Software Development"></eventCategory>
         <component name="Test Component">
             <task name="Test task 1" neededMonths="0" neededDays="5"></task>
             <task name="Test task 2" neededMonths="0" neededDays="10"></task>
