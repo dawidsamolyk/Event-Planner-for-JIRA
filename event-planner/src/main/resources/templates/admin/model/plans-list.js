@@ -76,7 +76,7 @@ function PlansList() {
     };
 
     that.insertEstimatedTimeToComplete = function (plan, row) {
-        that.insertCell(row, 3).appendChild(document.createTextNode(plan.reserveTimeInDays));
+        that.insertCell(row, 3).appendChild(document.createTextNode(plan.estimatedDaysToComplete));
     };
 
     that.insertOperationsLinksCell = function (plan, row) {

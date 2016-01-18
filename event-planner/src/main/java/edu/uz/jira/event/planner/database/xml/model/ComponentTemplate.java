@@ -127,12 +127,13 @@ public class ComponentTemplate implements ActiveObjectWrapper {
 
         ComponentTemplate componentTemplate = (ComponentTemplate) o;
 
-        if (getTask() != null ? !getTask().equals(componentTemplate.getTask()) : componentTemplate.getTask() != null) return false;
-        if (getName() != null ? !getName().equals(componentTemplate.getName()) : componentTemplate.getName() != null) return false;
+        if (getTask() != null ? !getTask().equals(componentTemplate.getTask()) : componentTemplate.getTask() != null)
+            return false;
+        if (getName() != null ? !getName().equals(componentTemplate.getName()) : componentTemplate.getName() != null)
+            return false;
         if (getDescription() != null ? !getDescription().equals(componentTemplate.getDescription()) : componentTemplate.getDescription() != null)
             return false;
         return Arrays.equals(getTasksNames(), componentTemplate.getTasksNames());
-
     }
 
     @Override

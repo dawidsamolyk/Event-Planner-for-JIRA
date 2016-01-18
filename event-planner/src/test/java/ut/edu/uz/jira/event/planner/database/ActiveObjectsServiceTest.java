@@ -159,7 +159,7 @@ public class ActiveObjectsServiceTest {
         PlanTemplate config = new PlanTemplate();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setDomainsNames(new String[]{"Test domain"});
+        config.setCategoriesNames(new String[]{"Test domain"});
         config.setComponentsNames(new String[]{"Test component"});
 
         exception.expect(ActiveObjectSavingException.class);
@@ -175,7 +175,7 @@ public class ActiveObjectsServiceTest {
         PlanTemplate config = new PlanTemplate();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setDomainsNames(new String[]{category.getName()});
+        config.setCategoriesNames(new String[]{category.getName()});
         config.setComponentsNames(new String[]{component.getName()});
 
         service.addFrom(config);
@@ -257,7 +257,7 @@ public class ActiveObjectsServiceTest {
         PlanTemplate config = new PlanTemplate();
         config.setName("Name");
         config.setDescription("Description");
-        config.setDomainsNames(new String[]{"Nonexistent domain"});
+        config.setCategoriesNames(new String[]{"Nonexistent domain"});
         config.setComponentsNames(new String[]{component.getName()});
 
         exception.expect(ActiveObjectSavingException.class);
@@ -273,7 +273,7 @@ public class ActiveObjectsServiceTest {
         config.setName("Name");
         config.setDescription("Description");
         config.setComponentsNames(new String[]{"Nonexistent component"});
-        config.setDomainsNames(new String[]{category.getName()});
+        config.setCategoriesNames(new String[]{category.getName()});
 
         exception.expect(ActiveObjectSavingException.class);
         service.addFrom(config);

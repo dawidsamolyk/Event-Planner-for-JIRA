@@ -108,7 +108,7 @@ public class EventPlanRestManagerTest {
         PlanTemplate expected = new PlanTemplate();
         expected.setName(testPlanName);
         expected.setDescription(testPlanDescription);
-        expected.setDomainsNames(new String[]{testDomainName});
+        expected.setCategoriesNames(new String[]{testDomainName});
         expected.setComponentsNames(new String[]{testComponentName});
         expected.setId(((PlanTemplate) transactionResult[0]).getId());
         assertEquals(expected, transactionResult[0]);
@@ -143,7 +143,7 @@ public class EventPlanRestManagerTest {
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
         PlanTemplate config = new PlanTemplate();
         config.setName("Test name");
-        config.setDomainsNames(new String[]{category.getName()});
+        config.setCategoriesNames(new String[]{category.getName()});
         config.setComponentsNames(new String[]{firstComponent.getName(), secondComponent.getName(), thirdComponent.getName()});
 
         Response result = fixture.post(config, mockRequest);

@@ -30,7 +30,7 @@ class ActiveObjectsConverter {
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
 
-        Collection<PlanToCategoryRelation> planToCategoryRelations = relationsManager.associatePlanWithDomains(result, resource.getDomainsNames());
+        Collection<PlanToCategoryRelation> planToCategoryRelations = relationsManager.associatePlanWithDomains(result, resource.getCategoriesNames());
         if (planToCategoryRelations.isEmpty()) {
             relationsManager.deleteWithRelations(result);
             throw new ActiveObjectSavingException();

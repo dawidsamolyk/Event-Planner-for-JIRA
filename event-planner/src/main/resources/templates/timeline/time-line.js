@@ -13,22 +13,16 @@ function TimeLine() {
 
     that.datesCreator = new TimeLineDatesCreator();
     that.tasksCreator = new TimeLineTasksCreator();
-    that.infoProvider = new TimeLineInfoProvider(that);
+    that.infoProvider = new TimeLineInfoProvider();
 
     that.setIssues = function (sourceTasks) {
         that.tasks = sourceTasks;
-
         that.showCurrentWeek();
     };
 
     that.setProjectDeadline = function (sourceDeadlineDate) {
         that.deadlineDate = sourceDeadlineDate;
-        that.infoProvider = new TimeLineInfoProvider(that);
-
-        that.allTimeLineWeeks = that.infoProvider.getTimeLineWeeks();
-
         that.showCurrentWeek();
-        that.infoProvider.showFlagsIfRequired();
     };
 
     that.showNextWeek = function () {
@@ -46,6 +40,7 @@ function TimeLine() {
     that.show = function (weekToShowIndex) {
         that.clearTimeLine();
 
+        that.allTimeLineWeeks = that.infoProvider.getTimeLineWeeks(that.deadlineDate, that.tasks);
         that.currentDisplayedWeekIndex = weekToShowIndex;
         var weekToShow = that.allTimeLineWeeks[weekToShowIndex];
 
@@ -54,6 +49,8 @@ function TimeLine() {
 
         that.createLateTasksCells();
         that.createTasksCells(weekToShow);
+
+        that.infoProvider.showFlagsIfRequired(that.deadlineDate, that.tasks);
     };
 
     that.clearTimeLine = function () {
@@ -71,13 +68,13 @@ function TimeLine() {
 
     that.createDatesCells = function (weekToShow) {
         if (that.shouldDisplayLateTasksColumn()) {
-            that.datesCreator.createLateDateCell(that.infoProvider.getMaximumIssueLate());
+            that.datesCreator.createLateDateCell(that.infoProvider.getMaximumIssueLate(that.tasks));
         }
         that.datesCreator.createCells(weekToShow, that.deadlineDate);
     };
 
     that.shouldDisplayLateTasksColumn = function () {
-        return that.isDisplayingCurrentWeek() && that.infoProvider.getMaximumIssueLate() != 0;
+        return that.isDisplayingCurrentWeek() && that.infoProvider.getMaximumIssueLate(that.tasks) !== 0;
     };
 
     that.isDisplayingCurrentWeek = function () {

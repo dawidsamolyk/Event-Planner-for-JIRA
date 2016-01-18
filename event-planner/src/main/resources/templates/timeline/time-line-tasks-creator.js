@@ -93,6 +93,8 @@ function TimeLineTasksCreator() {
         var result = that.getTasksToDoRow().insertCell(index);
         result.style.verticalAlign = 'bottom';
         result.style.padding = 0;
+        result.style.borderLeft = '1px solid #cccccc';
+        result.style.borderRight = '1px solid #cccccc';
         return result;
     };
 
@@ -108,6 +110,8 @@ function TimeLineTasksCreator() {
         var result = that.getDoneTasksRow().insertCell(index);
         result.style.verticalAlign = 'bottom';
         result.style.padding = 0;
+        result.style.borderLeft = '1px solid #cccccc';
+        result.style.borderRight = '1px solid #cccccc';
         result.style.textDecoration = 'line-through';
         return result;
     };

@@ -37,6 +37,8 @@ function TimeLineDatesCreator() {
     that.createDateCell = function (index, label) {
         var result = that.getDatesRow().insertCell(index);
         result.style.textAlign = 'center';
+        result.style.borderLeft = '1px solid #cccccc';
+        result.style.borderRight = '1px solid #cccccc';
         result.innerHTML = label;
         return result;
     };

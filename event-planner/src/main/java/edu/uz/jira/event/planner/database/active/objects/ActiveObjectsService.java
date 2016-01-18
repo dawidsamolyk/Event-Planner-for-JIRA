@@ -113,12 +113,16 @@ public class ActiveObjectsService {
         for (Category eachCategory : get(Category.class, Query.select())) {
             List<String> plansNames = new ArrayList<String>();
             for (Plan eachPlan : eachCategory.getPlans()) {
-                plansNames.add(eachPlan.getName());
+                plansNames.add(eachPlan.getName() + getEstimatedTimeToComplete(eachPlan));
             }
             result.put(eachCategory.getName(), plansNames);
         }
 
         return result;
+    }
+
+    private String getEstimatedTimeToComplete(@Nonnull final Plan plan) {
+        return " (~" + plan.getEstimatedDaysToComplete() + " days)";
     }
 
     /**

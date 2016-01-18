@@ -241,7 +241,7 @@ public class RestManagerTest {
         PlanTemplate invalidConfig = new PlanTemplate();
         invalidConfig.setName("Test name");
         invalidConfig.setDescription("Test description");
-        invalidConfig.setDomainsNames(new String[]{"Test domain"});
+        invalidConfig.setCategoriesNames(new String[]{"Test domain"});
         invalidConfig.setComponentsNames(new String[]{"Test component"});
 
         Response result = fixture.post(invalidConfig, mockRequest);

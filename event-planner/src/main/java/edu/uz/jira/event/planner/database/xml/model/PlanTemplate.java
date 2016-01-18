@@ -20,7 +20,6 @@ import java.util.List;
 @XmlType(name = "", propOrder = {
         "eventCategory",
         "component",
-        "id",
         "categoriesNames",
         "componentsNames"
 })
@@ -35,8 +34,10 @@ public class PlanTemplate implements ActiveObjectWrapper {
     private String description;
     @XmlAttribute(name = "reserveTimeInDays")
     private int reserveTimeInDays;
-    @XmlElement
+    @XmlAttribute
     private int id;
+    @XmlAttribute
+    private int estimatedDaysToComplete;
     @XmlElement
     private String[] categoriesNames;
     @XmlElement
@@ -60,9 +61,10 @@ public class PlanTemplate implements ActiveObjectWrapper {
             setId(plan.getID());
             setName(plan.getName());
             setDescription(plan.getDescription());
-            setDomainsNames(EntityNameExtractor.getNames(plan.getDomains()));
-            setComponentsNames(EntityNameExtractor.getNames(plan.getComponents()));
             setReserveTimeInDays(plan.getReserveTimeInDays());
+            setEstimatedDaysToComplete(plan.getEstimatedDaysToComplete());
+            setCategoriesNames(EntityNameExtractor.getNames(plan.getCategories()));
+            setComponentsNames(EntityNameExtractor.getNames(plan.getComponents()));
         }
         return this;
     }
@@ -81,7 +83,7 @@ public class PlanTemplate implements ActiveObjectWrapper {
     @Override
     public boolean isFullfilled() {
         return StringUtils.isNotBlank(getName())
-                && TextUtils.isEachElementNotBlank(getDomainsNames())
+                && TextUtils.isEachElementNotBlank(getCategoriesNames())
                 && TextUtils.isEachElementNotBlank(getComponentsNames());
     }
 
@@ -142,7 +144,11 @@ public class PlanTemplate implements ActiveObjectWrapper {
         this.id = id;
     }
 
-    public String[] getDomainsNames() {
+    public int getReserveTimeInDays() {
+        return reserveTimeInDays;
+    }
+
+    public String[] getCategoriesNames() {
         if (categoriesNames == null && eventCategory != null) {
             categoriesNames = new String[eventCategory.size()];
             for (int index = 0; index < eventCategory.size(); index++) {
@@ -152,8 +158,8 @@ public class PlanTemplate implements ActiveObjectWrapper {
         return categoriesNames;
     }
 
-    public void setDomainsNames(String[] domainsNames) {
-        this.categoriesNames = domainsNames;
+    public void setCategoriesNames(String[] categoriesNames) {
+        this.categoriesNames = categoriesNames;
     }
 
     public String[] getComponentsNames() {
@@ -170,12 +176,16 @@ public class PlanTemplate implements ActiveObjectWrapper {
         this.componentsNames = componentsNames;
     }
 
-    public int getReserveTimeInDays() {
-        return reserveTimeInDays;
-    }
-
     public void setReserveTimeInDays(int reserveTimeInDays) {
         this.reserveTimeInDays = reserveTimeInDays;
+    }
+
+    public int getEstimatedDaysToComplete() {
+        return estimatedDaysToComplete;
+    }
+
+    public void setEstimatedDaysToComplete(int estimatedDaysToComplete) {
+        this.estimatedDaysToComplete = estimatedDaysToComplete;
     }
 
     @Override
@@ -187,6 +197,7 @@ public class PlanTemplate implements ActiveObjectWrapper {
 
         if (reserveTimeInDays != that.reserveTimeInDays) return false;
         if (id != that.id) return false;
+        if (estimatedDaysToComplete != that.estimatedDaysToComplete) return false;
         if (eventCategory != null ? !eventCategory.equals(that.eventCategory) : that.eventCategory != null)
             return false;
         if (component != null ? !component.equals(that.component) : that.component != null) return false;
@@ -208,6 +219,7 @@ public class PlanTemplate implements ActiveObjectWrapper {
         result = 31 * result + id;
         result = 31 * result + Arrays.hashCode(categoriesNames);
         result = 31 * result + Arrays.hashCode(componentsNames);
+        result = 31 * result + estimatedDaysToComplete;
         return result;
     }
 }

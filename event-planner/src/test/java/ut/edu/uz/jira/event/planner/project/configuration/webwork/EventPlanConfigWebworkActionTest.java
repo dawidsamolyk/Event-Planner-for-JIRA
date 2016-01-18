@@ -29,14 +29,14 @@ import com.atlassian.jira.user.MockApplicationUser;
 import com.atlassian.jira.util.ErrorCollection;
 import com.atlassian.jira.web.HttpServletVariables;
 import com.atlassian.sal.api.message.I18nResolver;
-import edu.uz.jira.event.planner.project.configuration.webwork.EventPlanConfigurationAction;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
-import edu.uz.jira.event.planner.project.plan.ProjectConfigurator;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
+import edu.uz.jira.event.planner.project.configuration.webwork.EventPlanConfigurationAction;
+import edu.uz.jira.event.planner.project.plan.ProjectConfigurator;
 import edu.uz.jira.event.planner.util.text.Internationalization;
 import net.java.ao.EntityManager;
 import net.java.ao.test.converters.NameConverters;
@@ -306,8 +306,8 @@ public class EventPlanConfigWebworkActionTest {
 
         Map<String, List<String>> expectedResult = new HashMap<String, List<String>>();
         List<String> plans = new ArrayList<String>();
-        plans.add(testPlanName);
-        plans.add(secondTestPlanName);
+        plans.add(testPlanName + " (~0 days)");
+        plans.add(secondTestPlanName + " (~0 days)");
         expectedResult.put(testDomainName, plans);
 
         EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);

@@ -1,7 +1,7 @@
 package edu.uz.jira.event.planner.database.active.objects.model;
 
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import net.java.ao.Entity;
 import net.java.ao.ManyToMany;
 import net.java.ao.schema.Table;
@@ -25,7 +25,7 @@ import net.java.ao.schema.Table;
 public interface Plan extends Entity, NamedEntityWithDescription {
 
     @ManyToMany(value = PlanToCategoryRelation.class)
-    Category[] getDomains();
+    Category[] getCategories();
 
     @ManyToMany(value = PlanToComponentRelation.class)
     Component[] getComponents();
@@ -33,4 +33,8 @@ public interface Plan extends Entity, NamedEntityWithDescription {
     int getReserveTimeInDays();
 
     void setReserveTimeInDays(int reserveTimeInDays);
+
+    int getEstimatedDaysToComplete();
+
+    void setEstimatedDaysToComplete(int value);
 }

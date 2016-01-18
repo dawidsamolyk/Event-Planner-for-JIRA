@@ -2,8 +2,8 @@ package edu.uz.jira.event.planner.database.active.objects;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import net.java.ao.Query;
@@ -80,8 +80,11 @@ class RelationsManager {
                 result.add(associate(plan, each));
             }
         }
+        helper.updateNeededDaysToComplete(plan);
         return result;
     }
+
+
 
     Collection<PlanToCategoryRelation> associatePlanWithDomains(@Nonnull final Plan plan, @Nonnull final String[] domainsNames) {
         Collection<PlanToCategoryRelation> result = new ArrayList<PlanToCategoryRelation>();
