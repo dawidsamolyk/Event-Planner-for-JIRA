@@ -17,16 +17,16 @@
                 <div class="description" id="plan-description-description">Description of the plan.</div>
             </div>
             <div class="field-group">
-                <label for="plan-categories">Domains<span
+                <label for="plan-categories">Categories<span
                         class="aui-icon icon-required">(required)</span></label>
                 <select class="multi-select" multiple="multiple" id="plan-categories"
-                        name="plan-categories" title="Domain">
+                        name="plan-categories" title="Categories">
                 </select>
                 <br/>
                 <div class="aui-buttons">
-                    <button id="add-eventCategory-button" class="aui-button trigger-dialog">
+                    <button id="add-category-button" class="aui-button trigger-dialog">
                         <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                        Add new Domain
+                        Add new Category
                     </button>
                 </div>
 

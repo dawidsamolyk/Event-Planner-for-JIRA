@@ -31,7 +31,7 @@ function Plan() {
 
         return '{ "name": "' + name +
             '", "description": "' + description +
-            ', "categoriesNames": ' + categoriesNamesArray +
+            '", "categoriesNames": ' + categoriesNamesArray +
             ', "componentsNames": ' + componentsNamesArray +
             ' }';
     };

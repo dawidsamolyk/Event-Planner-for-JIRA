@@ -103,12 +103,12 @@
     componentListener.onSaveHideDialog();
     componentListener.onCancelCloseDialog();
 
-    var domainListener = new ButtonListener(eventCategory);
-    domainListener.onAddShowDialog();
-    domainListener.onSaveDoPostResource();
-    domainListener.onSaveHideDialog();
-    domainListener.onSaveDoGetAndSaveInto(plan);
-    domainListener.onCancelCloseDialog();
+    var categoryListener = new ButtonListener(eventCategory);
+    categoryListener.onAddShowDialog();
+    categoryListener.onSaveDoPostResource();
+    categoryListener.onSaveHideDialog();
+    categoryListener.onSaveDoGetAndSaveInto(plan);
+    categoryListener.onCancelCloseDialog();
 
     var planListener = new ButtonListener(plan)
     planListener.onShowDoGet([eventCategory, component]);

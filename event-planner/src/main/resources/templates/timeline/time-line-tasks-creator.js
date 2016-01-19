@@ -95,6 +95,7 @@ function TimeLineTasksCreator() {
         result.style.padding = 0;
         result.style.borderLeft = '1px solid #cccccc';
         result.style.borderRight = '1px solid #cccccc';
+        result.style.borderTop = 'none';
         return result;
     };
 
@@ -108,10 +109,11 @@ function TimeLineTasksCreator() {
 
     that.createDoneTaskCell = function (index) {
         var result = that.getDoneTasksRow().insertCell(index);
-        result.style.verticalAlign = 'bottom';
+        result.style.verticalAlign = 'top';
         result.style.padding = 0;
         result.style.borderLeft = '1px solid #cccccc';
         result.style.borderRight = '1px solid #cccccc';
+        result.style.borderBottom = 'none';
         result.style.textDecoration = 'line-through';
         return result;
     };
