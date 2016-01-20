@@ -29,14 +29,15 @@ function TimeLineTasksCreator() {
     };
 
     that.fillLateCellByIssues = function (lateCell, issues) {
-        var eachIssue, issue, lateTaskGadget;
+        var eachIssue, issue, lateTaskGadget, cellList;
 
         for (eachIssue in issues) {
             issue = issues[eachIssue];
 
             if (issue.daysAwayFromDueDate < 0 && issue.done === false) {
                 lateTaskGadget = that.taskGadgetCreator.createLate(issue);
-                lateCell.appendChild(lateTaskGadget);
+                cellList = that.getListFor(lateCell);
+                cellList.appendChild(lateTaskGadget);
             }
         }
     };
@@ -70,7 +71,7 @@ function TimeLineTasksCreator() {
     };
 
     that.fillCellsByIssues = function (cells, issues) {
-        var eachIssue, issue, issueDueDate, eachDate, cell;
+        var eachIssue, issue, issueDueDate, eachDate, cell, cellList;
         for (eachIssue in issues) {
             issue = issues[eachIssue];
             issueDueDate = new Date(issue.dueDate);
@@ -80,11 +81,35 @@ function TimeLineTasksCreator() {
                     cell = cells[eachDate];
 
                     if (issue.done === true) {
-                        cell.done.appendChild(that.taskGadgetCreator.createDone(issue));
+                        cellList = that.getListFor(cell.done);
+                        cellList.appendChild(that.taskGadgetCreator.createDone(issue));
                     } else {
-                        cell.toDo.appendChild(that.taskGadgetCreator.createToDo(issue));
+                        cellList = that.getListFor(cell.toDo);
+                        cellList.appendChild(that.taskGadgetCreator.createToDo(issue));
                     }
                 }
+            }
+        }
+
+        that.connectDraggableListener();
+    };
+
+    that.connectDraggableListener = function () {
+        AJS.$("ul.connectedSortable").sortable({
+            connectWith: "ul",
+            dropOnEmpty: true,
+            placeholder: "ui-state-highlight",
+            stop: function (event) {
+                console.log(event);
+            }
+        }).disableSelection();
+    };
+
+    that.getListFor = function (parent) {
+        var index;
+        for (index = 0; index < parent.childNodes.length; index + 1) {
+            if (parent.childNodes[index].className === 'connectedSortable') {
+                return parent.childNodes[index];
             }
         }
     };
@@ -96,7 +121,26 @@ function TimeLineTasksCreator() {
         result.style.borderLeft = '1px solid #cccccc';
         result.style.borderRight = '1px solid #cccccc';
         result.style.borderTop = 'none';
+        result.id = 'todo-' + index;
+
+        that.appendListRoot(result);
+
         return result;
+    };
+
+    that.appendListRoot = function (parent) {
+        var ulElement = document.createElement('UL');
+        ulElement.className = 'connectedSortable';
+        ulElement.style.listStyleType = 'none';
+        ulElement.style.listStyle = 'none';
+        ulElement.style.margin = '0';
+        ulElement.style.padding = '5px 0 0 0';
+        ulElement.style.height = '100%';
+        ulElement.style.verticalAlign = 'bottom';
+        ulElement.id = 'list-' + parent.id;
+
+        parent.appendChild(ulElement);
+        return ulElement;
     };
 
     that.createTodayTaskCell = function (index) {
@@ -115,6 +159,10 @@ function TimeLineTasksCreator() {
         result.style.borderRight = '1px solid #cccccc';
         result.style.borderBottom = 'none';
         result.style.textDecoration = 'line-through';
+        result.id = 'done-' + index;
+
+        that.appendListRoot(result);
+
         return result;
     };
 

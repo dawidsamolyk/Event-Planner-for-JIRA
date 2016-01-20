@@ -90,11 +90,15 @@ function TimeLine() {
         if (that.shouldDisplayLateTasksColumn()) {
             var lateCell = that.tasksCreator.createLateTaskCell();
             that.tasksCreator.fillLateCellByIssues(lateCell, that.tasks);
+
+            return lateCell;
         }
     };
 
     that.createTasksCells = function (weekToShow) {
         var cells = that.tasksCreator.createTasksCells(weekToShow, that.deadlineDate);
         that.tasksCreator.fillCellsByIssues(cells, that.tasks);
+
+        return cells;
     };
 };

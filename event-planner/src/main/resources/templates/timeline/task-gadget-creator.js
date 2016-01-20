@@ -2,10 +2,10 @@ function TaskGadgetCreator() {
     "use strict";
     var that = this;
 
-    that.create = function (gadgetClass, issue) {
+    that.create = function (issue) {
         var taskGadget, gadgetItem;
 
-        taskGadget = that.createElement('DIV', gadgetClass);
+        taskGadget = that.createElement('LI', 'gadget color1 ui-state-default');
         taskGadget.style.position = 'relative';
         taskGadget.id = issue.key;
 
@@ -35,7 +35,7 @@ function TaskGadgetCreator() {
         title.style.alignment = 'left';
         title.style.verticalAlign = 'middle';
         title.style.padding = '4px 4px 4px 4px';
-        title.innerText = issue.key;
+        title.appendChild(document.createTextNode(issue.key));
 
         return title;
     };
@@ -43,6 +43,7 @@ function TaskGadgetCreator() {
     that.createComponentIcon = function (issue) {
         var components = that.createElement('SPAN', 'aui-icon aui-icon-small aui-iconfont-component');
 
+        components.style.filter = 'invert(100%)';
         components.style.WebkitFilter = 'invert(100%)';
         components.style.MozFilter = 'invert(100%)';
         components.style.OFilter = 'invert(100%)';
@@ -50,7 +51,6 @@ function TaskGadgetCreator() {
         components.style.alignment = 'left';
         components.style.verticalAlign = 'middle';
         components.style.margin = '2px';
-        components.style.cursor = 'hand';
 
         var componentsNames = '';
         for (var loopIndex = 0; loopIndex < issue.componentsNames.length; loopIndex++) {
@@ -105,19 +105,41 @@ function TaskGadgetCreator() {
         return result;
     };
 
+    that.changeToDone = function (gadget) {
+        gadget.className = 'gadget color7 ui-state-default';
+        return gadget;
+    };
+
+    that.changeToToDo = function (gadget) {
+        gadget.className = 'gadget color1 ui-state-default';
+        return gadget;
+    };
+
+    that.changeToLate = function (gadget) {
+        gadget.className = 'gadget ui-state-default';
+        var headerElement = gadget.getElementsByClassName('dashboard-item-header')[0];
+        headerElement.style.background = '#333333';
+        return gadget;
+    };
+
     that.createToDo = function (issue) {
-        return that.create('gadget color1', issue);
+        return that.changeToToDo(that.create(issue));
     };
 
     that.createDone = function (issue) {
-        return that.create('gadget color7', issue);
+        return that.changeToDone(that.create(issue));
     };
 
     that.createLate = function (issue) {
-        var result, headerElement;
-        result = that.create('gadget', issue);
-        headerElement = result.getElementsByClassName('dashboard-item-header')[0];
-        headerElement.style.background = '#333333';
+        return that.changeToLate(that.create(issue));
+    };
+
+    that.getRoot = function (element) {
+        var result = element;
+        console.log(result);
+        while (result !== undefined && result.tagName !== 'LI') {
+            result = result.parent;
+        }
         return result;
     };
 };
