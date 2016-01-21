@@ -63,8 +63,8 @@ public class PlanTemplate implements ActiveObjectWrapper {
             setDescription(plan.getDescription());
             setReserveTimeInDays(plan.getReserveTimeInDays());
             setEstimatedDaysToComplete(plan.getEstimatedDaysToComplete());
-            setCategoriesNames(EntityNameExtractor.getNames(plan.getCategories()));
             setComponentsNames(EntityNameExtractor.getNames(plan.getComponents()));
+            setCategoriesNames(EntityNameExtractor.getNames(plan.getCategories()));
         }
         return this;
     }

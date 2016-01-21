@@ -13,7 +13,11 @@ function ButtonListener(resource) {
     };
 
     that.getSaveButtonId = function () {
-        return "#event-".concat(that.getResourceId()).concat("-dialog-save-button");
+        return "#".concat(that.getResourceId()).concat("-button");
+    };
+
+    that.getNextButtonId = function () {
+        return "#event-".concat(that.getResourceId()).concat("-dialog-next-button");
     };
 
     that.onAddShowDialog = function () {
@@ -26,6 +30,18 @@ function ButtonListener(resource) {
                 e.preventDefault();
                 document.getElementById(formId).reset();
                 AJS.dialog2(that.getDialogId()).show();
+            }
+        );
+    };
+
+    that.onNextShowNextDialogForResource = function (resource) {
+        var resourceDialogId = "#event-".concat(resource.id).concat("-dialog");
+
+        AJS.$(that.getNextButtonId()).click(
+            function (e) {
+                e.preventDefault();
+                AJS.dialog2(that.getDialogId()).hide();
+                AJS.dialog2(resourceDialogId).show();
             }
         );
     };
@@ -44,6 +60,15 @@ function ButtonListener(resource) {
             function (e) {
                 e.preventDefault();
                 that.rest.post(that.resource);
+            }
+        );
+    };
+
+    that.onSaveClearForm = function () {
+        AJS.$(that.getSaveButtonId()).click(
+            function (e) {
+                e.preventDefault();
+                that.resource.clear();
             }
         );
     };

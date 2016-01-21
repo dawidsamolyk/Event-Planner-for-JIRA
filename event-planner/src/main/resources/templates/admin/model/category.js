@@ -7,13 +7,15 @@ function Category() {
         return AJS.$("#category-name");
     };
 
-    that.getDescription = function () {
-        return AJS.$("#category-description");
+    that.getNameValue = function () {
+        return that.getName().attr("value");
+    };
+
+    that.clear = function () {
+        that.getName().val('');
     };
 
     that.getJson = function () {
-        return '{ "name": "' + that.getName().attr("value") +
-            '", "description": "' + that.getDescription().attr("value") +
-            '" }';
+        return '{ "name": "' + that.getNameValue() + '" }';
     };
 };

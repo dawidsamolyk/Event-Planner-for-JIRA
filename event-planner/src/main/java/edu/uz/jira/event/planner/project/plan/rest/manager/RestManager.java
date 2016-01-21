@@ -21,12 +21,13 @@ import java.util.List;
  * Abstract REST manager which implements common functionalities for concrete REST managers.
  */
 public abstract class RestManager {
-    private final ActiveObjectsService activeObjectsService;
-    final Class<? extends RawEntity> entityType;
-    private final TransactionTemplate transactionTemplate;
-    private final ActiveObjectWrapper emptyConfiguration;
+    protected final Class<? extends RawEntity> entityType;
+    protected final TransactionTemplate transactionTemplate;
+    protected final ActiveObjectWrapper emptyConfiguration;
+    protected final RestManagerHelper helper;
     private final UserManager userManager;
-    private final RestManagerHelper helper;
+    private final ActiveObjectsService activeObjectsService;
+
 
     /**
      * Constructor.
@@ -36,10 +37,10 @@ public abstract class RestManager {
      * @param activeObjectsService Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
      * @param emptyConfiguration   Empty configuration of handled Entities.
      */
-    RestManager(@Nonnull final UserManager userManager,
-                       @Nonnull final TransactionTemplate transactionTemplate,
-                       @Nonnull final ActiveObjectsService activeObjectsService,
-                       @Nonnull final ActiveObjectWrapper emptyConfiguration) {
+    protected RestManager(@Nonnull final UserManager userManager,
+                          @Nonnull final TransactionTemplate transactionTemplate,
+                          @Nonnull final ActiveObjectsService activeObjectsService,
+                          @Nonnull final ActiveObjectWrapper emptyConfiguration) {
         this.userManager = userManager;
         this.transactionTemplate = transactionTemplate;
         this.activeObjectsService = activeObjectsService;

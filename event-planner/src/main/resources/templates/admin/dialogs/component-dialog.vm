@@ -1,36 +1,34 @@
 <section role="dialog" id="event-component-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
     <header class="aui-dialog2-header">
-        <h2 class="aui-dialog2-header-main">Event Component Configuration</h2>
+        <h2 class="aui-dialog2-header-main">Select Event Plan Components Templates</h2>
     </header>
     <div class="aui-dialog2-content">
-        <form class="aui" id="event-component-configuration" action="#" method="post">
-            <div class="field-group" id="component-name-group">
-                <label for="component-name">Name<span class="aui-icon icon-required">(required)</span></label>
-                <input id="component-name" name="component-name" type="text">
-
-                <div class="description" id="component-name-description">Name of the Component.</div>
-            </div>
-            <div class="field-group" id="component-description-group">
-                <label for="component-description">Description</label>
-                <input id="component-description" name="component-description" type="text">
-
-                <div class="description" id="component-description-description">Description of the Component.</div>
-            </div>
+        <form class="aui" id="event-component-configuration">
             <div class="field-group">
-                <label for="component-tasks">Tasks<span
+                <label for="plan-components">Components<span
                         class="aui-icon icon-required">(required)</span></label>
-                <select class="multi-select" multiple="multiple" id="component-tasks"
-                        name="component-tasks" title="Tasks">
-                </select>
-                <br/>
-                <div class="aui-buttons">
-                    <button id="add-task-button" class="aui-button trigger-dialog">
-                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                        Add new Task
-                    </button>
-                </div>
+                <select class="multi-select" multiple="" id="plan-components" name="plan-components"
+                        title="Available Event components"></select>
 
-                <div class="description" id="component-tasks-description">Tasks to do for complete event component.
+                <div class="description" id="plan-components-description">Select at least one component.</div>
+            </div>
+            <div>
+                <h3>Add new Event Component Template</h3>
+                <div class="field-group">
+                    <label for="component-name">Name<span class="aui-icon icon-required">(required)</span></label>
+                    <input id="component-name" class="text" name="component-name" type="text" maxlength="80">
+                    <button id="component-button" class="aui-button" title="Add new Event Plan Component Template">
+                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                        Add
+                    </button>
+
+                    <div class="description" id="component-name-description">Max. 80 characters.</div>
+                </div>
+                <div class="field-group">
+                    <label for="component-description">Description</label>
+                    <input id="component-description" class="text" name="component-description" type="text"
+                           maxlength="255">
+                    <div class="description" id="component-description-description">Max. 255 characters.</div>
                 </div>
             </div>
         </form>
@@ -38,8 +36,7 @@
     <footer class="aui-dialog2-footer">
         <div class="aui-dialog2-footer-actions">
             <button id="event-component-dialog-cancel-button" class="aui-button">Cancel</button>
-            <button id="event-component-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save
-            </button>
+            <button id="event-component-dialog-next-button" class="aui-button aui-button-primary">Next</button>
         </div>
     </footer>
 </section>

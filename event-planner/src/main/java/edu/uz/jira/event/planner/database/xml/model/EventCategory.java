@@ -20,8 +20,6 @@ import javax.xml.bind.annotation.XmlType;
 public class EventCategory implements ActiveObjectWrapper {
     @XmlAttribute(name = "name", required = true)
     private String name;
-    @XmlAttribute(name = "description")
-    private String description;
 
     public String getName() {
         return name;
@@ -29,17 +27,6 @@ public class EventCategory implements ActiveObjectWrapper {
 
     public void setName(String value) {
         this.name = value;
-    }
-
-    public String getDescription() {
-        if (description == null) {
-            description = "";
-        }
-        return description;
-    }
-
-    public void setDescription(String value) {
-        this.description = value;
     }
 
     /**
@@ -64,7 +51,6 @@ public class EventCategory implements ActiveObjectWrapper {
         if (entity instanceof Category) {
             Category category = (Category) entity;
             setName(category.getName());
-            setDescription(category.getDescription());
         }
         return this;
     }
@@ -90,16 +76,14 @@ public class EventCategory implements ActiveObjectWrapper {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        EventCategory eventCategory = (EventCategory) o;
+        EventCategory that = (EventCategory) o;
 
-        if (getName() != null ? !getName().equals(eventCategory.getName()) : eventCategory.getName() != null) return false;
-        return !(getDescription() != null ? !getDescription().equals(eventCategory.getDescription()) : eventCategory.getDescription() != null);
+        return name != null ? name.equals(that.name) : that.name == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getName() != null ? getName().hashCode() : 0;
-        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
+        int result = name != null ? name.hashCode() : 0;
         return result;
     }
 }

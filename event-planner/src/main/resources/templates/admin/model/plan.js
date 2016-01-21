@@ -13,6 +13,11 @@ function Plan() {
         return AJS.$("#plan-description");
     };
 
+    that.clear = function () {
+        that.getName().val('');
+        that.getDescription().val('');
+    };
+
     that.getCategories = function () {
         return AJS.$("#plan-categories");
     };

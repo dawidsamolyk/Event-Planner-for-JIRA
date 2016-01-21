@@ -48,7 +48,7 @@
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
-        <dependency>com.atlassian.auiplugin:aui-form-validation</dependency>
+        <dependency>com.atlassian.auiplugin:aui-select2</dependency>
         <resource type="velocity" name="event-plans-view" location="/templates/admin/event-plans.vm"/>
         <resource type="download" name="component.js" location="/templates/admin/model/component.js"/>
         <resource type="download" name="category.js" location="/templates/admin/model/category.js"/>
@@ -137,7 +137,6 @@
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
-        <dependency>com.atlassian.auiplugin:aui-form-validation</dependency>
         <resource type="download" name="jquery.datetimepicker.full.min.js"
                   location="/libs/datepicker/jquery.datetimepicker.full.min.js"/>
         <resource type="download" name="jquery.datetimepicker.full.min.css"

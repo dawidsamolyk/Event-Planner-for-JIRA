@@ -187,7 +187,6 @@ public class ActiveObjectsServiceTest {
     public void domain_Should_Be_Added_If_Has_Fullfilled_Configuration() throws ActiveObjectSavingException {
         EventCategory configuration = new EventCategory();
         configuration.setName("Test name");
-        configuration.setDescription("Test description");
 
         service.addFrom(configuration);
 

@@ -21,7 +21,7 @@ import net.java.ao.schema.Table;
  * <li>If you need to specify the raw column names in create or find operations, letter case is important.</li>
  */
 @Table("Category")
-public interface Category extends Entity, NamedEntityWithDescription {
+public interface Category extends Entity, NamedEntity {
 
     @ManyToMany(value = PlanToCategoryRelation.class)
     Plan[] getPlans();

@@ -1,6 +1,6 @@
 <event-plans>
     <event-plan name="Meeting with person" description="" reserveTimeInDays="5">
-        <eventCategory name="Public Relations" description=""></eventCategory>
+        <eventCategory name="Public Relations"></eventCategory>
         <component name="Guests" description="">
             <task name="Prepare thanks for person, host etc." description="" neededMonthsBeforeEvent="0"
                   neededDaysBeforeEvent="14"></task>

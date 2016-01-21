@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 public class EventPlanConfiguration {
     private final static Validator VALIDATOR = new Validator();
     private final Project project;
-    private final String eventType;
+    private final String eventPlanTemplateName;
     private final String eventDueDate;
 
     /**
@@ -26,7 +26,7 @@ public class EventPlanConfiguration {
     public EventPlanConfiguration(@Nonnull final HttpServletRequest request) throws NullArgumentException {
         VALIDATOR.check(request);
 
-        eventType = request.getParameter("event-type");
+        eventPlanTemplateName = request.getParameter("event-type");
         eventDueDate = request.getParameter("event-duedate");
         String projectKey = request.getParameter("project-key");
 
@@ -43,8 +43,8 @@ public class EventPlanConfiguration {
     /**
      * @return Event type.
      */
-    public String getEventType() {
-        return eventType;
+    public String getEventPlanTemplateName() {
+        return eventPlanTemplateName;
     }
 
     /**

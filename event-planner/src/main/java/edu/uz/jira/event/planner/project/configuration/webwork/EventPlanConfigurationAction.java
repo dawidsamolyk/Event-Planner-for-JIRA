@@ -56,34 +56,41 @@ public class EventPlanConfigurationAction extends JiraWebActionSupport {
 
         Project project = config.getProject();
         String eventDueDate = config.getEventDueDate();
-        String eventType = config.getEventType();
+        String eventPlanTemplateName = config.getEventPlanTemplateName();
 
         if (validator.isInvalid(project)) {
             return Action.ERROR;
 
-        } else if (validator.canInputProjectConfiguration(project, eventType, eventDueDate)) {
+        } else if (validator.canInputProjectConfiguration(project, eventPlanTemplateName, eventDueDate)) {
             return Action.INPUT;
 
-        } else if (validator.canConfigureProject(project, eventType, eventDueDate)) {
-            configureProject(project, eventDueDate, eventType);
+        } else if (validator.canConfigureProject(project, eventPlanTemplateName, eventDueDate)) {
+            configureProject(project, eventDueDate, eventPlanTemplateName);
             return Action.SUCCESS;
         }
         return Action.ERROR;
     }
 
-    private void configureProject(@Nonnull final Project project, @Nonnull final String eventDueDate, @Nonnull final String eventType) throws ParseException, JiraException {
+    private void configureProject(@Nonnull final Project project, @Nonnull final String eventDueDate, @Nonnull final String eventPlanTemplateName) throws ParseException, JiraException {
         Version version = projectConfigurator.createVersion(project, eventDueDate);
 
-        List<Plan> eventPlans = activeObjectsService.get(Plan.class, Query.select().where(Plan.NAME + " = ?", eventType));
+        List<Plan> eventPlans = activeObjectsService.get(Plan.class, Query.select().where(Plan.NAME + " = ?", eventPlanTemplateName));
         if (!eventPlans.isEmpty()) {
             projectConfigurator.configure(project, version, eventPlans.get(0));
         }
     }
 
     /**
-     * @return Event Plans with Event Organization EventCategory name as key (eg. Development), and Event Organization Plan name
+     * @return Event Plan Templates with Event Organization Category name as key (eg. Development), and Event Organization Plan Template name.
      */
     public Map<String, List<String>> getEventPlans() {
         return activeObjectsService.getEventPlansSortedByDomain();
+    }
+
+    /**
+     * @return Event Plans Templates names with estimated time to complete (as text) for each Plan Template.
+     */
+    public Map<String, String> getEstimatedTimeForEachPlan() {
+        return activeObjectsService.getEstimatedTimeForEachPlan();
     }
 }

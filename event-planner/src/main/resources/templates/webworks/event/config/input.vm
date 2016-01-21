@@ -8,36 +8,36 @@
 </head>
 <body>
 <section role="dialog" id="event-config-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+
     <header class="aui-dialog2-header">
         <h2 class="aui-dialog2-header-main">Event organization configuration</h2>
     </header>
     <div class="aui-dialog2-content">
         <form class="aui" id="event-configuration" action="#" method="post">
             <div class="field-group">
-                <label for="event-type">Event Plan</label>
+                <label for="event-type">Plan Template</label>
                 <select class="select" id="event-type" name="event-type" title="Event type">
-                    <option>Undefined</option>
+                    <option id="Undefined">Undefined</option>
                     #set ($eventPlans = $action.getEventPlans())
+                    #set ($eventPlansEstimatedTimeToComplete = $action.getEstimatedTimeForEachPlan())
                     #foreach($eachPlan in $eventPlans.keySet())
                         <optgroup label="$eachPlan">
                             #foreach($eachValue in $eventPlans.get($eachPlan))
-                                <option>$eachValue</option>
+                                <option id="$eachValue">$eachValue $eventPlansEstimatedTimeToComplete.get($eachValue)</option>
                             #end
                         </optgroup>
                     #end
                 </select>
 
-                <div class="description">Predefined Plan of an Event. <a target="_blank"
-                                                                         href="$baseurl/plugins/servlet/event/plans/configuration"
-                                                                         title="Will open in new tab">Show all
-                    predefined
-                    Event Organization Plans.</a></div>
+                <div class="description">Select Template of project (Event Plan). <a target="_blank"
+                                                                                     href="$baseurl/plugins/servlet/event/plans/configuration"
+                                                                                     title="List of predefined Event Organization Plan Templates">
+                    Show details.</a></div>
             </div>
 
             <div class="field-group" id="event-duedate-group">
                 <label for="event-duedate">Event deadline<span class="aui-icon icon-required">(required)</span></label>
-                <input id="event-duedate" name="event-duedate" type="text" data-aui-validation-field
-                       data-aui-validation-required="required">
+                <input class="text" id="event-duedate" name="event-duedate" type="text">
 
                 <div class="description" id="event-duedate-description">Date of an event.</div>
             </div>

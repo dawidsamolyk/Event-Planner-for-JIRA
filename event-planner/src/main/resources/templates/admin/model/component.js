@@ -12,6 +12,11 @@ function Component() {
         return AJS.$("#component-description");
     };
 
+    that.clear = function () {
+        that.getName().val('');
+        that.getDescription().val('');
+    }
+
     that.getTasks = function () {
         return AJS.$("#component-tasks");
     };

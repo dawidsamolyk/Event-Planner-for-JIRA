@@ -50,9 +50,7 @@
 
                 AJS.dialog2("#plan-delete-dialog").hide();
                 window.history.back(-1);
-            };
-    )
-    ;
+            });
 
     AJS.$("#delete-plan-cancel-button").click(
             function (e) {
@@ -60,9 +58,7 @@
 
                 AJS.dialog2("#plan-delete-dialog").hide();
                 window.history.back(-1);
-            };
-    )
-    ;
+            });
 </script>
 </body>
 </html>

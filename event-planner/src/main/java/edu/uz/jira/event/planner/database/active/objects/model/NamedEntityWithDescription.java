@@ -3,12 +3,7 @@ package edu.uz.jira.event.planner.database.active.objects.model;
 /**
  * Interface of named database entity with description.
  */
-public interface NamedEntityWithDescription {
-    String NAME = "NAME";
-
-    String getName();
-
-    void setName(String name);
+public interface NamedEntityWithDescription extends NamedEntity {
 
     String getDescription();
 

@@ -17,12 +17,16 @@ function TimeLine() {
 
     that.setIssues = function (sourceTasks) {
         that.tasks = sourceTasks;
-        that.showCurrentWeek();
+        if (that.deadlineDate !== undefined) {
+            that.showCurrentWeek();
+        }
     };
 
     that.setProjectDeadline = function (sourceDeadlineDate) {
         that.deadlineDate = sourceDeadlineDate;
-        that.showCurrentWeek();
+        if (that.tasks !== undefined) {
+            that.showCurrentWeek();
+        }
     };
 
     that.showNextWeek = function () {

@@ -16,10 +16,9 @@ public class ActiveObjectsTestHelper {
         this.activeObjects = activeObjects;
     }
 
-    public Category createDomain(String name, String description) {
+    public Category createCategory(String name, String description) {
         Category category = activeObjects.create(Category.class);
         category.setName(name);
-        category.setDescription(description);
         category.save();
         return category;
     }
@@ -36,7 +35,7 @@ public class ActiveObjectsTestHelper {
     }
 
     public Category createDomainNamed(String name) {
-        return createDomain(name, "");
+        return createCategory(name, "");
     }
 
     public Task createTaskNamed(String name) {

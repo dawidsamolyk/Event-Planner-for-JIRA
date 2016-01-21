@@ -43,6 +43,7 @@ import net.java.ao.test.converters.NameConverters;
 import net.java.ao.test.jdbc.Hsql;
 import net.java.ao.test.jdbc.Jdbc;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
+import net.java.ao.util.StringUtils;
 import org.apache.commons.collections.MapUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -294,7 +295,7 @@ public class EventPlanConfigWebworkActionTest {
     }
 
     @Test
-    public void should_Return_Event_Plans_Sorted_By_Domains() throws Exception {
+    public void should_provide_Event_Plans_Sorted_By_Domains() throws Exception {
         String testPlanName = "Test plan 1";
         String secondTestPlanName = "Test plan 2";
         String testDomainName = "Test category";
@@ -306,8 +307,8 @@ public class EventPlanConfigWebworkActionTest {
 
         Map<String, List<String>> expectedResult = new HashMap<String, List<String>>();
         List<String> plans = new ArrayList<String>();
-        plans.add(testPlanName + " (~0 days)");
-        plans.add(secondTestPlanName + " (~0 days)");
+        plans.add(testPlanName);
+        plans.add(secondTestPlanName);
         expectedResult.put(testDomainName, plans);
 
         EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
@@ -315,6 +316,46 @@ public class EventPlanConfigWebworkActionTest {
         Map<String, List<String>> result = fixture.getEventPlans();
 
         assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void should_provide_estimated_time_for_each_event_plan_template_name() throws Exception {
+        String testPlanName = "Test plan 1";
+        String secondTestPlanName = "Test plan 2";
+        String testDomainName = "Test category";
+        Plan plan1 = testHelper.createPlanNamed(testPlanName);
+        Plan plan2 = testHelper.createPlanNamed(secondTestPlanName);
+        Category category = testHelper.createDomainNamed(testDomainName);
+        testHelper.associate(plan1, category);
+        testHelper.associate(plan2, category);
+        EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
+
+        Map<String, List<String>> eventPlans = fixture.getEventPlans();
+        Map<String, String> result = fixture.getEstimatedTimeForEachPlan();
+
+        Set<String> allPlans = new HashSet<String>();
+        for (List<String> eachPlans : eventPlans.values()) {
+            allPlans.addAll(eachPlans);
+        }
+        for (String each : result.keySet()) {
+            assertTrue(allPlans.contains(each));
+        }
+        for (String each : result.values()) {
+            assertTrue(!StringUtils.isBlank(each));
+        }
+    }
+
+    @Test
+    public void should_not_provide_Domains_without_any_plans() throws Exception {
+        Plan plan = testHelper.createPlanNamed("Test plan 1");
+        Category category = testHelper.createDomainNamed("Test category");
+        testHelper.associate(plan, category);
+        testHelper.createDomainNamed("Test category 2");
+        EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
+
+        Map<String, List<String>> result = fixture.getEventPlans();
+
+        assertEquals(1, result.keySet().size());
     }
 
     @Test

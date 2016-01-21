@@ -92,24 +92,23 @@ public class EventComponentRestManagerTest {
     }
 
     @Test
-    public void should_Get_Domain_From_Database() throws SQLException {
+    public void should_Get_Category_From_Database() throws SQLException {
         String testName = "Test name";
         String testDescription = "Test description";
-        testHelper.createDomain(testName, testDescription);
+        Category category = testHelper.createCategory(testName, testDescription);
         EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
 
         EventCategory expected = new EventCategory();
         expected.setName(testName);
-        expected.setDescription(testDescription);
         assertEquals(expected, transactionResult[0]);
     }
 
     @Test
-    public void should_Get_Many_Domains_From_Database() throws SQLException {
-        testHelper.createDomain("EventCategory 1", "Description");
-        testHelper.createDomain("EventCategory 2", "Description");
+    public void should_Get_Many_Categories_From_Database() throws SQLException {
+        testHelper.createCategory("EventCategory 1", "Description");
+        testHelper.createCategory("EventCategory 2", "Description");
         EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
@@ -118,7 +117,7 @@ public class EventComponentRestManagerTest {
     }
 
     @Test
-    public void should_Get_Empty_Domains_Array_When_There_Is_No_Domains_In_Database() {
+    public void should_Get_Empty_Categories_Array_When_There_Is_No_Categories_In_Database() {
         EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get( mockRequest);
@@ -127,11 +126,10 @@ public class EventComponentRestManagerTest {
     }
 
     @Test
-    public void should_Put_New_Domain() {
+    public void should_Put_New_Category() {
         EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
         EventCategory configuration = new EventCategory();
         configuration.setName("Test name");
-        configuration.setDescription("Test description");
 
         Response result = fixture.post(configuration, mockRequest);
 

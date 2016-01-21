@@ -2,7 +2,6 @@ package edu.uz.jira.event.planner.database.xml.model;
 
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
-import edu.uz.jira.event.planner.util.text.TextUtils;
 import net.java.ao.Entity;
 import net.java.ao.RawEntity;
 import org.apache.commons.lang3.StringUtils;
@@ -65,7 +64,7 @@ public class ComponentTemplate implements ActiveObjectWrapper {
      */
     @Override
     public boolean isFullfilled() {
-        return StringUtils.isNotBlank(getName()) && TextUtils.isEachElementNotBlank(tasksNames);
+        return StringUtils.isNotBlank(getName());
     }
 
     /**

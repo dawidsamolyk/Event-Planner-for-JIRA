@@ -4,47 +4,51 @@
     </header>
     <div class="aui-dialog2-content">
         <form class="aui" id="event-task-configuration" action="#" method="post">
-            <div class="field-group" id="task-name-group">
-                <label for="task-name">Name<span class="aui-icon icon-required">(required)</span></label>
-                <input id="task-name" name="task-name" type="text">
+            <div class="field-group">
+                <label for="plan-component">Select component</label>
+                <select id="plan-component" name="plan-component" title="Event Plan Tasks Templates"></select>
 
-                <div class="description" id="task-name-description">Name of the Task.</div>
+                <div class="description" id="plan-components-description">Select Component Template to which you want to
+                    add Tasks.
+                </div>
             </div>
-            <div class="field-group" id="task-description-group">
-                <label for="task-description">Description</label>
-                <input id="task-description" name="task-description" type="text">
+            <div class="field-group">
+                <label for="plan-tasks">Tasks<span class="aui-icon icon-required">(required)</span></label>
+                <select class="multi-select" multiple="" id="plan-tasks" name="plan-tasks"
+                        title="Event Plan Tasks Templates"></select>
 
-                <div class="description" id="task-description-description">Description of the Task.</div>
+                <div class="description" id="plan-components-description">Select at least one component.</div>
             </div>
-            <div class="field-group" id="task-time-group">
-                <label for="task-needed-time">Time for completion
-                    <span class="aui-icon icon-required">(required)</span></label>
+            <div><h3>Add new Event Category</h3>
+                <div class="field-group" id="task-name-group">
+                    <label for="task-name">Name<span class="aui-icon icon-required">(required)</span></label>
+                    <input id="task-name" name="task-name" type="text">
+
+                    <div class="description" id="task-name-description">Name of the Task.</div>
+                </div>
+                <div class="field-group" id="task-description-group">
+                    <label for="task-description">Description</label>
+                    <input id="task-description" name="task-description" type="text">
+
+                    <div class="description" id="task-description-description">Description of the Task.</div>
+                </div>
+                <div class="field-group" id="task-time-group">
+                    <label for="task-needed-time">Time for completion
+                        <span class="aui-icon icon-required">(required)</span></label>
                 <span id="task-needed-time">
                     <input id="task-needed-months" name="task-needed-months" type="number" min="0" value="0"
                            placeholder="Months" style="width: 60px;"> months +
                     <input id="task-needed-days" name="task-needed-days" type="number" min="1" max="31" value="0"
                            placeholder="Days" style="width: 60px;"> days
                 </span>
-                <div class="description" id="task-time-description">Estimated number of months and days needed to
-                    complete this task.
+                    <div class="description" id="task-time-description">Estimated number of months and days needed to
+                        complete this task.
+                    </div>
                 </div>
-            </div>
-            <div class="field-group">
-                <label for="task-subtasks">SubTasks</label>
-                <select class="multi-select" multiple="multiple" id="task-subtasks"
-                        name="task-subtasks" title="Sub-Tasks">
-                </select>
-                <br/>
-
-                <div class="aui-buttons">
-                    <button id="add-subtask-button" class="aui-button trigger-dialog">
-                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                        Add new Sub-Task
-                    </button>
-                </div>
-
-                <div class="description" id="task-subtasks-description">Sub-Tasks to do for complete this Task.
-                </div>
+                <button id="task-button" class="aui-button" title="Add new Event Task Template">
+                    <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                    Add
+                </button>
             </div>
         </form>
     </div>

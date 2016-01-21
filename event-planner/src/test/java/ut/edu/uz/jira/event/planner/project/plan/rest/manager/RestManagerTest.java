@@ -251,8 +251,8 @@ public class RestManagerTest {
 
     @Test
     public void on_Post_Should_Return_Only_One_Resource_With_Specified_Id() throws SQLException {
-        Category firstCategory = testHelper.createDomain("name", "descr");
-        testHelper.createDomain("test", "test");
+        Category firstCategory = testHelper.createCategory("name", "descr");
+        testHelper.createCategory("test", "test");
 
         EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
@@ -265,8 +265,8 @@ public class RestManagerTest {
 
     @Test
     public void on_Get_Should_Return_All_Resources() throws SQLException {
-        Category firstCategory = testHelper.createDomain("name", "descr");
-        Category secondCategory = testHelper.createDomain("test", "test");
+        Category firstCategory = testHelper.createCategory("name", "descr");
+        Category secondCategory = testHelper.createCategory("test", "test");
 
         EventCategoryRestManager fixture = new EventCategoryRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 

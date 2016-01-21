@@ -95,7 +95,7 @@ function TimeLineTasksCreator() {
     };
 
     that.connectDraggableListener = function () {
-        AJS.$("ul.connectedSortable").sortable({
+        jQuery("ul.connectedSortable").sortable({
             connectWith: "ul",
             dropOnEmpty: true,
             placeholder: "ui-state-highlight",

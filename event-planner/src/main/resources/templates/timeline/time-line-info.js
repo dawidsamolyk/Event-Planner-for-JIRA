@@ -15,6 +15,11 @@ function TimeLineInfoProvider() {
     that.getPercentOfDoneTasks = function (tasks) {
         var result, eachIssue, issue;
         result = 0;
+
+        if (tasks === undefined || tasks === null) {
+            return result;
+        }
+
         for (eachIssue in tasks) {
             issue = tasks[eachIssue];
 

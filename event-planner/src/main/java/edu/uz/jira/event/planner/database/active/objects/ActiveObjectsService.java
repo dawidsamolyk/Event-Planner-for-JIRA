@@ -105,7 +105,7 @@ public class ActiveObjectsService {
     }
 
     /**
-     * @return Event Plans names (map values) sorted by Event Domains names (map keys).
+     * @return Event Plan Templates names (map values) sorted by Event Categories names (map keys).
      */
     public Map<String, List<String>> getEventPlansSortedByDomain() {
         Map<String, List<String>> result = new HashMap<String, List<String>>();
@@ -113,9 +113,24 @@ public class ActiveObjectsService {
         for (Category eachCategory : get(Category.class, Query.select())) {
             List<String> plansNames = new ArrayList<String>();
             for (Plan eachPlan : eachCategory.getPlans()) {
-                plansNames.add(eachPlan.getName() + getEstimatedTimeToComplete(eachPlan));
+                plansNames.add(eachPlan.getName());
             }
-            result.put(eachCategory.getName(), plansNames);
+            if (!plansNames.isEmpty()) {
+                result.put(eachCategory.getName(), plansNames);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * @return Event Plan Templates names (map keys) with estimated time to complete as text (map value).
+     */
+    public Map<String, String> getEstimatedTimeForEachPlan() {
+        Map<String, String> result = new HashMap<String, String>();
+
+        for (Plan eachPlan : get(Plan.class, Query.select())) {
+            result.put(eachPlan.getName(), getEstimatedTimeToComplete(eachPlan));
         }
 
         return result;

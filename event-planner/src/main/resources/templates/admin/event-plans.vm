@@ -80,6 +80,10 @@
                 rest.get(plan.id, plansList);
             });
 
+    AJS.$("#plan-categories").auiSelect2();
+    AJS.$("#plan-components").auiSelect2();
+    AJS.$("#plan-tasks").auiSelect2();
+
     var subTaskListener = new ButtonListener(subTask);
     subTaskListener.onAddShowDialog();
     subTaskListener.onSaveDoPostResource();
@@ -96,26 +100,25 @@
     taskListener.onCancelCloseDialog();
 
     var componentListener = new ButtonListener(component);
-    componentListener.onShowDoGet([task]);
     componentListener.onAddShowDialog();
+    componentListener.onCancelCloseDialog();
+    componentListener.onNextShowNextDialogForResource(task);
     componentListener.onSaveDoPostResource();
     componentListener.onSaveDoGetAndSaveInto(plan);
-    componentListener.onSaveHideDialog();
-    componentListener.onCancelCloseDialog();
+    componentListener.onSaveClearForm();
 
     var categoryListener = new ButtonListener(eventCategory);
     categoryListener.onAddShowDialog();
-    categoryListener.onSaveDoPostResource();
-    categoryListener.onSaveHideDialog();
-    categoryListener.onSaveDoGetAndSaveInto(plan);
+    categoryListener.onNextShowNextDialogForResource(component);
     categoryListener.onCancelCloseDialog();
+    categoryListener.onSaveDoPostResource();
+    categoryListener.onSaveDoGetAndSaveInto(plan);
+    categoryListener.onSaveClearForm();
 
     var planListener = new ButtonListener(plan)
     planListener.onShowDoGet([eventCategory, component]);
     planListener.onAddShowDialog();
-    planListener.onSaveDoPostResource();
-    planListener.onSaveHideDialog();
-    planListener.onSaveDoGetAndSaveInto(plansList);
+    planListener.onNextShowNextDialogForResource(eventCategory);
     planListener.onCancelCloseDialog();
 </script>
 </body>

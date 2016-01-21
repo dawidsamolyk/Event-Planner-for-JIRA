@@ -49,7 +49,6 @@ class ActiveObjectsConverter {
     Category addFrom(@Nonnull final EventCategory resource) {
         Category result = activeObjectsService.create(Category.class);
         result.setName(resource.getName());
-        result.setDescription(resource.getDescription());
         result.save();
         return result;
     }
