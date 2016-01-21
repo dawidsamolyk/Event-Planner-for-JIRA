@@ -1,4 +1,4 @@
-package edu.uz.jira.event.planner.timeline;
+package edu.uz.jira.event.planner.timeline.rest;
 
 import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.avatar.Avatar;

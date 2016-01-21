@@ -21,7 +21,7 @@ import com.atlassian.jira.user.MockApplicationUser;
 import com.atlassian.jira.user.MockUser;
 import com.atlassian.jira.user.util.MockUserManager;
 import com.atlassian.jira.user.util.UserManager;
-import edu.uz.jira.event.planner.timeline.IssueDecorator;
+import edu.uz.jira.event.planner.timeline.rest.IssueDecorator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

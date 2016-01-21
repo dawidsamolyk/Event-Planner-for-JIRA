@@ -42,7 +42,7 @@ function DraggableListener() {
     };
 
     that.changeTaskState = function (taskKey, targetColumnId, targetColumnDate) {
-        that.restManager.postTask(taskKey, targetColumnId, targetColumnDate);
+        that.restManager.postTask(taskKey, targetColumnId.substring(0, targetColumnId.indexOf('-')), targetColumnDate);
     };
 
     that.getKeyForValueWithId = function (cells, valueId) {

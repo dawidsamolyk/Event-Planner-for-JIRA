@@ -272,28 +272,26 @@ function RESTManager() {
         jQuery.ajax({
             url: that.baseUrl + "issue/modify",
             type: "POST",
-            dataType: "json",
-            data: {
-                key: taskKey,
-                state: targetState,
-                dueDate: targetDueDate
-            },
+            contentType: "application/json",
+            data: '{ "key": "' + taskKey + '", "state": "' + targetState + '", "dueDateTime": "' + new Date(targetDueDate).getTime() + '" }',
             processData: false,
             success: function (data) {
                 require('aui/flag')({
                     type: 'success',
                     title: 'Task ' + projectKey + ' modified successfully!',
+                    body: '<ul><li>State: ' + targetState + '</li><li>Due Date: ' + targetDueDate + '</li></ul>',
                     close: 'auto'
                 });
+
             },
             error: function (request, status, error) {
+                console.error(request.responseText);
                 require('aui/flag')({
                     type: 'error',
                     title: 'Error while modifying Task with key ' + taskKey + '!',
                     close: 'auto'
                 });
             }
-        })
-        ;
+        });
     };
 };

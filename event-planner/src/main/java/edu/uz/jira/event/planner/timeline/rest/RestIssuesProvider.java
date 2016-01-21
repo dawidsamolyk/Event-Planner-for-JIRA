@@ -9,7 +9,6 @@ import com.atlassian.sal.api.transaction.TransactionTemplate;
 import edu.uz.jira.event.planner.exception.IssuesNotFoundException;
 import edu.uz.jira.event.planner.exception.ProjectNotFoundException;
 import edu.uz.jira.event.planner.project.plan.rest.RestManagerHelper;
-import edu.uz.jira.event.planner.timeline.IssueDecorator;
 import org.apache.commons.lang.StringUtils;
 import org.ofbiz.core.entity.GenericEntityException;
 

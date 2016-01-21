@@ -21,7 +21,7 @@ import com.atlassian.jira.user.util.MockUserManager;
 import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import edu.uz.jira.event.planner.timeline.rest.RestIssuesProvider;
-import edu.uz.jira.event.planner.timeline.IssueDecorator;
+import edu.uz.jira.event.planner.timeline.rest.IssueDecorator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
