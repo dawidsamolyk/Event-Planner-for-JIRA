@@ -56,9 +56,13 @@ function TimeLine() {
         lateCells = that.createLateTasksCells();
         cells = that.createTasksCells(weekToShow);
 
-        that.draggableListener.connect(jQuery.extend(lateCells, cells), that.shouldDisplayLateTasksColumn());
+        that.draggableListener.connect(jQuery.extend(lateCells, cells), that);
 
         that.infoProvider.showFlagsIfRequired(that.deadlineDate, that.tasks);
+    };
+
+    that.refreshLateDateCell = function () {
+
     };
 
     that.clearTimeLine = function () {

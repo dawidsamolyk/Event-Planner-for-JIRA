@@ -25,13 +25,13 @@ function TimeLineTasksCreator() {
         lateDoneCell = that.createDoneTaskCell(0);
         lateDoneCell.style.background = '#d04437';
 
-        result[null] = {'toDo': lateCell, 'done': lateDoneCell};
+        result['late'] = {'toDo': lateCell, 'done': lateDoneCell};
 
         return result;
     };
 
     that.fillLateCellByIssues = function (lateCells, issues) {
-        var eachIssue, issue, lateTaskGadget, cellList, lateToDoCell = lateCells[null].toDo;
+        var eachIssue, issue, lateTaskGadget, cellList, lateToDoCell = lateCells['late'].toDo;
 
         for (eachIssue in issues) {
             issue = issues[eachIssue];

@@ -5,7 +5,7 @@ function DraggableListener() {
     that.gadgetCreator = new TaskGadgetCreator();
     that.restManager = new RESTManager();
 
-    that.connect = function (cells, displayingLateTasksColumn) {
+    that.connect = function (cells, timeLine) {
         jQuery("ul.connectedSortable").sortable({
             connectWith: "ul",
             dropOnEmpty: true,
@@ -13,15 +13,13 @@ function DraggableListener() {
                 var taskGadget, targetColumnId, targetColumnDate;
                 taskGadget = ui.item.context;
 
-                if (ui.item.startPos === ui.item.index()) {
-                    return;
-                }
-
                 targetColumnId = that.getParentId(taskGadget, 'TD');
                 targetColumnDate = that.getKeyForValueWithId(cells, targetColumnId);
 
-                that.changeTaskGadgetColor(taskGadget, targetColumnId, displayingLateTasksColumn);
+                that.changeTaskGadgetColor(taskGadget, targetColumnId, timeLine.shouldDisplayLateTasksColumn());
                 that.changeTaskState(taskGadget.id, targetColumnId, targetColumnDate);
+
+                timeLine.refreshLateDateCell();
             }
         }).disableSelection();
     };

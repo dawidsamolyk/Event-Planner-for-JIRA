@@ -8,7 +8,7 @@ function TimeLineDatesCreator() {
 
     that.createLateDateCell = function (maximumIssueLate) {
         if (maximumIssueLate !== 0) {
-            that.createLateDateCell(maximumIssueLate);
+            that.createLateCell(maximumIssueLate);
         }
     };
 
@@ -48,7 +48,7 @@ function TimeLineDatesCreator() {
         return document.getElementById('dates');
     };
 
-    that.createLateDateCell = function (numberOfLateDays) {
+    that.createLateCell = function (numberOfLateDays) {
         var result;
         switch (numberOfLateDays) {
             case 1:

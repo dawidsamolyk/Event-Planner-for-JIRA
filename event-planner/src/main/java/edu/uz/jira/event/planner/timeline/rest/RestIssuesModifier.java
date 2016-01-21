@@ -9,6 +9,7 @@ import com.atlassian.jira.issue.status.category.StatusCategory;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.workflow.JiraWorkflow;
+import com.atlassian.jira.workflow.WorkflowManager;
 import com.opensymphony.workflow.loader.ActionDescriptor;
 import com.opensymphony.workflow.loader.StepDescriptor;
 import edu.uz.jira.event.planner.project.plan.rest.RestManagerHelper;
@@ -38,6 +39,7 @@ public class RestIssuesModifier {
     private final IssueManager issueManager;
     private JiraAuthenticationContext jiraAuthenticationContext;
     private IssueService issueService;
+    private WorkflowManager workflowManager;
 
     /**
      * Constructor.
@@ -47,6 +49,7 @@ public class RestIssuesModifier {
         issueManager = ComponentAccessor.getIssueManager();
         jiraAuthenticationContext = ComponentAccessor.getJiraAuthenticationContext();
         issueService = ComponentAccessor.getIssueService();
+        workflowManager = ComponentAccessor.getWorkflowManager();
     }
 
     @POST
@@ -85,7 +88,7 @@ public class RestIssuesModifier {
     }
 
     private MutableIssue setState(final MutableIssue issue, final String state) {
-        JiraWorkflow workflow = ComponentAccessor.getWorkflowManager().getWorkflow(issue);
+        JiraWorkflow workflow = workflowManager.getWorkflow(issue);
         if (workflow == null) {
             return issue;
         }

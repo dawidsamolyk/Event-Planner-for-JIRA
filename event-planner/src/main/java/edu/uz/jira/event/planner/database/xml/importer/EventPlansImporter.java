@@ -31,10 +31,8 @@ public class EventPlansImporter {
     }
 
     private Unmarshaller getUnmarshaller() throws EventPlansImportException {
-        String objectFactoryPackageName = ObjectFactory.class.getPackage().getName();
-
         try {
-            JAXBContext context = JAXBContext.newInstance(objectFactoryPackageName);
+            JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
             return context.createUnmarshaller();
         } catch (JAXBException e) {
             throw new EventPlansImportException(e);

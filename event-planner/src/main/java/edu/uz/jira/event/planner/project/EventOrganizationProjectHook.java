@@ -34,6 +34,8 @@ public class EventOrganizationProjectHook implements AddProjectHook {
     private final WorkflowDescriptorsFactory workflowDescriptorsFactory;
     private final ProjectCategoryConfigurator projectCategoryConfigurator;
     private final WorkflowUtils utils;
+    private final ActiveObjectsService activeObjectsService;
+    private final I18nResolver i18nResolver;
 
     /**
      * Constructor.
@@ -50,13 +52,8 @@ public class EventOrganizationProjectHook implements AddProjectHook {
         issueFieldsConfigurator = new IssueFieldsConfigurator(i18nResolver);
         projectCategoryConfigurator = new ProjectCategoryConfigurator(i18nResolver);
         utils = new WorkflowUtils();
-
-        importPredefinedEventPlansIfRequired(i18nResolver, activeObjectsService);
-    }
-
-    private void importPredefinedEventPlansIfRequired(@Nonnull I18nResolver i18nResolver, @Nonnull ActiveObjectsService activeObjectsService) {
-        EventPlansImportExecutor importExecutor = new EventPlansImportExecutor(i18nResolver, activeObjectsService);
-        importExecutor.startImport();
+        this.activeObjectsService = activeObjectsService;
+        this.i18nResolver = i18nResolver;
     }
 
     /**
@@ -65,7 +62,13 @@ public class EventOrganizationProjectHook implements AddProjectHook {
      */
     @Override
     public ValidateResponse validate(@Nonnull final ValidateData validateData) {
+        importPredefinedEventPlansIfRequired(i18nResolver, activeObjectsService);
         return ValidateResponse.create();
+    }
+
+    private void importPredefinedEventPlansIfRequired(@Nonnull I18nResolver i18nResolver, @Nonnull ActiveObjectsService activeObjectsService) {
+        EventPlansImportExecutor importExecutor = new EventPlansImportExecutor(i18nResolver, activeObjectsService);
+        importExecutor.startImport();
     }
 
     /**

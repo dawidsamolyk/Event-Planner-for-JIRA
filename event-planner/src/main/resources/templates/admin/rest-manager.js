@@ -276,10 +276,10 @@ function RESTManager() {
         }
 
         var targetDueDateTime;
-        if (targetDueDate) {
-            targetDueDateTime = new Date(targetDueDate).getTime();
-        } else {
+        if (targetDueDate === 'late') {
             targetDueDateTime = -1;
+        } else {
+            targetDueDateTime = new Date(targetDueDate).getTime();
         }
 
         jQuery.ajax({
