@@ -57,8 +57,8 @@ public class RestIssuesModifier {
         if (issue == null) {
             return helper.buildStatus(Response.Status.NOT_FOUND);
         }
-        setDueDate(issue, issueData);
-        setState(issue, issueData.getState());
+        issue = setDueDate(issue, issueData);
+        issue = setState(issue, issueData.getState());
 
         issueManager.updateIssue(getLoggedInUser(), issue, UpdateIssueRequest.builder().build());
 
@@ -118,7 +118,7 @@ public class RestIssuesModifier {
         return jiraAuthenticationContext.getUser();
     }
 
-    private void setDueDate(final MutableIssue issue, final IssueData issueData) {
+    private MutableIssue setDueDate(final MutableIssue issue, final IssueData issueData) {
         if (issueData.isLate()) {
             Calendar calendar = Calendar.getInstance(jiraAuthenticationContext.getLocale());
             calendar.setTime(new Date());
@@ -127,6 +127,7 @@ public class RestIssuesModifier {
         } else {
             issue.setDueDate(new Timestamp(issueData.getDueDateTime()));
         }
+        return issue;
     }
 
     @XmlRootElement
@@ -174,7 +175,7 @@ public class RestIssuesModifier {
         }
 
         public boolean isLate() {
-            return dueDateTime == null;
+            return dueDateTime < 0;
         }
 
         @Override

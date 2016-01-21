@@ -9,9 +9,6 @@ function DraggableListener() {
         jQuery("ul.connectedSortable").sortable({
             connectWith: "ul",
             dropOnEmpty: true,
-            start: function (event, ui) {
-                ui.item.startPos = ui.item.index();
-            },
             stop: function (event, ui) {
                 var taskGadget, targetColumnId, targetColumnDate;
                 taskGadget = ui.item.context;

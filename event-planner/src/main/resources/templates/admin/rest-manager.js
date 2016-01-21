@@ -35,6 +35,7 @@ function RESTManager() {
             data: resource.getJson(),
             processData: false,
             error: function (request) {
+                console.error(request.responseText);
                 require('aui/flag')({
                     type: 'error',
                     title: 'Cannot save ' + resource.id + '!',
@@ -74,6 +75,7 @@ function RESTManager() {
                 }
             },
             error: function (request) {
+                console.error(request.responseText);
                 require('aui/flag')({
                     type: 'error',
                     title: 'Cannot get ' + sourceId + '!',
@@ -122,6 +124,7 @@ function RESTManager() {
                 }
             },
             error: function (request) {
+                console.error(request.responseText);
                 require('aui/flag')({
                     type: 'error',
                     title: 'Cannot get ' + sourceId + '!',
@@ -159,6 +162,7 @@ function RESTManager() {
                 });
             },
             error: function (request) {
+                console.error(request.responseText);
                 require('aui/flag')({
                     type: 'error',
                     title: 'Cannot delete ' + resourceId + '!',
@@ -198,6 +202,7 @@ function RESTManager() {
                 timeLine.setIssues(data);
             },
             error: function (request, status, error) {
+                console.error(request.responseText);
                 var flagTitle = 'Error (' + error + ') while getting Tasks for Project ' + projectKey + '!';
 
                 if (error.valueOf() === 'Not Found') {
@@ -237,6 +242,7 @@ function RESTManager() {
                 timeLine.setProjectDeadline(projectDeadline);
             },
             error: function (request, status, error) {
+                console.error(request.responseText);
                 require('aui/flag')({
                     type: 'error',
                     title: 'Deadline for project ' + projectKey + ' is not set!',
@@ -269,17 +275,29 @@ function RESTManager() {
             return;
         }
 
+        var targetDueDateTime;
+        if (targetDueDate) {
+            targetDueDateTime = new Date(targetDueDate).getTime();
+        } else {
+            targetDueDateTime = -1;
+        }
+
         jQuery.ajax({
             url: that.baseUrl + "issue/modify",
             type: "POST",
             contentType: "application/json",
-            data: '{ "key": "' + taskKey + '", "state": "' + targetState + '", "dueDateTime": "' + new Date(targetDueDate).getTime() + '" }',
+            data: '{ "key": "' + taskKey + '", "state": "' + targetState + '", "dueDateTime": "' + targetDueDateTime + '" }',
             processData: false,
             success: function (data) {
+                if (targetDueDate === null) {
+                    targetDueDate = new Date();
+                    targetDueDate.setDate(new Date().getDate() - 1);
+                }
+
                 require('aui/flag')({
                     type: 'success',
                     title: 'Task ' + projectKey + ' modified successfully!',
-                    body: '<ul><li>State: ' + targetState + '</li><li>Due Date: ' + targetDueDate + '</li></ul>',
+                    body: '<ul><li>Status: ' + targetState + '</li><li>Due Date: ' + targetDueDate + '</li></ul>',
                     close: 'auto'
                 });
 
