@@ -182,6 +182,7 @@
         <resource type="download" name="weeks-calculator.js" location="/templates/timeline/weeks-calculator.js"/>
         <resource type="download" name="time-line-navigation-buttons.js"
                   location="/templates/timeline/time-line-navigation-buttons.js"/>
+        <resource type="download" name="draggable-listener.js" location="/templates/timeline/draggable-listener.js"/>
         <resource type="download" name="rest-manager.js" location="/templates/admin/rest-manager.js"/>
     </web-resource>
 

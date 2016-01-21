@@ -10,6 +10,7 @@ function TaskGadgetCreator() {
         taskGadget.id = issue.key;
 
         gadgetItem = that.createElement('DIV', 'dashboard-item-frame gadget-container');
+        gadgetItem.id = issue.key;
         taskGadget.appendChild(gadgetItem);
 
         gadgetItem.appendChild(that.createTitle(issue));
@@ -106,7 +107,7 @@ function TaskGadgetCreator() {
     };
 
     that.changeToDone = function (gadget) {
-        gadget.className = 'gadget color7 ui-state-default';
+        gadget.className = 'gadget color4 ui-state-default';
         return gadget;
     };
 
@@ -116,9 +117,7 @@ function TaskGadgetCreator() {
     };
 
     that.changeToLate = function (gadget) {
-        gadget.className = 'gadget ui-state-default';
-        var headerElement = gadget.getElementsByClassName('dashboard-item-header')[0];
-        headerElement.style.background = '#333333';
+        gadget.className = 'gadget color7 ui-state-default';
         return gadget;
     };
 
@@ -132,14 +131,5 @@ function TaskGadgetCreator() {
 
     that.createLate = function (issue) {
         return that.changeToLate(that.create(issue));
-    };
-
-    that.getRoot = function (element) {
-        var result = element;
-        console.log(result);
-        while (result !== undefined && result.tagName !== 'LI') {
-            result = result.parent;
-        }
-        return result;
     };
 };

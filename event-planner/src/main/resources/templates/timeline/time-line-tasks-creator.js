@@ -16,8 +16,8 @@ function TimeLineTasksCreator() {
         return that.getElementById('done-tasks');
     };
 
-    that.createLateTaskCell = function () {
-        var lateCell, lateDoneCell;
+    that.createLateTaskCells = function () {
+        var lateCell, lateDoneCell, result = {};
 
         lateCell = that.createTaskCell(0);
         lateCell.style.background = '#d04437';
@@ -25,18 +25,20 @@ function TimeLineTasksCreator() {
         lateDoneCell = that.createDoneTaskCell(0);
         lateDoneCell.style.background = '#d04437';
 
-        return lateCell;
+        result[null] = {'toDo': lateCell, 'done': lateDoneCell};
+
+        return result;
     };
 
-    that.fillLateCellByIssues = function (lateCell, issues) {
-        var eachIssue, issue, lateTaskGadget, cellList;
+    that.fillLateCellByIssues = function (lateCells, issues) {
+        var eachIssue, issue, lateTaskGadget, cellList, lateToDoCell = lateCells[null].toDo;
 
         for (eachIssue in issues) {
             issue = issues[eachIssue];
 
             if (issue.daysAwayFromDueDate < 0 && issue.done === false) {
                 lateTaskGadget = that.taskGadgetCreator.createLate(issue);
-                cellList = that.getListFor(lateCell);
+                cellList = that.getListFor(lateToDoCell);
                 cellList.appendChild(lateTaskGadget);
             }
         }
@@ -90,19 +92,6 @@ function TimeLineTasksCreator() {
                 }
             }
         }
-
-        that.connectDraggableListener();
-    };
-
-    that.connectDraggableListener = function () {
-        jQuery("ul.connectedSortable").sortable({
-            connectWith: "ul",
-            dropOnEmpty: true,
-            placeholder: "ui-state-highlight",
-            stop: function (event) {
-                console.log(event);
-            }
-        }).disableSelection();
     };
 
     that.getListFor = function (parent) {

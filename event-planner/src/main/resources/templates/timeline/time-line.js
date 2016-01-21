@@ -14,6 +14,7 @@ function TimeLine() {
     that.datesCreator = new TimeLineDatesCreator();
     that.tasksCreator = new TimeLineTasksCreator();
     that.infoProvider = new TimeLineInfoProvider();
+    that.draggableListener = new DraggableListener();
 
     that.setIssues = function (sourceTasks) {
         that.tasks = sourceTasks;
@@ -42,17 +43,20 @@ function TimeLine() {
     };
 
     that.show = function (weekToShowIndex) {
+        var weekToShow, lateCells, cells;
         that.clearTimeLine();
 
         that.allTimeLineWeeks = that.infoProvider.getTimeLineWeeks(that.deadlineDate, that.tasks);
         that.currentDisplayedWeekIndex = weekToShowIndex;
-        var weekToShow = that.allTimeLineWeeks[weekToShowIndex];
+        weekToShow = that.allTimeLineWeeks[weekToShowIndex];
 
         that.createDatesCells(weekToShow);
         that.createNavigationButtons();
 
-        that.createLateTasksCells();
-        that.createTasksCells(weekToShow);
+        lateCells = that.createLateTasksCells();
+        cells = that.createTasksCells(weekToShow);
+
+        that.draggableListener.connect(jQuery.extend(lateCells, cells), that.shouldDisplayLateTasksColumn());
 
         that.infoProvider.showFlagsIfRequired(that.deadlineDate, that.tasks);
     };
@@ -92,10 +96,10 @@ function TimeLine() {
 
     that.createLateTasksCells = function () {
         if (that.shouldDisplayLateTasksColumn()) {
-            var lateCell = that.tasksCreator.createLateTaskCell();
-            that.tasksCreator.fillLateCellByIssues(lateCell, that.tasks);
+            var cells = that.tasksCreator.createLateTaskCells();
+            that.tasksCreator.fillLateCellByIssues(cells, that.tasks);
 
-            return lateCell;
+            return cells;
         }
     };
 

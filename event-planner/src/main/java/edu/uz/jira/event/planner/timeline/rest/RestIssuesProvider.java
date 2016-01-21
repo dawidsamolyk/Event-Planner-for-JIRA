@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * REST manager which provides
+ * REST manager which provides Issues for Time Line.
  */
 @Path("/issues")
 public class RestIssuesProvider {

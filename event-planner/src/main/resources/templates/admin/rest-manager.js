@@ -245,4 +245,55 @@ function RESTManager() {
             }
         });
     };
+
+    that.postTask = function (taskKey, targetState, targetDueDate) {
+        if (taskKey === undefined || !taskKey || 0 === taskKey.length) {
+            require('aui/flag')({
+                type: 'error',
+                title: 'Cannot modify Task with empty Key!'
+            });
+            return;
+        }
+        if (targetState === undefined || !targetState || 0 === targetState.length) {
+            require('aui/flag')({
+                type: 'error',
+                title: 'Cannot modify Task to unknown state!'
+            });
+            return;
+        }
+        if (targetDueDate === undefined || !targetDueDate || 0 === targetDueDate.length) {
+            require('aui/flag')({
+                type: 'error',
+                title: 'Cannot set Task to unknown due date!'
+            });
+            return;
+        }
+
+        jQuery.ajax({
+            url: that.baseUrl + "issue/modify",
+            type: "POST",
+            dataType: "json",
+            data: {
+                key: taskKey,
+                state: targetState,
+                dueDate: targetDueDate
+            },
+            processData: false,
+            success: function (data) {
+                require('aui/flag')({
+                    type: 'success',
+                    title: 'Task ' + projectKey + ' modified successfully!',
+                    close: 'auto'
+                });
+            },
+            error: function (request, status, error) {
+                require('aui/flag')({
+                    type: 'error',
+                    title: 'Error while modifying Task with key ' + taskKey + '!',
+                    close: 'auto'
+                });
+            }
+        })
+        ;
+    };
 };
