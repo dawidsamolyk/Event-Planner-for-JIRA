@@ -140,9 +140,9 @@ public class RestIssuesModifier {
         for (ActionDescriptor eachAction : (List<ActionDescriptor>) step.getActions()) {
             String name = eachAction.getName();
 
-            if (state.equals("done") && (name.equals("Done") || name.equals("Resolved"))) {
+            if (state.equals(StatusCategory.COMPLETE) && (name.equals("Done") || name.equals("Resolved"))) {
                 actionToPerform = eachAction;
-            } else if (state.equals("todo") && name.equals("Reopen")) {
+            } else if (state.equals(StatusCategory.TO_DO) && name.equals("Reopen")) {
                 actionToPerform = eachAction;
             }
         }

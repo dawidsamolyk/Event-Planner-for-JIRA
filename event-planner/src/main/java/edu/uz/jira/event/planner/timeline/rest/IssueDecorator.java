@@ -35,6 +35,8 @@ public class IssueDecorator {
     @XmlElement
     private String summary;
     @XmlElement
+    private String description;
+    @XmlElement
     private String[] componentsNames;
     @XmlElement
     private long avatarId;
@@ -53,6 +55,7 @@ public class IssueDecorator {
     public IssueDecorator(@Nonnull final Issue source) {
         key = source.getKey();
         summary = source.getSummary();
+        description = source.getDescription();
 
         Timestamp sourceDueDate = source.getDueDate();
         if (sourceDueDate != null) {
@@ -142,6 +145,10 @@ public class IssueDecorator {
         return daysAwayFromDueDate;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -154,14 +161,18 @@ public class IssueDecorator {
         if (key != null ? !key.equals(that.key) : that.key != null) return false;
         if (status != null ? !status.equals(that.status) : that.status != null) return false;
         if (summary != null ? !summary.equals(that.summary) : that.summary != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(componentsNames, that.componentsNames)) return false;
         if (assigneeName != null ? !assigneeName.equals(that.assigneeName) : that.assigneeName != null) return false;
         return dueDate != null ? dueDate.equals(that.dueDate) : that.dueDate == null;
+
     }
 
     @Override
     public int hashCode() {
         return getKey().hashCode();
     }
+
+
 }

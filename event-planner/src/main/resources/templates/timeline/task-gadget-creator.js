@@ -32,7 +32,7 @@ function TaskGadgetCreator() {
     that.createTitleText = function (issue) {
         var title = that.createElement('SPAN', 'dashboard-item-title');
 
-        title.title = issue.key + ' ' + issue.summary;
+        title.title = 'Task key: ' + issue.key;
         title.style.alignment = 'left';
         title.style.verticalAlign = 'middle';
         title.style.padding = '4px 4px 4px 4px';
@@ -64,7 +64,7 @@ function TaskGadgetCreator() {
         avatarLink.href = "/jira/secure/ViewProfile.jspa?name=" + assigneeName;
         avatarImage = that.createElement('IMG');
         avatarImage.src = "/jira/secure/useravatar?avatarId=" + avatarId + "&amp;s=16";
-        avatarImage.title = assigneeName;
+        avatarImage.title = 'Assignee: ' + assigneeName;
         avatarImage.height = 16;
         avatarImage.width = 16;
         avatarImage.style.margin = '2px';
@@ -78,15 +78,19 @@ function TaskGadgetCreator() {
     };
 
     that.createSummary = function (issue) {
-        var summaryElement = that.createElement('DIV', 'dashboard-item-content');
-
+        var summaryElement, summaryTextElement;
+        summaryElement = that.createElement('DIV', 'dashboard-item-content');
         summaryElement.style.margin = '1px';
 
-        var summaryTextElement = that.createElement('A');
+        summaryTextElement = that.createElement('A');
         summaryTextElement.href = AJS.contextPath() + "/browse/" + issue.key;
         summaryTextElement.style.fontSize = '13px';
-        summaryTextElement.title = issue.summary;
         summaryTextElement.style.cursor = 'hand';
+        summaryTextElement.title = 'Summary: ' + issue.summary;
+        if (issue.description && issue.description.length !== 0) {
+            summaryTextElement.title += ', Description: ' + issue.description;
+        }
+
         summaryTextElement.appendChild(document.createTextNode(issue.summary));
         summaryElement.appendChild(summaryTextElement);
 
