@@ -52,12 +52,7 @@ function TaskGadgetCreator() {
         components.style.alignment = 'left';
         components.style.verticalAlign = 'middle';
         components.style.margin = '2px';
-
-        var componentsNames = '';
-        for (var loopIndex = 0; loopIndex < issue.componentsNames.length; loopIndex++) {
-            componentsNames += issue.componentsNames[loopIndex];
-        }
-        components.title = componentsNames;
+        components.title = 'Components: ' + issue.componentsNames;
 
         return components;
     };
