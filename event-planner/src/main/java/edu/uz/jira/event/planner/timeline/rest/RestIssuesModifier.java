@@ -1,5 +1,6 @@
 package edu.uz.jira.event.planner.timeline.rest;
 
+import com.atlassian.gzipfilter.org.apache.commons.lang.StringUtils;
 import com.atlassian.jira.bc.issue.IssueService;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.IssueManager;
@@ -12,7 +13,12 @@ import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.jira.workflow.WorkflowManager;
 import com.opensymphony.workflow.loader.ActionDescriptor;
 import com.opensymphony.workflow.loader.StepDescriptor;
+import edu.uz.jira.event.planner.exception.WorkflowActionNotFoundException;
+import edu.uz.jira.event.planner.exception.WorkflowActionNotValidatedException;
+import edu.uz.jira.event.planner.exception.WorkflowNotFoundException;
 import edu.uz.jira.event.planner.project.plan.rest.RestManagerHelper;
+import edu.uz.jira.event.planner.util.text.TextUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -57,40 +63,76 @@ public class RestIssuesModifier {
     public Response post(final IssueData issueData, @Context final HttpServletRequest request) {
         MutableIssue issue = issueManager.getIssueByKeyIgnoreCase(issueData.getKey());
 
+        if (!issueData.isFullfilled()) {
+            return helper.buildStatus(Response.Status.PRECONDITION_FAILED);
+        }
+
         if (issue == null) {
             return helper.buildStatus(Response.Status.NOT_FOUND);
         }
         issue = setDueDate(issue, issueData);
-        issue = setState(issue, issueData.getState());
+        try {
+            issue = setState(issue, issueData.getState());
+        } catch (WorkflowNotFoundException e) {
+            return helper.buildStatus(Response.Status.FORBIDDEN);
+        } catch (WorkflowActionNotFoundException e) {
+            return helper.buildStatus(Response.Status.FORBIDDEN);
+        } catch (WorkflowActionNotValidatedException e) {
+            return helper.buildStatus(Response.Status.FORBIDDEN);
+        }
 
         issueManager.updateIssue(getLoggedInUser(), issue, UpdateIssueRequest.builder().build());
 
-        if (isIssueModified(issueData)) {
+        if (issueModified(issueData)) {
             return helper.buildStatus(Response.Status.OK);
         }
-        return helper.buildStatus(Response.Status.NOT_MODIFIED);
+        return helper.buildStatus(Response.Status.CONFLICT);
     }
 
-    private boolean isIssueModified(final IssueData issueData) {
+    private boolean issueModified(final IssueData issueData) {
         MutableIssue issue = issueManager.getIssueByKeyIgnoreCase(issueData.getKey());
 
-        boolean validDueDate = issue.getDueDate().getTime() == issueData.getDueDateTime();
-
-        StatusCategory statusCategory = issue.getStatusObject().getStatusCategory();
-        boolean validState;
-        if (issueData.getState().equals("done")) {
-            validState = statusCategory.equals(StatusCategory.COMPLETE);
-        } else {
-            validState = statusCategory.equals(StatusCategory.TO_DO) || statusCategory.equals(StatusCategory.IN_PROGRESS);
+        if (issue == null) {
+            return false;
         }
+        StatusCategory statusCategory = issue.getStatusObject().getStatusCategory();
 
-        return validDueDate && validState;
+        boolean validDueDate = DateUtils.isSameDay(issue.getDueDate(), new Date(issueData.getDueDateTime()));
+
+        return validDueDate && isSame(statusCategory, issueData.getState());
     }
 
-    private MutableIssue setState(final MutableIssue issue, final String state) {
+    private MutableIssue setState(final MutableIssue issue, final String state) throws WorkflowNotFoundException, WorkflowActionNotFoundException, WorkflowActionNotValidatedException {
+        if (isSame(issue.getStatusObject().getStatusCategory(), state)) {
+            return issue;
+        }
+        ActionDescriptor actionToPerform = getWorkflowActionToPerform(issue, state);
+
+        if (actionToPerform == null) {
+            throw new WorkflowActionNotFoundException();
+        }
+
+        IssueService.TransitionValidationResult result = issueService.validateTransition(getLoggedInUser(), issue.getId(), actionToPerform.getId(), issueService.newIssueInputParameters());
+        if (result.isValid()) {
+            IssueService.IssueResult transitionResult = issueService.transition(getLoggedInUser(), result);
+            return transitionResult.getIssue();
+        } else {
+            throw new WorkflowActionNotValidatedException(TextUtils.getJoined(result.getErrorCollection().getErrorMessages(), ' '));
+        }
+    }
+
+    private boolean isSame(final StatusCategory statusCategory, final String state) {
+        String statusCategoryKey = statusCategory.getKey();
+        if (state.equals("done")) {
+            return statusCategoryKey.equals(StatusCategory.COMPLETE);
+        }
+        return statusCategoryKey.equals(StatusCategory.TO_DO) || statusCategoryKey.equals(StatusCategory.IN_PROGRESS);
+    }
+
+    private ActionDescriptor getWorkflowActionToPerform(final MutableIssue issue, final String state) throws WorkflowNotFoundException {
         JiraWorkflow workflow = workflowManager.getWorkflow(issue);
         if (workflow == null) {
-            return issue;
+            throw new WorkflowNotFoundException();
         }
         StepDescriptor step = workflow.getLinkedStep(issue.getStatusObject());
 
@@ -104,17 +146,7 @@ public class RestIssuesModifier {
                 actionToPerform = eachAction;
             }
         }
-
-        if (actionToPerform == null) {
-            return issue;
-        }
-
-        IssueService.TransitionValidationResult result = issueService.validateTransition(getLoggedInUser(), issue.getId(), actionToPerform.getId(), issueService.newIssueInputParameters());
-        if (result.isValid()) {
-            IssueService.IssueResult transitionResult = issueService.transition(getLoggedInUser(), result);
-            return transitionResult.getIssue();
-        }
-        return issue;
+        return actionToPerform;
     }
 
     private ApplicationUser getLoggedInUser() {
@@ -147,10 +179,14 @@ public class RestIssuesModifier {
             this("", "", null);
         }
 
-        public IssueData(final String key, final String state, final Long dueDateTime) {
+        public IssueData(String key, String state, Long dueDateTime) {
             this.key = key;
             this.state = state;
             this.dueDateTime = dueDateTime;
+        }
+
+        public boolean isFullfilled() {
+            return StringUtils.isNotBlank(key) && StringUtils.isNotBlank(state) && dueDateTime != null;
         }
 
         public String getKey() {
@@ -178,7 +214,7 @@ public class RestIssuesModifier {
         }
 
         public boolean isLate() {
-            return dueDateTime < 0;
+            return dueDateTime == null || dueDateTime < 0;
         }
 
         @Override
@@ -201,5 +237,7 @@ public class RestIssuesModifier {
             result = 31 * result + (dueDateTime != null ? dueDateTime.hashCode() : 0);
             return result;
         }
+
+
     }
 }

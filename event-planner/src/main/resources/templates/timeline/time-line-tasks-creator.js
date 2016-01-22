@@ -110,7 +110,7 @@ function TimeLineTasksCreator() {
         result.style.borderLeft = '1px solid #cccccc';
         result.style.borderRight = '1px solid #cccccc';
         result.style.borderTop = 'none';
-        result.id = 'todo-' + index;
+        result.id = 'new-' + index;
 
         that.appendListRoot(result);
 

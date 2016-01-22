@@ -16,13 +16,9 @@
             </task>
         </component>
         <component name="Presentation" description="">
-            <task name="Prepare slideshow agenda" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="20">
+            <task name="Prepare slideshow agenda and plan" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="20">
                 <sub-task name="Consult with person" description=""></sub-task>
-                <sub-task name="Short about person" description=""></sub-task>
-                <sub-task name="Short about host/us" description=""></sub-task>
-                <sub-task name="Content" description=""></sub-task>
-                <sub-task name="Summary" description=""></sub-task>
-                <sub-task name="Copy ready slideshow to many independent data storages" description=""></sub-task>
             </task>
             <task name="Prepare slideshow introduction" description="" neededMonthsBeforeEvent="0"
                   neededDaysBeforeEvent="20">
@@ -34,10 +30,9 @@
                 <sub-task name="Content" description=""></sub-task>
                 <sub-task name="Summary" description=""></sub-task>
             </task>
-            <task name="Prepare slideshow content and summary" description="" neededMonthsBeforeEvent="0"
-                  neededDaysBeforeEvent="20">
-                <sub-task name="Copy ready slideshow to many independent data storages" description=""></sub-task>
-            </task>
+            <task name="Copy ready slideshow to many independent data storages" description=""
+                  neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="20"></task>
             <task name="Review" neededMonthsBeforeEvent="0" description="" neededDaysBeforeEvent="22">
                 <sub-task name="Design" description=""></sub-task>
                 <sub-task name="Readability from a distance" description=""></sub-task>
@@ -101,19 +96,8 @@
             <task name="Prepare posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="1">
                 <sub-task name="Prepare design" description=""></sub-task>
                 <sub-task name="Review appearance and look" description=""></sub-task>
-                <sub-task name="Print" description=""></sub-task>
-                <sub-task name="Hang" description=""></sub-task>
-                <sub-task name="Take a photos of hanged posters" description=""></sub-task>
-                <sub-task name="Publish on social media" description=""></sub-task>
-                <sub-task name="Publish on our website" description=""></sub-task>
             </task>
-            <task name="Print posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="1">
-                <sub-task name="Print" description=""></sub-task>
-                <sub-task name="Hang" description=""></sub-task>
-                <sub-task name="Take a photos of hanged posters" description=""></sub-task>
-                <sub-task name="Publish on social media" description=""></sub-task>
-                <sub-task name="Publish on our website" description=""></sub-task>
-            </task>
+            <task name="Print posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="1"></task>
             <task name="Publish posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="1">
                 <sub-task name="Hang" description=""></sub-task>
                 <sub-task name="Take a photos of hanged posters" description=""></sub-task>

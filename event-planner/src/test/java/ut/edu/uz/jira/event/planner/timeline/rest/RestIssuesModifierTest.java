@@ -11,6 +11,7 @@ import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.MockApplicationUser;
 import com.atlassian.jira.workflow.WorkflowManager;
 import edu.uz.jira.event.planner.timeline.rest.RestIssuesModifier;
+import org.apache.commons.lang.time.DateUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -95,18 +96,7 @@ public class RestIssuesModifierTest {
         Response result = fixture.post(testIssueData, new MockHttpServletRequest());
 
         assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
-        assertTrue(sameDay(testIssue.getDueDate(), new Date(testIssueData.getDueDateTime())));
-    }
-
-    private boolean sameDay(Date first, Date second) {
-        Calendar cal1 = Calendar.getInstance();
-        cal1.setTime(first);
-
-        Calendar cal2 = Calendar.getInstance();
-        cal2.setTime(second);
-
-        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+        assertTrue(DateUtils.isSameDay(testIssue.getDueDate(), new Date(testIssueData.getDueDateTime())));
     }
 
 }

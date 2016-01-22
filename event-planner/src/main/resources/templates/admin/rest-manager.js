@@ -292,21 +292,38 @@ function RESTManager() {
                 if (targetDueDate === null) {
                     targetDueDate = new Date();
                     targetDueDate.setDate(new Date().getDate() - 1);
+                } else {
+                    targetDueDate = new Date(targetDueDate);
                 }
 
                 require('aui/flag')({
                     type: 'success',
-                    title: 'Task ' + projectKey + ' modified successfully!',
-                    body: '<ul><li>Status: ' + targetState + '</li><li>Due Date: ' + targetDueDate + '</li></ul>',
+                    title: 'Task ' + taskKey + ' modified successfully!',
+                    body: '<ul><li>Status: ' + targetState + '</li><li>Due Date: ' + targetDueDate.toDateString() + '</li></ul>',
                     close: 'auto'
                 });
 
             },
             error: function (request, status, error) {
-                console.error(request.responseText);
+                var flagBody, flagTitle = 'Error while modifying Task with key ' + taskKey + '!';
+
+                if (error.valueOf() === 'Forbidden') {
+                    flagTitle = 'Cannot close ' + taskKey + '!';
+                    flagBody = "Probable issue: blocking Sub-Tasks.<br><a href='" + AJS.contextPath() + "/browse/" + taskKey + "'>Show Task.</a>";
+
+                } else if (error.valueOf() === 'Not Found') {
+                    flagTitle = 'Task ' + taskKey + ' not found!';
+                    flagBody = 'Try again or contact with plugin author.';
+
+                } else if (error.valueOf() === 'Conflict') {
+                    flagTitle = 'Task ' + taskKey + ' not modified because of internal conflict!';
+                    flagBody = 'Try again or contact with plugin author.';
+                }
+
                 require('aui/flag')({
                     type: 'error',
-                    title: 'Error while modifying Task with key ' + taskKey + '!',
+                    title: flagTitle,
+                    body: flagBody,
                     close: 'auto'
                 });
             }

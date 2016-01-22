@@ -2,7 +2,6 @@ package edu.uz.jira.event.planner.database.active.objects;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
-import edu.uz.jira.event.planner.database.active.objects.model.SubTask;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.xml.model.*;
@@ -68,7 +67,7 @@ class ActiveObjectsConverter {
         return result;
     }
 
-    Task addFrom(TaskTemplate resource) throws ActiveObjectSavingException {
+    Task addFrom(@Nonnull final TaskTemplate resource) throws ActiveObjectSavingException {
         Task result = activeObjectsService.create(Task.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
@@ -85,7 +84,7 @@ class ActiveObjectsConverter {
         return result;
     }
 
-    SubTask addFrom(SubTaskTemplate resource) {
+    SubTask addFrom(@Nonnull final SubTaskTemplate resource) {
         SubTask result = activeObjectsService.create(SubTask.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
@@ -93,7 +92,7 @@ class ActiveObjectsConverter {
         return result;
     }
 
-    Entity addFrom(final EventPlanTemplates resource) throws ActiveObjectSavingException {
+    Entity addFrom(@Nonnull final EventPlanTemplates resource) throws ActiveObjectSavingException {
         for (PlanTemplate eachPlan : resource.getEventPlanTemplate()) {
             for (EventCategory eachEventCategory : eachPlan.getEventCategory()) {
                 addFrom(eachEventCategory);

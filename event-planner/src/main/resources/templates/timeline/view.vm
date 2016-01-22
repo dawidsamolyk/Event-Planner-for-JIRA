@@ -52,6 +52,12 @@
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
+    function loadDataForTimeLine() {
+        var rest = new RESTManager();
+        rest.getIssues(projectKey, timeLine);
+        rest.getProjectDeadline(projectKey, timeLine);
+    }
+
     var project = getParameterByName('project');
     var projectKey = project.substring('Project: '.length, project.length);
 
@@ -65,9 +71,7 @@
 
     AJS.$(document).ready(
             function () {
-                var rest = new RESTManager();
-                rest.getIssues(projectKey, timeLine);
-                rest.getProjectDeadline(projectKey, timeLine);
+                loadDataForTimeLine();
             });
 
     var buttonsListener = new TimeLineButtonsListener();

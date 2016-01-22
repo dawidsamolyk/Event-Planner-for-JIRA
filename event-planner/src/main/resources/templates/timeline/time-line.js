@@ -19,14 +19,14 @@ function TimeLine() {
     that.setIssues = function (sourceTasks) {
         that.tasks = sourceTasks;
         if (that.deadlineDate !== undefined) {
-            that.showCurrentWeek();
+            that.showCurrentDisplayedWeek();
         }
     };
 
     that.setProjectDeadline = function (sourceDeadlineDate) {
         that.deadlineDate = sourceDeadlineDate;
         if (that.tasks !== undefined) {
-            that.showCurrentWeek();
+            that.showCurrentDisplayedWeek();
         }
     };
 
@@ -61,8 +61,12 @@ function TimeLine() {
         that.infoProvider.showFlagsIfRequired(that.deadlineDate, that.tasks);
     };
 
-    that.refreshLateDateCell = function () {
+    that.showCurrentDisplayedWeek = function () {
+        that.show(that.currentDisplayedWeekIndex);
+    };
 
+    that.refresh = function () {
+        loadDataForTimeLine();
     };
 
     that.clearTimeLine = function () {
