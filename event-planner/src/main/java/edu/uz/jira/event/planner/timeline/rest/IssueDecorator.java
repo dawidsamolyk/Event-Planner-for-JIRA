@@ -31,7 +31,7 @@ public class IssueDecorator {
     @XmlElement
     private final String key;
     @XmlElement
-    private boolean done;
+    private String status;
     @XmlElement
     private String summary;
     @XmlElement
@@ -61,7 +61,7 @@ public class IssueDecorator {
         }
 
         setComponents(source);
-        setDone(source);
+        setStatus(source);
 
         User assignee = source.getAssignee();
         if (assignee != null) {
@@ -102,13 +102,13 @@ public class IssueDecorator {
     }
 
     public boolean isDone() {
-        return done;
+        return status.equals(StatusCategory.COMPLETE);
     }
 
-    private void setDone(@Nonnull final Issue source) {
+    private void setStatus(@Nonnull final Issue source) {
         Status statusObject = source.getStatusObject();
         StatusCategory statusCategory = statusObject.getStatusCategory();
-        done = statusCategory.getKey().equals(StatusCategory.COMPLETE);
+        status = statusCategory.getKey();
     }
 
     public String getSummary() {
@@ -149,16 +149,15 @@ public class IssueDecorator {
 
         IssueDecorator that = (IssueDecorator) o;
 
-        if (isDone() != that.isDone()) return false;
-        if (getAvatarId() != that.getAvatarId()) return false;
-        if (getDaysAwayFromDueDate() != that.getDaysAwayFromDueDate()) return false;
-        if (getKey() != null ? !getKey().equals(that.getKey()) : that.getKey() != null) return false;
-        if (getSummary() != null ? !getSummary().equals(that.getSummary()) : that.getSummary() != null) return false;
+        if (avatarId != that.avatarId) return false;
+        if (daysAwayFromDueDate != that.daysAwayFromDueDate) return false;
+        if (key != null ? !key.equals(that.key) : that.key != null) return false;
+        if (status != null ? !status.equals(that.status) : that.status != null) return false;
+        if (summary != null ? !summary.equals(that.summary) : that.summary != null) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if (!Arrays.equals(getComponentsNames(), that.getComponentsNames())) return false;
-        if (getAssigneeName() != null ? !getAssigneeName().equals(that.getAssigneeName()) : that.getAssigneeName() != null)
-            return false;
-        return !(getDueDate() != null ? !getDueDate().equals(that.getDueDate()) : that.getDueDate() != null);
+        if (!Arrays.equals(componentsNames, that.componentsNames)) return false;
+        if (assigneeName != null ? !assigneeName.equals(that.assigneeName) : that.assigneeName != null) return false;
+        return dueDate != null ? dueDate.equals(that.dueDate) : that.dueDate == null;
     }
 
     @Override

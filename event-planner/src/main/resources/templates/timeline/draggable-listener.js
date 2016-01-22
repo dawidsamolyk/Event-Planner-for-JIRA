@@ -29,7 +29,7 @@ function DraggableListener() {
             that.gadgetCreator.changeToLate(taskGadget);
 
         } else if (targetColumnId.startsWith('todo')) {
-            that.gadgetCreator.changeToToDo(taskGadget);
+            that.gadgetCreator.changeToNew(taskGadget);
 
         } else if (targetColumnId.startsWith('done')) {
             that.gadgetCreator.changeToDone(taskGadget);

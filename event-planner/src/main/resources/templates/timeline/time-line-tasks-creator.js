@@ -82,12 +82,15 @@ function TimeLineTasksCreator() {
                 if (that.dateUtil.isTheSameDay(issueDueDate, new Date(eachDate))) {
                     cell = cells[eachDate];
 
-                    if (issue.done === true) {
+                    if (issue.status === 'done') {
                         cellList = that.getListFor(cell.done);
                         cellList.appendChild(that.taskGadgetCreator.createDone(issue));
+                    } else if (issue.status === 'indeterminate') {
+                        cellList = that.getListFor(cell.toDo);
+                        cellList.appendChild(that.taskGadgetCreator.createInProgress(issue));
                     } else {
                         cellList = that.getListFor(cell.toDo);
-                        cellList.appendChild(that.taskGadgetCreator.createToDo(issue));
+                        cellList.appendChild(that.taskGadgetCreator.createNew(issue));
                     }
                 }
             }

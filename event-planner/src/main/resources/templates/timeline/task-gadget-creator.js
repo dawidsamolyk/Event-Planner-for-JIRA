@@ -111,8 +111,13 @@ function TaskGadgetCreator() {
         return gadget;
     };
 
-    that.changeToToDo = function (gadget) {
+    that.changeToNew = function (gadget) {
         gadget.className = 'gadget color1 ui-state-default';
+        return gadget;
+    };
+
+    that.changeToInProgress = function (gadget) {
+        gadget.className = 'gadget color3 ui-state-default';
         return gadget;
     };
 
@@ -121,8 +126,8 @@ function TaskGadgetCreator() {
         return gadget;
     };
 
-    that.createToDo = function (issue) {
-        return that.changeToToDo(that.create(issue));
+    that.createNew = function (issue) {
+        return that.changeToNew(that.create(issue));
     };
 
     that.createDone = function (issue) {
@@ -131,5 +136,9 @@ function TaskGadgetCreator() {
 
     that.createLate = function (issue) {
         return that.changeToLate(that.create(issue));
+    };
+
+    that.createInProgress = function (issue) {
+        return that.changeToInProgress(that.create(issue));
     };
 };
