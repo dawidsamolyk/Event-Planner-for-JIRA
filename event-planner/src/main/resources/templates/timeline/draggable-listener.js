@@ -14,11 +14,7 @@ function DraggableListener() {
                 if (that.isSameTargetAndSourceList(event)) {
                     return;
                 }
-
                 taskGadget = ui.item.context;
-
-                console.log(ui);
-                console.log(event);
 
                 targetColumnId = that.getParentId(taskGadget, 'TD');
                 targetColumnDate = that.getKeyForValueWithId(cells, targetColumnId);
@@ -27,11 +23,6 @@ function DraggableListener() {
                 that.changeTaskState(taskGadget.id, targetColumnId, targetColumnDate);
 
                 timeLine.refresh();
-            },
-            over: function (event, ui) {
-                console.log('over');
-                console.log(ui);
-                console.log(event);
             }
         }).disableSelection();
     };
@@ -40,7 +31,7 @@ function DraggableListener() {
         var targetId, sourceId;
         targetId = event.target.id;
         sourceId = that.getParentId(event.srcElement, 'UL');
-console.log(targetId);console.log(sourceId);
+
         return sourceId === targetId;
     };
 
