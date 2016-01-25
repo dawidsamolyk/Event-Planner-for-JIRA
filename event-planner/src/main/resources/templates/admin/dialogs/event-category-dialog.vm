@@ -1,36 +1,60 @@
-<section role="dialog" id="event-category-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+<section role="dialog" id="event-category-dialog" class="aui-layer aui-dialog2 aui-dialog2-large" aria-hidden="true">
     <header class="aui-dialog2-header">
-        <h2 class="aui-dialog2-header-main">Select Event Plan Categories</h2>
+        <h2 class="aui-dialog2-header-main">Drag&Drop Event Categories</h2>
     </header>
     <div class="aui-dialog2-content">
         <form class="aui" id="event-category-configuration">
-            <div class="field-group">
-                <label for="plan-categories">Categories<span
-                        class="aui-icon icon-required">(required)</span></label>
-                <select class="multi-select" multiple="" id="plan-categories" name="plan-categories"
-                        title="Available Event Categories"></select>
+            <table class="aui" style="height: 170px;">
+                <thead>
+                <tr>
+                    <th id="available-event-category-head">Available Categories</th>
+                    <th id="selected-event-category-head">Selected Categories for this Event Plan Template</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td headers="available-event-category-head" width="50%">
+                        <ul id="available-event-category" class="connectedSortable">
+                            <li class="ui-state-default aui-label">Item 1</li>
+                            <li class="ui-state-default aui-label">Item 2</li>
+                            <li class="ui-state-default aui-label">Item 3</li>
+                            <li class="ui-state-default aui-label">Item 4</li>
+                            <li class="ui-state-default aui-label">Item 5</li>
+                        </ul>
+                    </td>
+                    <td headers="selected-event-category-head" width="50%">
+                        <ul id="selected-event-category" class="connectedSortable">
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
-                <div class="description" id="plan-categories-description">Select at least one Category.</div>
-            </div>
-            <div>
-                <h3>Add new Event Category</h3>
+            <br/>
+            <div style="clear:both;">
+                <h2>Add new Event Category</h2>
                 <div class="field-group" id="event-category-group">
                     <label for="category-name">Name<span class="aui-icon icon-required">(required)</span></label>
                     <input id="category-name" class="text" name="category-name" type="text" maxlength="80">
-                    <button id="category-button" class="aui-button" title="Add new Event Category">
-                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                        Add
-                    </button>
 
                     <div class="description" id="category-name-description">Max. 80 characters.</div>
+                </div>
+                <div class="buttons-container">
+                    <div class="buttons">
+                        <button id="category-button" class="aui-button" title="Add new Event Category">
+                            <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                            Add new Event Category
+                        </button>
+                    </div>
                 </div>
             </div>
         </form>
     </div>
     <footer class="aui-dialog2-footer">
         <div class="aui-dialog2-footer-actions">
-            <button id="event-category-dialog-cancel-button" class="aui-button">Cancel</button>
+            <button id="event-category-dialog-back-button" class="aui-button">Back</button>
             <button id="event-category-dialog-next-button" class="aui-button aui-button-primary">Next</button>
+            <button id="event-category-dialog-cancel-button" class="aui-button aui-button-link">Cancel</button>
         </div>
     </footer>
 </section>

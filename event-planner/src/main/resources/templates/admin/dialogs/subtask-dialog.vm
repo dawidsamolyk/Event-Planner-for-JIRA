@@ -20,9 +20,9 @@
     </div>
     <footer class="aui-dialog2-footer">
         <div class="aui-dialog2-footer-actions">
-            <button id="event-subtask-dialog-cancel-button" class="aui-button">Cancel</button>
-            <button id="event-subtask-dialog-save-button" class="aui-button aui-button-primary" type="submit">Save
-            </button>
+            <button id="event-subtask-dialog-back-button" class="aui-button">Back</button>
+            <button id="event-subtask-dialog-next-button" class="aui-button aui-button-primary">Next</button>
+            <button id="event-subtask-dialog-cancel-button" class="aui-button aui-button-link">Cancel</button>
         </div>
     </footer>
 </section>

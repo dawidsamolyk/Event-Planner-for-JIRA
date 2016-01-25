@@ -8,16 +8,32 @@ function ButtonListener(resource) {
         return resource.id;
     };
 
+    that.getResourceDialogId = function (resource) {
+        return "#event-".concat(resource.id).concat("-dialog");
+    };
+
     that.getDialogId = function () {
         return "#event-".concat(that.getResourceId()).concat("-dialog");
     };
 
     that.getSaveButtonId = function () {
-        return "#".concat(that.getResourceId()).concat("-button");
+        return that.getResourceDialogId(that.getResourceId());
     };
 
     that.getNextButtonId = function () {
-        return "#event-".concat(that.getResourceId()).concat("-dialog-next-button");
+        return that.getButtonId('next');
+    };
+
+    that.getBackButtonId = function () {
+        return that.getButtonId('back');
+    };
+
+    that.getCancelButtonId = function () {
+        return that.getButtonId('cancel');
+    };
+
+    that.getButtonId = function (name) {
+        return "#event-".concat(that.getResourceId()).concat("-dialog-" + name + "-button");
     };
 
     that.onAddShowDialog = function () {
@@ -34,17 +50,25 @@ function ButtonListener(resource) {
         );
     };
 
-    that.onNextShowNextDialogForResource = function (resource) {
-        var resourceDialogId = "#event-".concat(resource.id).concat("-dialog");
-
+    that.onNextShowDialogForResource = function (resource) {
         AJS.$(that.getNextButtonId()).click(
             function (e) {
                 e.preventDefault();
                 AJS.dialog2(that.getDialogId()).hide();
-                AJS.dialog2(resourceDialogId).show();
+                AJS.dialog2(that.getResourceDialogId(resource)).show();
             }
         );
     };
+
+    that.onBackShowDialogForResource = function (resource) {
+        AJS.$(that.getBackButtonId()).click(
+            function (e) {
+                e.preventDefault();
+                AJS.dialog2(that.getDialogId()).hide();
+                AJS.dialog2(that.getResourceDialogId(resource)).show();
+            }
+        );
+    }
 
     that.onSaveDoGetAndSaveInto = function (destinationResource) {
         AJS.$(that.getSaveButtonId()).click(
@@ -83,9 +107,7 @@ function ButtonListener(resource) {
     };
 
     that.onCancelCloseDialog = function () {
-        var cancelButtonId = "#event-".concat(that.getResourceId()).concat("-dialog-cancel-button");
-
-        AJS.$(cancelButtonId).click(
+        AJS.$(that.getCancelButtonId()).click(
             function (e) {
                 e.preventDefault();
                 AJS.dialog2(that.getDialogId()).hide();

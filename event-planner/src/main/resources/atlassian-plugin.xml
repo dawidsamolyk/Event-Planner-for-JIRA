@@ -49,6 +49,7 @@
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
         <dependency>com.atlassian.auiplugin:aui-select2</dependency>
+        <dependency>com.atlassian.gadgets.dashboard:dashboard</dependency>
         <resource type="velocity" name="event-plans-view" location="/templates/admin/event-plans.vm"/>
         <resource type="download" name="component.js" location="/templates/admin/model/component.js"/>
         <resource type="download" name="category.js" location="/templates/admin/model/category.js"/>
@@ -58,6 +59,7 @@
         <resource type="download" name="task.js" location="/templates/admin/model/task.js"/>
         <resource type="download" name="rest-manager.js" location="/templates/admin/rest-manager.js"/>
         <resource type="download" name="button-listener.js" location="/templates/admin/button-listener.js"/>
+        <resource type="download" name="EventPlanDialogs.css" location="/style/EventPlanDialogs.css"/>
     </web-resource>
 
     <web-item key="event_plans" name="Event Organization Plans Link" i18n-name-key="event.plans.admin.name"

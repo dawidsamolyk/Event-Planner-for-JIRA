@@ -1,26 +1,77 @@
-<section role="dialog" id="event-component-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+<section role="dialog" id="event-component-dialog" class="aui-layer aui-dialog2 aui-dialog2-large" aria-hidden="true">
     <header class="aui-dialog2-header">
-        <h2 class="aui-dialog2-header-main">Select Event Plan Components Templates</h2>
+        <h2 class="aui-dialog2-header-main">Drag&Drop Event Plan Components Templates</h2>
     </header>
     <div class="aui-dialog2-content">
         <form class="aui" id="event-component-configuration">
-            <div class="field-group">
-                <label for="plan-components">Components<span
-                        class="aui-icon icon-required">(required)</span></label>
-                <select class="multi-select" multiple="" id="plan-components" name="plan-components"
-                        title="Available Event components"></select>
+            <table class="aui" style="height: 250px;">
+                <thead>
+                <tr>
+                    <th id="available-event-component-head">Available</th>
+                    <th id="selected-event-component-head">Selected</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td headers="available-event-component-head" width="50%">
+                        <ul id="available-event-category" class="connectedSortable">
+                            <li class="gadget color1 event-plan-element-portlet">
+                                <div class="dashboard-item-frame gadget-container">
+                                    <div class="event-plan-element-portlet-header dashboard-item-header"><h3
+                                            class="dashboard-item-title">Component name</h3></div>
+                                    <div class="dashboard-item-content event-plan-element-portlet-content">
+                                        <ul class="tasks-list">
+                                            <li class="aui-label">Task 1</li>
+                                            <li class="aui-label">Task 2</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="gadget color1 event-plan-element-portlet">
+                                <div class="dashboard-item-frame gadget-container">
+                                    <div class="event-plan-element-portlet-header dashboard-item-header"><h3
+                                            class="dashboard-item-title">Component name</h3></div>
+                                    <div class="dashboard-item-content event-plan-element-portlet-content">
+                                        <ul class="tasks-list">
+                                            <li class="aui-label">Task 1</li>
+                                            <li class="aui-label">Task 2</li>
+                                            <li class="aui-label">Task 3</li>
+                                            <li class="aui-label">Task 4</li>
+                                            <li class="aui-label">Task 5</li>
+                                            <li class="aui-label">Task 6</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="gadget color1 event-plan-element-portlet">
+                                <div class="dashboard-item-frame gadget-container">
+                                    <div class="event-plan-element-portlet-header dashboard-item-header"><h3
+                                            class="dashboard-item-title">Component name</h3></div>
+                                    <div class="dashboard-item-content event-plan-element-portlet-content">
+                                        <ul class="tasks-list">
+                                            <li class="aui-label">Task 1</li>
+                                            <li class="aui-label">Task 2</li>
+                                            <li class="aui-label">Task 3</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </td>
+                    <td headers="selected-event-component-head" width="50%">
+                        <ul id="available-event-category" class="connectedSortable">
 
-                <div class="description" id="plan-components-description">Select at least one component.</div>
-            </div>
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <br/>
             <div>
-                <h3>Add new Event Component Template</h3>
+                <h2>Add new Event Component Template</h2>
                 <div class="field-group">
                     <label for="component-name">Name<span class="aui-icon icon-required">(required)</span></label>
                     <input id="component-name" class="text" name="component-name" type="text" maxlength="80">
-                    <button id="component-button" class="aui-button" title="Add new Event Plan Component Template">
-                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                        Add
-                    </button>
 
                     <div class="description" id="component-name-description">Max. 80 characters.</div>
                 </div>
@@ -30,13 +81,53 @@
                            maxlength="255">
                     <div class="description" id="component-description-description">Max. 255 characters.</div>
                 </div>
+                <div class="field-group">
+                    <label for="new-component-tasks">Tasks<span class="aui-icon icon-required">(required)</span></label>
+                    <table id="new-component-tasks" class="aui" style="height: 170px;">
+                        <thead>
+                        <tr>
+                            <th id="available-event-task-head">Available</th>
+                            <th id="selected-event-task-head">Selected for new Component Template</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td headers="available-event-task-head" width="50%">
+                                <ul id="available-event-task" class="connectedSortable">
+                                    <li class="ui-state-default aui-label">Task 1</li>
+                                    <li class="ui-state-default aui-label">Task 2</li>
+                                    <li class="ui-state-default aui-label">Task 3</li>
+                                    <li class="ui-state-default aui-label">Task 4</li>
+                                    <li class="ui-state-default aui-label">Task 5</li>
+                                </ul>
+                            </td>
+                            <td headers="selected-event-task-head" width="50%">
+                                <ul id="selected-event-task" class="connectedSortable">
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="description" id="component-tasks-description">Select at least one Task.</div>
+                </div>
+                <br/>
+                <div class="buttons-container">
+                    <div class="buttons">
+                        <button id="component-button" class="aui-button" title="Add new Event Plan Component Template"
+                                type="submit">
+                            <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                            Add new Component Template
+                        </button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
     <footer class="aui-dialog2-footer">
         <div class="aui-dialog2-footer-actions">
-            <button id="event-component-dialog-cancel-button" class="aui-button">Cancel</button>
+            <button id="event-component-dialog-back-button" class="aui-button">Back</button>
             <button id="event-component-dialog-next-button" class="aui-button aui-button-primary">Next</button>
+            <button id="event-component-dialog-cancel-button" class="aui-button aui-button-link">Cancel</button>
         </div>
     </footer>
 </section>
