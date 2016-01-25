@@ -9,6 +9,9 @@ function DraggableListener() {
         jQuery("ul.connectedSortable").sortable({
             connectWith: "ul",
             dropOnEmpty: true,
+            cursor: "move",
+            delay: 150,
+            opacity: 0.7,
             stop: function (event, ui) {
                 var taskGadget, targetColumnId, targetColumnDate;
                 if (that.isSameTargetAndSourceList(event)) {

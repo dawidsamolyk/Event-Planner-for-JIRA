@@ -33,6 +33,8 @@ public class PlanTemplate implements ActiveObjectWrapper {
     private int reserveTimeInDays;
     @XmlAttribute
     private int id;
+    @XmlAttribute
+    private int estimatedTimeToComplete;
 
     /**
      * @return Event Plan Configuration with all empty fields (but not null).
@@ -65,6 +67,8 @@ public class PlanTemplate implements ActiveObjectWrapper {
                 categories.add(EventCategory.createEmpty().fill(eachCategory));
             }
             setEventCategory(categories);
+
+            setEstimatedTimeToComplete(plan.getEstimatedDaysToComplete());
         }
         return this;
     }
@@ -150,6 +154,14 @@ public class PlanTemplate implements ActiveObjectWrapper {
         this.reserveTimeInDays = reserveTimeInDays;
     }
 
+    public int getEstimatedTimeToComplete() {
+        return estimatedTimeToComplete;
+    }
+
+    public void setEstimatedTimeToComplete(int estimatedTimeToComplete) {
+        this.estimatedTimeToComplete = estimatedTimeToComplete;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -159,6 +171,7 @@ public class PlanTemplate implements ActiveObjectWrapper {
 
         if (reserveTimeInDays != that.reserveTimeInDays) return false;
         if (id != that.id) return false;
+        if (estimatedTimeToComplete != that.estimatedTimeToComplete) return false;
         if (eventCategory != null ? !eventCategory.equals(that.eventCategory) : that.eventCategory != null)
             return false;
         if (component != null ? !component.equals(that.component) : that.component != null) return false;
@@ -175,6 +188,7 @@ public class PlanTemplate implements ActiveObjectWrapper {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + reserveTimeInDays;
         result = 31 * result + id;
+        result = 31 * result + estimatedTimeToComplete;
         return result;
     }
 }

@@ -39,9 +39,9 @@ function PlansList() {
         newRow = table.insertRow(table.rows.length);
 
         that.insertNameAndDescriptionCell(plan, newRow);
-        that.insertCategoriesList(plan, newRow);
-        that.insertComponentsList(plan, newRow);
-        that.insertEstimatedTimeToComplete(plan, newRow);
+        that.insertCategoriesList(plan.eventCategory, newRow);
+        that.insertComponentsList(plan.component, newRow);
+        that.insertEstimatedTimeToComplete(plan.estimatedTimeToComplete, newRow);
         that.insertOperationsLinksCell(plan, newRow);
 
         return true;
@@ -59,24 +59,24 @@ function PlansList() {
         nameAndDescriptionCell.appendChild(description);
     };
 
-    that.insertCategoriesList = function (plan, row) {
-        var categoriesNamesList = that.createListFrom(plan.categoriesNames);
+    that.insertCategoriesList = function (eventCategories, row) {
+        var categoriesNamesList = that.createListFrom(eventCategories);
         if (categoriesNamesList === undefined) {
             return false;
         }
         that.insertCell(row, 1).appendChild(categoriesNamesList);
     };
 
-    that.insertComponentsList = function (plan, row) {
-        var componentsNamesList = that.createListFrom(plan.componentsNames);
+    that.insertComponentsList = function (components, row) {
+        var componentsNamesList = that.createListFrom(components);
         if (componentsNamesList === undefined) {
             return false;
         }
         that.insertCell(row, 2).appendChild(componentsNamesList);
     };
 
-    that.insertEstimatedTimeToComplete = function (plan, row) {
-        that.insertCell(row, 3).appendChild(document.createTextNode(plan.estimatedDaysToComplete));
+    that.insertEstimatedTimeToComplete = function (estimatedTimeToComplete, row) {
+        that.insertCell(row, 3).appendChild(document.createTextNode('~' + estimatedTimeToComplete + ' day(s)'));
     };
 
     that.insertOperationsLinksCell = function (plan, row) {
@@ -136,7 +136,7 @@ function PlansList() {
             if (eachValue === undefined) {
                 return undefined;
             }
-            that.addToList(result, document.createTextNode(eachValue));
+            that.addToList(result, document.createTextNode(eachValue.name));
         }
 
         return result;

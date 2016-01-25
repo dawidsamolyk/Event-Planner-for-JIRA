@@ -126,7 +126,7 @@ public class ActiveObjectsService {
     }
 
     private String getEstimatedTimeToComplete(@Nonnull final Plan plan) {
-        return " (~" + plan.getEstimatedDaysToComplete() + " days)";
+        return "~" + plan.getEstimatedDaysToComplete() + " days";
     }
 
     /**

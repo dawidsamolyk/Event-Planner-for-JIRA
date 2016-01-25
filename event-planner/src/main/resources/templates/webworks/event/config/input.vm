@@ -23,7 +23,7 @@
                     #foreach($eachPlan in $eventPlans.keySet())
                         <optgroup label="$eachPlan">
                             #foreach($eachValue in $eventPlans.get($eachPlan))
-                                <option id="$eachValue">$eachValue $eventPlansEstimatedTimeToComplete.get($eachValue)</option>
+                                <option id="$eachValue">$eachValue ($eventPlansEstimatedTimeToComplete.get($eachValue))</option>
                             #end
                         </optgroup>
                     #end
