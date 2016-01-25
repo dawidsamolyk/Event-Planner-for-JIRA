@@ -13,7 +13,7 @@ function TimeLineInfoProvider() {
     };
 
     that.getPercentOfDoneTasks = function (tasks) {
-        var result, eachIssue, issue;
+        var result, eachIssue, task;
         result = 0;
 
         if (tasks === undefined || tasks === null) {
@@ -21,9 +21,9 @@ function TimeLineInfoProvider() {
         }
 
         for (eachIssue in tasks) {
-            issue = tasks[eachIssue];
+            task = tasks[eachIssue];
 
-            if (issue.done === true) {
+            if (task.status === 'done') {
                 result += 1;
             }
         }
@@ -37,7 +37,7 @@ function TimeLineInfoProvider() {
             task = tasks[eachIssue];
             daysAwayFromDueDate = task.daysAwayFromDueDate;
 
-            if (task.done === false && daysAwayFromDueDate < result) {
+            if (task.status !== 'done' && daysAwayFromDueDate < result) {
                 result = daysAwayFromDueDate;
             }
         }

@@ -1,5 +1,6 @@
 package edu.uz.jira.event.planner.database.xml.model;
 
+import edu.uz.jira.event.planner.database.active.objects.model.SubTask;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import net.java.ao.Entity;
 import net.java.ao.RawEntity;
@@ -21,6 +22,8 @@ public class SubTaskTemplate implements ActiveObjectWrapper {
     private String name;
     @XmlAttribute(name = "description")
     private String description;
+    @XmlAttribute
+    private int id;
 
     /**
      * @return Event SubTask Configuration with all empty fields (but not null).
@@ -52,9 +55,11 @@ public class SubTaskTemplate implements ActiveObjectWrapper {
      * @see {@link ActiveObjectWrapper#fill(Entity)}
      */
     @Override
-    public ActiveObjectWrapper fill(@Nonnull final Entity entity) {
-        if (entity instanceof edu.uz.jira.event.planner.database.active.objects.model.SubTask) {
-            edu.uz.jira.event.planner.database.active.objects.model.SubTask subtask = (edu.uz.jira.event.planner.database.active.objects.model.SubTask) entity;
+    public SubTaskTemplate fill(@Nonnull final Entity entity) {
+        if (entity instanceof SubTask) {
+            SubTask subtask = (SubTask) entity;
+
+            setId(subtask.getID());
             setName(subtask.getName());
             setDescription(subtask.getDescription());
         }
@@ -66,7 +71,7 @@ public class SubTaskTemplate implements ActiveObjectWrapper {
      */
     @Override
     public Class<? extends RawEntity> getWrappedType() {
-        return edu.uz.jira.event.planner.database.active.objects.model.SubTask.class;
+        return SubTask.class;
     }
 
     /**
@@ -85,21 +90,32 @@ public class SubTaskTemplate implements ActiveObjectWrapper {
         return createEmpty();
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SubTaskTemplate subTaskTemplate = (SubTaskTemplate) o;
+        SubTaskTemplate that = (SubTaskTemplate) o;
 
-        if (getName() != null ? !getName().equals(subTaskTemplate.getName()) : subTaskTemplate.getName() != null) return false;
-        return !(getDescription() != null ? !getDescription().equals(subTaskTemplate.getDescription()) : subTaskTemplate.getDescription() != null);
+        if (id != that.id) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        return description != null ? description.equals(that.description) : that.description == null;
+
     }
 
     @Override
     public int hashCode() {
-        int result = getName() != null ? getName().hashCode() : 0;
-        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + id;
         return result;
     }
 }

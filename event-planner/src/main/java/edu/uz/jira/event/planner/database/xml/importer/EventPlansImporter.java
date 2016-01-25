@@ -75,6 +75,6 @@ public class EventPlansImporter {
      * @param plansTemplates Event Plan Templates to import.
      */
     public void importEventPlansIntoDatabase(final EventPlanTemplates plansTemplates) throws ActiveObjectSavingException {
-        activeObjectsService.addFrom(plansTemplates);
+        activeObjectsService.addManyPlans(plansTemplates);
     }
 }

@@ -2,8 +2,11 @@
     <event-plan name="Test Event Organization Plan" neededMonths="1" neededDays="7">
         <eventCategory name="Software Development"></eventCategory>
         <component name="Test Component">
-            <task name="Test task 1" neededMonths="0" neededDays="5"></task>
-            <task name="Test task 2" neededMonths="0" neededDays="10"></task>
+            <task name="Test task 1" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="5"></task>
+            <task name="Test task 2" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="10"></task>
+        </component>
+        <component name="Test Component 2">
+            <task name="Test task 1" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="5"></task>
         </component>
     </event-plan>
 </event-plans>

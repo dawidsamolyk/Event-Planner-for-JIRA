@@ -1,7 +1,8 @@
 package edu.uz.jira.event.planner.database.xml.model;
 
+import edu.uz.jira.event.planner.database.active.objects.model.Component;
+import edu.uz.jira.event.planner.database.active.objects.model.Task;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
-import edu.uz.jira.event.planner.util.text.EntityNameExtractor;
 import net.java.ao.Entity;
 import net.java.ao.RawEntity;
 import org.apache.commons.lang3.StringUtils;
@@ -9,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Nonnull;
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -17,8 +17,7 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "task",
-        "tasksNames"
+        "task"
 })
 public class ComponentTemplate implements ActiveObjectWrapper {
     @XmlElement(required = true)
@@ -27,8 +26,8 @@ public class ComponentTemplate implements ActiveObjectWrapper {
     private String name;
     @XmlAttribute(name = "description")
     private String description;
-    @XmlElement
-    private String[] tasksNames;
+    @XmlAttribute
+    private int id;
 
     /**
      * @return Event Component Configuration with all empty fields (but not null).
@@ -42,11 +41,18 @@ public class ComponentTemplate implements ActiveObjectWrapper {
      */
     @Override
     public ComponentTemplate fill(@Nonnull final Entity entity) {
-        if (entity instanceof edu.uz.jira.event.planner.database.active.objects.model.Component) {
-            edu.uz.jira.event.planner.database.active.objects.model.Component component = (edu.uz.jira.event.planner.database.active.objects.model.Component) entity;
+        if (entity instanceof Component) {
+            Component component = (Component) entity;
+
+            setId(component.getID());
             setName(component.getName());
             setDescription(component.getDescription());
-            setTasksNames(EntityNameExtractor.getNames(component.getTasks()));
+
+            List<TaskTemplate> tasks = new ArrayList<TaskTemplate>();
+            for (Task eachTask : component.getTasks()) {
+                tasks.add(TaskTemplate.createEmpty().fill(eachTask));
+            }
+            setTask(tasks);
         }
         return this;
     }
@@ -56,7 +62,7 @@ public class ComponentTemplate implements ActiveObjectWrapper {
      */
     @Override
     public Class<? extends RawEntity> getWrappedType() {
-        return edu.uz.jira.event.planner.database.active.objects.model.Component.class;
+        return Component.class;
     }
 
     /**
@@ -73,20 +79,6 @@ public class ComponentTemplate implements ActiveObjectWrapper {
     @Override
     public ActiveObjectWrapper getEmptyCopy() {
         return new ComponentTemplate();
-    }
-
-    public String[] getTasksNames() {
-        if (tasksNames == null && task != null) {
-            tasksNames = new String[task.size()];
-            for (int index = 0; index < task.size(); index++) {
-                tasksNames[index] = task.get(index).getName();
-            }
-        }
-        return tasksNames;
-    }
-
-    public void setTasksNames(String[] tasksNames) {
-        this.tasksNames = tasksNames;
     }
 
     public List<TaskTemplate> getTask() {
@@ -119,28 +111,34 @@ public class ComponentTemplate implements ActiveObjectWrapper {
         this.description = value;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ComponentTemplate componentTemplate = (ComponentTemplate) o;
+        ComponentTemplate that = (ComponentTemplate) o;
 
-        if (getTask() != null ? !getTask().equals(componentTemplate.getTask()) : componentTemplate.getTask() != null)
-            return false;
-        if (getName() != null ? !getName().equals(componentTemplate.getName()) : componentTemplate.getName() != null)
-            return false;
-        if (getDescription() != null ? !getDescription().equals(componentTemplate.getDescription()) : componentTemplate.getDescription() != null)
-            return false;
-        return Arrays.equals(getTasksNames(), componentTemplate.getTasksNames());
+        if (id != that.id) return false;
+        if (task != null ? !task.equals(that.task) : that.task != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        return description != null ? description.equals(that.description) : that.description == null;
+
     }
 
     @Override
     public int hashCode() {
-        int result = getTask() != null ? getTask().hashCode() : 0;
-        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
-        result = 31 * result + Arrays.hashCode(getTasksNames());
+        int result = task != null ? task.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + id;
         return result;
     }
 }

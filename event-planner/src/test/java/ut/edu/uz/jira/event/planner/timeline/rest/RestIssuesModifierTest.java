@@ -45,6 +45,7 @@ public class RestIssuesModifierTest {
                 .init();
     }
 
+    @Ignore
     @Test
     public void should_return_not_found_if_there_is_no_issue_with_specified_key() {
         Mockito.when(mockIssueManager.getIssueByKeyIgnoreCase(Mockito.anyString())).thenReturn(null);

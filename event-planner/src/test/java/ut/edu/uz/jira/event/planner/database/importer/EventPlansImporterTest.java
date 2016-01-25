@@ -4,8 +4,8 @@ import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.activeobjects.tx.Transactional;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.database.xml.importer.EventPlansImporter;
@@ -13,6 +13,7 @@ import edu.uz.jira.event.planner.database.xml.model.EventPlanTemplates;
 import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
 import edu.uz.jira.event.planner.exception.EventPlansImportException;
 import net.java.ao.EntityManager;
+import net.java.ao.Query;
 import net.java.ao.test.converters.NameConverters;
 import net.java.ao.test.jdbc.Hsql;
 import net.java.ao.test.jdbc.Jdbc;
@@ -81,8 +82,25 @@ public class EventPlansImporterTest {
 
         assertEquals(1, activeObjects.count(Plan.class));
         assertEquals(1, activeObjects.count(Category.class));
-        assertEquals(1, activeObjects.count(Component.class));
-        assertEquals(2, activeObjects.count(Task.class));
+        assertEquals(2, activeObjects.count(Component.class));
+        assertEquals(3, activeObjects.count(Task.class));
         assertEquals(0, activeObjects.count(SubTask.class));
+    }
+
+    @Test
+    public void should_not_duplicate_tasks_for_components() throws EventPlansImportException, ActiveObjectSavingException {
+        EventPlansImporter fixture = new EventPlansImporter(service);
+        EventPlanTemplates plans = fixture.getEventPlanTemplates(testFileUrl);
+
+        fixture.importEventPlansIntoDatabase(plans);
+
+        assertEquals(2, activeObjects.count(Component.class));
+        assertEquals(3, activeObjects.count(Task.class));
+        for (Component each : activeObjects.find(Component.class, Query.select().where(Component.NAME + " = ?", "Test Component"))) {
+            assertEquals(2, each.getTasks().length);
+        }
+        for (Component each : activeObjects.find(Component.class, Query.select().where(Component.NAME + " = ?", "Test Component 2"))) {
+            assertEquals(1, each.getTasks().length);
+        }
     }
 }

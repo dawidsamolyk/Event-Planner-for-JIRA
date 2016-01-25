@@ -72,7 +72,7 @@ public class RestIssuesModifier {
         }
         issue = setDueDate(issue, issueData);
         try {
-            issue = setState(issue, issueData.getState());
+            issue = setStatus(issue, issueData.getStatus());
         } catch (WorkflowNotFoundException e) {
             return helper.buildStatus(Response.Status.FORBIDDEN);
         } catch (WorkflowActionNotFoundException e) {
@@ -99,14 +99,14 @@ public class RestIssuesModifier {
 
         boolean validDueDate = DateUtils.isSameDay(issue.getDueDate(), new Date(issueData.getDueDateTime()));
 
-        return validDueDate && isSame(statusCategory, issueData.getState());
+        return validDueDate && isSame(statusCategory, issueData.getStatus());
     }
 
-    private MutableIssue setState(final MutableIssue issue, final String state) throws WorkflowNotFoundException, WorkflowActionNotFoundException, WorkflowActionNotValidatedException {
-        if (isSame(issue.getStatusObject().getStatusCategory(), state)) {
+    private MutableIssue setStatus(final MutableIssue issue, final String statusName) throws WorkflowNotFoundException, WorkflowActionNotFoundException, WorkflowActionNotValidatedException {
+        if (isSame(issue.getStatusObject().getStatusCategory(), statusName)) {
             return issue;
         }
-        ActionDescriptor actionToPerform = getWorkflowActionToPerform(issue, state);
+        ActionDescriptor actionToPerform = getWorkflowActionToPerform(issue, statusName);
 
         if (actionToPerform == null) {
             throw new WorkflowActionNotFoundException();
@@ -121,15 +121,15 @@ public class RestIssuesModifier {
         }
     }
 
-    private boolean isSame(final StatusCategory statusCategory, final String state) {
+    private boolean isSame(final StatusCategory statusCategory, final String statusName) {
         String statusCategoryKey = statusCategory.getKey();
-        if (state.equals("done")) {
+        if (statusName.equals("done")) {
             return statusCategoryKey.equals(StatusCategory.COMPLETE);
         }
         return statusCategoryKey.equals(StatusCategory.TO_DO) || statusCategoryKey.equals(StatusCategory.IN_PROGRESS);
     }
 
-    private ActionDescriptor getWorkflowActionToPerform(final MutableIssue issue, final String state) throws WorkflowNotFoundException {
+    private ActionDescriptor getWorkflowActionToPerform(final MutableIssue issue, final String statusName) throws WorkflowNotFoundException {
         JiraWorkflow workflow = workflowManager.getWorkflow(issue);
         if (workflow == null) {
             throw new WorkflowNotFoundException();
@@ -140,9 +140,9 @@ public class RestIssuesModifier {
         for (ActionDescriptor eachAction : (List<ActionDescriptor>) step.getActions()) {
             String name = eachAction.getName();
 
-            if (state.equals(StatusCategory.COMPLETE) && (name.equals("Done") || name.equals("Resolved"))) {
+            if (statusName.equals(StatusCategory.COMPLETE) && (name.equals("Done") || name.equals("Resolved"))) {
                 actionToPerform = eachAction;
-            } else if (state.equals(StatusCategory.TO_DO) && name.equals("Reopen")) {
+            } else if (statusName.equals(StatusCategory.TO_DO) && name.equals("Reopen")) {
                 actionToPerform = eachAction;
             }
         }
@@ -171,7 +171,7 @@ public class RestIssuesModifier {
         @XmlElement
         private String key;
         @XmlElement
-        private String state;
+        private String status;
         @XmlElement
         private Long dueDateTime;
 
@@ -179,14 +179,14 @@ public class RestIssuesModifier {
             this("", "", null);
         }
 
-        public IssueData(String key, String state, Long dueDateTime) {
+        public IssueData(String key, String status, Long dueDateTime) {
             this.key = key;
-            this.state = state;
+            this.status = status;
             this.dueDateTime = dueDateTime;
         }
 
         public boolean isFullfilled() {
-            return StringUtils.isNotBlank(key) && StringUtils.isNotBlank(state) && dueDateTime != null;
+            return StringUtils.isNotBlank(key) && StringUtils.isNotBlank(status) && dueDateTime != null;
         }
 
         public String getKey() {
@@ -195,14 +195,6 @@ public class RestIssuesModifier {
 
         public void setKey(String key) {
             this.key = key;
-        }
-
-        public String getState() {
-            return state;
-        }
-
-        public void setState(String state) {
-            this.state = state;
         }
 
         public Long getDueDateTime() {
@@ -217,6 +209,14 @@ public class RestIssuesModifier {
             return dueDateTime == null || dueDateTime < 0;
         }
 
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -225,7 +225,7 @@ public class RestIssuesModifier {
             IssueData issueData = (IssueData) o;
 
             if (key != null ? !key.equals(issueData.key) : issueData.key != null) return false;
-            if (state != null ? !state.equals(issueData.state) : issueData.state != null) return false;
+            if (status != null ? !status.equals(issueData.status) : issueData.status != null) return false;
             return dueDateTime != null ? dueDateTime.equals(issueData.dueDateTime) : issueData.dueDateTime == null;
 
         }
@@ -233,11 +233,9 @@ public class RestIssuesModifier {
         @Override
         public int hashCode() {
             int result = key != null ? key.hashCode() : 0;
-            result = 31 * result + (state != null ? state.hashCode() : 0);
+            result = 31 * result + (status != null ? status.hashCode() : 0);
             result = 31 * result + (dueDateTime != null ? dueDateTime.hashCode() : 0);
             return result;
         }
-
-
     }
 }

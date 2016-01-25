@@ -26,6 +26,7 @@ import org.mockito.Mockito;
 import ut.helpers.ActiveObjectsTestHelper;
 import ut.helpers.TestActiveObjects;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -59,80 +60,40 @@ public class ActiveObjectsServiceTest {
     @Test
     public void should_Not_Add_Any_With_Null_Configuration() throws ActiveObjectSavingException {
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom((EventCategory) null);
+        service.addPlan(null);
         assertEquals(0, activeObjects.count(Category.class));
 
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom((PlanTemplate) null);
+        service.addManyPlans(null);
         assertEquals(0, activeObjects.count(Plan.class));
-
-        exception.expect(ActiveObjectSavingException.class);
-        service.addFrom((ComponentTemplate) null);
-        assertEquals(0, activeObjects.count(Component.class));
-
-        exception.expect(ActiveObjectSavingException.class);
-        service.addFrom((SubTaskTemplate) null);
-        assertEquals(0, activeObjects.count(SubTask.class));
-
-        exception.expect(ActiveObjectSavingException.class);
-        service.addFrom((TaskTemplate) null);
-        assertEquals(0, activeObjects.count(Task.class));
     }
 
     @Test
     public void should_Not_Add_Any_With_Empty_Configuration() throws ActiveObjectSavingException {
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(EventCategory.createEmpty());
-        assertEquals(0, activeObjects.count(Category.class));
-
-        exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(PlanTemplate.createEmpty());
+        service.addPlan(PlanTemplate.createEmpty());
         assertEquals(0, activeObjects.count(Plan.class));
 
+        EventPlanTemplates plans = new EventPlanTemplates();
+        plans.setEventPlan(Arrays.asList(new PlanTemplate[]{PlanTemplate.createEmpty()}));
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(ComponentTemplate.createEmpty());
-        assertEquals(0, activeObjects.count(Component.class));
-
-        exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(SubTaskTemplate.createEmpty());
-        assertEquals(0, activeObjects.count(SubTask.class));
-
-        exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(TaskTemplate.createEmpty());
-        assertEquals(0, activeObjects.count(Task.class));
+        service.addManyPlans(plans);
+        assertEquals(0, activeObjects.count(Plan.class));
     }
 
     @Test
     public void should_Not_Add_Any_When_Confugiration_Is_Not_Fullfilled() throws ActiveObjectSavingException {
-        ComponentTemplate mockDomainConfig = mock(ComponentTemplate.class);
-        Mockito.when(mockDomainConfig.isFullfilled()).thenReturn(false);
-        exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(mockDomainConfig);
-        assertEquals(0, activeObjects.count(Category.class));
-
         PlanTemplate mockPlanConfig = mock(PlanTemplate.class);
         Mockito.when(mockPlanConfig.isFullfilled()).thenReturn(false);
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(mockPlanConfig);
+        service.addPlan(mockPlanConfig);
         assertEquals(0, activeObjects.count(Plan.class));
 
-        ComponentTemplate mockComponentTemplateConfig = mock(ComponentTemplate.class);
-        Mockito.when(mockComponentTemplateConfig.isFullfilled()).thenReturn(false);
+        EventPlanTemplates plans = new EventPlanTemplates();
+        plans.setEventPlan(Arrays.asList(new PlanTemplate[]{mockPlanConfig}));
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(mockComponentTemplateConfig);
-        assertEquals(0, activeObjects.count(Component.class));
-
-        SubTaskTemplate mockSubTaskTemplateConfig = mock(SubTaskTemplate.class);
-        Mockito.when(mockSubTaskTemplateConfig.isFullfilled()).thenReturn(false);
-        exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(mockComponentTemplateConfig);
-        assertEquals(0, activeObjects.count(SubTask.class));
-
-        TaskTemplate mockTaskTemplateConfig = mock(TaskTemplate.class);
-        Mockito.when(mockTaskTemplateConfig.isFullfilled()).thenReturn(false);
-        exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(mockTaskTemplateConfig);
-        assertEquals(0, activeObjects.count(Task.class));
+        service.addManyPlans(plans);
+        assertEquals(0, activeObjects.count(Plan.class));
     }
 
     @Test
@@ -159,152 +120,175 @@ public class ActiveObjectsServiceTest {
         PlanTemplate config = new PlanTemplate();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setCategoriesNames(new String[]{"Test domain"});
-        config.setComponentsNames(new String[]{"Test component"});
 
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(config);
+        service.addPlan(config);
 
         assertEquals(0, activeObjects.count(Plan.class));
     }
 
     @Test
     public void plan_Should_Be_Added_If_Has_Fullfilled_Configuration_And_Has_Related_Objects() throws ActiveObjectSavingException {
-        Category category = activeObjectsHelper.createDomainNamed("Test category");
+        Category category = activeObjectsHelper.createCategoryNamed("Test category");
         Component component = activeObjectsHelper.createComponentNamed("Test component");
+        Task task = activeObjectsHelper.createTaskNamed("test");
+        activeObjectsHelper.associate(component, task);
         PlanTemplate config = new PlanTemplate();
         config.setName("Test name");
         config.setDescription("Test description");
-        config.setCategoriesNames(new String[]{category.getName()});
-        config.setComponentsNames(new String[]{component.getName()});
+        config.setEventCategory(Arrays.asList(new EventCategory[]{EventCategory.createEmpty().fill(category)}));
+        config.setComponent(Arrays.asList(new ComponentTemplate[]{ComponentTemplate.createEmpty().fill(component)}));
 
-        service.addFrom(config);
+        service.addPlan(config);
 
         assertEquals(1, activeObjects.count(Plan.class));
     }
 
     @Test
-    public void domain_Should_Be_Added_If_Has_Fullfilled_Configuration() throws ActiveObjectSavingException {
-        EventCategory configuration = new EventCategory();
-        configuration.setName("Test name");
+    public void event_category_Should_Be_Added_If_Has_Fullfilled_Configuration() throws ActiveObjectSavingException {
+        EventCategory category = new EventCategory();
+        category.setName("Test name");
 
-        service.addFrom(configuration);
+        Component component = activeObjectsHelper.createComponentNamed("Test component");
+        Task task = activeObjectsHelper.createTaskNamed("test");
+        activeObjectsHelper.associate(component, task);
+        PlanTemplate plan = new PlanTemplate();
+        plan.setName("Test name");
+        plan.setDescription("Test description");
+        plan.setEventCategory(Arrays.asList(category));
+        plan.setComponent(Arrays.asList(new ComponentTemplate[]{ComponentTemplate.createEmpty().fill(component)}));
+
+        service.addPlan(plan);
 
         assertEquals(1, activeObjects.count(Category.class));
     }
 
     @Test
     public void task_Should_Be_Added_If_Has_Fullfilled_Configuration_With_Related_Sub_Tasks() throws ActiveObjectSavingException {
-        SubTask firstSubTask = activeObjectsHelper.createSubTaskNamed("Test 1");
-        SubTask secondSubTask = activeObjectsHelper.createSubTaskNamed("Test 2");
-        TaskTemplate config = new TaskTemplate();
+        PlanTemplate config = new PlanTemplate();
         config.setName("Test name");
-        config.setDescription("Test description");
-        config.setNeededDaysBeforeEvent(123);
-        config.setSubTasksNames(new String[]{firstSubTask.getName(), secondSubTask.getName()});
+        TaskTemplate testTask = new TaskTemplate();
+        testTask.setName("Test task");
+        testTask.setNeededDaysBeforeEvent(5);
+        ComponentTemplate component = new ComponentTemplate();
+        component.setName("Test component");
+        component.setTask(Arrays.asList(new TaskTemplate[]{testTask}));
+        config.setComponent(Arrays.asList(new ComponentTemplate[]{component}));
+        EventCategory eventCategory = EventCategory.createEmpty();
+        eventCategory.setName("Test category");
+        config.setEventCategory(Arrays.asList(new EventCategory[]{eventCategory}));
 
-        service.addFrom(config);
+        service.addPlan(config);
 
-        assertEquals(1, activeObjects.find(Task.class).length);
-        Task[] createdTask = activeObjects.find(Task.class, Query.select().where(Task.NAME + " = ?", config.getName()));
-        assertEquals(2, createdTask[0].getSubTasks().length);
+        assertEquals(1, activeObjects.count(Task.class));
     }
 
     @Test
     public void component_Should_Be_Added_If_Has_Fullfilled_Configuration() throws ActiveObjectSavingException {
-        Task task = activeObjectsHelper.createTaskNamed("Test");
-        ComponentTemplate config = new ComponentTemplate();
+        PlanTemplate config = new PlanTemplate();
         config.setName("Test name");
-        config.setDescription("Test description");
-        config.setTasksNames(new String[]{task.getName()});
+        TaskTemplate testTask = new TaskTemplate();
+        testTask.setName("Test task");
+        testTask.setNeededDaysBeforeEvent(5);
+        ComponentTemplate component = new ComponentTemplate();
+        component.setName("Test component");
+        component.setTask(Arrays.asList(new TaskTemplate[]{testTask}));
+        config.setComponent(Arrays.asList(new ComponentTemplate[]{component}));
+        EventCategory eventCategory = EventCategory.createEmpty();
+        eventCategory.setName("Test category");
+        config.setEventCategory(Arrays.asList(new EventCategory[]{eventCategory}));
 
-        service.addFrom(config);
+        service.addPlan(config);
 
         assertEquals(1, activeObjects.count(Component.class));
     }
 
     @Test
     public void component_Should_Be_Added_If_Has_Fullfilled_Configuration_With_Related_Tasks() throws ActiveObjectSavingException {
-        Task firstTask = activeObjectsHelper.createTaskNamed("Test 1");
-        Task secondTask = activeObjectsHelper.createTaskNamed("Test 2");
-        ComponentTemplate config = new ComponentTemplate();
+        PlanTemplate config = new PlanTemplate();
         config.setName("Test name");
-        config.setDescription("Test description");
-        config.setTasksNames(new String[]{firstTask.getName(), secondTask.getName()});
+        TaskTemplate testTask = new TaskTemplate();
+        testTask.setName("Test task");
+        testTask.setNeededDaysBeforeEvent(5);
+        ComponentTemplate component = new ComponentTemplate();
+        component.setName("Test component");
+        component.setTask(Arrays.asList(new TaskTemplate[]{testTask}));
+        config.setComponent(Arrays.asList(new ComponentTemplate[]{component}));
+        EventCategory eventCategory = EventCategory.createEmpty();
+        eventCategory.setName("Test category");
+        config.setEventCategory(Arrays.asList(new EventCategory[]{eventCategory}));
 
-        service.addFrom(config);
+        service.addPlan(config);
 
         assertEquals(1, activeObjects.find(Component.class).length);
-        Component[] createdTask = activeObjects.find(Component.class, Query.select().where(Component.NAME + " = ?", config.getName()));
-        assertEquals(2, createdTask[0].getTasks().length);
+        Component[] createdTask = activeObjects.find(Component.class, Query.select().where(Component.NAME + " = ?", "Test component"));
+        assertEquals(1, createdTask[0].getTasks().length);
     }
 
     @Test
     public void sub_Task_Should_Be_Added_If_Has_Fullfilled_Configuration() throws ActiveObjectSavingException {
-        SubTaskTemplate config = new SubTaskTemplate();
+        PlanTemplate config = new PlanTemplate();
         config.setName("Test name");
-        config.setDescription("Test description");
+        TaskTemplate testTask = new TaskTemplate();
+        testTask.setName("Test task");
+        testTask.setNeededDaysBeforeEvent(5);
+        SubTaskTemplate testSubTask = new SubTaskTemplate();
+        testSubTask.setName("Test sub-task");
+        testTask.setSubTask(Arrays.asList(new SubTaskTemplate[]{testSubTask}));
+        ComponentTemplate component = new ComponentTemplate();
+        component.setName("Test component");
+        component.setTask(Arrays.asList(new TaskTemplate[]{testTask}));
+        config.setComponent(Arrays.asList(new ComponentTemplate[]{component}));
+        EventCategory eventCategory = EventCategory.createEmpty();
+        eventCategory.setName("Test category");
+        config.setEventCategory(Arrays.asList(new EventCategory[]{eventCategory}));
 
-        service.addFrom(config);
+        service.addPlan(config);
 
         assertEquals(1, activeObjects.count(SubTask.class));
     }
 
     @Test
-    public void plan_Should_Not_Be_Add_If_Cannot_Relate_It_With_Domain() throws ActiveObjectSavingException {
+    public void plan_Should_Not_Be_Add_If_Cannot_Relate_It_With_Category() throws ActiveObjectSavingException {
         Component component = activeObjectsHelper.createComponentNamed("Test componnet");
         PlanTemplate config = new PlanTemplate();
         config.setName("Name");
         config.setDescription("Description");
-        config.setCategoriesNames(new String[]{"Nonexistent domain"});
-        config.setComponentsNames(new String[]{component.getName()});
 
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(config);
+        service.addPlan(config);
 
         assertEquals(0, activeObjects.count(Plan.class));
     }
 
     @Test
     public void plan_Should_Not_Be_Add_If_Cannot_Relate_It_With_Component() throws ActiveObjectSavingException {
-        Category category = activeObjectsHelper.createDomainNamed("test category");
+        Category category = activeObjectsHelper.createCategoryNamed("test category");
         PlanTemplate config = new PlanTemplate();
         config.setName("Name");
         config.setDescription("Description");
-        config.setComponentsNames(new String[]{"Nonexistent component"});
-        config.setCategoriesNames(new String[]{category.getName()});
 
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(config);
+        service.addPlan(config);
 
         assertEquals(0, activeObjects.count(Plan.class));
     }
 
     @Test
     public void component_Should_Not_Be_Add_If_Cannot_Relate_It_With_Tasks() throws ActiveObjectSavingException {
-        ComponentTemplate config = new ComponentTemplate();
-        config.setName("Name");
-        config.setDescription("Description");
-        config.setTasksNames(new String[]{"Nonexistent task"});
+        PlanTemplate config = new PlanTemplate();
+        config.setName("Test name");
+        ComponentTemplate component = new ComponentTemplate();
+        component.setName("Test component");
+        config.setComponent(Arrays.asList(new ComponentTemplate[]{component}));
+        EventCategory eventCategory = EventCategory.createEmpty();
+        eventCategory.setName("Test category");
+        config.setEventCategory(Arrays.asList(new EventCategory[]{eventCategory}));
 
         exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(config);
+        service.addPlan(config);
 
         assertEquals(0, activeObjects.count(Component.class));
-    }
-
-    @Test
-    public void task_Should_Not_Be_Add_If_Cannot_Relate_It_With_Sub_Tasks() throws ActiveObjectSavingException {
-        TaskTemplate config = new TaskTemplate();
-        config.setName("Name");
-        config.setDescription("Description");
-        config.setNeededDaysBeforeEvent(123);
-        config.setSubTasksNames(new String[]{"Nonexistent subtask"});
-
-        exception.expect(ActiveObjectSavingException.class);
-        service.addFrom(config);
-
-        assertEquals(0, activeObjects.count(Task.class));
     }
 
     @Test
@@ -318,7 +302,7 @@ public class ActiveObjectsServiceTest {
 
     @Test
     public void any_Entity_Related_With_Others_Should_Be_Deleted_By_Id() {
-        Category category = activeObjectsHelper.createDomainNamed("test name");
+        Category category = activeObjectsHelper.createCategoryNamed("test name");
         Component component = activeObjectsHelper.createComponentNamed("test name");
         Plan plan = activeObjectsHelper.createPlan("Name", "description", 0, 12);
         PlanToCategoryRelation relation = activeObjects.create(PlanToCategoryRelation.class);
@@ -344,7 +328,7 @@ public class ActiveObjectsServiceTest {
         Task task = activeObjectsHelper.createTask("test name", 0, 13);
         SubTask subTask = activeObjectsHelper.createSubTaskNamed("name");
         activeObjectsHelper.associate(task, subTask);
-        Category category = activeObjectsHelper.createDomainNamed("test name");
+        Category category = activeObjectsHelper.createCategoryNamed("test name");
         Component component = activeObjectsHelper.createComponentNamed("test name");
         activeObjectsHelper.associate(component, task);
         Plan plan = activeObjectsHelper.createPlan("Name", "description", 0, 14);

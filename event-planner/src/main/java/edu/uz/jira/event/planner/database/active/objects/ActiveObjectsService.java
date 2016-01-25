@@ -7,9 +7,9 @@ import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCa
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
-import edu.uz.jira.event.planner.database.xml.model.*;
+import edu.uz.jira.event.planner.database.xml.model.EventPlanTemplates;
+import edu.uz.jira.event.planner.database.xml.model.PlanTemplate;
 import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
-import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import net.java.ao.Entity;
 import net.java.ao.Query;
 import net.java.ao.RawEntity;
@@ -47,29 +47,18 @@ public class ActiveObjectsService {
         converter = new ActiveObjectsConverter(activeObjectsService, relationsManager);
     }
 
-    public Entity addFrom(@Nonnull final ActiveObjectWrapper resource) throws ActiveObjectSavingException {
-        if (resource == null || !resource.isFullfilled()) {
+    public Entity addPlan(@Nonnull final PlanTemplate plan) throws ActiveObjectSavingException {
+        if (plan == null || !plan.isFullfilled()) {
             throw new ActiveObjectSavingException();
         }
-        if (resource instanceof PlanTemplate) {
-            return converter.addFrom((PlanTemplate) resource);
+        return converter.addFrom(plan);
+    }
+
+    public Entity addManyPlans(@Nonnull final EventPlanTemplates plans) throws ActiveObjectSavingException {
+        if (plans == null || !plans.isFullfilled()) {
+            throw new ActiveObjectSavingException();
         }
-        if (resource instanceof EventCategory) {
-            return converter.addFrom((EventCategory) resource);
-        }
-        if (resource instanceof ComponentTemplate) {
-            return converter.addFrom((ComponentTemplate) resource);
-        }
-        if (resource instanceof TaskTemplate) {
-            return converter.addFrom((TaskTemplate) resource);
-        }
-        if (resource instanceof SubTaskTemplate) {
-            return converter.addFrom((SubTaskTemplate) resource);
-        }
-        if (resource instanceof EventPlanTemplates) {
-            return converter.addFrom((EventPlanTemplates) resource);
-        }
-        throw new ActiveObjectSavingException();
+        return converter.addFrom(plans);
     }
 
     /**

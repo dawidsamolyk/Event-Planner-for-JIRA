@@ -9,8 +9,8 @@ import com.atlassian.jira.mock.component.MockComponentWorker;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.database.xml.importer.EventPlansImportExecutor;
@@ -33,7 +33,6 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @Transactional
@@ -123,20 +122,13 @@ public class EventPlansImportExecutorTest {
 
         Plan plan = activeObjects.find(Plan.class)[0];
         Category category = activeObjects.find(Category.class)[0];
-        Component component = activeObjects.find(Component.class)[0];
-        List<Task> tasks = Arrays.asList(activeObjects.find(Task.class));
 
         PlanToCategoryRelation planToCategoryRelation = activeObjects.find(PlanToCategoryRelation.class)[0];
+        assertEquals(1, activeObjects.count(PlanToCategoryRelation.class));
         assertEquals(plan, planToCategoryRelation.getPlan());
         assertEquals(category, planToCategoryRelation.getCategory());
 
-        PlanToComponentRelation planToComponentRelation = activeObjects.find(PlanToComponentRelation.class)[0];
-        assertEquals(plan, planToComponentRelation.getPlan());
-        assertEquals(component, planToComponentRelation.getComponent());
-
-        for (TaskToComponentRelation eachRelation : activeObjects.find(TaskToComponentRelation.class)) {
-            assertEquals(component, eachRelation.getComponent());
-            assertTrue(tasks.contains(eachRelation.getTask()));
-        }
+        assertEquals(2, activeObjects.count(PlanToComponentRelation.class));
+        assertEquals(3, activeObjects.count(TaskToComponentRelation.class));
     }
 }

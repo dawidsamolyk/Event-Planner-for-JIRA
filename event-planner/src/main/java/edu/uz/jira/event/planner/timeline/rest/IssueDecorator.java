@@ -174,5 +174,4 @@ public class IssueDecorator {
         return getKey().hashCode();
     }
 
-
 }

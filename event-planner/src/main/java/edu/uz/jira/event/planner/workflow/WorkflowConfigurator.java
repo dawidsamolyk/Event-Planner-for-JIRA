@@ -38,7 +38,7 @@ public class WorkflowConfigurator {
     /**
      * @param workflow         Worflow to configure.
      * @param postFunction     Post-function to addFrom.
-     * @param transitionsNames Names of the transitions to which post-function should be added.
+     * @param transitionsNames Names of the transitions to which put-function should be added.
      */
     public void addToDraft(@Nonnull final JiraWorkflow workflow, @Nonnull final FunctionDescriptor postFunction, @Nonnull final String... transitionsNames) throws JiraException {
         for (String eachTransitionName : transitionsNames) {

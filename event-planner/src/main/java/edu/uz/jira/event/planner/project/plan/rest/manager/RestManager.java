@@ -4,6 +4,7 @@ import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.xml.model.PlanTemplate;
 import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.project.plan.rest.RestManagerHelper;
@@ -52,11 +53,11 @@ public abstract class RestManager {
     /**
      * Handles PUT request.
      *
-     * @param resource Resource with data to post.
+     * @param resource Resource with data to put.
      * @param request  Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
      */
-    public Response post(final ActiveObjectWrapper resource, @Context final HttpServletRequest request) {
+    public Response post(final PlanTemplate resource, @Context final HttpServletRequest request) {
         if (helper.isNotAdminUser(userManager.getRemoteUser(request))) {
             return helper.buildStatus(Response.Status.UNAUTHORIZED);
         }
@@ -117,7 +118,7 @@ public abstract class RestManager {
         return helper.buildStatus(Response.Status.OK);
     }
 
-    private Response doPutTransaction(@Nonnull final ActiveObjectWrapper resource) {
+    private Response doPutTransaction(@Nonnull final PlanTemplate resource) {
         return transactionTemplate.execute(new TransactionCallback<Response>() {
             public Response doInTransaction() {
                 if (!resource.getWrappedType().equals(entityType)) {
@@ -125,7 +126,7 @@ public abstract class RestManager {
                 }
                 Entity result;
                 try {
-                    result = activeObjectsService.addFrom(resource);
+                    result = activeObjectsService.addPlan(resource);
                 } catch (ActiveObjectSavingException e) {
                     return helper.buildStatus(Response.Status.NOT_ACCEPTABLE);
                 }

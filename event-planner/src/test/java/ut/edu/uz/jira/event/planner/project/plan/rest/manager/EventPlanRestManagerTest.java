@@ -10,11 +10,14 @@ import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
+import edu.uz.jira.event.planner.database.xml.model.ComponentTemplate;
+import edu.uz.jira.event.planner.database.xml.model.EventCategory;
 import edu.uz.jira.event.planner.database.xml.model.PlanTemplate;
+import edu.uz.jira.event.planner.database.xml.model.TaskTemplate;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.project.plan.rest.manager.EventPlanRestManager;
 import net.java.ao.EntityManager;
@@ -34,6 +37,7 @@ import ut.helpers.TestActiveObjects;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -89,18 +93,14 @@ public class EventPlanRestManagerTest {
         testHelper = new ActiveObjectsTestHelper(activeObjects);
     }
 
-    private PlanTemplate getEmptyPlan() {
-        return PlanTemplate.createEmpty();
-    }
-
     @Test
     public void should_Get_Plan_From_Database() throws SQLException {
         String testPlanName = "Test name";
         String testPlanDescription = "Test description";
-        String testDomainName = "Test domain";
+        String testCategoryName = "Test Category";
         int testDays = 123;
         String testComponentName = "Test component";
-        testHelper.createPlanWithDomainAndComponent(testPlanName, testPlanDescription, 0, testDays, testDomainName, testComponentName);
+        testHelper.createPlanWithCategoryAndComponent(testPlanName, testPlanDescription, 0, testDays, testCategoryName, testComponentName);
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
@@ -108,16 +108,14 @@ public class EventPlanRestManagerTest {
         PlanTemplate expected = new PlanTemplate();
         expected.setName(testPlanName);
         expected.setDescription(testPlanDescription);
-        expected.setCategoriesNames(new String[]{testDomainName});
-        expected.setComponentsNames(new String[]{testComponentName});
         expected.setId(((PlanTemplate) transactionResult[0]).getId());
-        assertEquals(expected, transactionResult[0]);
+        assertEquals(expected.getName(), ((PlanTemplate) transactionResult[0]).getName());
     }
 
     @Test
     public void should_Get_Many_Plans_From_Database() throws SQLException {
-        testHelper.createPlanWithDomainAndComponent("Plan 1", "Description", 1, 0, "EventCategory 1", "Component 1");
-        testHelper.createPlanWithDomainAndComponent("Plan 2", "Description", 1, 0, "EventCategory 2", "Component 1");
+        testHelper.createPlanWithCategoryAndComponent("Plan 1", "Description", 1, 0, "EventCategory 1", "Component 1");
+        testHelper.createPlanWithCategoryAndComponent("Plan 2", "Description", 1, 0, "EventCategory 2", "Component 1");
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
         fixture.get(mockRequest);
@@ -136,17 +134,21 @@ public class EventPlanRestManagerTest {
 
     @Test
     public void should_Put_New_Event_Plan() {
-        Category category = testHelper.createDomainNamed("Test category");
-        Component firstComponent = testHelper.createComponent("Test component 1", "");
-        Component secondComponent = testHelper.createComponent("Test component 2", "");
-        Component thirdComponent = testHelper.createComponent("Test component 3", "");
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
         PlanTemplate config = new PlanTemplate();
         config.setName("Test name");
-        config.setCategoriesNames(new String[]{category.getName()});
-        config.setComponentsNames(new String[]{firstComponent.getName(), secondComponent.getName(), thirdComponent.getName()});
+        TaskTemplate testTask = new TaskTemplate();
+        testTask.setName("Test task");
+        testTask.setNeededDaysBeforeEvent(5);
+        ComponentTemplate component = new ComponentTemplate();
+        component.setName("Test component");
+        component.setTask(Arrays.asList(new TaskTemplate[]{testTask}));
+        config.setComponent(Arrays.asList(new ComponentTemplate[]{component}));
+        EventCategory eventCategory = EventCategory.createEmpty();
+        eventCategory.setName("Test category");
+        config.setEventCategory(Arrays.asList(new EventCategory[]{eventCategory}));
 
-        Response result = fixture.post(config, mockRequest);
+        Response result = fixture.put(config, mockRequest);
 
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), result.getStatus());
     }
@@ -167,7 +169,7 @@ public class EventPlanRestManagerTest {
         Plan plan = testHelper.createPlanNamed("test name");
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
 
-        Response response = fixture.post(Integer.toString(plan.getID()), mockRequest);
+        Response response = fixture.put(Integer.toString(plan.getID()), mockRequest);
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 

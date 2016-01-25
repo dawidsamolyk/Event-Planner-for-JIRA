@@ -33,7 +33,7 @@ public class EventPlanRestManager extends RestManager {
     }
 
     /**
-     * @param id      Id of Plan to post. If not specified, all Plans will be returned.
+     * @param id      Id of Plan to put. If not specified, all Plans will be returned.
      * @param request Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
      * @see {@link RestManager#post(String, HttpServletRequest)}
@@ -41,7 +41,7 @@ public class EventPlanRestManager extends RestManager {
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response post(String id, @Context final HttpServletRequest request) {
+    public Response put(String id, @Context final HttpServletRequest request) {
         return super.post(id, request);
     }
 
@@ -57,14 +57,14 @@ public class EventPlanRestManager extends RestManager {
     }
 
     /**
-     * @param resource Resource with data to post.
+     * @param resource Resource with data to put.
      * @param request  Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
-     * @see {@link RestManager#post(ActiveObjectWrapper, HttpServletRequest)}
+     * @see {@link RestManager#post(PlanTemplate, HttpServletRequest)}
      */
-    @POST
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response post(final PlanTemplate resource, @Context final HttpServletRequest request) {
+    public Response put(final PlanTemplate resource, @Context final HttpServletRequest request) {
         return super.post(resource, request);
     }
 

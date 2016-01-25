@@ -9,7 +9,9 @@ import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
 import net.java.ao.Entity;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Converts XML representation of Event Plan Template elements into Active Objects (database entities).
@@ -29,13 +31,27 @@ class ActiveObjectsConverter {
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
 
-        Collection<PlanToCategoryRelation> planToCategoryRelations = relationsManager.associatePlanWithDomains(result, resource.getCategoriesNames());
+        List<Category> categories = new ArrayList<Category>();
+        for (EventCategory each : resource.getEventCategory()) {
+            if (each.isFullfilled()) {
+                categories.add(addFrom(each));
+            }
+        }
+
+        Collection<PlanToCategoryRelation> planToCategoryRelations = relationsManager.associatePlanWithCategories(result, categories);
         if (planToCategoryRelations.isEmpty()) {
             relationsManager.deleteWithRelations(result);
             throw new ActiveObjectSavingException();
         }
 
-        Collection<PlanToComponentRelation> planToComponentRelations = relationsManager.associatePlanWithComponents(result, resource.getComponentsNames());
+        List<Component> components = new ArrayList<Component>();
+        for (ComponentTemplate each : resource.getComponent()) {
+            if (each.isFullfilled()) {
+                components.add(addFrom(each));
+            }
+        }
+
+        Collection<PlanToComponentRelation> planToComponentRelations = relationsManager.associatePlanWithComponents(result, components);
         if (planToComponentRelations.isEmpty()) {
             relationsManager.deleteWithRelations(result);
             throw new ActiveObjectSavingException();
@@ -57,7 +73,14 @@ class ActiveObjectsConverter {
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
 
-        boolean valid = relationsManager.associate(result, resource.getTasksNames());
+        List<Task> tasks = new ArrayList<Task>();
+        for (TaskTemplate each : resource.getTask()) {
+            if (each.isFullfilled()) {
+                tasks.add(addFrom(each));
+            }
+        }
+
+        boolean valid = relationsManager.associate(result, tasks);
         if (!valid) {
             relationsManager.deleteWithRelations(result);
             throw new ActiveObjectSavingException();
@@ -74,7 +97,14 @@ class ActiveObjectsConverter {
         result.setNeededDaysToComplete(resource.getNeededDaysBeforeEvent());
         result.setNeededMonthsToComplete(resource.getNeededMonthsBeforeEvent());
 
-        boolean valid = relationsManager.associate(result, resource.getSubTasksNames());
+        List<SubTask> subTasks = new ArrayList<SubTask>();
+        for (SubTaskTemplate each : resource.getSubTask()) {
+            if (each.isFullfilled()) {
+                subTasks.add(addFrom(each));
+            }
+        }
+
+        boolean valid = relationsManager.associate(result, subTasks);
         if (!valid) {
             relationsManager.deleteWithRelations(result);
             throw new ActiveObjectSavingException();
@@ -94,21 +124,9 @@ class ActiveObjectsConverter {
 
     Entity addFrom(@Nonnull final EventPlanTemplates resource) throws ActiveObjectSavingException {
         for (PlanTemplate eachPlan : resource.getEventPlanTemplate()) {
-            for (EventCategory eachEventCategory : eachPlan.getEventCategory()) {
-                addFrom(eachEventCategory);
+            if (eachPlan.isFullfilled()) {
+                addFrom(eachPlan);
             }
-
-            for (ComponentTemplate eachComponentTemplate : eachPlan.getComponent()) {
-                for (TaskTemplate eachTaskTemplate : eachComponentTemplate.getTask()) {
-                    for (SubTaskTemplate eachSubTaskTemplate : eachTaskTemplate.getSubTask()) {
-                        addFrom(eachSubTaskTemplate);
-                    }
-                    addFrom(eachTaskTemplate);
-                }
-                addFrom(eachComponentTemplate);
-            }
-
-            addFrom(eachPlan);
         }
         return null;
     }

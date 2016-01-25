@@ -295,13 +295,13 @@ public class EventPlanConfigWebworkActionTest {
     }
 
     @Test
-    public void should_provide_Event_Plans_Sorted_By_Domains() throws Exception {
+    public void should_provide_Event_Plans_Sorted_By_Categorys() throws Exception {
         String testPlanName = "Test plan 1";
         String secondTestPlanName = "Test plan 2";
-        String testDomainName = "Test category";
+        String testCategoryName = "Test category";
         Plan plan1 = testHelper.createPlanNamed(testPlanName);
         Plan plan2 = testHelper.createPlanNamed(secondTestPlanName);
-        Category category = testHelper.createDomainNamed(testDomainName);
+        Category category = testHelper.createCategoryNamed(testCategoryName);
         testHelper.associate(plan1, category);
         testHelper.associate(plan2, category);
 
@@ -309,7 +309,7 @@ public class EventPlanConfigWebworkActionTest {
         List<String> plans = new ArrayList<String>();
         plans.add(testPlanName);
         plans.add(secondTestPlanName);
-        expectedResult.put(testDomainName, plans);
+        expectedResult.put(testCategoryName, plans);
 
         EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
 
@@ -322,10 +322,10 @@ public class EventPlanConfigWebworkActionTest {
     public void should_provide_estimated_time_for_each_event_plan_template_name() throws Exception {
         String testPlanName = "Test plan 1";
         String secondTestPlanName = "Test plan 2";
-        String testDomainName = "Test category";
+        String testCategoryName = "Test category";
         Plan plan1 = testHelper.createPlanNamed(testPlanName);
         Plan plan2 = testHelper.createPlanNamed(secondTestPlanName);
-        Category category = testHelper.createDomainNamed(testDomainName);
+        Category category = testHelper.createCategoryNamed(testCategoryName);
         testHelper.associate(plan1, category);
         testHelper.associate(plan2, category);
         EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
@@ -346,11 +346,11 @@ public class EventPlanConfigWebworkActionTest {
     }
 
     @Test
-    public void should_not_provide_Domains_without_any_plans() throws Exception {
+    public void should_not_provide_Categorys_without_any_plans() throws Exception {
         Plan plan = testHelper.createPlanNamed("Test plan 1");
-        Category category = testHelper.createDomainNamed("Test category");
+        Category category = testHelper.createCategoryNamed("Test category");
         testHelper.associate(plan, category);
-        testHelper.createDomainNamed("Test category 2");
+        testHelper.createCategoryNamed("Test category 2");
         EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
 
         Map<String, List<String>> result = fixture.getEventPlans();

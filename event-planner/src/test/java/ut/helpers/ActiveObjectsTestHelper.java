@@ -34,7 +34,7 @@ public class ActiveObjectsTestHelper {
         return createComponent(name, "");
     }
 
-    public Category createDomainNamed(String name) {
+    public Category createCategoryNamed(String name) {
         return createCategory(name, "");
     }
 
@@ -59,10 +59,12 @@ public class ActiveObjectsTestHelper {
         return result;
     }
 
-    public void createPlanWithDomainAndComponent(String planName, String planDescription, int months, int days, String domainName, String componentName) throws SQLException {
-        Category category = createDomainNamed(domainName);
+    public Plan createPlanWithCategoryAndComponent(String planName, String planDescription, int months, int days, String CategoryName, String componentName) throws SQLException {
+        Category category = createCategoryNamed(CategoryName);
 
         Component component = createComponentNamed(componentName);
+        Task task = createTaskNamed("test");
+        associate(component, task);
 
         Plan plan = createPlan(planName, planDescription, months, days);
 
@@ -75,6 +77,8 @@ public class ActiveObjectsTestHelper {
         relation2.setComponent(component);
         relation2.setPlan(plan);
         relation2.save();
+
+        return plan;
     }
 
     public PlanToCategoryRelation associate(Plan plan, Category category) {

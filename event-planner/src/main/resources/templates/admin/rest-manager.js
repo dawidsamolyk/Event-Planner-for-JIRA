@@ -252,7 +252,7 @@ function RESTManager() {
         });
     };
 
-    that.postTask = function (taskKey, targetState, targetDueDate) {
+    that.postTask = function (taskKey, targetStatus, targetDueDate) {
         if (taskKey === undefined || !taskKey || 0 === taskKey.length) {
             require('aui/flag')({
                 type: 'error',
@@ -260,10 +260,10 @@ function RESTManager() {
             });
             return;
         }
-        if (targetState === undefined || !targetState || 0 === targetState.length) {
+        if (targetStatus === undefined || !targetStatus || 0 === targetStatus.length) {
             require('aui/flag')({
                 type: 'error',
-                title: 'Cannot modify Task to unknown state!'
+                title: 'Cannot modify Task to unknown status!'
             });
             return;
         }
@@ -286,7 +286,7 @@ function RESTManager() {
             url: that.baseUrl + "issue/modify",
             type: "POST",
             contentType: "application/json",
-            data: '{ "key": "' + taskKey + '", "state": "' + targetState + '", "dueDateTime": "' + targetDueDateTime + '" }',
+            data: '{ "key": "' + taskKey + '", "status": "' + targetStatus + '", "dueDateTime": "' + targetDueDateTime + '" }',
             processData: false,
             success: function (data) {
                 if (targetDueDate === null) {
@@ -299,7 +299,7 @@ function RESTManager() {
                 require('aui/flag')({
                     type: 'success',
                     title: 'Task ' + taskKey + ' modified successfully!',
-                    body: '<ul><li>Status: ' + targetState + '</li><li>Due Date: ' + targetDueDate.toDateString() + '</li></ul>',
+                    body: '<ul><li>Status: ' + targetStatus + '</li><li>Due Date: ' + targetDueDate.toDateString() + '</li></ul>',
                     close: 'auto'
                 });
 

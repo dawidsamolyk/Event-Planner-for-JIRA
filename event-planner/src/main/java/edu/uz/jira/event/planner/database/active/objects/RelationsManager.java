@@ -72,9 +72,9 @@ class RelationsManager {
         return result;
     }
 
-    Collection<PlanToComponentRelation> associatePlanWithComponents(@Nonnull final Plan plan, @Nonnull final String[] componentsNames) {
+    Collection<PlanToComponentRelation> associatePlanWithComponents(@Nonnull final Plan plan, @Nonnull final List<Component> components) {
         Collection<PlanToComponentRelation> result = new ArrayList<PlanToComponentRelation>();
-        List<Component> components = helper.get(Component.class, Component.NAME + " = ?", componentsNames);
+
         if (components != null && components.size() > 0 && plan != null) {
             for (Component each : components) {
                 result.add(associate(plan, each));
@@ -84,12 +84,9 @@ class RelationsManager {
         return result;
     }
 
-
-
-    Collection<PlanToCategoryRelation> associatePlanWithDomains(@Nonnull final Plan plan, @Nonnull final String[] domainsNames) {
+    Collection<PlanToCategoryRelation> associatePlanWithCategories(@Nonnull final Plan plan, @Nonnull final List<Category> categories) {
         Collection<PlanToCategoryRelation> result = new ArrayList<PlanToCategoryRelation>();
 
-        List<Category> categories = helper.get(Category.class, Category.NAME + " = ?", domainsNames);
         if (categories != null && categories.size() > 0 && plan != null) {
             for (Category each : categories) {
                 result.add(associate(plan, each));
@@ -98,12 +95,8 @@ class RelationsManager {
         return result;
     }
 
-    boolean associate(@Nonnull final Component component, @Nonnull final String[] tasksNames) {
-        if (tasksNames == null || tasksNames.length == 0 || component == null) {
-            return false;
-        }
-        List<Task> tasks = helper.get(Task.class, Task.NAME + " = ?", tasksNames);
-        if (tasks == null || tasks.size() == 0) {
+    boolean associate(@Nonnull final Component component, @Nonnull final List<Task> tasks) {
+        if (tasks == null || tasks.size() == 0 || component == null) {
             return false;
         }
         for (Task each : tasks) {
@@ -112,14 +105,13 @@ class RelationsManager {
         return true;
     }
 
-    boolean associate(@Nonnull final Task task, @Nonnull final String[] subTasksNames) {
-        if (subTasksNames == null || subTasksNames.length == 0) {
+    boolean associate(@Nonnull final Task task, @Nonnull final List<SubTask> subTasks) {
+        if (task == null) {
+            return false;
+        }
+        if (subTasks == null || subTasks.size() == 0) {
             // Because Task does not have to contains SubTasks
             return true;
-        }
-        List<SubTask> subTasks = helper.get(SubTask.class, SubTask.NAME + " = ?", subTasksNames);
-        if (subTasks == null || subTasks.size() == 0 || task == null) {
-            return false;
         }
         for (SubTask each : subTasks) {
             associate(task, each);

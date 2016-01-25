@@ -3,6 +3,7 @@ function TimeLineTasksCreator() {
     var that = this;
     that.taskGadgetCreator = new TaskGadgetCreator();
     that.dateUtil = new DateUtil();
+    that.numberOfTasksToShow = 3;
 
     that.getElementById = function (id) {
         return document.getElementById(id);
@@ -31,17 +32,44 @@ function TimeLineTasksCreator() {
     };
 
     that.fillLateCellByIssues = function (lateCells, issues) {
-        var eachIssue, issue, lateTaskGadget, cellList, lateToDoCell = lateCells['late'].toDo;
+        var eachIssue, issue, lateTaskGadget, cellList, lateToDoCell;
+        lateToDoCell = lateCells['late'].toDo;
+        cellList = that.getListFor(lateToDoCell);
 
         for (eachIssue in issues) {
             issue = issues[eachIssue];
 
-            if (issue.daysAwayFromDueDate < 0 && issue.done === false) {
+            if (issue.daysAwayFromDueDate < 0 && issue.status !== 'done') {
                 lateTaskGadget = that.taskGadgetCreator.createLate(issue);
-                cellList = that.getListFor(lateToDoCell);
                 cellList.appendChild(lateTaskGadget);
             }
         }
+
+        //if (cellList.childNodes.length > that.numberOfTasksToShow) {
+        //    that.appendToggle(cellList);
+        //}
+    };
+
+    that.appendToggle = function (cellList) {
+        //var toggleButton = document.createElement('BUTTON');
+        //toggleButton.className = 'aui-button';
+        //toggleButton.id = cellList.id + '-toggle-button';
+        //toggleButton.style.width = '100%';
+        //toggleButton.appendChild(document.createTextNode('Show more...'));
+        //
+        //cellList.insertBefore(toggleButton, cellList.firstChild);
+        //
+        //var loopIndex;
+        //for (loopIndex = that.numberOfTasksToShow; loopIndex < cellList.childNodes.length; loopIndex + 1) {
+        //    jQuery('#' + cellList.childNodes[loopIndex].id).hide();
+        //}
+        //
+        //jQuery('#' + toggleButton.id).click(function () {
+        //    var loopIndex;
+        //    for (loopIndex = that.numberOfTasksToShow; loopIndex < cellList.childNodes.length; loopIndex + 1) {
+        //        jQuery('#' + cellList.childNodes[loopIndex].id).toggle(300);
+        //    }
+        //});
     };
 
     that.createTasksCells = function (weekDaysDates, deadlineDate) {

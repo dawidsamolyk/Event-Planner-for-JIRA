@@ -47,7 +47,7 @@ public class EventCategory implements ActiveObjectWrapper {
      * @see {@link ActiveObjectWrapper#fill(Entity)}
      */
     @Override
-    public ActiveObjectWrapper fill(@Nonnull final Entity entity) {
+    public EventCategory fill(@Nonnull final Entity entity) {
         if (entity instanceof Category) {
             Category category = (Category) entity;
             setName(category.getName());
