@@ -20,8 +20,12 @@ function Task() {
         return AJS.$("#task-needed-days");
     };
 
-    that.getSubTasks = function () {
-        return AJS.$("#task-subtasks");
+    that.getAvailableTasks = function () {
+        return AJS.$("#available-event-task");
+    };
+
+    that.getSelectedTasks = function () {
+        return AJS.$("#selected-event-task");
     };
 
     that.getJson = function () {
@@ -40,18 +44,24 @@ function Task() {
             ' }';
     };
 
-    that.setFromJson = function (allSubTasks) {
-        var eachKey, subTask;
-        that.getSubTasks().empty();
+    that.setFromJson = function (data) {
+        var eachKey, task, availableTasks;
+        availableTasks = that.getAvailableTasks();
+        availableTasks.empty();
 
-        for (eachKey in allSubTasks) {
-            subTask = allSubTasks[eachKey];
+        for (eachKey in data) {
+            task = data[eachKey];
 
-            if (subTask.name === undefined) {
+            if (that.isFullFilled(task) === false) {
                 return false;
             }
-            that.getSubTasks().append("<option>" + subTask.name + "</option>");
+            availableTasks.append("<li class='ui-state-default aui-label event-plan-list-element' title='" + task.description + "'>" + task.name + "</li>");
         }
+
         return true;
+    };
+
+    that.isFullFilled = function (task) {
+        return task !== undefined && task.name !== undefined;
     };
 };

@@ -1,6 +1,6 @@
 <section role="dialog" id="event-plan-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
     <header class="aui-dialog2-header">
-        <h2 class="aui-dialog2-header-main">Create new Event Organization Plan Template</h2>
+        <h2 class="aui-dialog2-header-main">Draft of Event Organization Plan Template</h2>
     </header>
     <div class="aui-dialog2-content">
         <form class="aui" id="event-plan-configuration">

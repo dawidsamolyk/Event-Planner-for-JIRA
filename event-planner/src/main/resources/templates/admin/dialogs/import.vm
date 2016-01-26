@@ -31,8 +31,7 @@
 
                 <div class="field-group hidden" id="definition-inline-content">
                     <label for="import-plan-templates-definition-inline-content">Event Plan Templates Definition
-                        (XML)<span
-                                class="aui-icon icon-required"> required</span>
+                        (XML)<span class="aui-icon icon-required"> required</span>
                     </label>
                     <textarea class="textarea long-field" cols="40" id="import-plan-definition-inline-content"
                               name="eventPlanTemplatesXml" rows="10" type="text"></textarea>

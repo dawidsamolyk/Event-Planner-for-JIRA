@@ -81,29 +81,31 @@
             });
 
     var subTaskListener = new ButtonListener(subTask);
-    subTaskListener.onBackShowDialogForResource(task);
+    subTaskListener.onBackShowDialogForResourceId(task.id);
+    subTaskListener.onNextShowDialogForResourceId('plan-summary');
     subTaskListener.onCancelCloseDialog();
 
     var taskListener = new ButtonListener(task);
-    //taskListener.onShowDoGet([subTask]);
-    taskListener.onBackShowDialogForResource(component);
-    taskListener.onNextShowDialogForResource(subTask);
+    taskListener.onBackShowDialogForResourceId(component.id);
+    taskListener.onNextShowDialogForResourceId(subTask.id);
     taskListener.onCancelCloseDialog();
 
     var componentListener = new ButtonListener(component);
-    componentListener.onBackShowDialogForResource(eventCategory);
-    componentListener.onNextShowDialogForResource(task);
+    componentListener.onShowDoGetResource([component, task]);
+    componentListener.onBackShowDialogForResourceId(eventCategory.id);
+    componentListener.onNextShowDialogForResourceId(task.id);
     componentListener.onCancelCloseDialog();
 
     var categoryListener = new ButtonListener(eventCategory);
-    categoryListener.onNextShowDialogForResource(component);
-    categoryListener.onBackShowDialogForResource(plan);
+    categoryListener.onShowDoGetResource([eventCategory]);
+    categoryListener.onNextShowDialogForResourceId(component.id);
+    categoryListener.onBackShowDialogForResourceId(plan.id);
     categoryListener.onCancelCloseDialog();
+    categoryListener.onAddNewResourceAppendItToAvailableResourcesList();
 
     var planListener = new ButtonListener(plan)
-    //planListener.onShowDoGet([eventCategory, component]);
     planListener.onAddShowDialog();
-    planListener.onNextShowDialogForResource(eventCategory);
+    planListener.onNextShowDialogForResourceId(eventCategory.id);
     planListener.onCancelCloseDialog();
 
     jQuery("ul.connectedSortable").sortable({

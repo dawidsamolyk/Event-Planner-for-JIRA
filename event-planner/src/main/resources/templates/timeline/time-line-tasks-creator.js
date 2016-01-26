@@ -100,7 +100,7 @@ function TimeLineTasksCreator() {
 
     that.getListFor = function (parent) {
         var index;
-        for (index = 0; index < parent.childNodes.length; index + 1) {
+        for (index = 0; index < parent.childNodes.length; index += 1) {
             if (parent.childNodes[index].className === 'connectedSortable') {
                 return parent.childNodes[index];
             }

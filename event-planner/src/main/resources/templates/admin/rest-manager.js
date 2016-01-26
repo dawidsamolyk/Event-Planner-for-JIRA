@@ -67,7 +67,7 @@ function RESTManager() {
             dataType: "json",
             success: function (data) {
                 var numberOfTry;
-                for (numberOfTry = 0; numberOfTry < that.maxNumberOfSameRequests; numberOfTry++) {
+                for (numberOfTry = 0; numberOfTry < that.maxNumberOfSameRequests; numberOfTry += 1) {
                     if (destinationResource.setFromJson(data)) {
                         break;
                     }
@@ -75,7 +75,6 @@ function RESTManager() {
                 }
             },
             error: function (request) {
-                console.error(request.responseText);
                 require('aui/flag')({
                     type: 'error',
                     title: 'Cannot get ' + sourceId + '!',
@@ -116,7 +115,7 @@ function RESTManager() {
             data: objectId,
             success: function (data) {
                 var numberOfTry;
-                for (numberOfTry = 0; numberOfTry < that.maxNumberOfSameRequests; numberOfTry++) {
+                for (numberOfTry = 0; numberOfTry < that.maxNumberOfSameRequests; numberOfTry += 1) {
                     if (destinationResource.setFromJson(data)) {
                         break;
                     }
@@ -124,7 +123,6 @@ function RESTManager() {
                 }
             },
             error: function (request) {
-                console.error(request.responseText);
                 require('aui/flag')({
                     type: 'error',
                     title: 'Cannot get ' + sourceId + '!',
