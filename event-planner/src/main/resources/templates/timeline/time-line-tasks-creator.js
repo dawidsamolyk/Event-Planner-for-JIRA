@@ -3,6 +3,7 @@ function TimeLineTasksCreator() {
     var that = this;
     that.taskGadgetCreator = new TaskGadgetCreator();
     that.dateUtil = new DateUtil();
+    that.tasksToggle = new TasksToggle();
 
     that.getElementById = function (id) {
         return document.getElementById(id);
@@ -43,6 +44,15 @@ function TimeLineTasksCreator() {
                 cellList.appendChild(lateTaskGadget);
             }
         }
+
+        that.addScrollButtonIfRequired(lateToDoCell, cellList);
+    };
+
+    that.addScrollButtonIfRequired = function (cell, list) {
+        if (that.tasksToggle.addIfRequired(cell, list.id)) {
+            list.style.maxHeight = '200px';
+            list.style.overflow = 'hidden';
+        }
     };
 
     that.createTasksCells = function (weekDaysDates, deadlineDate) {
@@ -74,24 +84,29 @@ function TimeLineTasksCreator() {
     };
 
     that.fillCellsByIssues = function (cells, issues) {
-        var eachIssue, issue, issueDueDate, eachDate, cell, cellList;
+        var eachIssue, issue, issueDueDate, eachDate, cell, cellList, issueStatus;
         for (eachIssue in issues) {
             issue = issues[eachIssue];
             issueDueDate = new Date(issue.dueDate);
+            issueStatus = issue.status;
 
             for (eachDate in cells) {
                 if (that.dateUtil.isTheSameDay(issueDueDate, new Date(eachDate))) {
                     cell = cells[eachDate];
 
-                    if (issue.status === 'done') {
+                    if (issueStatus === 'done') {
                         cellList = that.getListFor(cell.done);
                         cellList.appendChild(that.taskGadgetCreator.createDone(issue));
-                    } else if (issue.status === 'indeterminate') {
+                    } else if (issueStatus === 'indeterminate') {
                         cellList = that.getListFor(cell.toDo);
                         cellList.appendChild(that.taskGadgetCreator.createInProgress(issue));
                     } else {
                         cellList = that.getListFor(cell.toDo);
                         cellList.appendChild(that.taskGadgetCreator.createNew(issue));
+                    }
+
+                    if (issueStatus !== 'done') {
+                        that.addScrollButtonIfRequired(cell.toDo, cellList);
                     }
                 }
             }
