@@ -44,7 +44,8 @@
     </servlet>
 
     <web-resource name="Event Plans Configuration Resources" key="event-plans-configuration-resources">
-        <description key="event.plans.config.resources">Resources for Event Plan Templates Configuration GUI</description>
+        <description key="event.plans.config.resources">Resources for Event Plan Templates Configuration GUI
+        </description>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
@@ -108,7 +109,8 @@
 
     <webwork1 key="event-organization-config-webwork" name="Event Organization Plan Webworks"
               i18n-name-key="event.organization.webwork.name">
-        <description key="event-organization-config-webwork-description">The Event Organization Configuration Webwork</description>
+        <description key="event-organization-config-webwork-description">The Event Organization Configuration Webwork
+        </description>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <actions>
@@ -117,6 +119,12 @@
                 <view name="success">/templates/webworks/event/config/success.vm</view>
                 <view name="input">/templates/webworks/event/config/input.vm</view>
                 <view name="error">/templates/webworks/event/config/error.vm</view>
+            </action>
+            <action name="edu.uz.jira.event.planner.project.plan.webwork.EventPlanCreator"
+                    alias="EventPlanCreator">
+                <view name="success">/templates/webworks/event/plan/success.vm</view>
+                <view name="input">/templates/webworks/event/plan/input.vm</view>
+                <view name="error">/templates/webworks/event/plan/error.vm</view>
             </action>
             <action name="edu.uz.jira.event.planner.util.webwork.AlwaysShowInputAction"
                     alias="DeleteEventOrganizationPlan">
@@ -186,6 +194,8 @@
                   location="/templates/timeline/time-line-navigation-buttons.js"/>
         <resource type="download" name="draggable-listener.js" location="/templates/timeline/draggable-listener.js"/>
         <resource type="download" name="rest-manager.js" location="/templates/admin/rest-manager.js"/>
+        <resource type="download" name="time-line-tasks-toggle.js"
+                  location="/templates/timeline/time-line-tasks-toggle.js"/>
     </web-resource>
 
     <web-item key="my_links_link" name="Event Organization Time Line" i18n-name-key="event.plan.timeline.menu.name"

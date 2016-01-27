@@ -66,11 +66,12 @@ public class RestIssuesModifier {
         if (!issueData.isFullfilled()) {
             return helper.buildStatus(Response.Status.PRECONDITION_FAILED);
         }
-
         if (issue == null) {
             return helper.buildStatus(Response.Status.NOT_FOUND);
         }
+
         issue = setDueDate(issue, issueData);
+
         try {
             issue = setStatus(issue, issueData.getStatus());
         } catch (WorkflowNotFoundException e) {

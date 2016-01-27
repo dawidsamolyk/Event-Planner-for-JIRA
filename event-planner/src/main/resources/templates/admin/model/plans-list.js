@@ -39,9 +39,9 @@ function PlansList() {
         newRow = table.insertRow(table.rows.length);
 
         that.insertNameAndDescriptionCell(plan, newRow);
-        that.insertCategoriesList(plan.eventCategory, newRow);
-        that.insertComponentsList(plan.component, newRow);
-        that.insertEstimatedTimeToComplete(plan.estimatedTimeToComplete, newRow);
+        that.insertStatistics(plan.estimatedTimeToComplete, newRow);
+        that.insertList(plan.component, newRow);
+        that.insertList(plan.eventCategory, newRow);
         that.insertOperationsLinksCell(plan, newRow);
 
         return true;
@@ -59,24 +59,13 @@ function PlansList() {
         nameAndDescriptionCell.appendChild(description);
     };
 
-    that.insertCategoriesList = function (eventCategories, row) {
-        var categoriesNamesList = that.createListFrom(eventCategories);
-        if (categoriesNamesList === undefined) {
-            return false;
-        }
-        that.insertCell(row, 1).appendChild(categoriesNamesList);
+    that.insertList = function (array, row) {
+        var list = that.createListFrom(array);
+        that.insertCell(row, row.length).appendChild(list);
     };
 
-    that.insertComponentsList = function (components, row) {
-        var componentsNamesList = that.createListFrom(components);
-        if (componentsNamesList === undefined) {
-            return false;
-        }
-        that.insertCell(row, 2).appendChild(componentsNamesList);
-    };
-
-    that.insertEstimatedTimeToComplete = function (estimatedTimeToComplete, row) {
-        that.insertCell(row, 3).appendChild(document.createTextNode('~' + estimatedTimeToComplete + ' day(s)'));
+    that.insertStatistics = function (estimatedTimeToComplete, row) {
+        that.insertCell(row, row.length).appendChild(document.createTextNode('~' + estimatedTimeToComplete + ' day(s)'));
     };
 
     that.insertOperationsLinksCell = function (plan, row) {
@@ -92,7 +81,7 @@ function PlansList() {
         //that.addToList(operationsList, editLink);
         that.addToList(operationsList, deleteLink);
 
-        operationsCell = that.insertCell(row, 4);
+        operationsCell = that.insertCell(row, row.length);
         operationsCell.appendChild(operationsList);
     };
 

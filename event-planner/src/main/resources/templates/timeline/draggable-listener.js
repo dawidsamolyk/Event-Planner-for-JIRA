@@ -23,9 +23,7 @@ function DraggableListener() {
                 targetColumnDate = that.getKeyForValueWithId(cells, targetColumnId);
 
                 that.changeTaskGadgetColor(taskGadget, targetColumnId, timeLine.shouldDisplayLateTasksColumn());
-                that.changeTaskStatus(taskGadget.id, targetColumnId, targetColumnDate);
-
-                timeLine.refresh();
+                that.changeTaskStatus(taskGadget.id, targetColumnId, targetColumnDate, timeLine);
             }
         }).disableSelection();
     };
@@ -50,8 +48,8 @@ function DraggableListener() {
         }
     };
 
-    that.changeTaskStatus = function (taskKey, targetColumnId, targetColumnDate) {
-        that.restManager.postTask(taskKey, targetColumnId.substring(0, targetColumnId.indexOf('-')), targetColumnDate);
+    that.changeTaskStatus = function (taskKey, targetColumnId, targetColumnDate, timeLine) {
+        that.restManager.postTask(taskKey, targetColumnId.substring(0, targetColumnId.indexOf('-')), targetColumnDate, timeLine);
     };
 
     that.getKeyForValueWithId = function (cells, valueId) {

@@ -250,7 +250,7 @@ function RESTManager() {
         });
     };
 
-    that.postTask = function (taskKey, targetStatus, targetDueDate) {
+    that.postTask = function (taskKey, targetStatus, targetDueDate, timeLine) {
         if (taskKey === undefined || !taskKey || 0 === taskKey.length) {
             require('aui/flag')({
                 type: 'error',
@@ -300,7 +300,6 @@ function RESTManager() {
                     body: '<ul><li>Status: ' + targetStatus + '</li><li>Due Date: ' + targetDueDate.toDateString() + '</li></ul>',
                     close: 'auto'
                 });
-
             },
             error: function (request, status, error) {
                 var flagBody, flagTitle = 'Error while modifying Task with key ' + taskKey + '!';
@@ -324,6 +323,11 @@ function RESTManager() {
                     body: flagBody,
                     close: 'auto'
                 });
+            },
+            complete: function () {
+                if (timeLine !== undefined) {
+                    timeLine.refresh();
+                }
             }
         });
     };

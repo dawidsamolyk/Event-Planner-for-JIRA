@@ -3,6 +3,7 @@ function TimeLineTasksCreator() {
     var that = this;
     that.taskGadgetCreator = new TaskGadgetCreator();
     that.dateUtil = new DateUtil();
+    that.tasksToggle = new TasksToggle();
 
     that.getElementById = function (id) {
         return document.getElementById(id);
@@ -43,6 +44,16 @@ function TimeLineTasksCreator() {
                 cellList.appendChild(lateTaskGadget);
             }
         }
+
+        that.addScrollButtonIfRequired(lateToDoCell, cellList);
+    };
+
+    that.addScrollButtonIfRequired = function (cell, list) {
+        if (that.tasksToggle.addIfRequired(cell, list.id)) {
+            list.style.maxHeight = '200px';
+            cell.style.maxHeight = '230px';
+            list.style.overflow = 'hidden';
+        }
     };
 
     that.createTasksCells = function (weekDaysDates, deadlineDate) {
@@ -61,7 +72,6 @@ function TimeLineTasksCreator() {
                 cell = that.createTaskCell(currentCellIndex);
                 doneCell = that.createDoneTaskCell(currentCellIndex);
             }
-
             if (that.dateUtil.isTheSameDay(date, deadlineDate)) {
                 that.setAsDeadlineTaskCellAtIndex(currentCellIndex);
             }
@@ -74,24 +84,29 @@ function TimeLineTasksCreator() {
     };
 
     that.fillCellsByIssues = function (cells, issues) {
-        var eachIssue, issue, issueDueDate, eachDate, cell, cellList;
+        var eachIssue, issue, issueDueDate, eachDate, cell, cellList, issueStatus;
         for (eachIssue in issues) {
             issue = issues[eachIssue];
             issueDueDate = new Date(issue.dueDate);
+            issueStatus = issue.status;
 
             for (eachDate in cells) {
                 if (that.dateUtil.isTheSameDay(issueDueDate, new Date(eachDate))) {
                     cell = cells[eachDate];
 
-                    if (issue.status === 'done') {
+                    if (issueStatus === 'done') {
                         cellList = that.getListFor(cell.done);
                         cellList.appendChild(that.taskGadgetCreator.createDone(issue));
-                    } else if (issue.status === 'indeterminate') {
+                    } else if (issueStatus === 'indeterminate') {
                         cellList = that.getListFor(cell.toDo);
                         cellList.appendChild(that.taskGadgetCreator.createInProgress(issue));
                     } else {
                         cellList = that.getListFor(cell.toDo);
                         cellList.appendChild(that.taskGadgetCreator.createNew(issue));
+                    }
+
+                    if (issueStatus !== 'done') {
+                        that.addScrollButtonIfRequired(cell.toDo, cellList);
                     }
                 }
             }
@@ -114,6 +129,7 @@ function TimeLineTasksCreator() {
         result.style.borderLeft = '1px solid #cccccc';
         result.style.borderRight = '1px solid #cccccc';
         result.style.borderTop = 'none';
+        result.style.height = '230px';
         result.id = 'new-' + index;
 
         that.appendListRoot(result);
@@ -122,18 +138,18 @@ function TimeLineTasksCreator() {
     };
 
     that.appendListRoot = function (parent) {
-        var ulElement = document.createElement('UL');
-        ulElement.className = 'connectedSortable';
-        ulElement.style.listStyleType = 'none';
-        ulElement.style.listStyle = 'none';
-        ulElement.style.margin = '0';
-        ulElement.style.padding = '5px 0 0 0';
-        ulElement.style.height = '100%';
-        ulElement.style.verticalAlign = 'bottom';
-        ulElement.id = 'list-' + parent.id;
+        var result = document.createElement('UL');
+        result.className = 'connectedSortable';
+        result.style.listStyleType = 'none';
+        result.style.listStyle = 'none';
+        result.style.margin = '0';
+        result.style.padding = '5px 0 0 0';
+        result.style.verticalAlign = 'bottom';
+        result.style.height = '100%';
+        result.id = 'list-' + parent.id;
 
-        parent.appendChild(ulElement);
-        return ulElement;
+        parent.appendChild(result);
+        return result;
     };
 
     that.createTodayTaskCell = function (index) {
