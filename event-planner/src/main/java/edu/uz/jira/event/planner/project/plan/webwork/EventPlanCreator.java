@@ -10,6 +10,6 @@ public class EventPlanCreator extends JiraWebActionSupport {
 
     @Override
     public String execute() {
-        return Action.ERROR;
+        return Action.INPUT;
     }
 }

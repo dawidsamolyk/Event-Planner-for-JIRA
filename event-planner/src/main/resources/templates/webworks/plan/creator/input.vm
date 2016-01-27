@@ -17,7 +17,7 @@
                    style="float: right;"><span class="aui-icon aui-icon-small aui-iconfont-help">
             Get help!
         </span></a>
-                <h3 class="formtitle">Draft of Event Plan Template</h3>
+                <h2 class="formtitle" id="form-title">Draft of Event Plan Template</h2>
             </td>
         </tr>
         <tr>
@@ -30,18 +30,172 @@
                     <span class="warning">Note</span>: when the screen is shown to the user only non-hidden fields that
                     the user has permissions to edit will be actually displayed.
                 </p>
+
+                <div id="category-form">
+                    <p>Drag&drop Event Categories which fits to this Event Plan Template</p>
+                    <table class="aui" style="height: 170px;">
+                        <thead>
+                        <tr>
+                            <th id="available-event-category-head">Available Categories</th>
+                            <th id="selected-event-category-head">Selected Categories for this Event Plan Template</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td headers="available-event-category-head" width="50%">
+                                <ul id="available-event-category" class="connectedSortable"></ul>
+                            </td>
+                            <td headers="selected-event-category-head" width="50%">
+                                <ul id="selected-event-category" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <form class="aui" id="event-category-configuration" style="clear:both;">
+                        <div class="field-group">
+                            <label for="category-name">Name<span
+                                    class="aui-icon icon-required">(required)</span></label>
+                            <input id="category-name" class="text" name="category-name" type="text" maxlength="80">
+
+                            <button id="event-category-dialog-add-button" class="aui-button" title="Add new Category">
+                                <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                                Add new Event Category
+                            </button>
+
+                            <div class="description" id="category-name-description">Max. 80 characters.</div>
+                        </div>
+                    </form>
+                    <div class="aui-dialog2-footer-actions" style="clear: both;">
+                        <button id="event-category-dialog-next-button" class="aui-button aui-button-primary">Next
+                        </button>
+                        <button id="event-category-dialog-cancel-button" class="aui-button aui-button-link">Cancel
+                        </button>
+                    </div>
+                </div>
+                <div id="component-form">
+                    <p>Drag&drop Event Components which fits to this Event Plan Template</p>
+                    <table class="aui" style="height: 250px;">
+                        <thead>
+                        <tr>
+                            <th id="available-event-component-head">Available</th>
+                            <th id="selected-event-component-head">Selected</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td headers="available-event-component-head" width="50%">
+                                <ul id="available-event-component" class="connectedSortable"></ul>
+                            </td>
+                            <td id="selected-predefined-event-components" headers="selected-event-component-head" width="50%">
+                                <ul id="selected-event-component" class="connectedSortable"></ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <div class="aui-dialog2-footer-actions" style="clear: both;">
+                        <button id="event-component-dialog-back-button" class="aui-button">Back</button>
+                        <button id="event-component-dialog-create-button" class="aui-button"><span
+                                class="aui-icon aui-icon-small aui-iconfont-add"></span> Create new Component Template
+                        </button>
+                        <button id="event-component-dialog-next-button" class="aui-button aui-button-primary">Next
+                        </button>
+                        <button id="event-component-dialog-cancel-button" class="aui-button aui-button-link">Cancel
+                        </button>
+                    </div>
+                </div>
+                <div id="new-component-form">
+                    <div>
+                        <table class="aui" style="height: 250px;">
+                            <thead>
+                            <tr>
+                                <th id="selected-component-head">Selected Component Templates</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td id="selected-components" headers="selected-component-head" width="50%">
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="aui" style="height: 170px;">
+                            <thead>
+                            <tr>
+                                <th id="available-event-tasks-head">Available Tasks to drop into Component Template</th>
+                                <th id="new-component-template-head">New Component Template</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td headers="available-event-tasks-head" width="50%">
+                                    <ul id="available-event-task" class="connectedSortable"></ul>
+                                </td>
+                                <td headers="new-component-template-head" width="50%">
+                                    <div class="gadget color1 event-plan-element-portlet" style="position: relative;">
+                                        <div class="dashboard-item-frame gadget-container">
+                                            <div class="dashboard-item-header event-plan-element-portlet-content"><input
+                                                    id="component-name"
+                                                    class="text long-field"
+                                                    name="component-name"
+                                                    type="text" maxlength="80"
+                                                    placeholder="Name (max. 80 characters)"
+                                                    style="width:90%; margin: 2px;">
+                                            </div>
+                                            <div class="dashboard-item-content event-plan-element-portlet-content"
+                                                 style="overflow: hidden;">
+                                                <textarea id="component-description" class="text text long-field"
+                                                          name="component-description"
+                                                          type="text"
+                                                          placeholder="Description (max. 255 characters)"
+                                                          maxlength="255"
+                                                          style="width:90%; margin: 2px; resize: vertical; max-height: 150px;"></textarea>
+                                                <br/>Tasks:
+                                                <ul id="new-component-tasks" class="tasks-list connectedSortable"
+                                                    style="min-height: 50px;"></ul>
+                                                <p>Estimated time to complete: </p>
+                                                <p class="aui-buttons" style="float: right;">
+                                                    <button id="event-new-component-dialog-clear-button"
+                                                            class="aui-button"
+                                                            title="Clear new Event Plan Component Template"
+                                                            resolved>Clear
+                                                    </button>
+                                                    <button id="event-new-component-dialog-finish-button"
+                                                            class="aui-button aui-button-primary"
+                                                            title="Create new Event Plan Component Template"
+                                                            type="submit" resolved>Create
+                                                    </button>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <br/>
+                    </div>
+                    <br/>
+                    <div class="aui-dialog2-footer-actions" style="clear: both;">
+                        <button id="event-new-component-dialog-back-button" class="aui-button">Back</button>
+                        <button id="event-new-component-dialog-create-component-button" class="aui-button"><span
+                                class="aui-icon aui-icon-small aui-iconfont-add"></span> Create new Component Template
+                        </button>
+                        <button id="event-new-component-dialog-create-task-button" class="aui-button"><span
+                                class="aui-icon aui-icon-small aui-iconfont-add"></span> Create new Task Template
+                        </button>
+                        <button id="event-new-component-dialog-next-button" class="aui-button aui-button-primary">Next
+                        </button>
+                        <button id="event-new-component-dialog-cancel-button" class="aui-button aui-button-link">Cancel
+                        </button>
+                    </div>
+                </div>
             </td>
         </tr>
         </tbody>
     </table>
-
-
 </section>
-
-    #include("templates/admin/dialogs/event-category-dialog.vm")
-    #include("templates/admin/dialogs/component-dialog.vm")
-    #include("templates/admin/dialogs/task-dialog.vm")
-    #include("templates/admin/dialogs/subtask-dialog.vm")
 
 <script type="text/javascript">
     function getParameterByName(name) {
@@ -51,45 +205,55 @@
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
-    AJS.$(document).ready(
-            function () {
-                jQuery('#').innerHTML = getParameterByName('name');
-            }
-    );
-
     var plan = new Plan();
     var eventCategory = new Category();
-    var component = new Component();
+    var selectableComponent = new Component();
+    var newComponent = new Component();
+    newComponent.id = 'new-component';
     var task = new Task();
     var subTask = new SubTask();
 
-    var subTaskListener = new ButtonListener(subTask);
-    subTaskListener.onBackShowDialogForResourceId(task.id);
-    subTaskListener.onNextShowDialogForResourceId('plan-summary');
-    subTaskListener.onCancelCloseDialog();
+    var rest = new RESTManager();
 
-    var taskListener = new ButtonListener(task);
-    taskListener.onBackShowDialogForResourceId(component.id);
-    taskListener.onNextShowDialogForResourceId(subTask.id);
-    taskListener.onCancelCloseDialog();
+    var componentListener = new ButtonListener(selectableComponent);
+    componentListener.toggleForm();
+    componentListener.onClickHideForm('next');
+    componentListener.onClickHideForm('create');
+    componentListener.onClickHideForm('back');
+    componentListener.onClickToggleResourceForm('back', eventCategory);
+    componentListener.onClickToggleResourceForm('create', newComponent);
+    componentListener.onClick('create', function () {
+        var selectedComponentsList = document.getElementById('selected-event-component');
+        document.getElementById('selected-components').appendChild(selectedComponentsList);
+    });
+    componentListener.onCancelBackToEventPlanTemplatesList();
 
-    var componentListener = new ButtonListener(component);
-    componentListener.onShowDoGetResource([component, task]);
-    componentListener.onBackShowDialogForResourceId(eventCategory.id);
-    componentListener.onNextShowDialogForResourceId(task.id);
-    componentListener.onCancelCloseDialog();
+    var newComponentListener = new ButtonListener(newComponent);
+    newComponentListener.toggleForm();
+    newComponentListener.onClickHideForm('next');
+    newComponentListener.onClickHideForm('back');
+    newComponentListener.onClickToggleResourceForm('back', selectableComponent);
+    newComponentListener.onClickClearForm('create-component');
+    newComponentListener.onClickClearForm('clear');
+    newComponentListener.onClick('back', function () {
+        var selectedComponentsList = document.getElementById('selected-event-component');
+        document.getElementById('selected-predefined-event-components').appendChild(selectedComponentsList);
+    });
+    newComponentListener.onCancelBackToEventPlanTemplatesList();
 
     var categoryListener = new ButtonListener(eventCategory);
-    categoryListener.onShowDoGetResource([eventCategory]);
-    categoryListener.onNextShowDialogForResourceId(component.id);
-    categoryListener.onBackShowDialogForResourceId(plan.id);
-    categoryListener.onCancelCloseDialog();
+    categoryListener.onClickHideForm('next');
+    categoryListener.onClickToggleResourceForm('next', selectableComponent);
     categoryListener.onAddNewResourceAppendItToAvailableResourcesList();
+    categoryListener.onCancelBackToEventPlanTemplatesList();
 
-    var planListener = new ButtonListener(plan)
-    planListener.onAddShowDialog();
-    planListener.onNextShowDialogForResourceId(eventCategory.id);
-    planListener.onCancelCloseDialog();
+    AJS.$(document).ready(
+            function () {
+                jQuery('#').innerHTML = getParameterByName('plan-name');
+                rest.doGetResourcesInto([eventCategory], eventCategory);
+                rest.doGetResourcesInto([selectableComponent, task], selectableComponent);
+            }
+    );
 
     jQuery("ul.connectedSortable").sortable({
         connectWith: "ul",

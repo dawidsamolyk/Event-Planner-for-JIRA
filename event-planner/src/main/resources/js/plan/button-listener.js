@@ -4,123 +4,61 @@ function ButtonListener(resource) {
     that.resource = resource;
     that.rest = new RESTManager();
 
-    that.getResourceId = function () {
-        return resource.id;
-    };
-
-    that.getResourceDialogId = function (resourceId) {
-        return "#event-".concat(resourceId).concat("-dialog");
-    };
-
-    that.getDialogId = function () {
-        return "#event-".concat(that.getResourceId()).concat("-dialog");
-    };
-
-    that.getSaveButtonId = function () {
-        return that.getResourceDialogId(that.getResourceId());
-    };
-
-    that.getAddButtonId = function () {
-        return that.getButtonId('add');
-    };
-
-    that.getNextButtonId = function () {
-        return that.getButtonId('next');
-    };
-
-    that.getBackButtonId = function () {
-        return that.getButtonId('back');
-    };
-
-    that.getCancelButtonId = function () {
-        return that.getButtonId('cancel');
-    };
-
     that.getButtonId = function (name) {
-        return "#event-".concat(that.getResourceId()).concat("-dialog-" + name + "-button");
+        return "#event-".concat(that.resource.id).concat("-dialog-" + name + "-button");
     };
 
-    that.onNextShowDialogForResourceId = function (resourceId) {
-        AJS.$(that.getNextButtonId()).click(
+    that.toggleForm = function () {
+        jQuery("#" + that.resource.id + "-form").toggle();
+
+        jQuery('html, body').animate({
+            scrollTop: jQuery('#form-title').offset().top + 'px'
+        }, 'slow');
+    };
+
+    that.onClick = function (buttonName, functionToExecute) {
+        AJS.$(that.getButtonId(buttonName)).click(
             function (e) {
                 e.preventDefault();
-                AJS.dialog2(that.getDialogId()).hide();
-                AJS.dialog2(that.getResourceDialogId(resourceId)).show();
+                functionToExecute();
             }
         );
     };
 
-    that.onBackShowDialogForResourceId = function (resourceId) {
-        AJS.$(that.getBackButtonId()).click(
-            function (e) {
-                e.preventDefault();
-                AJS.dialog2(that.getDialogId()).hide();
-                AJS.dialog2(that.getResourceDialogId(resourceId)).show();
-            }
-        );
-    }
+    that.onCancelBackToEventPlanTemplatesList = function () {
+        that.onClick('cancel', function () {
+            window.location.href = AJS.contextPath() + '/secure/EventPlansManager.jspa';
+        });
+    };
+
+    that.onClickClearForm = function (buttonName) {
+        that.onClick(buttonName, resource.clear);
+    };
+
+    that.onClickHideForm = function (buttonName) {
+        that.onClick(buttonName, that.toggleForm);
+    };
+
+    that.onClickToggleResourceForm = function (buttonName, resource) {
+        that.onClick(buttonName, function () {
+            jQuery("#" + resource.id + "-form").toggle();
+        });
+    };
 
     that.onSaveDoPostResource = function () {
-        AJS.$(that.getSaveButtonId()).click(
-            function (e) {
-                e.preventDefault();
-                that.rest.post(that.resource);
-            }
-        );
-    };
-
-    that.onSaveClearForm = function () {
-        AJS.$(that.getSaveButtonId()).click(
-            function (e) {
-                e.preventDefault();
-                that.resource.clear();
-            }
-        );
-    };
-
-    that.onSaveHideDialog = function () {
-        AJS.$(that.getSaveButtonId()).click(
-            function (e) {
-                e.preventDefault();
-                AJS.dialog2(that.getDialogId()).hide();
-            }
-        );
-    };
-
-    that.onCancelCloseDialog = function () {
-        AJS.$(that.getCancelButtonId()).click(
-            function (e) {
-                e.preventDefault();
-                AJS.dialog2(that.getDialogId()).hide();
-            }
-        );
-    };
-
-    that.onShowDoGetResource = function (resourcesArray) {
-        AJS.dialog2(that.getDialogId()).on("show",
-            function () {
-                var eachKey, resource;
-                
-                for (eachKey in resourcesArray) {
-                    resource = resourcesArray[eachKey];
-                    that.rest.get(resource.id, resource);
-                }
-            }
-        );
+        that.onClick('save', function () {
+            that.rest.post(that.resource);
+        });
     };
 
     that.onAddNewResourceAppendItToAvailableResourcesList = function () {
-        AJS.$(that.getAddButtonId()).click(
-            function (e) {
-                e.preventDefault();
+        that.onClick('add', function () {
+            var list = AJS.$("#selected-event-" + that.resource.id);
 
-                var list = AJS.$("#selected-event-" + that.getResourceId());
-
-                if (that.getResourceId() === 'category') {
-                    list.append("<li class='ui-state-default aui-label'>" + resource.getNameValue() + "</li>");
-                    resource.clear();
-                }
+            if (that.resource.id === 'category') {
+                list.append("<li class='ui-state-default aui-label'>" + resource.getNameValue() + "</li>");
+                resource.clear();
             }
-        );
+        });
     };
 };

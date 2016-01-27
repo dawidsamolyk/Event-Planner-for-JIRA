@@ -45,6 +45,15 @@ function RESTManager() {
         });
     };
 
+    that.doGetResourcesInto = function (resourcesArray, destinationResource) {
+        var eachKey, resource;
+
+        for (eachKey in resourcesArray) {
+            resource = resourcesArray[eachKey];
+            that.get(destinationResource.id, resource);
+        }
+    };
+
     that.get = function (sourceId, destinationResource) {
         if (!sourceId || 0 === sourceId.length) {
             require('aui/flag')({

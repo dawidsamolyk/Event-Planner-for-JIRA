@@ -13,7 +13,7 @@ function Component() {
     };
 
     that.getTasks = function () {
-        return AJS.$("#new-component-tasks");
+        return jQuery("#new-component-tasks");
     };
 
     that.getAvailableComponents = function () {
@@ -22,6 +22,12 @@ function Component() {
 
     that.getSelectedComponents = function () {
         return AJS.$("#selected-event-component");
+    };
+
+    that.clear = function () {
+        that.getTasks().empty();
+        that.getName().val('');
+        that.getDescription().val('');
     };
 
     that.getJson = function () {
