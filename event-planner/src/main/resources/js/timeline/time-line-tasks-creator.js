@@ -108,6 +108,10 @@ function TimeLineTasksCreator() {
                     if (issueStatus !== 'done') {
                         that.addScrollButtonIfRequired(cell.toDo, cellList);
                     }
+
+                    if (issueStatus !== 'done') {
+                        that.addScrollButtonIfRequired(cell.toDo, cellList);
+                    }
                 }
             }
         }
