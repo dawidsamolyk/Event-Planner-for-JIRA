@@ -92,15 +92,12 @@ public class RestIssuesModifier {
 
     private boolean issueModified(final IssueData issueData) {
         MutableIssue issue = issueManager.getIssueByKeyIgnoreCase(issueData.getKey());
-
         if (issue == null) {
             return false;
         }
-        StatusCategory statusCategory = issue.getStatusObject().getStatusCategory();
 
         boolean validDueDate = DateUtils.isSameDay(issue.getDueDate(), new Date(issueData.getDueDateTime()));
-
-        return validDueDate && isSame(statusCategory, issueData.getStatus());
+        return validDueDate && isSame(issue.getStatusObject().getStatusCategory(), issueData.getStatus());
     }
 
     private MutableIssue setStatus(final MutableIssue issue, final String statusName) throws WorkflowNotFoundException, WorkflowActionNotFoundException, WorkflowActionNotValidatedException {

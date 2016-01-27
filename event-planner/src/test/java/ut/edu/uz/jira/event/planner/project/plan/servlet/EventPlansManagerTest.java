@@ -7,7 +7,7 @@ import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import com.atlassian.templaterenderer.TemplateRenderer;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
-import edu.uz.jira.event.planner.project.plan.servlet.EventPlanServlet;
+import edu.uz.jira.event.planner.project.plan.webwork.EventPlansManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-public class EventPlanServletTest {
+public class EventPlansManagerTest {
     private UserManager mockUserManager;
     private TemplateRenderer mockTemplateRenderer;
     private LoginUriProvider mockLoginUriProvider;
@@ -54,7 +54,7 @@ public class EventPlanServletTest {
     @Test
     public void should_redirect_to_login_page_when_User_Is_Null() throws IOException {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
-        TestingEventPlanServlet fixture = new TestingEventPlanServlet(mockTemplateRenderer, mockUserManager, mockLoginUriProvider, i18nResolver, service);
+        TestingEventPlansManager fixture = new TestingEventPlansManager(mockTemplateRenderer, mockUserManager, mockLoginUriProvider, i18nResolver, service);
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getRequestURL()).thenReturn(new StringBuffer("http://localhost:2990/jira/plugins/servlet/test"));
         HttpServletResponse mockResponse = mock(HttpServletResponse.class);
@@ -67,7 +67,7 @@ public class EventPlanServletTest {
     @Test
     public void should_redirect_to_login_page_when_User_Is_not_admin() throws IOException {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
-        TestingEventPlanServlet fixture = new TestingEventPlanServlet(mockTemplateRenderer, mockUserManager, mockLoginUriProvider, i18nResolver, service);
+        TestingEventPlansManager fixture = new TestingEventPlansManager(mockTemplateRenderer, mockUserManager, mockLoginUriProvider, i18nResolver, service);
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getRequestURL()).thenReturn(new StringBuffer("http://localhost:2990/jira/plugins/servlet/test"));
         HttpServletResponse mockResponse = mock(HttpServletResponse.class);
@@ -80,7 +80,7 @@ public class EventPlanServletTest {
     @Test
     public void if_user_not_admin_should_redirect_to_login_page_with_copying_source_address_with_query() throws IOException {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
-        TestingEventPlanServlet fixture = new TestingEventPlanServlet(mockTemplateRenderer, mockUserManager, mockLoginUriProvider, i18nResolver, service);
+        TestingEventPlansManager fixture = new TestingEventPlansManager(mockTemplateRenderer, mockUserManager, mockLoginUriProvider, i18nResolver, service);
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getRequestURL()).thenReturn(new StringBuffer("http://localhost:2990/jira/plugins/servlet/test"));
         Mockito.when(mockRequest.getQueryString()).thenReturn("a=1&b=2");
@@ -99,7 +99,7 @@ public class EventPlanServletTest {
 
     @Test
     public void if_admin_user_then_should_render_page() throws IOException {
-        TestingEventPlanServlet fixture = new TestingEventPlanServlet(mockTemplateRenderer, mockUserManager, mockLoginUriProvider, i18nResolver, service);
+        TestingEventPlansManager fixture = new TestingEventPlansManager(mockTemplateRenderer, mockUserManager, mockLoginUriProvider, i18nResolver, service);
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         Mockito.when(mockRequest.getRequestURL()).thenReturn(new StringBuffer("http://localhost:2990/jira/plugins/servlet/test"));
         HttpServletResponse mockResponse = mock(HttpServletResponse.class);
@@ -109,8 +109,8 @@ public class EventPlanServletTest {
         Mockito.verify(mockTemplateRenderer, times(1)).render(Mockito.anyString(), Mockito.any(Writer.class));
     }
 
-    private class TestingEventPlanServlet extends EventPlanServlet {
-        public TestingEventPlanServlet(@Nonnull TemplateRenderer templateRenderer, @Nonnull UserManager userManager, @Nonnull LoginUriProvider loginUriProvider, I18nResolver resolver, ActiveObjectsService service) {
+    private class TestingEventPlansManager extends EventPlansManager {
+        public TestingEventPlansManager(@Nonnull TemplateRenderer templateRenderer, @Nonnull UserManager userManager, @Nonnull LoginUriProvider loginUriProvider, I18nResolver resolver, ActiveObjectsService service) {
             super(templateRenderer, userManager, loginUriProvider, resolver, service);
         }
 

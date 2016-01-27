@@ -60,59 +60,69 @@
     </table>
 </section>
 
-    #include("templates/admin/dialogs/plan-dialog.vm")
-    #include("templates/admin/dialogs/event-category-dialog.vm")
-    #include("templates/admin/dialogs/component-dialog.vm")
-    #include("templates/admin/dialogs/task-dialog.vm")
-    #include("templates/admin/dialogs/subtask-dialog.vm")
+<section role="dialog" id="event-plan-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <form class="aui" id="event-plan-configuration" action="EventPlanCreator.jspa">
+        <header class="aui-dialog2-header">
+            <h2 class="aui-dialog2-header-main">Add Event Organization Plan Template</h2>
+        </header>
+        <div class="aui-dialog2-content">
+
+            <div class="field-group" id="event-name-group">
+                <label for="plan-name">Name<span class="aui-icon icon-required">(required)</span></label>
+                <input id="plan-name" class="text" name="plan-name" type="text" maxlength="80" minlength="1" required>
+
+                <div class="description" id="plan-name-description">Max. 80 characters.</div>
+            </div>
+            <div class="field-group" id="event-description-group">
+                <label for="plan-description">Description</label>
+                <input id="plan-description" class="text" name="plan-description" type="text" maxlength="255"
+                       minlength="0">
+
+                <div class="description" id="plan-description-description">Max. 255 characters.</div>
+            </div>
+
+        </div>
+        <footer class="aui-dialog2-footer">
+            <div class="aui-dialog2-footer-actions">
+                <button id="event-plan-dialog-cancel-button" class="aui-button aui-button-link">Cancel</button>
+                <button id="event-plan-dialog-next-button" class="aui-button aui-button-primary">Next</button>
+            </div>
+        </footer>
+    </form>
+</section>
 
 <script type="text/javascript">
     var plansList = new PlansList();
     var plan = new Plan();
-    var eventCategory = new Category();
-    var component = new Component();
-    var task = new Task();
-    var subTask = new SubTask();
 
     AJS.$(document).ready(
             function () {
                 var rest = new RESTManager();
-                rest.get(plan.id, plansList);
-            });
+                rest.get('plan', plansList);
+            }
+    );
 
-    var subTaskListener = new ButtonListener(subTask);
-    subTaskListener.onBackShowDialogForResourceId(task.id);
-    subTaskListener.onNextShowDialogForResourceId('plan-summary');
-    subTaskListener.onCancelCloseDialog();
+    AJS.$("#add-plan-button").click(
+            function (e) {
+                e.preventDefault();
+                plan.clear();
+                AJS.dialog2('#event-plan-dialog').show();
+            }
+    );
 
-    var taskListener = new ButtonListener(task);
-    taskListener.onBackShowDialogForResourceId(component.id);
-    taskListener.onNextShowDialogForResourceId(subTask.id);
-    taskListener.onCancelCloseDialog();
+    AJS.$("#event-plan-dialog-cancel-button").click(
+            function (e) {
+                e.preventDefault();
+                AJS.dialog2('#event-plan-dialog').hide();
+            }
+    );
 
-    var componentListener = new ButtonListener(component);
-    componentListener.onShowDoGetResource([component, task]);
-    componentListener.onBackShowDialogForResourceId(eventCategory.id);
-    componentListener.onNextShowDialogForResourceId(task.id);
-    componentListener.onCancelCloseDialog();
-
-    var categoryListener = new ButtonListener(eventCategory);
-    categoryListener.onShowDoGetResource([eventCategory]);
-    categoryListener.onNextShowDialogForResourceId(component.id);
-    categoryListener.onBackShowDialogForResourceId(plan.id);
-    categoryListener.onCancelCloseDialog();
-    categoryListener.onAddNewResourceAppendItToAvailableResourcesList();
-
-    var planListener = new ButtonListener(plan)
-    planListener.onAddShowDialog();
-    planListener.onNextShowDialogForResourceId(eventCategory.id);
-    planListener.onCancelCloseDialog();
-
-    jQuery("ul.connectedSortable").sortable({
-        connectWith: "ul",
-        dropOnEmpty: true,
-        cursor: "move"
-    }).disableSelection();
+    //    AJS.$("#event-plan-dialog-next-button").click(
+    //            function (e) {
+    //                e.preventDefault();
+    //                document.location = AJS.contextPath() + '/secure/EventPlanCreator.jspa?' + plan.getQueryParams();
+    //            }
+    //    );
 </script>
 </body>
 </html>

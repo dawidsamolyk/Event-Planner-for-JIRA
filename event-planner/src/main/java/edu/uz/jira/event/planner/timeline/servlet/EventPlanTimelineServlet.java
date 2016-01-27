@@ -39,6 +39,6 @@ public class EventPlanTimelineServlet extends HttpServlet {
             return;
         }
         response.setContentType("text/html;charset=utf-8");
-        templateRenderer.render("/templates/timeline/view.vm", response.getWriter());
+        templateRenderer.render("/templates/timeline/time-line.vm", response.getWriter());
     }
 }

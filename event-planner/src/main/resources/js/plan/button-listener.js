@@ -40,20 +40,6 @@ function ButtonListener(resource) {
         return "#event-".concat(that.getResourceId()).concat("-dialog-" + name + "-button");
     };
 
-    that.onAddShowDialog = function () {
-        var addButtonId, formId;
-        addButtonId = "#add-".concat(that.getResourceId()).concat("-button");
-        formId = "event-".concat(that.getResourceId()).concat("-configuration");
-
-        AJS.$(addButtonId).click(
-            function (e) {
-                e.preventDefault();
-                document.getElementById(formId).reset();
-                AJS.dialog2(that.getDialogId()).show();
-            }
-        );
-    };
-
     that.onNextShowDialogForResourceId = function (resourceId) {
         AJS.$(that.getNextButtonId()).click(
             function (e) {

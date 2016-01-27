@@ -4,11 +4,10 @@
     <meta name="decorator" content="atl.admin">
     <meta name="admin.active.section" content="admin_project_current/project_section"/>
     <meta name="admin.active.tab" content="view_projects"/>
-    $webResourceManager.requireResource("edu.uz.jira.event.planner.event-planner:event-plan-configuration-resources")
+    $webResourceManager.requireResource("edu.uz.jira.event.planner.event-planner:project-configuration-resources")
 </head>
 <body>
 <section role="dialog" id="event-config-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
-
     <header class="aui-dialog2-header">
         <h2 class="aui-dialog2-header-main">Event organization configuration</h2>
     </header>
@@ -37,7 +36,7 @@
 
             <div class="field-group" id="event-duedate-group">
                 <label for="event-duedate">Event deadline<span class="aui-icon icon-required">(required)</span></label>
-                <input class="text" id="event-duedate" name="event-duedate" type="text">
+                <input class="text" id="event-duedate" name="event-duedate" type="text" required>
 
                 <div class="description" id="event-duedate-description">Date of an event.</div>
             </div>

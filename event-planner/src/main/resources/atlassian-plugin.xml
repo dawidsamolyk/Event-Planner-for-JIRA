@@ -38,11 +38,6 @@
         <description>Provides REST resources for the plugin.</description>
     </rest>
 
-    <servlet name="Event Plans Configuration" class="edu.uz.jira.event.planner.project.plan.servlet.EventPlanServlet"
-             key="event-plans-configuration">
-        <url-pattern>/event/plans/configuration</url-pattern>
-    </servlet>
-
     <web-resource name="Event Plans Configuration Resources" key="event-plans-configuration-resources">
         <description key="event.plans.config.resources">Resources for Event Plan Templates Configuration GUI
         </description>
@@ -52,14 +47,14 @@
         <dependency>com.atlassian.auiplugin:aui-select2</dependency>
         <dependency>com.atlassian.gadgets.dashboard:dashboard</dependency>
         <resource type="velocity" name="event-plans-view" location="/templates/admin/event-plans.vm"/>
-        <resource type="download" name="component.js" location="/templates/admin/model/component.js"/>
-        <resource type="download" name="category.js" location="/templates/admin/model/category.js"/>
-        <resource type="download" name="plan.js" location="/templates/admin/model/plan.js"/>
-        <resource type="download" name="plans-list.js" location="/templates/admin/model/plans-list.js"/>
-        <resource type="download" name="subtask.js" location="/templates/admin/model/subtask.js"/>
-        <resource type="download" name="task.js" location="/templates/admin/model/task.js"/>
-        <resource type="download" name="rest-manager.js" location="/templates/admin/rest-manager.js"/>
-        <resource type="download" name="button-listener.js" location="/templates/admin/button-listener.js"/>
+        <resource type="download" name="component.js" location="/js/plan/model/component.js"/>
+        <resource type="download" name="category.js" location="/js/plan/model/category.js"/>
+        <resource type="download" name="plan.js" location="/js/plan/model/plan.js"/>
+        <resource type="download" name="plans-list.js" location="/js/plan/model/plans-list.js"/>
+        <resource type="download" name="subtask.js" location="/js/plan/model/subtask.js"/>
+        <resource type="download" name="task.js" location="/js/plan/model/task.js"/>
+        <resource type="download" name="rest-manager.js" location="/js/rest/rest-manager.js"/>
+        <resource type="download" name="button-listener.js" location="/js/plan/button-listener.js"/>
         <resource type="download" name="EventPlanDialogs.css" location="/style/EventPlanDialogs.css"/>
     </web-resource>
 
@@ -67,7 +62,7 @@
               section="admin_project_menu/project_section" weight="40">
         <description>Link to Event Organization Plan Templates Configuration page.</description>
         <label key="event.plans.admin.label"/>
-        <link linkId="event_plans">/plugins/servlet/event/plans/configuration</link>
+        <link linkId="event_plans">/secure/EventPlansManager.jspa</link>
         <condition class="com.atlassian.jira.plugin.webfragment.conditions.UserIsAdminCondition"/>
     </web-item>
 
@@ -113,45 +108,49 @@
         </description>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
-        <actions>
+        <actions>s
             <action name="edu.uz.jira.event.planner.project.configuration.webwork.EventPlanConfigurationAction"
                     alias="EventOrganizationPlanConfiguration">
-                <view name="success">/templates/webworks/event/config/success.vm</view>
-                <view name="input">/templates/webworks/event/config/input.vm</view>
-                <view name="error">/templates/webworks/event/config/error.vm</view>
+                <view name="success">/templates/webworks/project/success.vm</view>
+                <view name="input">/templates/webworks/project/input.vm</view>
+                <view name="error">/templates/webworks/project/error.vm</view>
             </action>
             <action name="edu.uz.jira.event.planner.project.plan.webwork.EventPlanCreator"
                     alias="EventPlanCreator">
-                <view name="success">/templates/webworks/event/plan/success.vm</view>
-                <view name="input">/templates/webworks/event/plan/input.vm</view>
-                <view name="error">/templates/webworks/event/plan/error.vm</view>
+                <view name="success">/templates/webworks/plan/creator/success.vm</view>
+                <view name="input">/templates/webworks/plan/creator/input.vm</view>
+                <view name="error">/templates/webworks/plan/creator/error.vm</view>
+            </action>
+            <action name="edu.uz.jira.event.planner.project.plan.webwork.EventPlansManager"
+                    alias="EventPlansManager">
+                <view name="input">/templates/admin/event-plans.vm</view>
             </action>
             <action name="edu.uz.jira.event.planner.util.webwork.AlwaysShowInputAction"
                     alias="DeleteEventOrganizationPlan">
-                <view name="input">/templates/admin/webworks/delete.vm</view>
+                <view name="input">/templates/webworks/plan/editor/delete.vm</view>
             </action>
             <action name="edu.uz.jira.event.planner.util.webwork.AlwaysShowInputAction"
                     alias="EditEventOrganizationPlan">
-                <view name="input">/templates/admin/webworks/edit.vm</view>
+                <view name="input">/templates/webworks/plan/editor/edit.vm</view>
             </action>
             <action name="edu.uz.jira.event.planner.util.webwork.AlwaysShowInputAction"
                     alias="ViewEventOrganizationPlan">
-                <view name="input">/templates/admin/webworks/view.vm</view>
+                <view name="input">/templates/webworks/plan/viewer//view.vm</view>
             </action>
         </actions>
     </webwork1>
 
-    <web-resource name="Event Plan Configuration Resources" key="event-plan-configuration-resources">
+    <web-resource name="Event Plan Configuration Resources" key="project-configuration-resources">
         <description key="event.plans.config.resources">Resources for Event Organization Plan configuration
         </description>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
         <resource type="download" name="jquery.datetimepicker.full.min.js"
-                  location="/libs/datepicker/jquery.datetimepicker.full.min.js"/>
+                  location="/js/datepicker/jquery.datetimepicker.full.min.js"/>
         <resource type="download" name="jquery.datetimepicker.full.min.css"
-                  location="/libs/datepicker/jquery.datetimepicker.full.min.css"/>
-        <resource type="download" name="input.js" location="/templates/webworks/event/config/input.js"/>
+                  location="/style/jquery.datetimepicker.full.min.css"/>
+        <resource type="download" name="config.js" location="/js/project/config.js"/>
     </web-resource>
 
     <workflow-validator key="issue-due-date-validator" name="Issue Due Date Validator"
@@ -176,26 +175,26 @@
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
         <dependency>com.atlassian.gadgets.dashboard:dashboard</dependency>
-        <resource type="velocity" name="view" location="/templates/timeline/view.vm"/>
-        <resource type="download" name="time-line.js" location="/templates/timeline/time-line.js"/>
+        <resource type="velocity" name="view" location="/templates/timeline/time-line.vm"/>
+        <resource type="download" name="time-line.js" location="/js/timeline/time-line.js"/>
         <resource type="download" name="time-line-dates-creator.js"
-                  location="/templates/timeline/time-line-dates-creator.js"/>
+                  location="/js/timeline/time-line-dates-creator.js"/>
         <resource type="download" name="time-line-tasks-creator.js"
-                  location="/templates/timeline/time-line-tasks-creator.js"/>
+                  location="/js/timeline/time-line-tasks-creator.js"/>
         <resource type="download" name="task-gadget-creator.js"
-                  location="/templates/timeline/task-gadget-creator.js"/>
-        <resource type="download" name="date-util.js" location="/templates/timeline/date-util.js"/>
+                  location="/js/timeline/task-gadget-creator.js"/>
+        <resource type="download" name="date-util.js" location="/js/util/date-util.js"/>
         <resource type="download" name="time-line-buttons-listener.js"
-                  location="/templates/timeline/time-line-buttons-listener.js"/>
+                  location="/js/timeline/time-line-buttons-listener.js"/>
         <resource type="download" name="time-line-info.js"
-                  location="/templates/timeline/time-line-info.js"/>
-        <resource type="download" name="weeks-calculator.js" location="/templates/timeline/weeks-calculator.js"/>
+                  location="/js/timeline/time-line-info.js"/>
+        <resource type="download" name="weeks-calculator.js" location="/js/util/weeks-calculator.js"/>
         <resource type="download" name="time-line-navigation-buttons.js"
-                  location="/templates/timeline/time-line-navigation-buttons.js"/>
-        <resource type="download" name="draggable-listener.js" location="/templates/timeline/draggable-listener.js"/>
-        <resource type="download" name="rest-manager.js" location="/templates/admin/rest-manager.js"/>
+                  location="/js/timeline/time-line-navigation-buttons.js"/>
+        <resource type="download" name="draggable-listener.js" location="/js/timeline/draggable-listener.js"/>
+        <resource type="download" name="rest-manager.js" location="/js/rest/rest-manager.js"/>
         <resource type="download" name="time-line-tasks-toggle.js"
-                  location="/templates/timeline/time-line-tasks-toggle.js"/>
+                  location="/js/timeline/time-line-tasks-toggle.js"/>
     </web-resource>
 
     <web-item key="my_links_link" name="Event Organization Time Line" i18n-name-key="event.plan.timeline.menu.name"

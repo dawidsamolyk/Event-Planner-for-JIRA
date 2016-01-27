@@ -13,6 +13,20 @@ function Plan() {
         return AJS.$("#plan-description");
     };
 
+    that.getValueOf = function (element) {
+        return element.attr("value");
+    };
+
+    that.getQueryParams = function () {
+        var result, name = that.getValueOf(that.getName()), description = that.getValueOf(that.getDescription());
+        result = AJS.format("name={0}", name);
+
+        if (!description || description.length > 0) {
+            result.concat(AJS.format("&description={0}", description));
+        }
+        return result;
+    };
+
     that.clear = function () {
         that.getName().val('');
         that.getDescription().val('');
@@ -29,8 +43,8 @@ function Plan() {
     that.getJson = function () {
         var name, description, categoriesNamesArray, componentsNamesArray;
 
-        name = that.getName().attr("value");
-        description = that.getDescription().attr("value");
+        name = that.getValueOf(that.getName());
+        description = that.getValueOf(that.getDescription());
         categoriesNamesArray = JSON.stringify(that.getCategories().val());
         componentsNamesArray = JSON.stringify(that.getComponents().val());
 

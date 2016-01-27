@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Event Organization Plans Configurations</title>
+    <title>Draft of Event Plan Template</title>
     <meta name="decorator" content="atl.admin">
     <meta name="admin.active.section" content="admin_project_menu/project_section"/>
     <meta name="admin.active.tab" content="event_plans"/>
@@ -8,77 +8,60 @@
 </head>
 <body>
 <section class="aui-page-panel-content">
-    <header class="aui-page-header">
-        <div class="aui-page-header-inner">
-            <div class="aui-page-header-main">
-                <h2>View Event Plan Templates</h2>
-            </div>
-            <div class="aui-page-header-actions">
-                <div class="aui-buttons">
-                    <button id="add-plan-button" class="aui-button trigger-dialog">
-                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                        Add Event Plan Template
-                    </button>
-                </div>
-                <div class="aui-buttons">
-                    <button id="import-plans-button" class="aui-button trigger-dialog">
-                        Import
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <div class="aui-message info">
-        <span class="aui-icon icon-info"></span>
-
-        <p>Description...</p>
-    </div>
-
-    <table id="plans-table" class="aui aui-table-rowhover">
-        <thead>
+    <table class="jiraform jirapanel maxWidth">
+        <tbody>
         <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Statistics
-            </th>
-            <th>
-                Component Templates
-            </th>
-            <th>
-                Assigned Event Categories
-            </th>
-            <th>
-                Operations
-            </th>
+            <td class="jiraformheader">
+                <a class="help-lnk" href="https://docs.atlassian.com/jira/docs-064/Defining+a+Screen"
+                   title="Get online help about Placing fields on screens" data-helplink="online" target="_jirahelp"
+                   style="float: right;"><span class="aui-icon aui-icon-small aui-iconfont-help">
+            Get help!
+        </span></a>
+                <h3 class="formtitle">Draft of Event Plan Template</h3>
+            </td>
         </tr>
-        </thead>
-        <tbody id="plans-table-body">
+        <tr>
+            <td class="jiraformbody">
+                <p>
+                    This page shows the way the fields are organised on <b id="plan-name"></b> screen.
+                </p>
+
+                <p>
+                    <span class="warning">Note</span>: when the screen is shown to the user only non-hidden fields that
+                    the user has permissions to edit will be actually displayed.
+                </p>
+            </td>
+        </tr>
         </tbody>
     </table>
+
+
 </section>
 
-    #include("templates/admin/dialogs/plan-dialog.vm")
     #include("templates/admin/dialogs/event-category-dialog.vm")
     #include("templates/admin/dialogs/component-dialog.vm")
     #include("templates/admin/dialogs/task-dialog.vm")
     #include("templates/admin/dialogs/subtask-dialog.vm")
 
 <script type="text/javascript">
-    var plansList = new PlansList();
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    AJS.$(document).ready(
+            function () {
+                jQuery('#').innerHTML = getParameterByName('name');
+            }
+    );
+
     var plan = new Plan();
     var eventCategory = new Category();
     var component = new Component();
     var task = new Task();
     var subTask = new SubTask();
-
-    AJS.$(document).ready(
-            function () {
-                var rest = new RESTManager();
-                rest.get(plan.id, plansList);
-            });
 
     var subTaskListener = new ButtonListener(subTask);
     subTaskListener.onBackShowDialogForResourceId(task.id);
