@@ -55,7 +55,8 @@
                         <div class="field-group">
                             <label for="category-name">Name<span
                                     class="aui-icon icon-required">(required)</span></label>
-                            <input id="category-name" class="text" name="category-name" type="text" maxlength="80">
+                            <input id="category-name" class="text" name="category-name" type="text" maxlength="80"
+                                   required>
 
                             <button id="event-category-dialog-add-button" class="aui-button" title="Add new Category">
                                 <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
@@ -86,7 +87,7 @@
                             <td headers="available-event-component-head" width="50%">
                                 <ul id="available-event-component" class="connectedSortable"></ul>
                             </td>
-                            <td id="selected-predefined-event-components" headers="selected-event-component-head" width="50%">
+                            <td headers="selected-event-component-head" width="50%">
                                 <ul id="selected-event-component" class="connectedSortable"></ul>
                             </td>
                         </tr>
@@ -106,20 +107,6 @@
                 </div>
                 <div id="new-component-form">
                     <div>
-                        <table class="aui" style="height: 250px;">
-                            <thead>
-                            <tr>
-                                <th id="selected-component-head">Selected Component Templates</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td id="selected-components" headers="selected-component-head" width="50%">
-
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
                         <table class="aui" style="height: 170px;">
                             <thead>
                             <tr>
@@ -141,7 +128,7 @@
                                                     name="component-name"
                                                     type="text" maxlength="80"
                                                     placeholder="Name (max. 80 characters)"
-                                                    style="width:90%; margin: 2px;">
+                                                    style="width:90%; margin: 2px;" required>
                                             </div>
                                             <div class="dashboard-item-content event-plan-element-portlet-content"
                                                  style="overflow: hidden;">
@@ -175,6 +162,20 @@
                             </tbody>
                         </table>
                         <br/>
+                        <table class="aui" style="height: 250px; max-height: 250px; overflowY: scroll;">
+                            <thead>
+                            <tr>
+                                <th id="selected-component-head">Currently selected Component Templates</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td id="selected-components" headers="selected-component-head">
+                                    <ul id="selected-predefined-event-components" class="connectedSortable"></ul>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <br/>
                     <div class="aui-dialog2-footer-actions" style="clear: both;">
@@ -223,8 +224,7 @@
     componentListener.onClickToggleResourceForm('back', eventCategory);
     componentListener.onClickToggleResourceForm('create', newComponent);
     componentListener.onClick('create', function () {
-        var selectedComponentsList = document.getElementById('selected-event-component');
-        document.getElementById('selected-components').appendChild(selectedComponentsList);
+        jQuery('#selected-event-component').children('li').appendTo('#selected-predefined-event-components');
     });
     componentListener.onCancelBackToEventPlanTemplatesList();
 
@@ -236,8 +236,7 @@
     newComponentListener.onClickClearForm('create-component');
     newComponentListener.onClickClearForm('clear');
     newComponentListener.onClick('back', function () {
-        var selectedComponentsList = document.getElementById('selected-event-component');
-        document.getElementById('selected-predefined-event-components').appendChild(selectedComponentsList);
+        jQuery('#selected-predefined-event-components').children('li').appendTo('#selected-event-component');
     });
     newComponentListener.onCancelBackToEventPlanTemplatesList();
 

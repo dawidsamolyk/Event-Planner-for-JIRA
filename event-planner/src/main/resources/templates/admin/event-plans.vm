@@ -85,7 +85,7 @@
         <footer class="aui-dialog2-footer">
             <div class="aui-dialog2-footer-actions">
                 <button id="event-plan-dialog-cancel-button" class="aui-button aui-button-link">Cancel</button>
-                <button id="event-plan-dialog-next-button" class="aui-button aui-button-primary">Next</button>
+                <button id="event-plan-dialog-next-button" class="aui-button aui-button-primary">Create</button>
             </div>
         </footer>
     </form>

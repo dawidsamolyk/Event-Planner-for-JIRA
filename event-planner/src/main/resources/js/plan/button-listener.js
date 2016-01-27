@@ -53,9 +53,23 @@ function ButtonListener(resource) {
 
     that.onAddNewResourceAppendItToAvailableResourcesList = function () {
         that.onClick('add', function () {
-            var list = AJS.$("#selected-event-" + that.resource.id);
+            var list = AJS.$("#selected-event-" + that.resource.id), listElement, gadgetContainer;
 
             if (that.resource.id === 'category') {
+                list.append("<li class='ui-state-default aui-label'>" + resource.getNameValue() + "</li>");
+                resource.clear();
+
+            } else if (that.resource.id === 'component') {
+                listElement = document.createElement('LI');
+                listElement.className = 'gadget color1 event-plan-element-portlet';
+                listElement.style.position = 'relative';
+                listElement.style.zIndex = '1';
+
+                gadgetContainer = document.createElement('DIV');
+                gadgetContainer.className = 'dashboard-item-frame gadget-container';
+                listElement.appendChild(gadgetContainer);
+
+
                 list.append("<li class='ui-state-default aui-label'>" + resource.getNameValue() + "</li>");
                 resource.clear();
             }
