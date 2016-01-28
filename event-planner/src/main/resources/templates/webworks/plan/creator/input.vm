@@ -55,16 +55,23 @@
                         <div class="field-group">
                             <label for="category-name">Name<span
                                     class="aui-icon icon-required">(required)</span></label>
-                            <input id="category-name" class="text" name="category-name" type="text" maxlength="80"
+                            <input id="category-name" class="text" name="category-name" type="text"
+                                   maxlength="80"
                                    required>
-
-                            <button id="event-category-dialog-add-button" class="aui-button" title="Add new Category">
-                                <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                                Add new Event Category
-                            </button>
 
                             <div class="description" id="category-name-description">Max. 80 characters.</div>
                         </div>
+
+                        <div class="buttons-container">
+                            <div class="buttons">
+                                <button id="event-category-dialog-add-button" class="aui-button"
+                                        title="Add new Category">
+                                    <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                                    Add new Event Category
+                                </button>
+                            </div>
+                        </div>
+
                     </form>
                     <div class="aui-dialog2-footer-actions" style="clear: both;">
                         <button id="event-category-dialog-next-button" class="aui-button aui-button-primary">Next
@@ -148,10 +155,11 @@
                                                             title="Clear new Event Plan Component Template"
                                                             resolved>Clear
                                                     </button>
-                                                    <button id="event-new-component-dialog-finish-button"
+                                                    <button id="event-new-component-dialog-add-button"
                                                             class="aui-button aui-button-primary"
                                                             title="Create new Event Plan Component Template"
-                                                            type="submit" resolved>Create
+                                                            type="submit" resolved><span
+                                                            class="aui-icon aui-icon-small aui-iconfont-add"></span> Add
                                                     </button>
                                                 </p>
                                             </div>
@@ -162,33 +170,150 @@
                             </tbody>
                         </table>
                         <br/>
-                        <table class="aui" style="height: 250px; max-height: 250px; overflowY: scroll;">
-                            <thead>
-                            <tr>
-                                <th id="selected-component-head">Currently selected Component Templates</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td id="selected-components" headers="selected-component-head">
-                                    <ul id="selected-predefined-event-components" class="connectedSortable"></ul>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <div id="currently-created-components">
+                            <table class="aui" style="height: 250px; max-height: 250px; overflowY: scroll;">
+                                <thead>
+                                <tr>
+                                    <th id="selected-component-head">Currently selected Component Templates</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td id="selected-components" headers="selected-component-head">
+                                        <ul id="selected-predefined-event-components" class="connectedSortable"></ul>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <div class="aui-dialog2-footer-actions" style="clear: both;">
+                                <button id="event-new-component-dialog-back-button" class="aui-button">Back</button>
+                                <button id="event-new-component-dialog-create-component-button" class="aui-button"><span
+                                        class="aui-icon aui-icon-small aui-iconfont-add"></span> Create new Component
+                                    Template
+                                </button>
+                                <button id="event-new-component-dialog-create-task-button" class="aui-button"><span
+                                        class="aui-icon aui-icon-small aui-iconfont-add"></span> Create new Task
+                                    Template
+                                </button>
+                                <button id="event-new-component-dialog-next-button"
+                                        class="aui-button aui-button-primary">Next
+                                </button>
+                                <button id="event-new-component-dialog-cancel-button"
+                                        class="aui-button aui-button-link">Cancel
+                                </button>
+                            </div>
+                        </div>
                     </div>
+                </div>
+
+                <div id="task-form">
+                    <p>Create new Task Template</p>
+
+                    <form class="aui" id="event-task-configuration" style="clear:both;">
+                        <div class="field-group">
+                            <label for="task-name">Name<span
+                                    class="aui-icon icon-required">(required)</span></label>
+                            <input id="task-name" class="text long-field" name="task-name" type="text" maxlength="80"
+                                   required>
+                            <div class="description" id="task-name-description">Max. 80 characters.</div>
+                        </div>
+                        <div class="field-group">
+                            <label for="task-description">Description</label>
+                            <input id="task-description" class="text long-field" name="task-description" type="text"
+                                   maxlength="255">
+                            <div class="description" id="task-description-description">Max. 255 characters.</div>
+                        </div>
+                        <div class="field-group">
+                            <label for="task-needed-months">Time to complete<span
+                                    class="aui-icon icon-required">(required)</span></label>
+                            <input id="task-needed-months" class="text short-field" name="task-description"
+                                   type="number" min="0"
+                                   placeholder="Months"> month(s) and
+                            <input id="task-needed-days" class="text short-field" name="task-description" type="number"
+                                   min="0"
+                                   placeholder="Days"> day(s)
+                            <div class="description" id="task-needed-months-description">Number of months and days
+                                <u>before the event deadline</u> when this Task should be done.
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label for="task-subtasks">SubTasks</label>
+                            <table id="task-subtasks" class="aui" style="height: 170px;">
+                                <thead>
+                                <tr>
+                                    <th id="created-subtasks-header">SubTasks Templates to assign with Task Template
+                                    </th>
+                                    <th id="new-subtask-header">Add new SubTask Template</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td headers="created-subtasks-header">
+                                        <ul id="subtasks"></ul>
+                                    </td>
+                                    <td headers="new-subtask-header">
+                                        <form class="aui" id="event-subtask-configuration" style="padding: 0;">
+                                            <div class="field-group">
+                                                <label for="subtask-name">Name<span
+                                                        class="aui-icon icon-required">(required)</span></label>
+                                                <input id="subtask-name" class="text long-field" name="subtask-name"
+                                                       type="text" maxlength="80"
+                                                       required>
+                                                <div class="description" id="subtask-name-description">Max. 80
+                                                    characters.
+                                                </div>
+                                            </div>
+                                            <div class="field-group">
+                                                <label for="subtask-description">Description</label>
+                                                <input id="subtask-description" class="text long-field"
+                                                       name="subtask-description" type="text"
+                                                       maxlength="255">
+                                                <div class="description" id="subtask-description-description">Max. 255
+                                                    characters.
+                                                </div>
+                                            </div>
+                                            <div class="buttons-container">
+                                                <div class="buttons">
+                                                    <button id="event-subtask-add-button" class="aui-button aui-button-primary"
+                                                            title="Add new SubTask Template">
+                                                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                                                        Add new SubTask Template
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="description" id="task-subtasks-description">Checklist of issues that should be
+                                completed with this Task Template.
+                            </div>
+                        </div>
+                        <div class="buttons-container">
+                            <div class="buttons">
+                                <button id="event-task-dialog-add-button" class="aui-button aui-button-primary"
+                                        title="Add new Task Template">
+                                    <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                                    Add new Task Template
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
                     <br/>
                     <div class="aui-dialog2-footer-actions" style="clear: both;">
-                        <button id="event-new-component-dialog-back-button" class="aui-button">Back</button>
-                        <button id="event-new-component-dialog-create-component-button" class="aui-button"><span
+                        <button id="event-task-dialog-back-button" class="aui-button">Back</button>
+                        <button id="event-task-dialog-create-component-button" class="aui-button"><span
                                 class="aui-icon aui-icon-small aui-iconfont-add"></span> Create new Component Template
                         </button>
-                        <button id="event-new-component-dialog-create-task-button" class="aui-button"><span
+                        <button id="event-task-dialog-create-task-button" class="aui-button"><span
                                 class="aui-icon aui-icon-small aui-iconfont-add"></span> Create new Task Template
                         </button>
-                        <button id="event-new-component-dialog-next-button" class="aui-button aui-button-primary">Next
+                        <button id="event-task-dialog-next-button" class="aui-button aui-button-primary">Summary
                         </button>
-                        <button id="event-new-component-dialog-cancel-button" class="aui-button aui-button-link">Cancel
+                        <button id="event-task-dialog-cancel-button" class="aui-button aui-button-link">Cancel
                         </button>
                     </div>
                 </div>
@@ -216,6 +341,12 @@
 
     var rest = new RESTManager();
 
+    var categoryListener = new ButtonListener(eventCategory);
+    categoryListener.onClickHideForm('next');
+    categoryListener.onClickToggleResourceForm('next', selectableComponent);
+    categoryListener.onClickAddAppendNewResourceToList(AJS.$("#selected-event-" + eventCategory.id));
+    categoryListener.onCancelBackToEventPlanTemplatesList();
+
     var componentListener = new ButtonListener(selectableComponent);
     componentListener.toggleForm();
     componentListener.onClickHideForm('next');
@@ -223,6 +354,7 @@
     componentListener.onClickHideForm('back');
     componentListener.onClickToggleResourceForm('back', eventCategory);
     componentListener.onClickToggleResourceForm('create', newComponent);
+    componentListener.onClickToggleResourceForm('next', plan);
     componentListener.onClick('create', function () {
         jQuery('#selected-event-component').children('li').appendTo('#selected-predefined-event-components');
     });
@@ -232,19 +364,29 @@
     newComponentListener.toggleForm();
     newComponentListener.onClickHideForm('next');
     newComponentListener.onClickHideForm('back');
-    newComponentListener.onClickToggleResourceForm('back', selectableComponent);
     newComponentListener.onClickClearForm('create-component');
     newComponentListener.onClickClearForm('clear');
+    newComponentListener.onClickToggleResourceForm('back', selectableComponent);
+    newComponentListener.onClickToggleResourceForm('create-task', task);
+    newComponentListener.onClickHideElement('create-task', '#currently-created-components');
+    newComponentListener.onClickShowElement('create-component', '#currently-created-components');
     newComponentListener.onClick('back', function () {
         jQuery('#selected-predefined-event-components').children('li').appendTo('#selected-event-component');
     });
     newComponentListener.onCancelBackToEventPlanTemplatesList();
+    newComponentListener.onClickAddAppendNewResourceToList(AJS.$("#selected-predefined-event-components"));
 
-    var categoryListener = new ButtonListener(eventCategory);
-    categoryListener.onClickHideForm('next');
-    categoryListener.onClickToggleResourceForm('next', selectableComponent);
-    categoryListener.onAddNewResourceAppendItToAvailableResourcesList();
-    categoryListener.onCancelBackToEventPlanTemplatesList();
+    var taskListener = new ButtonListener(task);
+    taskListener.toggleForm();
+    taskListener.onClickToggleResourceForm('next', plan);
+    taskListener.onClickClearForm('create-task');
+    taskListener.onClickHideForm('back');
+    taskListener.onClickHideForm('next');
+    taskListener.onClickHideForm('create-component');
+    taskListener.onClickToggleResourceForm('create-component', newComponent);
+    taskListener.onClickToggleResourceForm('back', newComponent);
+    //taskListener.onClickAddAppendNewResourceToList(AJS.$("#selected-event-" + eventCategory.id));
+    taskListener.onCancelBackToEventPlanTemplatesList();
 
     AJS.$(document).ready(
             function () {
@@ -258,6 +400,25 @@
         connectWith: "ul",
         dropOnEmpty: true,
         cursor: "move"
+    }).disableSelection();
+
+    jQuery("#available-event-task").sortable({
+        connectWith: ".connectedSortable",
+        remove: function (event, ui) {
+            var itemClone, destinationListId;
+            destinationListId = '#new-component-tasks';
+            itemClone = ui.item.clone();
+
+            itemClone.appendTo(destinationListId);
+            jQuery(this).sortable('cancel');
+        }
+    }).disableSelection();
+
+    jQuery("#new-component-tasks").sortable({
+        connectWith: ".connectedSortable",
+        remove: function (event, ui) {
+            jQuery(this).sortable('cancel');
+        }
     }).disableSelection();
 </script>
 </body>

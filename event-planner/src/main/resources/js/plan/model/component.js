@@ -8,12 +8,24 @@ function Component() {
         return AJS.$("#component-name");
     };
 
+    that.getNameValue = function () {
+        return that.getName().attr("value");
+    };
+
     that.getDescription = function () {
         return AJS.$("#component-description");
     };
 
+    that.getDescriptionValue = function () {
+        return that.getDescription().attr("value");
+    };
+
     that.getTasks = function () {
         return jQuery("#new-component-tasks");
+    };
+
+    that.getTasksValue = function () {
+        return that.getTasks().val();
     };
 
     that.getAvailableComponents = function () {
@@ -31,9 +43,9 @@ function Component() {
     };
 
     that.getJson = function () {
-        return '{ "name": "' + that.getName().attr("value") +
-            '", "description": "' + that.getDescription().attr("value") +
-            '", "tasksNames": ' + JSON.stringify(that.getTasks().val()) +
+        return '{ "name": "' + that.getTasksValue() +
+            '", "description": "' + that.getDescriptionValue() +
+            '", "tasksNames": ' + JSON.stringify(that.getTasksValue()) +
             ' }';
     };
 
@@ -142,4 +154,4 @@ function Component() {
     that.isFullFilled = function (component) {
         return component !== undefined && component.name !== undefined && component.task !== undefined && component.task.length > 0;
     };
-};
+}

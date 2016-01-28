@@ -45,34 +45,75 @@ function ButtonListener(resource) {
         });
     };
 
+    that.onClickHideElement = function (buttonName, elementId) {
+        that.onClick(buttonName, function () {
+            jQuery(elementId).hide();
+        });
+    };
+
+    that.onClickShowElement = function (buttonName, elementId) {
+        that.onClick(buttonName, function () {
+            jQuery(elementId).show();
+        });
+    };
+
     that.onSaveDoPostResource = function () {
         that.onClick('save', function () {
             that.rest.post(that.resource);
         });
     };
 
-    that.onAddNewResourceAppendItToAvailableResourcesList = function () {
+    that.onClickAddAppendNewResourceToList = function (list) {
         that.onClick('add', function () {
-            var list = AJS.$("#selected-event-" + that.resource.id), listElement, gadgetContainer;
-
             if (that.resource.id === 'category') {
                 list.append("<li class='ui-state-default aui-label'>" + resource.getNameValue() + "</li>");
-                resource.clear();
-
-            } else if (that.resource.id === 'component') {
-                listElement = document.createElement('LI');
-                listElement.className = 'gadget color1 event-plan-element-portlet';
-                listElement.style.position = 'relative';
-                listElement.style.zIndex = '1';
-
-                gadgetContainer = document.createElement('DIV');
-                gadgetContainer.className = 'dashboard-item-frame gadget-container';
-                listElement.appendChild(gadgetContainer);
-
-
-                list.append("<li class='ui-state-default aui-label'>" + resource.getNameValue() + "</li>");
-                resource.clear();
+            } else if (that.resource.id === 'new-component') {
+                list.append(that.getComponent());
+                that.resource.getTasks().children('li').appendTo('#' + that.getNewComponentTasksListId());
             }
+            resource.clear();
         });
     };
-};
+
+    that.getComponent = function () {
+        var listElement, gadgetContainer, header, headerText, details, tasks, loopIndex, eachTask;
+
+        listElement = document.createElement('LI');
+        listElement.className = 'gadget color1 event-plan-element-portlet';
+        listElement.style.position = 'relative';
+        listElement.style.zIndex = '1';
+
+        gadgetContainer = document.createElement('DIV');
+        gadgetContainer.className = 'dashboard-item-frame gadget-container';
+        listElement.appendChild(gadgetContainer);
+
+        header = document.createElement('DIV');
+        header.className = 'dashboard-item-header';
+
+        headerText = document.createElement('H3');
+        headerText.className = 'dashboard-item-title';
+        headerText.appendChild(document.createTextNode(that.resource.getNameValue()));
+        header.appendChild(headerText);
+        gadgetContainer.appendChild(header);
+
+        details = document.createElement('DIV');
+        details.className = 'dashboard-item-content event-plan-element-portlet-content';
+
+        details.appendChild(document.createTextNode(that.resource.getDescriptionValue()));
+        details.appendChild(document.createElement('BR'));
+        details.appendChild(document.createTextNode('Tasks:'));
+        gadgetContainer.appendChild(details);
+
+        tasks = document.createElement('UL');
+        tasks.className = 'tasks-list';
+        tasks.id = that.getNewComponentTasksListId();
+
+        details.appendChild(tasks);
+
+        return listElement;
+    };
+
+    that.getNewComponentTasksListId = function () {
+        return that.resource.getNameValue() + '-tasks-list';
+    };
+}

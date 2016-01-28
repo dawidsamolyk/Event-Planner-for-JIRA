@@ -1,4 +1,4 @@
-#available-event-category, #selected-event-category, #available-event-component, #selected-event-component, #available-event-task, #selected-event-task, #selected-component-tasks, #selected-predefined-event-components {
+#available-event-category, #selected-event-category, #available-event-component, #selected-event-component, #available-event-task, #selected-event-task, #selected-component-tasks, #selected-predefined-event-components, #subtasks {
     width: 100%;
     height: 100%;
     list-style: none none;
@@ -16,7 +16,7 @@
     padding: 5px 0 0 0;
 }
 
-#available-event-category li, #selected-event-category li, #event-plan-element-portlet li, #available-event-task li, #selected-event-task li, #selected-component-tasks li, #new-component-tasks li, #selected-predefined-event-components li {
+#available-event-category li, #selected-event-category li, #event-plan-element-portlet li, #available-event-task li, #selected-event-task li, #selected-component-tasks li, #new-component-tasks li, #selected-predefined-event-components li, #subtasks li {
     margin: 0 5px 5px 5px;
     padding: 5px;
     width: 90%;
