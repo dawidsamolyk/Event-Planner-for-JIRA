@@ -7,58 +7,56 @@
     $webResourceManager.requireResource("edu.uz.jira.event.planner.event-planner:event-plans-configuration-resources")
 </head>
 <body>
-<section class="aui-page-panel-content">
-    <header class="aui-page-header">
-        <div class="aui-page-header-inner">
-            <div class="aui-page-header-main">
-                <h2>View Event Plan Templates</h2>
+<header class="aui-page-header">
+    <div class="aui-page-header-inner">
+        <div class="aui-page-header-main">
+            <h2>View Event Plan Templates</h2>
+        </div>
+        <div class="aui-page-header-actions">
+            <div class="aui-buttons">
+                <button id="add-plan-button" class="aui-button trigger-dialog">
+                    <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
+                    Add Event Plan Template
+                </button>
             </div>
-            <div class="aui-page-header-actions">
-                <div class="aui-buttons">
-                    <button id="add-plan-button" class="aui-button trigger-dialog">
-                        <span class="aui-icon aui-icon-small aui-iconfont-add"></span>
-                        Add Event Plan Template
-                    </button>
-                </div>
-                <div class="aui-buttons">
-                    <button id="import-plans-button" class="aui-button trigger-dialog">
-                        Import
-                    </button>
-                </div>
+            <div class="aui-buttons">
+                <button id="import-plans-button" class="aui-button trigger-dialog">
+                    Import
+                </button>
             </div>
         </div>
-    </header>
-
-    <div class="aui-message info">
-        <span class="aui-icon icon-info"></span>
-
-        <p>Description...</p>
     </div>
+</header>
 
-    <table id="plans-table" class="aui aui-table-rowhover">
-        <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Statistics
-            </th>
-            <th>
-                Component Templates
-            </th>
-            <th>
-                Assigned Event Categories
-            </th>
-            <th>
-                Operations
-            </th>
-        </tr>
-        </thead>
-        <tbody id="plans-table-body">
-        </tbody>
-    </table>
-</section>
+<div class="aui-message info">
+    <span class="aui-icon icon-info"></span>
+
+    <p>Description...</p>
+</div>
+
+<table id="plans-table" class="aui aui-table-rowhover">
+    <thead>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Statistics
+        </th>
+        <th>
+            Component Templates
+        </th>
+        <th>
+            Assigned Event Categories
+        </th>
+        <th>
+            Operations
+        </th>
+    </tr>
+    </thead>
+    <tbody id="plans-table-body">
+    </tbody>
+</table>
 
 <section role="dialog" id="event-plan-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
     <form class="aui" id="event-plan-configuration" action="EventPlanCreator.jspa">
@@ -89,40 +87,39 @@
             </div>
         </footer>
     </form>
-</section>
 
-<script type="text/javascript">
-    var plansList = new PlansList();
-    var plan = new Plan();
+    <script type="text/javascript">
+        var plansList = new PlansList();
+        var plan = new Plan();
 
-    AJS.$(document).ready(
-            function () {
-                var rest = new RESTManager();
-                rest.get('plan', plansList);
-            }
-    );
+        AJS.$(document).ready(
+                function () {
+                    var rest = new RESTManager();
+                    rest.get('plan', plansList);
+                }
+        );
 
-    AJS.$("#add-plan-button").click(
-            function (e) {
-                e.preventDefault();
-                plan.clear();
-                AJS.dialog2('#event-plan-dialog').show();
-            }
-    );
+        AJS.$("#add-plan-button").click(
+                function (e) {
+                    e.preventDefault();
+                    plan.clear();
+                    AJS.dialog2('#event-plan-dialog').show();
+                }
+        );
 
-    AJS.$("#event-plan-dialog-cancel-button").click(
-            function (e) {
-                e.preventDefault();
-                AJS.dialog2('#event-plan-dialog').hide();
-            }
-    );
+        AJS.$("#event-plan-dialog-cancel-button").click(
+                function (e) {
+                    e.preventDefault();
+                    AJS.dialog2('#event-plan-dialog').hide();
+                }
+        );
 
-    //    AJS.$("#event-plan-dialog-next-button").click(
-    //            function (e) {
-    //                e.preventDefault();
-    //                document.location = AJS.contextPath() + '/secure/EventPlanCreator.jspa?' + plan.getQueryParams();
-    //            }
-    //    );
-</script>
+        //    AJS.$("#event-plan-dialog-next-button").click(
+        //            function (e) {
+        //                e.preventDefault();
+        //                document.location = AJS.contextPath() + '/secure/EventPlanCreator.jspa?' + plan.getQueryParams();
+        //            }
+        //    );
+    </script>
 </body>
 </html>

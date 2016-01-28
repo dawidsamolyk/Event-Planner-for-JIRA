@@ -8,11 +8,17 @@ function ButtonListener(resource) {
         return "#event-".concat(that.resource.id).concat("-dialog-" + name + "-button");
     };
 
+    that.hideForm = function () {
+        jQuery("#" + that.resource.id + "-form").hide();
+        jQuery("#" + that.resource.id + "-form-buttons").hide();
+    };
+
     that.toggleForm = function () {
         jQuery("#" + that.resource.id + "-form").toggle();
+        jQuery("#" + that.resource.id + "-form-buttons").toggle();
 
         jQuery('html, body').animate({
-            scrollTop: jQuery('#form-title').offset().top + 'px'
+            scrollTop: jQuery('#page-title').offset().top + 'px'
         }, 'slow');
     };
 
@@ -42,6 +48,7 @@ function ButtonListener(resource) {
     that.onClickToggleResourceForm = function (buttonName, resource) {
         that.onClick(buttonName, function () {
             jQuery("#" + resource.id + "-form").toggle();
+            jQuery("#" + resource.id + "-form-buttons").toggle();
         });
     };
 
