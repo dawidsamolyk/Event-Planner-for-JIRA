@@ -21,7 +21,11 @@ function Component() {
     };
 
     that.getTasks = function () {
-        return jQuery("#new-component-tasks");
+        return jQuery("#" + that.id + "-tasks");
+    };
+
+    that.getTasksValue = function () {
+        return that.getTasks().val();
     };
 
     that.getTasksValue = function () {
@@ -29,11 +33,11 @@ function Component() {
     };
 
     that.getAvailableComponents = function () {
-        return AJS.$("#available-event-component");
+        return AJS.$("#available-event-" + that.id);
     };
 
     that.getSelectedComponents = function () {
-        return AJS.$("#selected-event-component");
+        return AJS.$("#selected-event-" + that.id);
     };
 
     that.clear = function () {
@@ -74,7 +78,7 @@ function Component() {
         } else if (resource.neededMonthsBeforeEvent > 1) {
             result += resource.neededMonthsBeforeEvent + ' months';
         }
-        if (resource.neededMonthsBeforeEvent > 0 && task.neededDaysBeforeEvent > 0) {
+        if (resource.neededMonthsBeforeEvent > 0 && resource.neededDaysBeforeEvent > 0) {
             result += resource.neededDaysBeforeEvent + ' and ';
         }
         if (resource.neededDaysBeforeEvent === 1) {

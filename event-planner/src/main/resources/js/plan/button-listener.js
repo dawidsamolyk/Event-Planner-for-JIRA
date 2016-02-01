@@ -72,17 +72,30 @@ function ButtonListener(resource) {
 
     that.onClickAddAppendNewResourceToList = function (list) {
         that.onClick('add', function () {
-            if (that.resource.id === 'category') {
+            if (that.resource.id === 'category' || that.resource.id === 'subtask') {
                 list.append("<li class='ui-state-default aui-label'>" + resource.getNameValue() + "</li>");
+
             } else if (that.resource.id === 'new-component') {
-                list.append(that.getComponent());
-                that.resource.getTasks().children('li').appendTo('#' + that.getNewComponentTasksListId());
+                list.append(that.getComponentAsGadgetListElement());
+                that.resource.getTasks().children('li').appendTo('#' + that.getResourceSubElementsListId());
+
+            } else if (that.resource.id === 'task') {
+                list.append(that.getTaskAsListElement());
+                that.resource.getSubTasks().children('li').appendTo('#' + that.getResourceSubElementsListId());
             }
             resource.clear();
         });
     };
 
-    that.getComponent = function () {
+    that.getResourceSubElementsListId = function () {
+        return that.resource.getNameValue() + '-list';
+    };
+
+    that.getTaskAsListElement = function () {
+        return "<li class='ui-state-default aui-label'>" + resource.getNameValue() + "</li>";
+    };
+
+    that.getComponentAsGadgetListElement = function () {
         var listElement, gadgetContainer, header, headerText, details, tasks, loopIndex, eachTask;
 
         listElement = document.createElement('LI');
@@ -119,8 +132,7 @@ function ButtonListener(resource) {
 
         return listElement;
     };
-
+}
     that.getNewComponentTasksListId = function () {
         return that.resource.getNameValue() + '-tasks-list';
-    };
 }

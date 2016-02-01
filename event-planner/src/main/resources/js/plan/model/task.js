@@ -8,6 +8,10 @@ function Task() {
         return AJS.$("#task-name");
     };
 
+    that.getNameValue = function () {
+        return that.getName().attr("value");
+    };
+
     that.getDescription = function () {
         return AJS.$("#task-description");
     };
@@ -20,12 +24,24 @@ function Task() {
         return AJS.$("#task-needed-days");
     };
 
+    that.getSubTasks = function () {
+        return jQuery("#subtasks");
+    };
+
     that.getAvailableTasks = function () {
         return AJS.$("#available-event-task");
     };
 
     that.getSelectedTasks = function () {
         return AJS.$("#selected-event-task");
+    };
+
+    that.clear = function () {
+        that.getName().val('');
+        that.getDescription().val('');
+        that.getNeededMonthsBeforeEvent().val('');
+        that.getNeededDaysBeforeEvent().val('');
+        that.getSubTasks().empty();
     };
 
     that.getJson = function () {
@@ -64,4 +80,4 @@ function Task() {
     that.isFullFilled = function (task) {
         return task !== undefined && task.name !== undefined;
     };
-};
+}

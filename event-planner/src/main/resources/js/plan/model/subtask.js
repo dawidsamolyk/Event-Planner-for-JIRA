@@ -12,13 +12,22 @@ function SubTask() {
         return AJS.$("#subtask-description");
     };
 
-    that.getJson = function () {
-        var name, description;
-        name = that.getName().attr("value");
-        description = that.getDescription().attr("value");
+    that.getNameValue = function () {
+        return that.getName().attr("value");
+    };
 
-        return '{ "name": "' + name +
-            '", "description": "' + description +
+    that.getDescriptionValue = function () {
+        return that.getDescription().attr("value");
+    };
+
+    that.clear = function () {
+        that.getName().val('');
+        that.getDescription().val('');
+    };
+
+    that.getJson = function () {
+        return '{ "name": "' + that.getNameValue() +
+            '", "description": "' + that.getDescriptionValue() +
             '" }';
     };
-};
+}
