@@ -48,4 +48,4 @@ function Category() {
     that.isFullFilled = function (category) {
         return category !== undefined && category.name !== undefined;
     };
-};
+}

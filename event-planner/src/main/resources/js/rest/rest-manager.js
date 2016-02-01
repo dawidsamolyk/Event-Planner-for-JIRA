@@ -3,7 +3,6 @@ function RESTManager() {
     var that = this;
 
     that.baseUrl = AJS.contextPath() + "/rest/event-plans/1.0/";
-    that.maxNumberOfSameRequests = 5;
 
     that.post = function (resource) {
         if (resource === undefined) {
@@ -50,7 +49,7 @@ function RESTManager() {
 
         for (eachKey in resourcesArray) {
             resource = resourcesArray[eachKey];
-            that.get(destinationResource.id, resource);
+            that.get(resource.id, destinationResource);
         }
     };
 
@@ -75,13 +74,7 @@ function RESTManager() {
             type: "GET",
             dataType: "json",
             success: function (data) {
-                var numberOfTry;
-                for (numberOfTry = 0; numberOfTry < that.maxNumberOfSameRequests; numberOfTry += 1) {
-                    if (destinationResource.setFromJson(data)) {
-                        break;
-                    }
-                    that.get(sourceId, destinationResource);
-                }
+                destinationResource.setFromJson(data);
             },
             error: function (request) {
                 require('aui/flag')({
@@ -123,13 +116,7 @@ function RESTManager() {
             contentType: "text/plain",
             data: objectId,
             success: function (data) {
-                var numberOfTry;
-                for (numberOfTry = 0; numberOfTry < that.maxNumberOfSameRequests; numberOfTry += 1) {
-                    if (destinationResource.setFromJson(data)) {
-                        break;
-                    }
-                    that.getAsPost(sourceId, destinationResource, objectId);
-                }
+                destinationResource.setFromJson(data);
             },
             error: function (request) {
                 require('aui/flag')({

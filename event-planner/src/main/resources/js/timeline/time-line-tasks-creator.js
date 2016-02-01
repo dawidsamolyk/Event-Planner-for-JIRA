@@ -128,7 +128,7 @@ function TimeLineTasksCreator() {
 
     that.createTaskCell = function (index) {
         var result = that.getTasksToDoRow().insertCell(index);
-        result.style.verticalAlign = 'bottom';
+        result.style.verticalAlign = 'top';
         result.style.padding = 0;
         result.style.borderLeft = '1px solid #cccccc';
         result.style.borderRight = '1px solid #cccccc';
@@ -148,7 +148,7 @@ function TimeLineTasksCreator() {
         result.style.listStyle = 'none';
         result.style.margin = '0';
         result.style.padding = '5px 0 0 0';
-        result.style.verticalAlign = 'bottom';
+        result.style.verticalAlign = 'top';
         result.style.height = '100%';
         result.id = 'list-' + parent.id;
 

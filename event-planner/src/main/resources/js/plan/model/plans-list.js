@@ -130,4 +130,4 @@ function PlansList() {
 
         return result;
     };
-};
+}
