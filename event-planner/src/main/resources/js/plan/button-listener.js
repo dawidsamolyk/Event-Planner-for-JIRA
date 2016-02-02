@@ -132,7 +132,8 @@ function ButtonListener(resource) {
 
         return listElement;
     };
-}
+
     that.getNewComponentTasksListId = function () {
         return that.resource.getNameValue() + '-tasks-list';
+    };
 }

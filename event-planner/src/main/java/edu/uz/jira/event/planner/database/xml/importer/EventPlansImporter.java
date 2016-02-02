@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.io.StringReader;
 import java.net.URL;
 
 /**
@@ -62,6 +63,24 @@ public class EventPlansImporter {
     public EventPlanTemplates getEventPlanTemplates(@Nonnull final URL sourceFileUrl) throws EventPlansImportException {
         try {
             return (EventPlanTemplates) unmarshaller.unmarshal(sourceFileUrl);
+        } catch (JAXBException e) {
+            throw new EventPlansImportException(e);
+        } catch (ClassCastException e) {
+            throw new EventPlansImportException(e);
+        } catch (IllegalArgumentException e) {
+            throw new EventPlansImportException(e);
+        }
+    }
+
+    /**
+     * Reads data from source XML string.
+     *
+     * @return Event Plan Templates.
+     * @throws EventPlansImportException Thrown when cannot unmarshall or cast data to Event Plans.
+     */
+    public EventPlanTemplates getEventPlanTemplates(@Nonnull final StringReader reader) throws EventPlansImportException {
+        try {
+            return (EventPlanTemplates) unmarshaller.unmarshal(reader);
         } catch (JAXBException e) {
             throw new EventPlansImportException(e);
         } catch (ClassCastException e) {

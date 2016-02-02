@@ -64,7 +64,6 @@
             <h2 class="aui-dialog2-header-main">Add Event Organization Plan Template</h2>
         </header>
         <div class="aui-dialog2-content">
-
             <div class="field-group" id="event-name-group">
                 <label for="plan-name">Name<span class="aui-icon icon-required">(required)</span></label>
                 <input id="plan-name" class="text" name="plan-name" type="text" maxlength="80" minlength="1" required>
@@ -87,39 +86,120 @@
             </div>
         </footer>
     </form>
+</section>
 
-    <script type="text/javascript">
-        var plansList = new PlansList();
-        var plan = new Plan();
+<section id="import-plan-dialog" role="dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <form class="aui" id="import-event-plan-template-form" action="">
+        <header class="aui-dialog2-header">
+            <h2 class="aui-dialog2-header-main" title="Import Event Plan Templates From XML">Import Event Plan Templates
+                From XML</h2>
+        </header>
+        <div class="aui-dialog2-content">
+            <div class="field-group">
+                <label for="uploadFile">Upload file</label>
+                <input class="upfile" type="file" id="uploadFile" name="uploadFile" title="Upload file">
+            </div>
+        </div>
 
-        AJS.$(document).ready(
-                function () {
-                    var rest = new RESTManager();
-                    rest.get('plan', plansList);
+        <footer class="aui-dialog2-footer">
+            <div class="aui-dialog2-footer-actions">
+                <span class="icon throbber"></span>
+                <button class="aui-button" id="import-plan-templates-submit" name="Import" type="submit" value="Import">
+                    Import
+                </button>
+                <button class="aui-button aui-button-link" id="import-plan-templates-cancel">Cancel</button>
+            </div>
+        </footer>
+    </form>
+</section>
+
+<script type="text/javascript">
+    var plansList = new PlansList();
+    var plan = new Plan();
+
+    function loadPlansList() {
+        var rest = new RESTManager();
+        rest.get('plan', plansList);
+    }
+
+    AJS.$(document).ready(
+            function () {
+                loadPlansList();
+            }
+    );
+
+    AJS.$("#add-plan-button").click(
+            function (e) {
+                e.preventDefault();
+                plan.clear();
+                AJS.dialog2('#event-plan-dialog').show();
+            }
+    );
+
+    AJS.$("#event-plan-dialog-cancel-button").click(
+            function (e) {
+                e.preventDefault();
+                AJS.dialog2('#event-plan-dialog').hide();
+            }
+    );
+
+    AJS.$("#import-plans-button").click(
+            function (e) {
+                e.preventDefault();
+                document.getElementById("import-event-plan-template-form").reset();
+                AJS.dialog2('#import-plan-dialog').show();
+            }
+    );
+
+    AJS.$("#import-plan-templates-cancel").click(
+            function (e) {
+                e.preventDefault();
+                AJS.dialog2('#import-plan-dialog').hide();
+            }
+    );
+
+    AJS.$("#import-plan-templates-submit").click(
+            function (e) {
+                e.preventDefault();
+
+                var file = document.getElementById("uploadFile").files[0], reader = new FileReader();
+
+                reader.readAsText(file, "UTF-8");
+                reader.onload = function (event) {
+                    jQuery.ajax({
+                        url: AJS.contextPath() + "/rest/event-plans/1.0/plan/import",
+                        type: "POST",
+                        contentType: "text/plain",
+                        data: event.target.result,
+                        success: function (data) {
+                            require('aui/flag')({
+                                type: 'success',
+                                title: 'Event Plan Template imported successfully!',
+                                close: "auto"
+                            });
+                            loadPlansList();
+                        },
+                        error: function (request) {
+                            require('aui/flag')({
+                                type: 'error',
+                                title: 'Cannot import selected Event Plan Template!',
+                                body: 'Status: ' + request.statusText,
+                                close: "auto"
+                            });
+                        }
+                    });
                 }
-        );
-
-        AJS.$("#add-plan-button").click(
-                function (e) {
-                    e.preventDefault();
-                    plan.clear();
-                    AJS.dialog2('#event-plan-dialog').show();
+                reader.onerror = function (event) {
+                    require('aui/flag')({
+                        type: 'error',
+                        title: 'Error while reading XML file!',
+                        close: "auto"
+                    });
                 }
-        );
 
-        AJS.$("#event-plan-dialog-cancel-button").click(
-                function (e) {
-                    e.preventDefault();
-                    AJS.dialog2('#event-plan-dialog').hide();
-                }
-        );
-
-        //    AJS.$("#event-plan-dialog-next-button").click(
-        //            function (e) {
-        //                e.preventDefault();
-        //                document.location = AJS.contextPath() + '/secure/EventPlanCreator.jspa?' + plan.getQueryParams();
-        //            }
-        //    );
-    </script>
+                AJS.dialog2('#import-plan-dialog').hide();
+            }
+    );
+</script>
 </body>
 </html>

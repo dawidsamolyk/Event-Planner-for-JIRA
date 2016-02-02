@@ -116,7 +116,7 @@
                 <view name="error">/templates/webworks/project/error.vm</view>
             </action>
             <action name="edu.uz.jira.event.planner.project.plan.webwork.EventPlanCreator"
-                    alias="EventPlanCreator">
+                             alias="EventPlanCreator">
                 <view name="success">/templates/webworks/plan/creator/success.vm</view>
                 <view name="input">/templates/webworks/plan/creator/input.vm</view>
                 <view name="error">/templates/webworks/plan/creator/error.vm</view>

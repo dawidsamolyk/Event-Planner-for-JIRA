@@ -24,12 +24,21 @@ public class EventPlansImportExecutor {
     private final I18nResolver i18nResolver;
     private final ActiveObjectsService activeObjectsService;
 
+    /**
+     * Constructor.
+     *
+     * @param i18nResolver         Injected {@code I18nResolver} implementation.
+     * @param activeObjectsService Injected {@code ActiveObjectsService} implementation.
+     */
     public EventPlansImportExecutor(@Nonnull final I18nResolver i18nResolver,
                                     @Nonnull final ActiveObjectsService activeObjectsService) {
         this.i18nResolver = i18nResolver;
         this.activeObjectsService = activeObjectsService;
     }
 
+    /**
+     * Starting import.
+     */
     public void startImport() {
         String importedProperty = ComponentAccessor.getApplicationProperties().getText(APPLICATION_PROPERTY_KEY);
 
