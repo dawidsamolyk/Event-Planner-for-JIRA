@@ -1,16 +1,10 @@
 <html>
 <head>
     <title>Event Organization Plans Configurations</title>
-
     <meta name="decorator" content="atl.admin">
     <meta name="admin.active.section" content="admin_project_menu/project_section"/>
     <meta name="admin.active.tab" content="event_plans"/>
-
-    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui.js"></script>
-    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-experimental.js"></script>
-    <script src="//aui-cdn.atlassian.com/aui-adg/5.9.3/js/aui-datepicker.js"></script>
-    <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui.css"/>
-    <link rel="stylesheet" type="text/css" href="//aui-cdn.atlassian.com/aui-adg/5.9.3/css/aui-experimental.css"/>
+    $webResourceManager.requireResource("edu.uz.jira.event.planner.event-planner:event-plans-configuration-resources")
 </head>
 <body>
 <section role="dialog" id="plan-delete-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
@@ -35,10 +29,6 @@
                 results = regex.exec(location.search);
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
-    ;
-
-        #include("templates/admin/rest-manager.js")
-    var rest = new RESTManager();
 
     AJS.dialog2("#plan-delete-dialog").show();
 
@@ -46,6 +36,7 @@
             function (e) {
                 e.preventDefault();
 
+                var rest = new RESTManager();
                 rest.doDelete('plan', getParameterByName('id'));
 
                 AJS.dialog2("#plan-delete-dialog").hide();
