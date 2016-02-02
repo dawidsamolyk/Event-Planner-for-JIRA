@@ -5,7 +5,7 @@ function Component() {
     that.id = 'component';
 
     that.getName = function () {
-        return AJS.$("#component-name");
+        return AJS.$("#" + that.id + "-name");
     };
 
     that.getNameValue = function () {
@@ -13,7 +13,7 @@ function Component() {
     };
 
     that.getDescription = function () {
-        return AJS.$("#component-description");
+        return AJS.$("#" + that.id + "-description");
     };
 
     that.getDescriptionValue = function () {
@@ -33,11 +33,11 @@ function Component() {
     };
 
     that.getAvailableComponents = function () {
-        return AJS.$("#available-event-" + that.id);
+        return AJS.$("#available-" + that.id);
     };
 
     that.getSelectedComponents = function () {
-        return AJS.$("#selected-event-" + that.id);
+        return AJS.$("#selected-" + that.id);
     };
 
     that.clear = function () {

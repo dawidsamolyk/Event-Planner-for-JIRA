@@ -4,7 +4,7 @@ function Category() {
     that.id = 'category';
 
     that.getNameField = function () {
-        return AJS.$("#category-name");
+        return AJS.$("#" + that.id + "-name");
     };
 
     that.getNameValue = function () {
@@ -21,11 +21,11 @@ function Category() {
     };
 
     that.getAvailableCategories = function () {
-        return AJS.$("#available-event-category");
+        return AJS.$("#available-" + that.id);
     };
 
     that.getSelectedCategories = function () {
-        return AJS.$("#selected-event-category");
+        return AJS.$("#selected-" + that.id);
     };
 
     that.setFromJson = function (data) {

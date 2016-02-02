@@ -55,7 +55,7 @@
         <resource type="download" name="task.js" location="/js/plan/model/task.js"/>
         <resource type="download" name="rest-manager.js" location="/js/rest/rest-manager.js"/>
         <resource type="download" name="button-listener.js" location="/js/plan/button-listener.js"/>
-        <resource type="download" name="EventPlanDialogs.css" location="/style/EventPlanDialogs.css"/>
+        <resource type="download" name="EventPlanTemplates.css" location="/style/EventPlanTemplates.css"/>
     </web-resource>
 
     <web-item key="event_plans" name="Event Organization Plans Link" i18n-name-key="event.plans.admin.name"

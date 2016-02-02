@@ -5,11 +5,11 @@ function SubTask() {
     that.id = 'subtask';
 
     that.getName = function () {
-        return AJS.$("#subtask-name");
+        return AJS.$("#" + that.id + "-name");
     };
 
     that.getDescription = function () {
-        return AJS.$("#subtask-description");
+        return AJS.$("#" + that.id + "-description");
     };
 
     that.getNameValue = function () {

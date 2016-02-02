@@ -75,7 +75,7 @@ function ButtonListener(resource) {
             if (that.resource.id === 'category' || that.resource.id === 'subtask') {
                 list.append("<li class='ui-state-default aui-label'>" + resource.getNameValue() + "</li>");
 
-            } else if (that.resource.id === 'new-component') {
+            } else if (that.resource.id === 'component') {
                 list.append(that.getComponentAsGadgetListElement());
                 that.resource.getTasks().children('li').appendTo('#' + that.getResourceSubElementsListId());
 

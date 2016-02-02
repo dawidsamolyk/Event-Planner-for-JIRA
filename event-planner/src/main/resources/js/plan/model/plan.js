@@ -6,11 +6,11 @@ function Plan() {
     that.elementsTag = 'option';
 
     that.getName = function () {
-        return AJS.$("#plan-name");
+        return AJS.$("#" + that.id + "-name");
     };
 
     that.getDescription = function () {
-        return AJS.$("#plan-description");
+        return AJS.$("#" + that.id + "-description");
     };
 
     that.getValueOf = function (element) {
@@ -33,11 +33,11 @@ function Plan() {
     };
 
     that.getCategories = function () {
-        return AJS.$("#plan-categories");
+        return AJS.$("#" + that.id + "-categories");
     };
 
     that.getComponents = function () {
-        return AJS.$("#plan-components");
+        return AJS.$("#" + that.id + "-components");
     };
 
     that.getJson = function () {

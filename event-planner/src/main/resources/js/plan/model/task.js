@@ -5,7 +5,7 @@ function Task() {
     that.id = 'task';
 
     that.getName = function () {
-        return AJS.$("#task-name");
+        return AJS.$("#" + that.id + "-name");
     };
 
     that.getNameValue = function () {
@@ -13,15 +13,15 @@ function Task() {
     };
 
     that.getDescription = function () {
-        return AJS.$("#task-description");
+        return AJS.$("#" + that.id + "-description");
     };
 
     that.getNeededMonthsBeforeEvent = function () {
-        return AJS.$("#task-needed-months");
+        return AJS.$("#" + that.id + "-needed-months");
     };
 
     that.getNeededDaysBeforeEvent = function () {
-        return AJS.$("#task-needed-days");
+        return AJS.$("#" + that.id + "-needed-days");
     };
 
     that.getSubTasks = function () {
@@ -29,11 +29,11 @@ function Task() {
     };
 
     that.getAvailableTasks = function () {
-        return AJS.$("#available-event-task");
+        return AJS.$("#available-" + that.id);
     };
 
     that.getSelectedTasks = function () {
-        return AJS.$("#selected-event-task");
+        return AJS.$("#selected-" + that.id);
     };
 
     that.clear = function () {
