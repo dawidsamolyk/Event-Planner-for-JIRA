@@ -25,7 +25,7 @@
                 <button id="event-all-components-dialog-create-button" class="aui-button" resolved><span
                         class="aui-icon aui-icon-small aui-iconfont-add"></span> Add Component
                 </button>
-                <button id="event-all-components-dialog-next-button" class="aui-button aui-button-primary" resolved>Next
+                <button id="event-all-components-dialog-summary-button" class="aui-button aui-button-primary" resolved>Summary
                 </button>
                 <button id="event-all-components-dialog-cancel-button" class="aui-button aui-button-link" resolved>
                     Cancel
@@ -40,7 +40,7 @@
                 <button id="event-component-dialog-create-task-button" class="aui-button" resolved><span
                         class="aui-icon aui-icon-small aui-iconfont-add"></span> Add Task
                 </button>
-                <button id="event-component-dialog-next-button" class="aui-button aui-button-primary" resolved>Next
+                <button id="event-component-dialog-summary-button" class="aui-button aui-button-primary" resolved>Summary
                 </button>
                 <button id="event-component-dialog-cancel-button" class="aui-button aui-button-link" resolved>Cancel
                 </button>
@@ -54,7 +54,7 @@
                 <button id="event-task-dialog-create-task-button" class="aui-button" resolved><span
                         class="aui-icon aui-icon-small aui-iconfont-add"></span> Add Task
                 </button>
-                <button id="event-task-dialog-next-button" class="aui-button aui-button-primary" resolved>Summary
+                <button id="event-task-dialog-summary-button" class="aui-button aui-button-primary" resolved>Summary
                 </button>
                 <button id="event-task-dialog-cancel-button" class="aui-button aui-button-link" resolved>Cancel
                 </button>
@@ -337,12 +337,12 @@
 
     var allComponentsListener = new ButtonListener(allComponents);
     allComponentsListener.hideForm();
-    allComponentsListener.onClickHideForm('next');
-    allComponentsListener.onClickHideForm('create');
+    allComponentsListener.onClickHideForm('summary');
+    allComponentsListener.onClickToggleResourceForm('summary', plan);
     allComponentsListener.onClickHideForm('back');
     allComponentsListener.onClickToggleResourceForm('back', eventCategory);
+    allComponentsListener.onClickHideForm('create');
     allComponentsListener.onClickToggleResourceForm('create', component);
-    allComponentsListener.onClickToggleResourceForm('next', plan);
     allComponentsListener.onClick('create', function () {
         jQuery('#selected-' + allComponents.id).children('li').appendTo('#selected-' + component.id);
     });
@@ -350,7 +350,7 @@
 
     var componentListener = new ButtonListener(component);
     componentListener.hideForm();
-    componentListener.onClickHideForm('next');
+    componentListener.onClickHideForm('summary');
     componentListener.onClickHideForm('back');
     componentListener.onClickHideForm('create-task');
     componentListener.onClickClearForm('create-component');
@@ -368,10 +368,10 @@
 
     var taskListener = new ButtonListener(task);
     taskListener.hideForm();
-    taskListener.onClickToggleResourceForm('next', plan);
+    taskListener.onClickHideForm('summary');
+    taskListener.onClickToggleResourceForm('summary', plan);
     taskListener.onClickClearForm('create-task');
     taskListener.onClickHideForm('back');
-    taskListener.onClickHideForm('next');
     taskListener.onClickHideForm('create-component');
     taskListener.onClickClearForm('create-task');
     taskListener.onClickToggleResourceForm('create-component', component);

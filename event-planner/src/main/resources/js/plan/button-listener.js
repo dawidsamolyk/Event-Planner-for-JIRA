@@ -73,14 +73,14 @@ function ButtonListener(resource) {
     that.onClickAddAppendNewResourceToList = function (list) {
         that.onClick('add', function () {
             if (that.resource.id === 'category' || that.resource.id === 'subtask') {
-                list.append("<li class='ui-state-default aui-label'>" + resource.getNameValue() + "</li>");
-
+                list.append(that.getResourceListElement());
+                
             } else if (that.resource.id === 'component') {
                 list.append(that.getComponentAsGadgetListElement());
                 that.resource.getTasks().children('li').appendTo('#' + that.getResourceSubElementsListId());
 
             } else if (that.resource.id === 'task') {
-                list.append(that.getTaskAsListElement());
+                list.append(that.getResourceListElement());
                 that.resource.getSubTasks().children('li').appendTo('#' + that.getResourceSubElementsListId());
             }
             resource.clear();
@@ -91,8 +91,8 @@ function ButtonListener(resource) {
         return that.resource.getNameValue() + '-list';
     };
 
-    that.getTaskAsListElement = function () {
-        return "<li class='ui-state-default aui-label'>" + resource.getNameValue() + "</li>";
+    that.getResourceListElement = function () {
+        return "<li class='event-plan-list-element ui-state-default aui-label'>" + resource.getNameValue() + "</li>";
     };
 
     that.getComponentAsGadgetListElement = function () {
