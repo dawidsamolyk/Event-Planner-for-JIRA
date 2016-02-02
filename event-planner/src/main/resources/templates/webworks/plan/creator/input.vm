@@ -25,7 +25,8 @@
                 <button id="event-all-components-dialog-create-button" class="aui-button" resolved><span
                         class="aui-icon aui-icon-small aui-iconfont-add"></span> Add Component
                 </button>
-                <button id="event-all-components-dialog-summary-button" class="aui-button aui-button-primary" resolved>Summary
+                <button id="event-all-components-dialog-summary-button" class="aui-button aui-button-primary" resolved>
+                    Summary
                 </button>
                 <button id="event-all-components-dialog-cancel-button" class="aui-button aui-button-link" resolved>
                     Cancel
@@ -40,7 +41,8 @@
                 <button id="event-component-dialog-create-task-button" class="aui-button" resolved><span
                         class="aui-icon aui-icon-small aui-iconfont-add"></span> Add Task
                 </button>
-                <button id="event-component-dialog-summary-button" class="aui-button aui-button-primary" resolved>Summary
+                <button id="event-component-dialog-summary-button" class="aui-button aui-button-primary" resolved>
+                    Summary
                 </button>
                 <button id="event-component-dialog-cancel-button" class="aui-button aui-button-link" resolved>Cancel
                 </button>
@@ -59,11 +61,22 @@
                 <button id="event-task-dialog-cancel-button" class="aui-button aui-button-link" resolved>Cancel
                 </button>
             </div>
+
+            <div id="plan-form-buttons" class="aui-buttons" style="float: right;">
+                <button id="event-plan-dialog-back-button" class="aui-button" resolved>Back</button>
+                <button id="event-plan-dialog-create-component-button" class="aui-button" resolved><span
+                        class="aui-icon aui-icon-small aui-iconfont-add"></span> Add Component
+                </button>
+                <button id="event-plan-dialog-save-button" class="aui-button aui-button-primary" resolved>Save
+                </button>
+                <button id="event-plan-dialog-cancel-button" class="aui-button aui-button-link" resolved>Cancel
+                </button>
+            </div>
         </div>
     </div>
 </header>
 
-<p>This is configuration page for draft of Event Plan Template named <b id="plan-name"></b>.</p>
+<p>This is configuration page for draft of Event Plan Template named <b id="plan-name-title"></b>.</p>
 <br/>
 <div id="category-form">
     <p>Drag&drop Event Categories which fits to this Event Plan Template</p>
@@ -304,11 +317,65 @@
         <tbody>
         <tr>
             <td headers="available-tasks-head">
-                <ul id="available-tasks" style="height: 250px; max-height: 250px; overflow-y: auto; overflow-x: auto;"></ul>
+                <ul id="available-tasks"
+                    style="height: 250px; max-height: 250px; overflow-y: auto; overflow-x: auto;"></ul>
             </td>
         </tr>
         </tbody>
     </table>
+</div>
+
+<div id="plan-form">
+    <table class="aui" style="height: 250px;">
+        <thead>
+        <tr>
+            <th id="selected-categories-head">Selected Categories</th>
+            <th id="selected-components-head">Selected Components</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td headers="selected-categories-head" width="50%">
+                <ul id="selected-categories" class="connectedSortable"></ul>
+            </td>
+            <td headers="selected-components-head" width="50%">
+                <ul id="selected-components" class="connectedSortable"></ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form class="aui" id="event-plan-configuration" style="clear:both;" action="">
+        <div class="field-group">
+            <label for="plan-name">Name<span
+                    class="aui-icon icon-required">(required)</span></label>
+            <input id="plan-name" class="text" name="plan-name" type="text"
+                   maxlength="80"
+                   required>
+
+            <div class="description" id="plan-name-description">Max. 80 characters.</div>
+        </div>
+
+        <div class="field-group">
+            <label for="plan-description">Description</label>
+            <input id="plan-description" class="text" name="plan-description" type="text"
+                   maxlength="80"
+                   required>
+
+            <div class="description" id="plan-description-description">Max. 80 characters.</div>
+        </div>
+
+        <div class="field-group">
+            <label for="plan-reserve-months">Time reserve</label>
+            <input id="plan-reserve-months" class="text short-field" name="plan-reserve-months"
+                   type="number" min="0"
+                   placeholder="Months"> month(s) and
+            <input id="plan-reserve-days" class="text short-field" name="plan-reserve-days" type="number"
+                   min="0"
+                   placeholder="Days"> day(s)
+
+            <div class="description" id="plan-reserve-description">Extra time for complete Event Plan.</div>
+        </div>
+    </form>
 </div>
 
 <script type="text/javascript">
@@ -327,8 +394,6 @@
     var task = new Task();
     var subTask = new SubTask();
 
-    var rest = new RESTManager();
-
     var categoryListener = new ButtonListener(eventCategory);
     categoryListener.onClickHideForm('next');
     categoryListener.onClickToggleResourceForm('next', allComponents);
@@ -339,30 +404,29 @@
     allComponentsListener.hideForm();
     allComponentsListener.onClickHideForm('summary');
     allComponentsListener.onClickToggleResourceForm('summary', plan);
+    allComponentsListener.onClickMoveListsElements('summary', '#selected-' + allComponents.id, '#selected-components');
+    allComponentsListener.onClickMoveListsElements('summary', '#selected-' + eventCategory.id, '#selected-categories');
     allComponentsListener.onClickHideForm('back');
     allComponentsListener.onClickToggleResourceForm('back', eventCategory);
     allComponentsListener.onClickHideForm('create');
     allComponentsListener.onClickToggleResourceForm('create', component);
-    allComponentsListener.onClick('create', function () {
-        jQuery('#selected-' + allComponents.id).children('li').appendTo('#selected-' + component.id);
-    });
+    allComponentsListener.onClickMoveListsElements('create', '#selected-' + allComponents.id, '#selected-' + component.id);
     allComponentsListener.onCancelBackToEventPlanTemplatesList();
 
     var componentListener = new ButtonListener(component);
     componentListener.hideForm();
     componentListener.onClickHideForm('summary');
+    componentListener.onClickToggleResourceForm('summary', plan);
+    componentListener.onClickMoveListsElements('summary', '#selected-' + allComponents.id, '#selected-components');
+    componentListener.onClickMoveListsElements('summary', '#selected-' + eventCategory.id, '#selected-categories');
     componentListener.onClickHideForm('back');
     componentListener.onClickHideForm('create-task');
     componentListener.onClickClearForm('create-component');
     componentListener.onClickClearForm('clear');
     componentListener.onClickToggleResourceForm('back', allComponents);
-    componentListener.onClick('back', function () {
-        jQuery('#selected-' + component.id).children('li').appendTo('#selected-' + allComponents.id);
-    });
+    componentListener.onClickMoveListsElements('back', '#selected-' + component.id, '#selected-' + allComponents.id);
     componentListener.onClickToggleResourceForm('create-task', task);
-    componentListener.onClick('create-task', function () {
-        jQuery('#available-' + task.id).children('li').appendTo('#available-tasks');
-    });
+    componentListener.onClickMoveListsElements('create-task', '#available-' + task.id, '#available-tasks');
     componentListener.onCancelBackToEventPlanTemplatesList();
     componentListener.onClickAddAppendNewResourceToList(AJS.$("#selected-" + component.id));
 
@@ -370,27 +434,44 @@
     taskListener.hideForm();
     taskListener.onClickHideForm('summary');
     taskListener.onClickToggleResourceForm('summary', plan);
+    taskListener.onClickMoveListsElements('summary', '#selected-' + allComponents.id, '#selected-components');
+    taskListener.onClickMoveListsElements('summary', '#selected-' + eventCategory.id, '#selected-categories');
     taskListener.onClickClearForm('create-task');
-    taskListener.onClickHideForm('back');
     taskListener.onClickHideForm('create-component');
-    taskListener.onClickClearForm('create-task');
     taskListener.onClickToggleResourceForm('create-component', component);
+    taskListener.onClickMoveListsElements('create-component', '#available-tasks', '#available-' + task.id);
+    taskListener.onClickHideForm('back');
     taskListener.onClickToggleResourceForm('back', component);
-    taskListener.onClick('back', function () {
-        jQuery('#available-tasks').children('li').appendTo('#available-' + task.id);
-    });
-    taskListener.onClick('create-component', function () {
-        jQuery('#available-tasks').children('li').appendTo('#available-' + task.id);
-    });
+    taskListener.onClickMoveListsElements('back', '#available-tasks', '#available-' + task.id);
     taskListener.onCancelBackToEventPlanTemplatesList();
     taskListener.onClickAddAppendNewResourceToList(AJS.$("#available-tasks"));
 
     var subTaskListener = new ButtonListener(subTask);
     subTaskListener.onClickAddAppendNewResourceToList(AJS.$("#subtasks"));
 
+    var planListener = new ButtonListener(plan);
+    planListener.hideForm();
+    planListener.onClickHideForm('back');
+    planListener.onClickToggleResourceForm('back', allComponents);
+    planListener.onClickMoveListsElements('back', '#selected-components', '#selected-' + allComponents.id);
+    planListener.onClickMoveListsElements('back', '#selected-categories', '#selected-' + eventCategory.id);
+    planListener.onClickHideForm('create-component');
+    planListener.onClickToggleResourceForm('create-component', component);
+    planListener.onClickMoveListsElements('create-component', '#selected-components', '#selected-' + component.id);
+    planListener.onClickMoveListsElements('create-component', '#selected-categories', '#selected-' + eventCategory.id);
+    planListener.onCancelBackToEventPlanTemplatesList();
+    planListener.onClick('save', function () {
+        alert('save!');
+    });
+
     AJS.$(document).ready(
             function () {
-                jQuery('#plan-name').append(getParameterByName('plan-name'));
+                var planName = getParameterByName('plan-name'), planDescription = getParameterByName('plan-description');
+                jQuery('#plan-name-title').append(planName);
+                jQuery('#plan-name').append(planName);
+                jQuery('#plan-description').append(planDescription);
+
+                var rest = new RESTManager();
                 rest.doGetResourcesInto([eventCategory], eventCategory);
                 rest.doGetResourcesInto([component], allComponents);
                 rest.doGetResourcesInto([task], task);

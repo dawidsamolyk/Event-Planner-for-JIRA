@@ -31,6 +31,12 @@ function ButtonListener(resource) {
         );
     };
 
+    that.onClickMoveListsElements = function (buttonName, sourceListId, destinationListId) {
+        that.onClick(buttonName, function () {
+            jQuery(sourceListId).children('li').appendTo(destinationListId);
+        });
+    };
+
     that.onCancelBackToEventPlanTemplatesList = function () {
         that.onClick('cancel', function () {
             window.location.href = AJS.contextPath() + '/secure/EventPlansManager.jspa';
@@ -74,7 +80,7 @@ function ButtonListener(resource) {
         that.onClick('add', function () {
             if (that.resource.id === 'category' || that.resource.id === 'subtask') {
                 list.append(that.getResourceListElement());
-                
+
             } else if (that.resource.id === 'component') {
                 list.append(that.getComponentAsGadgetListElement());
                 that.resource.getTasks().children('li').appendTo('#' + that.getResourceSubElementsListId());
