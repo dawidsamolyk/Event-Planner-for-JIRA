@@ -326,7 +326,8 @@
 </div>
 
 <div id="plan-form">
-    <table class="aui" style="height: 250px;">
+    <p>Summary of Event Plan Template Draft.</p>
+    <table class="aui" style="height: 225px;">
         <thead>
         <tr>
             <th id="selected-categories-head">Selected Categories</th>
@@ -365,13 +366,8 @@
         </div>
 
         <div class="field-group">
-            <label for="plan-reserve-months">Time reserve</label>
-            <input id="plan-reserve-months" class="text short-field" name="plan-reserve-months"
-                   type="number" min="0"
-                   placeholder="Months"> month(s) and
-            <input id="plan-reserve-days" class="text short-field" name="plan-reserve-days" type="number"
-                   min="0"
-                   placeholder="Days"> day(s)
+            <label for="plan-reserve-days">Time reserve</label>
+            <input id="plan-reserve-days" class="text short-field" name="plan-reserve-days" type="number" min="0" placeholder="Days"> day(s)
 
             <div class="description" id="plan-reserve-description">Extra time for complete Event Plan.</div>
         </div>
@@ -468,8 +464,8 @@
             function () {
                 var planName = getParameterByName('plan-name'), planDescription = getParameterByName('plan-description');
                 jQuery('#plan-name-title').append(planName);
-                jQuery('#plan-name').append(planName);
-                jQuery('#plan-description').append(planDescription);
+                jQuery('#plan-name').val(planName);
+                jQuery('#plan-description').val(planDescription);
 
                 var rest = new RESTManager();
                 rest.doGetResourcesInto([eventCategory], eventCategory);

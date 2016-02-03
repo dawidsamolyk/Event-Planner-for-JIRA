@@ -59,18 +59,31 @@
 </table>
 
 <section role="dialog" id="event-plan-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
-    <form class="aui" id="event-plan-configuration" action="EventPlanCreator.jspa">
+    <form class="aui" id="new-plan-configuration" action="">
         <header class="aui-dialog2-header">
             <h2 class="aui-dialog2-header-main">Add Event Organization Plan Template</h2>
         </header>
         <div class="aui-dialog2-content">
-            <div class="field-group" id="event-name-group">
-                <label for="plan-name">Name<span class="aui-icon icon-required">(required)</span></label>
+            <div class="field-group">
+                <label for="source-project">Source project<span class="aui-icon icon-required">(required)</span></label>
+                <select id="source-project" class="select" name="Source project" title="Source project" placeholder="Select a project">
+                    #set ($projects = $action.getProjects())
+                    #foreach($eachKey in $projects.keySet())
+                        <option id="$eachKey">$projects.get($eachKey) ($eachKey)</option>
+                    #end
+                </select>
+
+                <div class="description" id="source-project-description">Select project from which Plan Template will be
+                    created.
+                </div>
+            </div>
+            <div class="field-group">
+                <label for="plan-name">Template name<span class="aui-icon icon-required">(required)</span></label>
                 <input id="plan-name" class="text" name="plan-name" type="text" maxlength="80" minlength="1" required>
 
                 <div class="description" id="plan-name-description">Max. 80 characters.</div>
             </div>
-            <div class="field-group" id="event-description-group">
+            <div class="field-group">
                 <label for="plan-description">Description</label>
                 <input id="plan-description" class="text" name="plan-description" type="text" maxlength="255"
                        minlength="0">
@@ -78,6 +91,42 @@
                 <div class="description" id="plan-description-description">Max. 255 characters.</div>
             </div>
 
+            <div class="field-group">
+                <label for="plan-categories">Event Categories</label>
+                <table class="aui" style="height: 170px;" id="plan-categories">
+                    <thead>
+                    <tr>
+                        <th id="available-category-head">Available</th>
+                        <th id="selected-category-head">Selected</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td headers="available-category-head" width="50%">
+                            <ul id="available-category" class="connectedSortable"></ul>
+                        </td>
+                        <td headers="selected-category-head" width="50%">
+                            <ul id="selected-category" class="connectedSortable"></ul>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="description" id="plan-categories-description">Drag and drop Categories which best describe this template.</div>
+
+                <form class="aui" id="event-category-configuration" style="clear:both;">
+                    <div class="field-group">
+                        <label for="category-name">New category name<span
+                                class="aui-icon icon-required">(required)</span></label>
+                        <input id="category-name" class="text medium-field" name="category-name" type="text" maxlength="80" required>
+                        <button id="event-category-dialog-add-button" class="aui-button" title="Add new Category">
+                            <span class="aui-icon aui-icon-small aui-iconfont-add"></span>Add
+                        </button>
+
+                        <div class="description" id="category-name-description">Max. 80 characters.</div>
+                    </div>
+
+                </form>
+            </div>
         </div>
         <footer class="aui-dialog2-footer">
             <div class="aui-dialog2-footer-actions">
@@ -116,11 +165,22 @@
 <script type="text/javascript">
     var plansList = new PlansList();
     var plan = new Plan();
+    var eventCategory = new Category();
+
+    var categoryListener = new ButtonListener(eventCategory);
+    categoryListener.onClickAddAppendNewResourceToList(AJS.$("#selected-" + eventCategory.id));
 
     function loadPlansList() {
         var rest = new RESTManager();
         rest.get('plan', plansList);
+        rest.doGetResourcesInto([eventCategory], eventCategory);
     }
+
+    jQuery("ul.connectedSortable").sortable({
+        connectWith: "ul",
+        dropOnEmpty: true,
+        cursor: "move"
+    }).disableSelection();
 
     AJS.$(document).ready(
             function () {

@@ -44,7 +44,7 @@
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
-        <dependency>com.atlassian.auiplugin:aui-select2</dependency>
+        <dependency>com.atlassian.auiplugin:aui-select</dependency>
         <dependency>com.atlassian.gadgets.dashboard:dashboard</dependency>
         <resource type="velocity" name="event-plans-view" location="/templates/admin/event-plans.vm"/>
         <resource type="download" name="component.js" location="/js/plan/model/component.js"/>
@@ -115,12 +115,6 @@
                 <view name="input">/templates/webworks/project/input.vm</view>
                 <view name="error">/templates/webworks/project/error.vm</view>
             </action>
-            <action name="edu.uz.jira.event.planner.project.plan.webwork.EventPlanCreator"
-                             alias="EventPlanCreator">
-                <view name="success">/templates/webworks/plan/creator/success.vm</view>
-                <view name="input">/templates/webworks/plan/creator/input.vm</view>
-                <view name="error">/templates/webworks/plan/creator/error.vm</view>
-            </action>
             <action name="edu.uz.jira.event.planner.project.plan.webwork.EventPlansManager"
                     alias="EventPlansManager">
                 <view name="input">/templates/admin/event-plans.vm</view>
@@ -135,7 +129,7 @@
             </action>
             <action name="edu.uz.jira.event.planner.util.webwork.AlwaysShowInputAction"
                     alias="ViewEventOrganizationPlan">
-                <view name="input">/templates/webworks/plan/viewer//view.vm</view>
+                <view name="input">/templates/webworks/plan/viewer/view.vm</view>
             </action>
         </actions>
     </webwork1>
