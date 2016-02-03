@@ -12,6 +12,32 @@ AJS.$(document).ready(
     }
 );
 
+function isListContainsText(listId, text) {
+    "use strict";
+    return AJS.$(listId).children('li:contains("' + text + '")').length > 0;
+}
+
+function savePlan() {
+    "use strict";
+    var projectKey, name, description, reserveTime, categories = [];
+
+    projectKey = jQuery('#source-project').children(":selected").attr("id");
+    name = jQuery('#plan-name').attr('value');
+    description = jQuery('#plan-description').attr('value');
+    reserveTime = jQuery('#plan-reserve-time').attr('value');
+
+    if (!reserveTime || reserveTime.length === 0) {
+        reserveTime = "0";
+    }
+
+    jQuery("#selected-category li").each(
+        function () {
+            categories.push(jQuery(this).text());
+        });
+
+    rest.postPlan(projectKey, name, description, reserveTime, categories);
+}
+
 function addListeners() {
     "use strict";
     if (AJS.$("#source-project").children().length === 0) {
@@ -20,11 +46,13 @@ function addListeners() {
 
     AJS.$('#event-category-add-button').click(
         function (event) {
-            "use strict";
             event.preventDefault();
             var nameValue = category.getNameValue();
 
-            if (nameValue && nameValue.length > 0) {
+            if (isListContainsText("#selected-category", nameValue) || isListContainsText("#available-category", nameValue)) {
+                jQuery('#category-name-description').html('<div class="error" id="category-name-description">Cannot add duplicate Category! Max. 80 characters.</div>');
+
+            } else if (nameValue && nameValue.length > 0) {
                 AJS.$("#selected-category").append("<li class='aui-label aui-label-closeable event-plan-list-element' style='padding-right: 5px;'>" + nameValue + "<span tabindex='0' class='aui-icon aui-icon-close'></span></li>");
                 AJS.$('#category-name').val('');
 
@@ -34,6 +62,7 @@ function addListeners() {
                     }
                 );
                 jQuery('#category-name-description').html('<div class="description" id="category-name-description">Max. 80 characters.</div>');
+
             } else {
                 jQuery('#category-name-description').html('<div class="error" id="category-name-description">Name cannot be empty! Max. 80 characters.</div>');
             }
@@ -64,27 +93,6 @@ function addListeners() {
             }
         }
     );
-
-    function savePlan() {
-        "use strict";
-        var projectKey, name, description, reserveTime, categories = [];
-
-        projectKey = jQuery('#source-project').children(":selected").attr("id");
-        name = jQuery('#plan-name').attr('value');
-        description = jQuery('#plan-description').attr('value');
-        reserveTime = jQuery('#plan-reserve-time').attr('value');
-
-        if (!reserveTime || reserveTime.length === 0) {
-            reserveTime = "0";
-        }
-
-        jQuery("#selected-category li").each(
-            function () {
-                categories.push(jQuery(this).text());
-            });
-
-        rest.postPlan(projectKey, name, description, reserveTime, categories);
-    }
 
     AJS.$("#add-plan-button").click(
         function (e) {

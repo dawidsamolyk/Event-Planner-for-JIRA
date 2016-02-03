@@ -17,6 +17,7 @@ import javax.annotation.Nonnull;
  */
 public class IssueFieldsConfigurator {
     private static final String DUE_DATE_FIELD_ID = "duedate";
+    private static final String COMPONENT_FIELD_ID = "components";
     private final FieldLayoutManager fieldLayoutManager;
     private final I18nResolver internationalization;
     private final FieldLayoutBuilder fieldLayoutBuilder;
@@ -37,7 +38,7 @@ public class IssueFieldsConfigurator {
      */
     public EditableFieldLayout getEventOrganizationFieldLayout() {
         EditableFieldLayout defaultFieldLayout = fieldLayoutManager.getEditableDefaultFieldLayout();
-        return fieldLayoutBuilder.copyWithMakeRequired(defaultFieldLayout, DUE_DATE_FIELD_ID);
+        return fieldLayoutBuilder.copyWithMakeRequired(defaultFieldLayout, DUE_DATE_FIELD_ID, COMPONENT_FIELD_ID);
     }
 
     /**
