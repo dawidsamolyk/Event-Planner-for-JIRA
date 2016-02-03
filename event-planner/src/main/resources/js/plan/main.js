@@ -13,6 +13,11 @@ AJS.$(document).ready(
 );
 
 function addListeners() {
+    "use strict";
+    if (AJS.$("#source-project").children().length === 0) {
+        AJS.$('#add-plan-button').remove();
+    }
+
     AJS.$('#event-category-add-button').click(
         function (event) {
             "use strict";
@@ -20,7 +25,7 @@ function addListeners() {
             var nameValue = category.getNameValue();
 
             if (nameValue && nameValue.length > 0) {
-                AJS.$("#selected-category").append("<li class='aui-label aui-label-closeable event-plan-list-element' style='padding-right: 5px;'>" + nameValue + "<span tabindex='0' class='aui-icon aui-icon-close' original-title='(remove closableNoUrl)'>(remove closableNoUrl)</span></li>");
+                AJS.$("#selected-category").append("<li class='aui-label aui-label-closeable event-plan-list-element' style='padding-right: 5px;'>" + nameValue + "<span tabindex='0' class='aui-icon aui-icon-close'></span></li>");
                 AJS.$('#category-name').val('');
 
                 jQuery(".aui-icon-close").click(
@@ -55,7 +60,6 @@ function addListeners() {
 
             if (planName && planName.length > 0 && selectedCategories.children().length > 0) {
                 savePlan();
-
                 AJS.dialog2('#event-plan-dialog').hide();
             }
         }
@@ -69,6 +73,10 @@ function addListeners() {
         name = jQuery('#plan-name').attr('value');
         description = jQuery('#plan-description').attr('value');
         reserveTime = jQuery('#plan-reserve-time').attr('value');
+
+        if (!reserveTime || reserveTime.length === 0) {
+            reserveTime = "0";
+        }
 
         jQuery("#selected-category li").each(
             function () {

@@ -71,4 +71,9 @@ public class EventPlanTemplates implements ActiveObjectWrapper {
     public ActiveObjectWrapper getEmptyCopy() {
         return new EventPlanTemplates();
     }
+
+    @Override
+    public String getName() {
+        return "";
+    }
 }

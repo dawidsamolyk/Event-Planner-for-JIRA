@@ -29,7 +29,7 @@
                 </select>
 
                 <div class="description">Select Template of project (Event Plan). <a target="_blank"
-                                                                                     href="$baseurl/plugins/servlet/event/plans/configuration"
+                                                                                     href="$baseurl/secure/EventPlansManager.jspa"
                                                                                      title="List of predefined Event Organization Plan Templates">
                     Show details.</a></div>
             </div>

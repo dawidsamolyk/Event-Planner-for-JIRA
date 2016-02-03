@@ -6,7 +6,10 @@ import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCa
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.xml.model.*;
 import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
+import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import net.java.ao.Entity;
+import net.java.ao.Query;
+import net.java.ao.RawEntity;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -26,6 +29,10 @@ class ActiveObjectsConverter {
         this.relationsManager = relationsManager;
     }
 
+    private RawEntity getFrom(ActiveObjectWrapper wrapper) {
+        return activeObjectsService.find(wrapper.getWrappedType(), Query.select().where("NAME = ?", wrapper.getName()))[0];
+    }
+
     Plan addFrom(@Nonnull final PlanTemplate resource) throws ActiveObjectSavingException {
         Plan result = activeObjectsService.create(Plan.class);
         result.setName(resource.getName());
@@ -33,8 +40,10 @@ class ActiveObjectsConverter {
 
         List<Category> categories = new ArrayList<Category>();
         for (EventCategory each : resource.getEventCategory()) {
-            if (each.isFullfilled()) {
+            if (each.isFullfilled() && notExists(each)) {
                 categories.add(addFrom(each));
+            } else {
+                categories.add((Category) getFrom(each));
             }
         }
 
@@ -59,6 +68,10 @@ class ActiveObjectsConverter {
 
         result.save();
         return result;
+    }
+
+    private boolean notExists(@Nonnull final EventCategory category) {
+        return activeObjectsService.find(category.getWrappedType(), Query.select().where("NAME = ?", category.getName())).length == 0;
     }
 
     Category addFrom(@Nonnull final EventCategory resource) {

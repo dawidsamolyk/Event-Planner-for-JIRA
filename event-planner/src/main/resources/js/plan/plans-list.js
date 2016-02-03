@@ -9,15 +9,11 @@ function PlansList() {
     };
 
     that.setFromJson = function (allPlans) {
-        var eachKey, plan;
+        var eachKey;
         that.clearTable();
 
         for (eachKey in allPlans) {
-            plan = allPlans[eachKey];
-
-            if (that.insert(plan) === false) {
-                return false;
-            }
+            that.insert(allPlans[eachKey]);
         }
         return true;
     };
@@ -65,7 +61,23 @@ function PlansList() {
     };
 
     that.insertStatistics = function (estimatedTimeToComplete, row) {
-        that.insertCell(row, row.length).appendChild(document.createTextNode('~' + estimatedTimeToComplete + ' day(s)'));
+        var months = Math.floor(estimatedTimeToComplete / 30), days = estimatedTimeToComplete % 30, result = '~';
+
+        if (months === 1) {
+            result += months + ' month';
+        } else if (months > 1) {
+            result += months + ' months';
+        }
+        if (months > 0 && days > 0) {
+            result += ' and ';
+        }
+        if (days === 1) {
+            result += days + ' day';
+        } else if (days > 1) {
+            result += days + ' days';
+        }
+
+        that.insertCell(row, row.length).appendChild(document.createTextNode(result));
     };
 
     that.insertOperationsLinksCell = function (plan, row) {

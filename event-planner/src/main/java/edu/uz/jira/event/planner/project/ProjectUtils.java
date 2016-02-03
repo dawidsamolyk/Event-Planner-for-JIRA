@@ -1,6 +1,8 @@
 package edu.uz.jira.event.planner.project;
 
+import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.project.Project;
+import com.atlassian.jira.project.ProjectCategory;
 import com.atlassian.jira.project.version.Version;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
@@ -40,5 +42,10 @@ public class ProjectUtils {
         }
 
         return result;
+    }
+
+    public ProjectCategory getEventPlanProjectCategory() {
+        String projectCategoryName = internationalization.getText(Internationalization.PROJECT_CATEGORY_NAME);
+        return ComponentAccessor.getProjectManager().getProjectCategoryObjectByName(projectCategoryName);
     }
 }

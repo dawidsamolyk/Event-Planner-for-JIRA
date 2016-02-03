@@ -2,10 +2,12 @@ package edu.uz.jira.event.planner.project.plan.webwork;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.project.Project;
+import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.database.xml.importer.EventPlansImportExecutor;
+import edu.uz.jira.event.planner.project.ProjectUtils;
 import webwork.action.Action;
 
 import javax.annotation.Nonnull;
@@ -18,6 +20,8 @@ import java.util.Map;
 public class EventPlansManager extends JiraWebActionSupport {
     private final ActiveObjectsService activeObjectsService;
     private final I18nResolver i18nResolver;
+    private final ProjectUtils projectUtils;
+    private ProjectManager projectManager;
 
     /**
      * Constructor.
@@ -29,6 +33,8 @@ public class EventPlansManager extends JiraWebActionSupport {
                              @Nonnull final ActiveObjectsService activeObjectsService) {
         this.i18nResolver = i18nResolver;
         this.activeObjectsService = activeObjectsService;
+        projectManager = ComponentAccessor.getProjectManager();
+        projectUtils = new ProjectUtils(i18nResolver);
     }
 
     @Override
@@ -45,7 +51,7 @@ public class EventPlansManager extends JiraWebActionSupport {
     public Map<String, String> getProjects() {
         Map<String, String> result = new HashMap<String, String>();
 
-        for (Project eachProject : ComponentAccessor.getProjectManager().getProjectObjects()) {
+        for (Project eachProject : projectManager.getProjectsFromProjectCategory(projectUtils.getEventPlanProjectCategory())) {
             result.put(eachProject.getKey(), eachProject.getName());
         }
 

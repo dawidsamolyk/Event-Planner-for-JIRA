@@ -38,10 +38,8 @@ function RESTManager() {
     };
 
     that.postPlan = function (projectKey, name, description, reserveTime, categories) {
-        // TODO validate input
-
         jQuery.ajax({
-            url: that.baseUrl + "plan",
+            url: that.baseUrl + 'plan',
             type: "POST",
             contentType: "application/json",
             data: '{ "projectKey": "' + projectKey + '", "name": "' + name + '", "description": "' + description + '", "reserveTime": "' + reserveTime + '", "categories": ' + JSON.stringify(categories) + ' }',
@@ -62,10 +60,8 @@ function RESTManager() {
                 } else if (error.valueOf() === 'Not Found') {
                     flagTitle = 'Project with key ' + projectKey + ' not found!';
 
-                } else if (error.valueOf() === 'Conflict') {
-                    // TODO
-                    flagTitle = 'Task ' + name + ' not modified because of internal conflict!';
-                    flagBody = 'Try again or contact with plugin author.';
+                } else if (error.valueOf() === 'Not Acceptable') {
+                    flagTitle = 'Not found any tasks or Event deadline Version in project with key ' + projectKey + '!';
                 }
 
                 require('aui/flag')({
@@ -74,6 +70,9 @@ function RESTManager() {
                     body: flagBody,
                     close: 'auto'
                 });
+            },
+            complete: function () {
+                loadPlansList();
             }
         });
     };

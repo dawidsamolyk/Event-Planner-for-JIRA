@@ -33,7 +33,7 @@
             <task name="Copy ready slideshow to many independent data storages" description=""
                   neededMonthsBeforeEvent="0"
                   neededDaysBeforeEvent="20"></task>
-            <task name="Review" neededMonthsBeforeEvent="0" description="" neededDaysBeforeEvent="22">
+            <task name="Review presentation" neededMonthsBeforeEvent="0" description="" neededDaysBeforeEvent="22">
                 <sub-task name="Design" description=""></sub-task>
                 <sub-task name="Readability from a distance" description=""></sub-task>
                 <sub-task name="Grammar and spelling" description=""></sub-task>

@@ -27,4 +27,6 @@ public interface ActiveObjectWrapper {
      * @return Copy of object without filled fields.
      */
     ActiveObjectWrapper getEmptyCopy();
+
+    String getName();
 }

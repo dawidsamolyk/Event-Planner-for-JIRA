@@ -26,8 +26,8 @@ public abstract class RestManager {
     protected final TransactionTemplate transactionTemplate;
     protected final ActiveObjectWrapper emptyConfiguration;
     protected final RestManagerHelper helper;
-    private final UserManager userManager;
-    private final ActiveObjectsService activeObjectsService;
+    protected final UserManager userManager;
+    protected final ActiveObjectsService activeObjectsService;
 
 
     /**
