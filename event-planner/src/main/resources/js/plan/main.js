@@ -54,18 +54,40 @@ function addListeners() {
             }
 
             if (planName && planName.length > 0 && selectedCategories.children().length > 0) {
+                savePlan();
+
                 AJS.dialog2('#event-plan-dialog').hide();
             }
         }
     );
 
+    function savePlan() {
+        "use strict";
+        var projectKey, name, description, reserveTime, categories = [];
+
+        projectKey = jQuery('#source-project').children(":selected").attr("id");
+        name = jQuery('#plan-name').attr('value');
+        description = jQuery('#plan-description').attr('value');
+        reserveTime = jQuery('#plan-reserve-time').attr('value');
+
+        jQuery("#selected-category li").each(
+            function () {
+                categories.push(jQuery(this).text());
+            });
+
+        rest.postPlan(projectKey, name, description, reserveTime, categories);
+    }
+
     AJS.$("#add-plan-button").click(
         function (e) {
-            "use strict";
             e.preventDefault();
             document.getElementById('new-plan-configuration').reset();
             jQuery('#selected-category').empty();
             rest.get(category.id, category);
+
+            jQuery('#category-name-description').html('<div class="description" id="category-name-description">Max. 80 characters.</div>');
+            jQuery('#plan-categories-description').html('<div class="description" id="plan-categories-description">Drag and drop Categories which best describe this template. Select at least one.</div>');
+            jQuery('#category-name-description').html('<div class="description" id="category-name-description">Max. 80 characters.</div>');
 
             AJS.dialog2('#event-plan-dialog').show();
         }
@@ -73,7 +95,6 @@ function addListeners() {
 
     AJS.$("#event-plan-dialog-cancel-button").click(
         function (e) {
-            "use strict";
             e.preventDefault();
             AJS.dialog2('#event-plan-dialog').hide();
         }
@@ -81,7 +102,6 @@ function addListeners() {
 
     AJS.$("#import-plans-button").click(
         function (e) {
-            "use strict";
             e.preventDefault();
             document.getElementById("import-event-plan-template-form").reset();
             AJS.dialog2('#import-plan-dialog').show();
@@ -90,7 +110,6 @@ function addListeners() {
 
     AJS.$("#import-plan-templates-cancel").click(
         function (e) {
-            "use strict";
             e.preventDefault();
             AJS.dialog2('#import-plan-dialog').hide();
         }
@@ -98,7 +117,6 @@ function addListeners() {
 
     AJS.$("#import-plan-templates-submit").click(
         function (e) {
-            "use strict";
             e.preventDefault();
 
             var file = document.getElementById("uploadFile").files[0], reader = new FileReader();

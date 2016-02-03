@@ -61,11 +61,11 @@ public class RestIssuesModifier {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response post(final IssueData issueData, @Context final HttpServletRequest request) {
-        MutableIssue issue = issueManager.getIssueByKeyIgnoreCase(issueData.getKey());
-
-        if (!issueData.isFullfilled()) {
+        if (issueData == null || !issueData.isFullfilled()) {
             return helper.buildStatus(Response.Status.PRECONDITION_FAILED);
         }
+
+        MutableIssue issue = issueManager.getIssueByKeyIgnoreCase(issueData.getKey());
         if (issue == null) {
             return helper.buildStatus(Response.Status.NOT_FOUND);
         }

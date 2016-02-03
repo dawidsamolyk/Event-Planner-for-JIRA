@@ -41,7 +41,7 @@
             Name
         </th>
         <th>
-            Statistics
+            Estimated time to complete
         </th>
         <th>
             Component Templates
@@ -84,12 +84,20 @@
 
                 <div class="description" id="plan-name-description">Max. 80 characters.</div>
             </div>
+
             <div class="field-group">
                 <label for="plan-description">Description</label>
                 <input id="plan-description" class="text" name="plan-description" type="text" maxlength="255"
                        minlength="0">
 
                 <div class="description" id="plan-description-description">Max. 255 characters.</div>
+            </div>
+
+            <div class="field-group">
+                <label for="plan-reserve-time">Time reserve</label>
+                <input id="plan-reserve-time" class="text short-field" name="plan-reserve-time" type="number" min="0" placeholder="Day(s)"> day(s)
+
+                <div class="description" id="plan-reserve-time-description">Extra time for complete Event Plan.</div>
             </div>
 
             <div class="field-group">

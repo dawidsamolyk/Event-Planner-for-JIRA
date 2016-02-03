@@ -37,6 +37,47 @@ function RESTManager() {
         });
     };
 
+    that.postPlan = function (projectKey, name, description, reserveTime, categories) {
+        // TODO validate input
+
+        jQuery.ajax({
+            url: that.baseUrl + "plan",
+            type: "POST",
+            contentType: "application/json",
+            data: '{ "projectKey": "' + projectKey + '", "name": "' + name + '", "description": "' + description + '", "reserveTime": "' + reserveTime + '", "categories": ' + JSON.stringify(categories) + ' }',
+            processData: false,
+            success: function () {
+                require('aui/flag')({
+                    type: 'success',
+                    title: 'Plan template named ' + name + ' saved successfully!',
+                    close: 'auto'
+                });
+            },
+            error: function (request, status, error) {
+                var flagBody, flagTitle = 'Error while saving Plan template named ' + name + '!';
+
+                if (error.valueOf() === 'Precondition Failed') {
+                    flagTitle = 'Plan template ' + name + ' is not fullfilled!';
+
+                } else if (error.valueOf() === 'Not Found') {
+                    flagTitle = 'Project with key ' + projectKey + ' not found!';
+
+                } else if (error.valueOf() === 'Conflict') {
+                    // TODO
+                    flagTitle = 'Task ' + name + ' not modified because of internal conflict!';
+                    flagBody = 'Try again or contact with plugin author.';
+                }
+
+                require('aui/flag')({
+                    type: 'error',
+                    title: flagTitle,
+                    body: flagBody,
+                    close: 'auto'
+                });
+            }
+        });
+    };
+
     that.doDelete = function (resourceId, objectId) {
         if (!resourceId || 0 === resourceId.length) {
             require('aui/flag')({
