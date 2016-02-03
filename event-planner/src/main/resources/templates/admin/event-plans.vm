@@ -66,7 +66,8 @@
         <div class="aui-dialog2-content">
             <div class="field-group">
                 <label for="source-project">Source project<span class="aui-icon icon-required">(required)</span></label>
-                <select id="source-project" class="select" name="Source project" title="Source project" placeholder="Select a project">
+                <select id="source-project" class="select" name="Source project" title="Source project"
+                        placeholder="Select a project">
                     #set ($projects = $action.getProjects())
                     #foreach($eachKey in $projects.keySet())
                         <option id="$eachKey">$projects.get($eachKey) ($eachKey)</option>
@@ -92,7 +93,8 @@
             </div>
 
             <div class="field-group">
-                <label for="plan-categories">Event Categories</label>
+                <label for="plan-categories">Event Categories<span
+                        class="aui-icon icon-required">(required)</span></label>
                 <table class="aui" style="height: 170px;" id="plan-categories">
                     <thead>
                     <tr>
@@ -111,14 +113,16 @@
                     </tr>
                     </tbody>
                 </table>
-                <div class="description" id="plan-categories-description">Drag and drop Categories which best describe this template.</div>
+                <div class="description" id="plan-categories-description">Drag and drop Categories which best describe
+                    this template.
+                </div>
 
                 <form class="aui" id="event-category-configuration" style="clear:both;">
                     <div class="field-group">
-                        <label for="category-name">New category name<span
-                                class="aui-icon icon-required">(required)</span></label>
-                        <input id="category-name" class="text medium-field" name="category-name" type="text" maxlength="80" required>
-                        <button id="event-category-dialog-add-button" class="aui-button" title="Add new Category">
+                        <label for="category-name">New category name</label>
+                        <input id="category-name" class="text medium-field" name="category-name" type="text"
+                               maxlength="80" required>
+                        <button id="event-category-add-button" class="aui-button" title="Add new Category">
                             <span class="aui-icon aui-icon-small aui-iconfont-add"></span>Add
                         </button>
 
@@ -131,7 +135,7 @@
         <footer class="aui-dialog2-footer">
             <div class="aui-dialog2-footer-actions">
                 <button id="event-plan-dialog-cancel-button" class="aui-button aui-button-link">Cancel</button>
-                <button id="event-plan-dialog-next-button" class="aui-button aui-button-primary">Create</button>
+                <button id="event-plan-dialog-create-button" class="aui-button aui-button-primary">Create</button>
             </div>
         </footer>
     </form>
@@ -163,103 +167,7 @@
 </section>
 
 <script type="text/javascript">
-    var plansList = new PlansList();
-    var plan = new Plan();
-    var eventCategory = new Category();
-
-    var categoryListener = new ButtonListener(eventCategory);
-    categoryListener.onClickAddAppendNewResourceToList(AJS.$("#selected-" + eventCategory.id));
-
-    function loadPlansList() {
-        var rest = new RESTManager();
-        rest.get('plan', plansList);
-        rest.doGetResourcesInto([eventCategory], eventCategory);
-    }
-
-    jQuery("ul.connectedSortable").sortable({
-        connectWith: "ul",
-        dropOnEmpty: true,
-        cursor: "move"
-    }).disableSelection();
-
-    AJS.$(document).ready(
-            function () {
-                loadPlansList();
-            }
-    );
-
-    AJS.$("#add-plan-button").click(
-            function (e) {
-                e.preventDefault();
-                plan.clear();
-                AJS.dialog2('#event-plan-dialog').show();
-            }
-    );
-
-    AJS.$("#event-plan-dialog-cancel-button").click(
-            function (e) {
-                e.preventDefault();
-                AJS.dialog2('#event-plan-dialog').hide();
-            }
-    );
-
-    AJS.$("#import-plans-button").click(
-            function (e) {
-                e.preventDefault();
-                document.getElementById("import-event-plan-template-form").reset();
-                AJS.dialog2('#import-plan-dialog').show();
-            }
-    );
-
-    AJS.$("#import-plan-templates-cancel").click(
-            function (e) {
-                e.preventDefault();
-                AJS.dialog2('#import-plan-dialog').hide();
-            }
-    );
-
-    AJS.$("#import-plan-templates-submit").click(
-            function (e) {
-                e.preventDefault();
-
-                var file = document.getElementById("uploadFile").files[0], reader = new FileReader();
-
-                reader.readAsText(file, "UTF-8");
-                reader.onload = function (event) {
-                    jQuery.ajax({
-                        url: AJS.contextPath() + "/rest/event-plans/1.0/plan/import",
-                        type: "POST",
-                        contentType: "text/plain",
-                        data: event.target.result,
-                        success: function (data) {
-                            require('aui/flag')({
-                                type: 'success',
-                                title: 'Event Plan Template imported successfully!',
-                                close: "auto"
-                            });
-                            loadPlansList();
-                        },
-                        error: function (request) {
-                            require('aui/flag')({
-                                type: 'error',
-                                title: 'Cannot import selected Event Plan Template!',
-                                body: 'Status: ' + request.statusText,
-                                close: "auto"
-                            });
-                        }
-                    });
-                }
-                reader.onerror = function (event) {
-                    require('aui/flag')({
-                        type: 'error',
-                        title: 'Error while reading XML file!',
-                        close: "auto"
-                    });
-                }
-
-                AJS.dialog2('#import-plan-dialog').hide();
-            }
-    );
+    addListeners();
 </script>
 </body>
 </html>

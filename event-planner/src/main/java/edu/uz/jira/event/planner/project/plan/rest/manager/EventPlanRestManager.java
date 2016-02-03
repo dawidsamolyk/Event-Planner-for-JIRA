@@ -4,7 +4,6 @@ import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.database.xml.model.PlanTemplate;
-import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
@@ -33,19 +32,6 @@ public class EventPlanRestManager extends RestManager {
     }
 
     /**
-     * @param id      Id of Plan to put. If not specified, all Plans will be returned.
-     * @param request Http Servlet request.
-     * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
-     * @see {@link RestManager#post(String, HttpServletRequest)}
-     */
-    @POST
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response put(String id, @Context final HttpServletRequest request) {
-        return super.post(id, request);
-    }
-
-    /**
      * @param request Http Servlet request.
      * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
      * @see {@link RestManager#get(HttpServletRequest)}
@@ -54,18 +40,6 @@ public class EventPlanRestManager extends RestManager {
     @Produces(MediaType.APPLICATION_JSON)
     public Response get(@Context final HttpServletRequest request) {
         return super.get(request);
-    }
-
-    /**
-     * @param resource Resource with data to put.
-     * @param request  Http Servlet request.
-     * @return Response which indicates that action was successful or not (and why) coded by numbers (formed with HTTP response standard).
-     * @see {@link RestManager#post(PlanTemplate, HttpServletRequest)}
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(final PlanTemplate resource, @Context final HttpServletRequest request) {
-        return super.post(resource, request);
     }
 
     /**

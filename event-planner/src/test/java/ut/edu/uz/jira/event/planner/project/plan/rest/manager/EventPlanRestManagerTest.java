@@ -133,27 +133,6 @@ public class EventPlanRestManagerTest {
     }
 
     @Test
-    public void should_Put_New_Event_Plan() {
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
-        PlanTemplate config = new PlanTemplate();
-        config.setName("Test name");
-        TaskTemplate testTask = new TaskTemplate();
-        testTask.setName("Test task");
-        testTask.setNeededDaysBeforeEvent(5);
-        ComponentTemplate component = new ComponentTemplate();
-        component.setName("Test component");
-        component.setTask(Arrays.asList(new TaskTemplate[]{testTask}));
-        config.setComponent(Arrays.asList(new ComponentTemplate[]{component}));
-        EventCategory eventCategory = EventCategory.createEmpty();
-        eventCategory.setName("Test category");
-        config.setEventCategory(Arrays.asList(new EventCategory[]{eventCategory}));
-
-        Response result = fixture.put(config, mockRequest);
-
-        assertEquals(Response.Status.ACCEPTED.getStatusCode(), result.getStatus());
-    }
-
-    @Test
     public void on_Delete_should_remove_entity_with_specified_id() throws SQLException {
         Plan plan = testHelper.createPlanNamed("test name");
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
@@ -162,18 +141,5 @@ public class EventPlanRestManagerTest {
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         assertEquals(0, activeObjects.count(Plan.class));
-    }
-
-    @Test
-    public void on_Post_should_get_entity_with_specified_id() throws SQLException {
-        Plan plan = testHelper.createPlanNamed("test name");
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
-
-        Response response = fixture.put(Integer.toString(plan.getID()), mockRequest);
-
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-
-        ActiveObjectWrapper expected = PlanTemplate.createEmpty().fill(plan);
-        assertEquals(expected, transactionResult[0]);
     }
 }

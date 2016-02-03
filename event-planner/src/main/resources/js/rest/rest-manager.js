@@ -4,55 +4,6 @@ function RESTManager() {
 
     that.baseUrl = AJS.contextPath() + "/rest/event-plans/1.0/";
 
-    that.post = function (resource) {
-        if (resource === undefined) {
-            require('aui/flag')({
-                type: 'error',
-                title: 'Cannot save undefined resource!'
-            });
-            return;
-        }
-        if (!resource.id || 0 === resource.id.length) {
-            require('aui/flag')({
-                type: 'error',
-                title: 'Cannot save resource with empty name!'
-            });
-            return;
-        }
-        if (!resource.getJson() || 0 === resource.getJson().length) {
-            require('aui/flag')({
-                type: 'error',
-                title: 'Cannot save empty resource (without data)!'
-            });
-            return;
-        }
-
-        jQuery.ajax({
-            url: that.baseUrl + resource.id,
-            type: "POST",
-            contentType: "application/json",
-            data: resource.getJson(),
-            processData: false,
-            error: function (request) {
-                console.error(request.responseText);
-                require('aui/flag')({
-                    type: 'error',
-                    title: 'Cannot save ' + resource.id + '!',
-                    body: 'Status: ' + request.statusText
-                });
-            }
-        });
-    };
-
-    that.doGetResourcesInto = function (resourcesArray, destinationResource) {
-        var eachKey, resource;
-
-        for (eachKey in resourcesArray) {
-            resource = resourcesArray[eachKey];
-            that.get(resource.id, destinationResource);
-        }
-    };
-
     that.get = function (sourceId, destinationResource) {
         if (!sourceId || 0 === sourceId.length) {
             require('aui/flag')({
@@ -73,48 +24,6 @@ function RESTManager() {
             url: that.baseUrl + sourceId,
             type: "GET",
             dataType: "json",
-            success: function (data) {
-                destinationResource.setFromJson(data);
-            },
-            error: function (request) {
-                require('aui/flag')({
-                    type: 'error',
-                    title: 'Cannot get ' + sourceId + '!',
-                    body: 'Status: ' + request.statusText
-                });
-            }
-        });
-    };
-
-    that.getAsPost = function (sourceId, destinationResource, objectId) {
-        if (!sourceId || 0 === sourceId.length) {
-            require('aui/flag')({
-                type: 'error',
-                title: 'Cannot get resource with empty name!'
-            });
-            return;
-        }
-        if (destinationResource === undefined) {
-            require('aui/flag')({
-                type: 'error',
-                title: 'Cannot save data into undefined resource!'
-            });
-            return;
-        }
-        if (!objectId || 0 === objectId.length) {
-            require('aui/flag')({
-                type: 'error',
-                title: 'Cannot get object with empty ID!'
-            });
-            return;
-        }
-
-        jQuery.ajax({
-            url: that.baseUrl + sourceId,
-            type: "POST",
-            dataType: "json",
-            contentType: "text/plain",
-            data: objectId,
             success: function (data) {
                 destinationResource.setFromJson(data);
             },
@@ -327,4 +236,4 @@ function RESTManager() {
             }
         });
     };
-};
+}

@@ -15,19 +15,8 @@
 }
 
 .event-plan-list-element {
-    margin: 5px 5px 5px 5px;
-    width: 90%;
+    margin: 5px;
+    width: 80%;
     list-style: none none;
-    margin: 0;
     vertical-align: top;
-}
-
-.event-plan-element-portlet {
-    margin: 0 1em 1em 0;
-    padding: 0.3em;
-    position: relative;
-}
-
-.event-plan-element-portlet-content {
-    padding: 0.4em;
 }

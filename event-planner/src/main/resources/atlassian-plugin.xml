@@ -44,17 +44,10 @@
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:dialog2</dependency>
         <dependency>com.atlassian.auiplugin:ajs-flag</dependency>
-        <dependency>com.atlassian.auiplugin:aui-select</dependency>
-        <dependency>com.atlassian.gadgets.dashboard:dashboard</dependency>
-        <resource type="velocity" name="event-plans-view" location="/templates/admin/event-plans.vm"/>
-        <resource type="download" name="component.js" location="/js/plan/model/component.js"/>
-        <resource type="download" name="category.js" location="/js/plan/model/category.js"/>
-        <resource type="download" name="plan.js" location="/js/plan/model/plan.js"/>
-        <resource type="download" name="plans-list.js" location="/js/plan/model/plans-list.js"/>
-        <resource type="download" name="subtask.js" location="/js/plan/model/subtask.js"/>
-        <resource type="download" name="task.js" location="/js/plan/model/task.js"/>
+        <resource type="download" name="category.js" location="/js/plan/category.js"/>
+        <resource type="download" name="plans-list.js" location="/js/plan/plans-list.js"/>
         <resource type="download" name="rest-manager.js" location="/js/rest/rest-manager.js"/>
-        <resource type="download" name="button-listener.js" location="/js/plan/button-listener.js"/>
+        <resource type="download" name="main.js" location="/js/plan/main.js"/>
         <resource type="download" name="EventPlanTemplates.css" location="/style/EventPlanTemplates.css"/>
     </web-resource>
 

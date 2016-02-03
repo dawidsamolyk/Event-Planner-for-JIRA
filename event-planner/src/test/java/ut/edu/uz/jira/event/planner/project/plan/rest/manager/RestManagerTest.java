@@ -92,36 +92,6 @@ public class RestManagerTest {
     }
 
     @Test
-    public void on_Get_Should_Response_Unauthorized_When_User_Is_Null() {
-        Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
-
-        Response result = fixture.get(mockRequest);
-
-        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
-    }
-
-    @Test
-    public void on_Post_with_id_Should_Response_Unauthorized_When_User_Is_Null() {
-        Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
-
-        Response result = fixture.put("123", mockRequest);
-
-        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
-    }
-
-    @Test
-    public void on_Post_Should_Response_Unauthorized_When_User_Is_Null() {
-        Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
-
-        Response result = fixture.put(PlanTemplate.createEmpty(), mockRequest);
-
-        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
-    }
-
-    @Test
     public void on_Delete_Should_Response_Unauthorized_When_User_Is_Null() {
         Mockito.when(mockUserManager.getRemoteUser(Mockito.any(HttpServletRequest.class))).thenReturn(null);
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
@@ -142,26 +112,6 @@ public class RestManagerTest {
     }
 
     @Test
-    public void on_Post_Should_Response_Unauthorized_When_User_Is_Not_Admin() {
-        Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
-
-        Response result = fixture.put(PlanTemplate.createEmpty(), mockRequest);
-
-        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
-    }
-
-    @Test
-    public void on_Post_with_id_Should_Response_Unauthorized_When_User_Is_Not_Admin() {
-        Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
-
-        Response result = fixture.put("123", mockRequest);
-
-        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
-    }
-
-    @Test
     public void on_Delete_Should_Response_Unauthorized_When_User_Is_Not_Admin() {
         Mockito.when(mockUserManager.isSystemAdmin(Mockito.any(UserKey.class))).thenReturn(false);
         EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
@@ -169,24 +119,6 @@ public class RestManagerTest {
         Response result = fixture.delete("11", mockRequest);
 
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), result.getStatus());
-    }
-
-    @Test
-    public void on_Post_should_Response_No_Content_When_Resource_Is_Null() {
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
-
-        Response result = fixture.put((PlanTemplate) null, mockRequest);
-
-        assertEquals(Response.Status.NO_CONTENT.getStatusCode(), result.getStatus());
-    }
-
-    @Test
-    public void should_Not_Post_Empty_Configuration() {
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
-
-        Response result = fixture.put(PlanTemplate.createEmpty(), mockRequest);
-
-        assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), result.getStatus());
     }
 
     @Test
@@ -228,31 +160,6 @@ public class RestManagerTest {
     }
 
     @Test
-    public void on_Post_Should_Not_Accept_When_Trying_To_Put_Configuration_Of_Invalid_Resource() throws SQLException {
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForPut, planService);
-        PlanTemplate invalidConfig = new PlanTemplate();
-        invalidConfig.setName("Test name");
-        invalidConfig.setDescription("Test description");
-
-        Response result = fixture.put(invalidConfig, mockRequest);
-
-        assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), result.getStatus());
-    }
-
-    @Test
-    public void on_Put_Should_Return_Only_One_Resource_With_Specified_Id() throws SQLException {
-        Plan plan = testHelper.createPlanWithCategoryAndComponent("Plan 1", "Description", 1, 0, "EventCategory 1", "Component 1");
-
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
-
-        Response result = fixture.put(Integer.toString(plan.getID()), mockRequest);
-
-        assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
-        assertEquals(1, doGetTransactionResult.length);
-        assertEquals(plan.getName(), ((PlanTemplate) doGetTransactionResult[0]).getName());
-    }
-
-    @Test
     public void on_Get_Should_Return_All_Resources() throws SQLException {
         Plan firstPlan = testHelper.createPlanWithCategoryAndComponent("Plan 1", "Description", 1, 0, "EventCategory 1", "Component 1");
         Plan secondPlan = testHelper.createPlanWithCategoryAndComponent("Plan 2", "Descriptio 2", 1, 0, "EventCategory 1234", "Component 124121");
@@ -285,37 +192,5 @@ public class RestManagerTest {
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         assertEquals(0, activeObjects.count(Plan.class));
-    }
-
-    @Test
-    public void on_Post_should_get_entity_with_specified_id() throws SQLException {
-        Plan plan = testHelper.createPlanWithCategoryAndComponent("Plan 1", "Description", 1, 0, "EventCategory 1", "Component 1");
-
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
-
-        Response response = fixture.put(Integer.toString(plan.getID()), mockRequest);
-
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-
-        ActiveObjectWrapper expected = PlanTemplate.createEmpty().fill(plan);
-        assertEquals(expected, doGetTransactionResult[0]);
-    }
-
-    @Test
-    public void on_Put_with_null_id_should_response_not_acceptable() {
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
-
-        Response result = fixture.put((String) null, mockRequest);
-
-        assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), result.getStatus());
-    }
-
-    @Test
-    public void on_Put_with_empty_id_should_response_not_acceptable() {
-        EventPlanRestManager fixture = new EventPlanRestManager(mockUserManager, mockTransactionTemplateForGet, planService);
-
-        Response result = fixture.put("", mockRequest);
-
-        assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), result.getStatus());
     }
 }

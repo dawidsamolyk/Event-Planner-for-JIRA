@@ -15,11 +15,6 @@ function Category() {
         that.getNameField().val('');
     };
 
-    that.getJson = function () {
-        // TODO wszystkie wybrane kategorie w formie tablicy JSON
-        return '{ "name": "' + that.getNameValue() + '" }';
-    };
-
     that.getAvailableCategories = function () {
         return AJS.$("#available-" + that.id);
     };
