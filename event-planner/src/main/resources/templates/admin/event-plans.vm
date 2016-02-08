@@ -31,7 +31,9 @@
 <div class="aui-message info">
     <span class="aui-icon icon-info"></span>
 
-    <p>Description...</p>
+    <p>This is a list of Event Plan templates which you can use while creating new Project of type Event Organization.</p>
+
+    <p>You can add new Plan template based on currently existent Project of type Event Organization.</p>
 </div>
 
 <table id="plans-table" class="aui aui-table-rowhover">
