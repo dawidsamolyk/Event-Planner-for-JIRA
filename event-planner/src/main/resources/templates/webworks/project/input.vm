@@ -1,3 +1,5 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!ATTLIST option days CDATA #IMPLIED>
 <html>
 <head>
     <title>Event Organization Plan Configuration</title>
@@ -22,7 +24,9 @@
                     #foreach($eachPlan in $eventPlans.keySet())
                         <optgroup label="$eachPlan">
                             #foreach($eachValue in $eventPlans.get($eachPlan))
-                                <option id="$eachValue">$eachValue ($eventPlansEstimatedTimeToComplete.get($eachValue))</option>
+                                <option id="$eachValue" days="$eventPlansEstimatedTimeToComplete.get($eachValue)">$eachValue
+                                    (~$eventPlansEstimatedTimeToComplete.get($eachValue) days)
+                                </option>
                             #end
                         </optgroup>
                     #end

@@ -115,8 +115,8 @@ public class ActiveObjectsService {
     /**
      * @return Event Plan Templates names (map keys) with estimated time to complete as text (map value).
      */
-    public Map<String, String> getEstimatedTimeForEachPlan() {
-        Map<String, String> result = new HashMap<String, String>();
+    public Map<String, Integer> getEstimatedTimeForEachPlan() {
+        Map<String, Integer> result = new HashMap<String, Integer>();
 
         for (Plan eachPlan : get(Plan.class, Query.select())) {
             result.put(eachPlan.getName(), getEstimatedTimeToComplete(eachPlan));
@@ -125,8 +125,8 @@ public class ActiveObjectsService {
         return result;
     }
 
-    private String getEstimatedTimeToComplete(@Nonnull final Plan plan) {
-        return "~" + plan.getEstimatedDaysToComplete() + " days";
+    private int getEstimatedTimeToComplete(@Nonnull final Plan plan) {
+        return plan.getEstimatedDaysToComplete();
     }
 
     /**

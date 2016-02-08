@@ -90,7 +90,7 @@ public class EventPlanConfigurationAction extends JiraWebActionSupport {
     /**
      * @return Event Plans Templates names with estimated time to complete (as text) for each Plan Template.
      */
-    public Map<String, String> getEstimatedTimeForEachPlan() {
+    public Map<String, Integer> getEstimatedTimeForEachPlan() {
         return activeObjectsService.getEstimatedTimeForEachPlan();
     }
 }

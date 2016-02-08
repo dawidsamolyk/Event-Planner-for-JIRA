@@ -4,6 +4,7 @@ import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.IssueManager;
 import com.atlassian.jira.project.Project;
+import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import edu.uz.jira.event.planner.exception.IssuesNotFoundException;
@@ -33,6 +34,7 @@ public class RestIssuesProvider {
     private final TransactionTemplate transactionTemplate;
     private final RestManagerHelper helper;
     private final IssueManager issueManager;
+    private final ProjectManager projectManager;
 
     /**
      * Constructor.
@@ -43,12 +45,13 @@ public class RestIssuesProvider {
         this.transactionTemplate = transactionTemplate;
         issueManager = ComponentAccessor.getIssueManager();
         helper = new RestManagerHelper();
+        projectManager = ComponentAccessor.getProjectManager();
     }
 
     private List<IssueDecorator> getIssues(final String projectKey) throws ProjectNotFoundException, IssuesNotFoundException {
         List<IssueDecorator> result = new ArrayList<IssueDecorator>();
 
-        Project project = ComponentAccessor.getProjectManager().getProjectByCurrentKeyIgnoreCase(projectKey);
+        Project project =  projectManager.getProjectByCurrentKeyIgnoreCase(projectKey);
         if (project == null) {
             throw new ProjectNotFoundException();
         }

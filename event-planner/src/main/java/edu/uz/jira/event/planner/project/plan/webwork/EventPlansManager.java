@@ -2,6 +2,7 @@ package edu.uz.jira.event.planner.project.plan.webwork;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.project.Project;
+import com.atlassian.jira.project.ProjectCategory;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.sal.api.message.I18nResolver;
@@ -51,7 +52,12 @@ public class EventPlansManager extends JiraWebActionSupport {
     public Map<String, String> getProjects() {
         Map<String, String> result = new HashMap<String, String>();
 
-        for (Project eachProject : projectManager.getProjectsFromProjectCategory(projectUtils.getEventPlanProjectCategory())) {
+        ProjectCategory eventPlanProjectCategory = projectUtils.getEventPlanProjectCategory();
+        if (eventPlanProjectCategory == null) {
+            return result;
+        }
+
+        for (Project eachProject : projectManager.getProjectsFromProjectCategory(eventPlanProjectCategory)) {
             result.put(eachProject.getKey(), eachProject.getName());
         }
 
