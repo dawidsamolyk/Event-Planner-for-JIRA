@@ -10,16 +10,20 @@ import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.project.version.Version;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.sal.api.message.I18nResolver;
+import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.xml.exporter.EventPlanExporter;
 import edu.uz.jira.event.planner.database.xml.model.*;
 import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
 import edu.uz.jira.event.planner.exception.EmptyComponentsListException;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.project.ProjectUtils;
+import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.util.text.TextUtils;
 import net.java.ao.Entity;
+import net.java.ao.Query;
 import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -28,10 +32,13 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -64,6 +71,47 @@ public class EventPlanRestManager extends RestManager {
         projectComponentManager = ComponentAccessor.getProjectComponentManager();
         issueService = ComponentAccessor.getIssueService();
         authenticationContext = ComponentAccessor.getJiraAuthenticationContext();
+
+    }
+
+    @POST
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response post(String planId, @Context final HttpServletRequest request) {
+        final int id;
+        try {
+            id = Integer.parseInt(planId);
+        } catch (NumberFormatException e) {
+            return helper.buildStatus(Response.Status.NOT_ACCEPTABLE);
+        }
+
+        final ActiveObjectWrapper[] foundPlans = getEntities(entityType, Query.select().where("ID = ?", id));
+
+        if (foundPlans.length == 0) {
+            return helper.buildStatus(Response.Status.NOT_FOUND);
+        }
+
+        EventPlanTemplates toExport = new EventPlanTemplates();
+        for (ActiveObjectWrapper each : foundPlans) {
+            if (each instanceof PlanTemplate) {
+                toExport.addPlan((PlanTemplate) each);
+            }
+        }
+
+        try {
+            final EventPlanExporter exporter = new EventPlanExporter(activeObjectsService);
+            final File result = exporter.export(toExport);
+
+            return Response.ok(transactionTemplate.execute(new TransactionCallback<File>() {
+                public File doInTransaction() {
+                    return result;
+                }
+            })).build();
+
+        } catch (JAXBException e) {
+            return helper.buildStatus(Response.Status.CONFLICT);
+        } catch (IOException e) {
+            return helper.buildStatus(Response.Status.CONFLICT);
+        }
     }
 
     @POST

@@ -37,6 +37,27 @@ function RESTManager() {
         });
     };
 
+    that.exportPlan = function (plan) {
+        jQuery.ajax({
+            url: that.baseUrl + 'plan',
+            type: "POST",
+            contentType: "text/plain",
+            data: String(plan.id),
+            processData: false,
+            success: function (data) {
+                var blob = new Blob([data], {type: "application/xml;charset=utf-8"});
+                saveAs(blob, plan.name + '.xml');
+            },
+            error: function () {
+                require('aui/flag')({
+                    type: 'error',
+                    title: 'Error while exporting plan template!',
+                    close: 'auto'
+                });
+            }
+        });
+    };
+
     that.postPlan = function (projectKey, name, description, reserveTime, categories) {
         jQuery.ajax({
             url: that.baseUrl + 'plan',

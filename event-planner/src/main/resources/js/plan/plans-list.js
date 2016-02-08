@@ -81,20 +81,26 @@ function PlansList() {
     };
 
     that.insertOperationsLinksCell = function (plan, row) {
-        var deleteLink, operationsList, operationsCell;
+        var exportLink, deleteLink, operationsList, operationsCell;
 
-        //TODO odkomentuj dopiero, gdy zostanie zaimplementowana akacja edycji planu eventu
-        //var editLink = that.createLink(document.createTextNode('Edit'), AJS.contextPath() + "/secure/EditEventOrganizationPlan.jspa?id=" + plan.id, "Edit Event Organization Plan", "edit-plan");
+        exportLink = that.createLink(document.createTextNode('Export'), "#", "Export Event Organization Plan", "export-plan-" + plan.id);
         deleteLink = that.createLink(document.createTextNode('Delete'), AJS.contextPath() + "/secure/DeleteEventOrganizationPlan.jspa?id=" + plan.id, "Delete Event Organization Plan", "delete-plan");
 
         operationsList = that.createList();
         operationsList.className = "operations-list";
-        //TODO odkomentuj dopiero, gdy zostanie zaimplementowana akacja edycji planu eventu
-        //that.addToList(operationsList, editLink);
+        that.addToList(operationsList, exportLink);
         that.addToList(operationsList, deleteLink);
 
         operationsCell = that.insertCell(row, row.length);
         operationsCell.appendChild(operationsList);
+
+        AJS.$('#' + exportLink.id).click(
+            function (event) {
+                event.preventDefault();
+                var rest = new RESTManager();
+                rest.exportPlan(plan);
+            }
+        );
     };
 
     that.insertCell = function (row, index) {

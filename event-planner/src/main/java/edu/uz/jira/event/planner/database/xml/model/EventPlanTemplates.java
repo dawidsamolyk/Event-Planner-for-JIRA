@@ -26,6 +26,10 @@ public class EventPlanTemplates implements ActiveObjectWrapper {
     @XmlElement(name = "event-plan")
     private List<PlanTemplate> eventPlan;
 
+    public EventPlanTemplates() {
+        eventPlan = new ArrayList<PlanTemplate>();
+    }
+
     public List<PlanTemplate> getEventPlanTemplate() {
         if (eventPlan == null) {
             eventPlan = new ArrayList<PlanTemplate>();
@@ -35,6 +39,10 @@ public class EventPlanTemplates implements ActiveObjectWrapper {
 
     public void setEventPlan(List<PlanTemplate> eventPlan) {
         this.eventPlan = eventPlan;
+    }
+
+    public void addPlan(PlanTemplate plan) {
+        eventPlan.add(plan);
     }
 
     @Override

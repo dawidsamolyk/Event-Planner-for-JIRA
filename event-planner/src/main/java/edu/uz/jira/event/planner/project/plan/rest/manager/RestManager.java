@@ -29,7 +29,6 @@ public abstract class RestManager {
     protected final UserManager userManager;
     protected final ActiveObjectsService activeObjectsService;
 
-
     /**
      * Constructor.
      *
@@ -135,7 +134,7 @@ public abstract class RestManager {
         });
     }
 
-    private ActiveObjectWrapper[] getEntities(@Nonnull final Class<? extends RawEntity> entityType, @Nonnull final Query query) {
+    protected ActiveObjectWrapper[] getEntities(@Nonnull final Class<? extends RawEntity> entityType, @Nonnull final Query query) {
         List<? extends RawEntity> entities = activeObjectsService.get(entityType, query);
         int numberOfEntities = entities.size();
 

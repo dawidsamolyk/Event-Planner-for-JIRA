@@ -48,6 +48,7 @@
         <resource type="download" name="plans-list.js" location="/js/plan/plans-list.js"/>
         <resource type="download" name="rest-manager.js" location="/js/rest/rest-manager.js"/>
         <resource type="download" name="main.js" location="/js/plan/main.js"/>
+        <resource type="download" name="FileSaver.min.js" location="/js/util/FileSaver.min.js"/>
         <resource type="download" name="EventPlanTemplates.css" location="/style/EventPlanTemplates.css"/>
     </web-resource>
 
