@@ -1,0 +1,41 @@
+<html>
+<head>
+    <title>Event Plan Template</title>
+    <meta name="decorator" content="atl.admin">
+    <meta name="admin.active.section" content="admin_project_menu/project_section"/>
+    <meta name="admin.active.tab" content="event_plans"/>
+    $webResourceManager.requireResource("edu.uz.jira.event.planner.event-planner:event-plans-configuration-resources")
+</head>
+<body>
+<section role="dialog" id="plan-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <header class="aui-dialog2-header">
+        <h2 class="aui-dialog2-header-main">Event Plan Template</h2>
+    </header>
+    <div class="aui-dialog2-content">
+
+    </div>
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button id="plan-back-button" class="aui-button">Back</button>
+        </div>
+    </footer>
+</section>
+
+<script type="text/javascript">
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    AJS.dialog2("#plan-dialog").show();
+
+    AJS.$("#plan-back-button").click(
+            function (e) {
+                e.preventDefault();
+                window.history.back(-1);
+            });
+</script>
+</body>
+</html>

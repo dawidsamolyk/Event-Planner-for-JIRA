@@ -36,8 +36,8 @@ function PlansList() {
 
         that.insertNameAndDescriptionCell(plan, newRow);
         that.insertStatistics(plan, newRow);
-        that.insertList(plan.component, newRow);
-        that.insertList(plan.eventCategory, newRow);
+        that.insertList(plan.component, true, newRow);
+        that.insertList(plan.eventCategory, false, newRow);
         that.insertOperationsLinksCell(plan, newRow);
 
         return true;
@@ -47,7 +47,7 @@ function PlansList() {
         var nameSpan, name, description, nameAndDescriptionCell;
 
         nameSpan = that.createDiv(plan.name, "field-name");
-        name = that.createLink(nameSpan, AJS.contextPath() + "/secure/ViewEventOrganizationPlan.jspa?id=" + plan.id, "View Event Organization Plan");
+        name = that.createLink(nameSpan, AJS.contextPath() + "/secure/ViewEventPlanTemplate.jspa?id=".concat(plan.id), "View Event Plan template");
         description = that.createDiv(plan.description, "description secondary-text");
 
         nameAndDescriptionCell = that.insertCell(row, 0);
@@ -55,8 +55,8 @@ function PlansList() {
         nameAndDescriptionCell.appendChild(description);
     };
 
-    that.insertList = function (array, row) {
-        var list = that.createListFrom(array);
+    that.insertList = function (array, countTasks, row) {
+        var list = that.createListFrom(array, countTasks);
         that.insertCell(row, row.length).appendChild(list);
     };
 
@@ -71,12 +71,11 @@ function PlansList() {
     };
 
     that.getEstimatedTimeToCompleteText = function (numberOfDays) {
-        var months = Math.floor(numberOfDays / 30), days = numberOfDays % 30, result = '~';
+        var months = Math.floor(numberOfDays / 30), days = numberOfDays % 30, result = "~";
 
         if (numberOfDays === 0) {
-            return 'none';
+            return "none";
         }
-
         if (months === 1) {
             result += months + ' month';
         } else if (months > 1) {
@@ -97,8 +96,8 @@ function PlansList() {
     that.insertOperationsLinksCell = function (plan, row) {
         var exportLink, deleteLink, operationsList, operationsCell;
 
-        exportLink = that.createLink(document.createTextNode('Export'), "#", "Export Event Organization Plan", "export-plan-" + plan.id);
-        deleteLink = that.createLink(document.createTextNode('Delete'), AJS.contextPath() + "/secure/DeleteEventOrganizationPlan.jspa?id=" + plan.id, "Delete Event Organization Plan", "delete-plan");
+        exportLink = that.createLink(document.createTextNode('Export'), "#", "Export Event Plan template", "export-plan-".concat(plan.id));
+        deleteLink = that.createLink(document.createTextNode('Delete'), AJS.contextPath() + "/secure/DeleteEventPlanTemplate.jspa?id=".concat(plan.id), "Delete Event Plan template", "delete-plan");
 
         operationsList = that.createList();
         operationsList.className = "operations-list";
@@ -108,7 +107,7 @@ function PlansList() {
         operationsCell = that.insertCell(row, row.length);
         operationsCell.appendChild(operationsList);
 
-        AJS.$('#' + exportLink.id).click(
+        AJS.$('#'.concat(exportLink.id)).click(
             function (event) {
                 event.preventDefault();
                 var rest = new RESTManager();
@@ -148,8 +147,8 @@ function PlansList() {
         return list;
     };
 
-    that.createListFrom = function (array) {
-        var result, eachKey, eachValue;
+    that.createListFrom = function (array, countTasks) {
+        var result, eachKey, eachValue, text;
         result = that.createList();
 
         for (eachKey in array) {
@@ -157,7 +156,12 @@ function PlansList() {
             if (eachValue === undefined) {
                 return undefined;
             }
-            that.addToList(result, document.createTextNode(eachValue.name));
+            if (countTasks === false) {
+                text = eachValue.name;
+            } else {
+                text = eachValue.name.concat(' (').concat(eachValue.task.length).concat(' tasks)');
+            }
+            that.addToList(result, document.createTextNode(text));
         }
 
         return result;
