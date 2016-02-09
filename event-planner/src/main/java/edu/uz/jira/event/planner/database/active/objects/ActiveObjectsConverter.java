@@ -37,6 +37,7 @@ class ActiveObjectsConverter {
         Plan result = activeObjectsService.create(Plan.class);
         result.setName(resource.getName());
         result.setDescription(resource.getDescription());
+        result.setReserveTimeInDays(resource.getReserveTimeInDays());
 
         List<Category> categories = new ArrayList<Category>();
         for (EventCategory each : resource.getEventCategory()) {
@@ -64,6 +65,13 @@ class ActiveObjectsConverter {
         if (planToComponentRelations.isEmpty()) {
             relationsManager.deleteWithRelations(result);
             throw new ActiveObjectSavingException();
+        }
+
+        if (resource.getOptimisticTimeToComplete() > -1) {
+            result.setOptimisticTimeToComplete(resource.getOptimisticTimeToComplete());
+        }
+        if (resource.getTheWorstTimeToComplete() > -1) {
+            result.setTheWorstTimeToComplete(resource.getTheWorstTimeToComplete());
         }
 
         result.save();

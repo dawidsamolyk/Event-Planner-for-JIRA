@@ -4,8 +4,10 @@ import com.atlassian.crowd.embedded.api.User;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.plugin.webfragment.contextproviders.AbstractJiraContextProvider;
 import com.atlassian.jira.plugin.webfragment.model.JiraHelper;
+import edu.uz.jira.event.planner.util.DatesDifferenceCalculator;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +15,6 @@ import java.util.Map;
  * Provides back-end for due date indicator on Issue View.
  */
 public class DueDateIndicator extends AbstractJiraContextProvider {
-    private static final int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
 
     /**
      * @param user       JIRA User.
@@ -36,9 +37,7 @@ public class DueDateIndicator extends AbstractJiraContextProvider {
      */
     public int getDaysAwayFromDueDate(final Timestamp dueDate) {
         if (dueDate != null) {
-            int currentTimeInDays = (int) (System.currentTimeMillis() / MILLIS_IN_DAY);
-            int dueDateTimeInDays = (int) (dueDate.getTime() / MILLIS_IN_DAY);
-            return dueDateTimeInDays - currentTimeInDays + 1;
+            return DatesDifferenceCalculator.getDaysDifference(new Date(), dueDate) + 1;
         }
         return 0;
     }

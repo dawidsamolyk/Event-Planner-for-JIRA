@@ -33,7 +33,8 @@ function savePlan() {
     jQuery("#selected-category li").each(
         function () {
             categories.push(jQuery(this).text());
-        });
+        }
+    );
 
     rest.postPlan(projectKey, name, description, reserveTime, categories);
 }

@@ -8,9 +8,7 @@ import net.java.ao.Query;
 import net.java.ao.RawEntity;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Helpers for working with Active Objects.
@@ -33,7 +31,28 @@ class ActiveObjectsHelper {
         return result;
     }
 
-    int updateNeededDaysToComplete(@Nonnull final Plan plan) {
+    void updateEstimatedDaysToComplete(@Nonnull final Plan plan) {
+        int estimatedDaysToCompletePlan = updateNeededDaysToComplete(plan);
+
+        Set<Integer> neededDays = new HashSet<Integer>();
+        int neededExtraDays = 0;
+
+        for (Component each : plan.getComponents()) {
+            for (Task eachTask : each.getTasks()) {
+                int eachTaskNeededDays = (eachTask.getNeededMonthsToComplete() * 30) + eachTask.getNeededDaysToComplete();
+
+                if (neededDays.contains(eachTaskNeededDays)) {
+                    neededExtraDays++;
+                } else {
+                    neededDays.add(eachTaskNeededDays);
+                }
+            }
+        }
+
+        plan.setTheWorstTimeToComplete(estimatedDaysToCompletePlan + neededExtraDays);
+    }
+
+    private int updateNeededDaysToComplete(@Nonnull final Plan plan) {
         int maximumDays = 0;
         for (Component each : plan.getComponents()) {
             int eachComponentMaxDays = getMaximumDaysToComplete(each);
@@ -43,12 +62,12 @@ class ActiveObjectsHelper {
         }
 
         int estimatedDaysToCompletePlan = maximumDays + plan.getReserveTimeInDays();
-        plan.setEstimatedDaysToComplete(estimatedDaysToCompletePlan);
+        plan.setOptimisticTimeToComplete(estimatedDaysToCompletePlan);
 
         return estimatedDaysToCompletePlan;
     }
 
-    private int getMaximumDaysToComplete(Component component) {
+    private int getMaximumDaysToComplete(@Nonnull final Component component) {
         int maximumNeededDays = 0;
 
         for (Task eachTask : component.getTasks()) {

@@ -35,7 +35,7 @@ function PlansList() {
         newRow = table.insertRow(table.rows.length);
 
         that.insertNameAndDescriptionCell(plan, newRow);
-        that.insertStatistics(plan.estimatedTimeToComplete, newRow);
+        that.insertStatistics(plan, newRow);
         that.insertList(plan.component, newRow);
         that.insertList(plan.eventCategory, newRow);
         that.insertOperationsLinksCell(plan, newRow);
@@ -60,8 +60,22 @@ function PlansList() {
         that.insertCell(row, row.length).appendChild(list);
     };
 
-    that.insertStatistics = function (estimatedTimeToComplete, row) {
-        var months = Math.floor(estimatedTimeToComplete / 30), days = estimatedTimeToComplete % 30, result = '~';
+    that.insertStatistics = function (plan, row) {
+        var list = that.createList();
+
+        that.addToList(list, document.createTextNode('Optimistic: ' + that.getEstimatedTimeToCompleteText(plan.optimisticTimeToComplete)));
+        that.addToList(list, document.createTextNode('The worst: ' + that.getEstimatedTimeToCompleteText(plan.theWorstTimeToComplete)));
+        that.addToList(list, document.createTextNode('Time reserve: ' + that.getEstimatedTimeToCompleteText(plan.reserveTimeInDays)));
+
+        that.insertCell(row, row.length).appendChild(list);
+    };
+
+    that.getEstimatedTimeToCompleteText = function (numberOfDays) {
+        var months = Math.floor(numberOfDays / 30), days = numberOfDays % 30, result = '~';
+
+        if (numberOfDays === 0) {
+            return 'none';
+        }
 
         if (months === 1) {
             result += months + ' month';
@@ -77,7 +91,7 @@ function PlansList() {
             result += days + ' days';
         }
 
-        that.insertCell(row, row.length).appendChild(document.createTextNode(result));
+        return result;
     };
 
     that.insertOperationsLinksCell = function (plan, row) {

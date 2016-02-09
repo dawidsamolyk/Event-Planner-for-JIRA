@@ -32,9 +32,13 @@ public interface Plan extends Entity, NamedEntityWithDescription {
 
     int getReserveTimeInDays();
 
-    void setReserveTimeInDays(int reserveTimeInDays);
+    void setReserveTimeInDays(int value);
 
-    int getEstimatedDaysToComplete();
+    int getOptimisticTimeToComplete();
 
-    void setEstimatedDaysToComplete(int value);
+    void setOptimisticTimeToComplete(int value);
+
+    int getTheWorstTimeToComplete();
+
+    void setTheWorstTimeToComplete(int value);
 }

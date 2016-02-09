@@ -80,7 +80,7 @@ class RelationsManager {
                 result.add(associate(plan, each));
             }
         }
-        helper.updateNeededDaysToComplete(plan);
+        helper.updateEstimatedDaysToComplete(plan);
         return result;
     }
 

@@ -99,7 +99,7 @@
                 <label for="plan-reserve-time">Time reserve</label>
                 <input id="plan-reserve-time" class="text short-field" name="plan-reserve-time" type="number" min="0" placeholder="Day(s)"> day(s)
 
-                <div class="description" id="plan-reserve-time-description">Extra time for complete Event Plan.</div>
+                <div class="description" id="plan-reserve-time-description">Estimated extra time for complete Event Plan.</div>
             </div>
 
             <div class="field-group">

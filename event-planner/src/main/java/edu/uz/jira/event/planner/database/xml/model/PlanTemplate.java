@@ -30,11 +30,13 @@ public class PlanTemplate implements ActiveObjectWrapper {
     @XmlAttribute(name = "description")
     private String description;
     @XmlAttribute(name = "reserveTimeInDays")
-    private int reserveTimeInDays;
+    private int reserveTimeInDays = 0;
+    @XmlAttribute(name = "optimisticTimeToComplete")
+    private int optimisticTimeToComplete = -1;
+    @XmlAttribute(name = "theWorstTimeToComplete")
+    private int theWorstTimeToComplete = -1;
     @XmlAttribute
     private int id;
-    @XmlAttribute
-    private int estimatedTimeToComplete;
 
     /**
      * @return Event Plan Configuration with all empty fields (but not null).
@@ -68,7 +70,8 @@ public class PlanTemplate implements ActiveObjectWrapper {
             }
             setEventCategory(categories);
 
-            setEstimatedTimeToComplete(plan.getEstimatedDaysToComplete());
+            setOptimisticTimeToComplete(plan.getOptimisticTimeToComplete());
+            setTheWorstTimeToComplete(plan.getTheWorstTimeToComplete());
         }
         return this;
     }
@@ -154,12 +157,20 @@ public class PlanTemplate implements ActiveObjectWrapper {
         this.reserveTimeInDays = reserveTimeInDays;
     }
 
-    public int getEstimatedTimeToComplete() {
-        return estimatedTimeToComplete;
+    public int getOptimisticTimeToComplete() {
+        return optimisticTimeToComplete;
     }
 
-    public void setEstimatedTimeToComplete(int estimatedTimeToComplete) {
-        this.estimatedTimeToComplete = estimatedTimeToComplete;
+    public void setOptimisticTimeToComplete(int optimisticTimeToComplete) {
+        this.optimisticTimeToComplete = optimisticTimeToComplete;
+    }
+
+    public int getTheWorstTimeToComplete() {
+        return theWorstTimeToComplete;
+    }
+
+    public void setTheWorstTimeToComplete(int theWorstTimeToComplete) {
+        this.theWorstTimeToComplete = theWorstTimeToComplete;
     }
 
     @Override
@@ -170,8 +181,9 @@ public class PlanTemplate implements ActiveObjectWrapper {
         PlanTemplate that = (PlanTemplate) o;
 
         if (reserveTimeInDays != that.reserveTimeInDays) return false;
+        if (optimisticTimeToComplete != that.optimisticTimeToComplete) return false;
+        if (theWorstTimeToComplete != that.theWorstTimeToComplete) return false;
         if (id != that.id) return false;
-        if (estimatedTimeToComplete != that.estimatedTimeToComplete) return false;
         if (eventCategory != null ? !eventCategory.equals(that.eventCategory) : that.eventCategory != null)
             return false;
         if (component != null ? !component.equals(that.component) : that.component != null) return false;
@@ -187,8 +199,9 @@ public class PlanTemplate implements ActiveObjectWrapper {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + reserveTimeInDays;
+        result = 31 * result + optimisticTimeToComplete;
+        result = 31 * result + theWorstTimeToComplete;
         result = 31 * result + id;
-        result = 31 * result + estimatedTimeToComplete;
         return result;
     }
 }

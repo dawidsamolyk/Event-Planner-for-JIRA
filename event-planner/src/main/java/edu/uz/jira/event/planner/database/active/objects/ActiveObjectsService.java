@@ -126,7 +126,7 @@ public class ActiveObjectsService {
     }
 
     private int getEstimatedTimeToComplete(@Nonnull final Plan plan) {
-        return plan.getEstimatedDaysToComplete();
+        return plan.getOptimisticTimeToComplete();
     }
 
     /**

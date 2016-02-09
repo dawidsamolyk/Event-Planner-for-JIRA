@@ -43,7 +43,6 @@ import net.java.ao.test.converters.NameConverters;
 import net.java.ao.test.jdbc.Hsql;
 import net.java.ao.test.jdbc.Jdbc;
 import net.java.ao.test.junit.ActiveObjectsJUnitRunner;
-import net.java.ao.util.StringUtils;
 import org.apache.commons.collections.MapUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -331,7 +330,7 @@ public class EventPlanConfigWebworkActionTest {
         EventPlanConfigurationAction fixture = new EventPlanConfigurationAction(mocki18n, activeObjectsService);
 
         Map<String, List<String>> eventPlans = fixture.getEventPlans();
-        Map<String, String> result = fixture.getEstimatedTimeForEachPlan();
+        Map<String, Integer> result = fixture.getEstimatedTimeForEachPlan();
 
         Set<String> allPlans = new HashSet<String>();
         for (List<String> eachPlans : eventPlans.values()) {
@@ -339,9 +338,6 @@ public class EventPlanConfigWebworkActionTest {
         }
         for (String each : result.keySet()) {
             assertTrue(allPlans.contains(each));
-        }
-        for (String each : result.values()) {
-            assertTrue(!StringUtils.isBlank(each));
         }
     }
 

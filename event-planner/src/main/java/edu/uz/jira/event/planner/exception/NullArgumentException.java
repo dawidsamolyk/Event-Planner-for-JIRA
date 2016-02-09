@@ -13,4 +13,8 @@ public class NullArgumentException extends Exception {
     public NullArgumentException(final String className) {
         super("Argument " + className + " must not be null.");
     }
+
+    public NullArgumentException() {
+        super();
+    }
 }

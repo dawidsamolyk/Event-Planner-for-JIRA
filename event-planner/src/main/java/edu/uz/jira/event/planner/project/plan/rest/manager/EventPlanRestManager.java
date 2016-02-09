@@ -1,25 +1,20 @@
 package edu.uz.jira.event.planner.project.plan.rest.manager;
 
-import com.atlassian.jira.bc.issue.IssueService;
-import com.atlassian.jira.bc.project.component.ProjectComponent;
-import com.atlassian.jira.bc.project.component.ProjectComponentManager;
 import com.atlassian.jira.component.ComponentAccessor;
-import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
-import com.atlassian.jira.project.version.Version;
-import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.sal.api.user.UserManager;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
+import edu.uz.jira.event.planner.database.xml.converter.ProjectToTemplateConverter;
 import edu.uz.jira.event.planner.database.xml.exporter.EventPlanExporter;
-import edu.uz.jira.event.planner.database.xml.model.*;
+import edu.uz.jira.event.planner.database.xml.model.EventPlanTemplates;
+import edu.uz.jira.event.planner.database.xml.model.PlanTemplate;
 import edu.uz.jira.event.planner.exception.ActiveObjectSavingException;
 import edu.uz.jira.event.planner.exception.EmptyComponentsListException;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
-import edu.uz.jira.event.planner.project.ProjectUtils;
 import edu.uz.jira.event.planner.project.plan.rest.ActiveObjectWrapper;
 import edu.uz.jira.event.planner.util.text.TextUtils;
 import net.java.ao.Entity;
@@ -40,7 +35,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -48,11 +42,9 @@ import java.util.List;
  */
 @Path("/plan")
 public class EventPlanRestManager extends RestManager {
-    private final JiraAuthenticationContext authenticationContext;
     private final ProjectManager projectManager;
-    private final ProjectComponentManager projectComponentManager;
-    private final IssueService issueService;
-    private ProjectUtils projectUtils;
+    private final ProjectToTemplateConverter converter;
+
 
     /**
      * Constructor.
@@ -60,20 +52,24 @@ public class EventPlanRestManager extends RestManager {
      * @param userManager          Injected {@code UserManager} implementation.
      * @param transactionTemplate  Injected {@code TransactionTemplate} implementation.
      * @param activeObjectsService Event Organization Plan Service which manages Active Objects (Plans, Domains, Tasks etc.).
+     * @param i18nResolver          Injected {@code I18nResolver} implementation.
      */
     public EventPlanRestManager(@Nonnull final UserManager userManager,
                                 @Nonnull final TransactionTemplate transactionTemplate,
                                 @Nonnull final ActiveObjectsService activeObjectsService,
                                 @Nonnull final I18nResolver i18nResolver) {
         super(userManager, transactionTemplate, activeObjectsService, PlanTemplate.createEmpty());
-        projectUtils = new ProjectUtils(i18nResolver);
         projectManager = ComponentAccessor.getProjectManager();
-        projectComponentManager = ComponentAccessor.getProjectComponentManager();
-        issueService = ComponentAccessor.getIssueService();
-        authenticationContext = ComponentAccessor.getJiraAuthenticationContext();
-
+        converter = new ProjectToTemplateConverter(i18nResolver);
     }
 
+    /**
+     * Exports selected Event Plan to XML file. Returns File instance.
+     *
+     * @param planId  ID of plan to export.
+     * @param request Http Servlet request.
+     * @return Response of request.
+     */
     @POST
     @Consumes(MediaType.TEXT_PLAIN)
     public Response post(String planId, @Context final HttpServletRequest request) {
@@ -114,6 +110,13 @@ public class EventPlanRestManager extends RestManager {
         }
     }
 
+    /**
+     * Adds new Event Plan template basing on existent Project.
+     *
+     * @param configuration Configuration of new Event Plan template.
+     * @param request       Http Servlet request.
+     * @return Response of request.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response post(NewPlanTemplateConfiguration configuration, @Context final HttpServletRequest request) {
@@ -128,7 +131,7 @@ public class EventPlanRestManager extends RestManager {
 
         PlanTemplate planTemplate;
         try {
-            planTemplate = getEventPlanTemplate(project, configuration);
+            planTemplate = converter.getEventPlanTemplate(project, configuration);
         } catch (EmptyComponentsListException e) {
             return helper.buildStatus(Response.Status.NOT_ACCEPTABLE);
         } catch (NullArgumentException e) {
@@ -146,95 +149,6 @@ public class EventPlanRestManager extends RestManager {
         }
 
         return helper.buildStatus(Response.Status.OK);
-    }
-
-    private PlanTemplate getEventPlanTemplate(@Nonnull final Project project, @Nonnull final NewPlanTemplateConfiguration configuration) throws EmptyComponentsListException, NullArgumentException {
-        PlanTemplate result = new PlanTemplate();
-
-        result.setName(configuration.getName());
-        result.setDescription(configuration.getDescription());
-        result.setReserveTimeInDays(Integer.parseInt(configuration.getReserveTime()));
-
-        List<EventCategory> categories = getEventCategories(configuration);
-        result.setEventCategory(categories);
-
-        List<ComponentTemplate> components = getComponentTemplates(project);
-        result.setComponent(components);
-
-        if (components.isEmpty()) {
-            throw new EmptyComponentsListException();
-        }
-
-        return result;
-    }
-
-    private List<ComponentTemplate> getComponentTemplates(@Nonnull final Project project) throws NullArgumentException {
-        List<ComponentTemplate> components = new ArrayList<ComponentTemplate>();
-        for (ProjectComponent eachComponent : project.getProjectComponents()) {
-            ComponentTemplate eachComponentTemplate = new ComponentTemplate();
-            eachComponentTemplate.setName(eachComponent.getName());
-            eachComponentTemplate.setDescription(eachComponent.getDescription());
-
-            List<TaskTemplate> tasks = getTaskTemplates(eachComponent, projectUtils.getDueDateVersion(project));
-            eachComponentTemplate.setTask(tasks);
-
-            components.add(eachComponentTemplate);
-        }
-        return components;
-    }
-
-    private List<TaskTemplate> getTaskTemplates(@Nonnull final ProjectComponent eachComponent, @Nonnull final Version dueDateVersion) {
-        List<TaskTemplate> result = new ArrayList<TaskTemplate>();
-
-        for (Long issueId : projectComponentManager.getIssueIdsWithComponent(eachComponent)) {
-            Issue issue = issueService.getIssue(authenticationContext.getUser(), issueId).getIssue();
-
-            TaskTemplate taskTemplate = new TaskTemplate();
-            taskTemplate.setName(issue.getSummary());
-            taskTemplate.setDescription(issue.getDescription());
-
-            Calendar issueDueDate = Calendar.getInstance(authenticationContext.getLocale());
-            issueDueDate.setTime(issue.getDueDate());
-            Calendar projectDueDate = Calendar.getInstance(authenticationContext.getLocale());
-            projectDueDate.setTime(dueDateVersion.getReleaseDate());
-
-            int diffYear = projectDueDate.get(Calendar.YEAR) - issueDueDate.get(Calendar.YEAR);
-            int diffMonths = (diffYear * 12) + projectDueDate.get(Calendar.MONTH) - issueDueDate.get(Calendar.MONTH);
-            int diffDays = projectDueDate.get(Calendar.DAY_OF_YEAR) - issueDueDate.get(Calendar.DAY_OF_YEAR);
-
-            taskTemplate.setNeededMonthsBeforeEvent(diffMonths);
-            taskTemplate.setNeededDaysBeforeEvent(diffDays);
-            taskTemplate.setSubTask(getSubTaskTemplates(issue));
-
-            result.add(taskTemplate);
-        }
-
-        return result;
-    }
-
-    private List<SubTaskTemplate> getSubTaskTemplates(@Nonnull final Issue issue) {
-        List<SubTaskTemplate> result = new ArrayList<SubTaskTemplate>();
-
-        for (Issue eachSubTask : issue.getSubTaskObjects()) {
-            SubTaskTemplate subTask = new SubTaskTemplate();
-
-            subTask.setName(eachSubTask.getSummary());
-            subTask.setDescription(eachSubTask.getDescription());
-
-            result.add(subTask);
-        }
-
-        return result;
-    }
-
-    private List<EventCategory> getEventCategories(@Nonnull final NewPlanTemplateConfiguration configuration) {
-        List<EventCategory> categories = new ArrayList<EventCategory>();
-        for (String eachCategoryName : configuration.getCategories()) {
-            EventCategory eachCategory = new EventCategory();
-            eachCategory.setName(eachCategoryName);
-            categories.add(eachCategory);
-        }
-        return categories;
     }
 
     /**
