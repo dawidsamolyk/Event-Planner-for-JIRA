@@ -84,6 +84,7 @@ function TimeLineInfoProvider() {
 
     that.startCheckingIsAnyTaskWasChanged = function (timeLine) {
         var timeoutTimeInSeconds = 30, millisecondsMultiplier = 1000, flag;
+        that.lastRequestTime = new Date().getTime();
 
         that.checkIsAnyTaskWasChanged = function () {
             window.setTimeout(function () {

@@ -29,13 +29,13 @@
                 <tbody>
                 <tr>
                     <td style="text-align: left;">
-                        <button id="previous-week" class="aui-button" style="width: 200px;"><< Previous week</button>
+                        <button id="previous-week" class="aui-button" style="width: 200px;" ondragover="timeLine.showPreviousWeek()"><< Previous week</button>
                     </td>
                     <td style="text-align: center;">
-                        <button id="current-week" class="aui-button" style="width: 200px;">Current week</button>
+                        <button id="current-week" class="aui-button" style="width: 200px;" ondragover="timeLine.showCurrentWeek()">Current week</button>
                     </td>
                     <td style="text-align: right;">
-                        <button id="next-week" class="aui-button" style="width: 200px;">Next week >></button>
+                        <button id="next-week" class="aui-button" style="width: 200px;" ondragover="timeLine.showNextWeek()">Next week >></button>
                     </td>
                 </tr>
                 </tbody>
@@ -113,7 +113,7 @@
             <tr>
                 <td headers="name">DONE</td>
                 <td headers="apperance">
-                    <li class="gadget color4" style="position: relative; list-style: none; width: 200px;">
+                    <li class="gadget color4" style="position: relative; list-style: none; width: 200px; text-decoration: line-through;">
                         <div class="dashboard-item-frame gadget-container">
                             <div class="dashboard-item-header">
                     <span class="aui-icon aui-icon-small aui-iconfont-component" title="Components: Example component"

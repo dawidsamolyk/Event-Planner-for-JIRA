@@ -27,7 +27,7 @@ function DraggableListener() {
                 that.changeTaskGadgetColor(taskGadget, targetColumnId, timeLine.shouldDisplayLateTasksColumn());
                 that.changeTaskStatus(taskGadget.id, targetColumnId, targetColumnDate, timeLine);
 
-                timeLine.infoProvider.startCheckingIsAnyTaskWasChanged();
+                timeLine.infoProvider.startCheckingIsAnyTaskWasChanged(timeLine);
             }
         }).disableSelection();
     };
