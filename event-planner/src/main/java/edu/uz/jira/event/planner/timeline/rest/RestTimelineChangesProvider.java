@@ -2,6 +2,7 @@ package edu.uz.jira.event.planner.timeline.rest;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.Issue;
+import com.atlassian.jira.issue.IssueManager;
 import com.atlassian.jira.issue.changehistory.ChangeHistory;
 import com.atlassian.jira.issue.changehistory.ChangeHistoryManager;
 import com.atlassian.jira.project.Project;
@@ -21,10 +22,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * REST manager which provides information about project changes for Time Line.
@@ -34,6 +32,7 @@ public class RestTimelineChangesProvider {
     private final TransactionTemplate transactionTemplate;
     private final RestManagerHelper helper;
     private final ProjectManager projectManager;
+    private final IssueManager issueManager;
     private ChangeHistoryManager changeHistoryManager;
 
     /**
@@ -46,6 +45,7 @@ public class RestTimelineChangesProvider {
         helper = new RestManagerHelper();
         projectManager = ComponentAccessor.getProjectManager();
         changeHistoryManager = ComponentAccessor.getChangeHistoryManager();
+        issueManager = ComponentAccessor.getIssueManager();
     }
 
     @POST
@@ -55,6 +55,8 @@ public class RestTimelineChangesProvider {
         if (!configuration.isFullfilled()) {
             return helper.buildStatus(Response.Status.NOT_ACCEPTABLE);
         }
+        Date lastRequestTime = configuration.getLastRequestTime();
+        List<String> currentTasksKeys = new ArrayList<String>(configuration.getCurrentTasksKeys());
 
         Project project = projectManager.getProjectByCurrentKeyIgnoreCase(configuration.getProjectKey());
         if (project == null) {
@@ -63,24 +65,28 @@ public class RestTimelineChangesProvider {
 
         Collection<Long> issuesIds;
         try {
-            issuesIds = ComponentAccessor.getIssueManager().getIssueIdsForProject(project.getId());
+            issuesIds = issueManager.getIssueIdsForProject(project.getId());
         } catch (GenericEntityException e) {
             return helper.buildStatus(Response.Status.NOT_FOUND);
         }
 
         final List<String> changedIssuesKeys = new ArrayList<String>();
-        for (Issue each : ComponentAccessor.getIssueManager().getIssueObjects(issuesIds)) {
-            List<ChangeHistory> changeHistory = changeHistoryManager.getChangeHistoriesSince(each, configuration.getLastRequestTime());
+        for (Issue each : issueManager.getIssueObjects(issuesIds)) {
+            List<ChangeHistory> changeHistory = changeHistoryManager.getChangeHistoriesSince(each, lastRequestTime);
 
-            if (!changeHistory.isEmpty()) {
+            if (!changeHistory.isEmpty() || each.getCreated().after(lastRequestTime)) {
                 changedIssuesKeys.add(each.getKey());
             }
+
+            currentTasksKeys.remove(each.getKey());
+        }
+        if(!currentTasksKeys.isEmpty()) {
+            changedIssuesKeys.addAll(currentTasksKeys);
         }
 
-        if(changedIssuesKeys.isEmpty()) {
+        if (changedIssuesKeys.isEmpty()) {
             return helper.buildStatus(Response.Status.NO_CONTENT);
         }
-
         return Response.ok(new GenericEntity<List<String>>(changedIssuesKeys) {
         }).build();
     }
@@ -88,6 +94,7 @@ public class RestTimelineChangesProvider {
     public static class TimeLineChangesConfiguration {
         private String projectKey;
         private long lastRequestTime;
+        private String[] currentTasksKeys;
 
         public String getProjectKey() {
             return projectKey;
@@ -109,22 +116,12 @@ public class RestTimelineChangesProvider {
             return StringUtils.isNotBlank(projectKey);
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            TimeLineChangesConfiguration that = (TimeLineChangesConfiguration) o;
-
-            if (lastRequestTime != that.lastRequestTime) return false;
-            return projectKey != null ? projectKey.equals(that.projectKey) : that.projectKey == null;
+        public List<String> getCurrentTasksKeys() {
+            return Arrays.asList(currentTasksKeys);
         }
 
-        @Override
-        public int hashCode() {
-            int result = projectKey != null ? projectKey.hashCode() : 0;
-            result = 31 * result + (int) (lastRequestTime ^ (lastRequestTime >>> 32));
-            return result;
+        public void setCurrentTasksKeys(String[] currentTasksKeys) {
+            this.currentTasksKeys = currentTasksKeys;
         }
     }
 }
