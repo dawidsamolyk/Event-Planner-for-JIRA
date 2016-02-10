@@ -83,7 +83,7 @@ function TimeLineInfoProvider() {
     };
 
     that.startCheckingIsAnyTaskWasChanged = function (timeLine) {
-        var timeoutTimeInSeconds = 30, millisecondsMultiplier = 1000, flag;
+        var timeoutTimeInSeconds = 60, millisecondsMultiplier = 1000, flag;
         that.lastRequestTime = new Date().getTime();
 
         that.checkIsAnyTaskWasChanged = function () {
@@ -103,9 +103,14 @@ function TimeLineInfoProvider() {
                     processData: false,
                     success: function (data, textStatus, jqXHR) {
                         if (jqXHR.statusText === "OK" && flag === undefined) {
+                            var task = 'Task ';
+                            if (data.length > 1) {
+                                task = 'Tasks ';
+                            }
+
                             flag = require('aui/flag')({
                                 type: 'info',
-                                title: 'Tasks ' + data + ' was changed.',
+                                title: task + data + ' was changed.',
                                 body: '<a href="#" id="refresh-timeLine" style="cursor: hand;">Refresh TimeLine</a>'
                             });
 
