@@ -3,6 +3,7 @@ function TimeLineInfoProvider() {
     var that = this;
     that.weeksCalculator = new WeeksCalculator();
     that.dateUtil = new DateUtil();
+    that.checkIsAnyTaskWasChanged = null;
     that.lastRequestTime = new Date().getTime();
 
     that.getTimeLineWeeks = function (deadlineDate, tasks) {
@@ -77,10 +78,14 @@ function TimeLineInfoProvider() {
         }
     };
 
-    that.showFlagIfAnyTaskChanged = function (timeLine) {
-        var timeoutTimeInSeconds = 30, millisecondsMultiplier = 1000;
+    that.stopCheckingIsAnyTaskWasChanged = function () {
+        that.checkIsAnyTaskWasChanged = null;
+    };
 
-        function checkIsAnyTaskWasChanged() {
+    that.startCheckingIsAnyTaskWasChanged = function (timeLine) {
+        var timeoutTimeInSeconds = 30, millisecondsMultiplier = 1000, flag;
+
+        that.checkIsAnyTaskWasChanged = function () {
             window.setTimeout(function () {
                 var each, tasksKeys = [];
 
@@ -96,8 +101,8 @@ function TimeLineInfoProvider() {
                     dataType: "json",
                     processData: false,
                     success: function (data, textStatus, jqXHR) {
-                        if (jqXHR.statusText === "OK") {
-                            var flag = require('aui/flag')({
+                        if (jqXHR.statusText === "OK" && flag === undefined) {
+                            flag = require('aui/flag')({
                                 type: 'info',
                                 title: 'Tasks ' + data + ' was changed.',
                                 body: '<a href="#" id="refresh-timeLine" style="cursor: hand;">Refresh TimeLine</a>'
@@ -107,16 +112,16 @@ function TimeLineInfoProvider() {
                                 e.preventDefault();
                                 timeLine.refresh();
                                 flag.close();
+                                flag = undefined;
                             });
                         }
                     },
-                    complete: checkIsAnyTaskWasChanged
+                    complete: that.checkIsAnyTaskWasChanged
                 });
 
                 that.lastRequestTime = new Date().getTime();
             }, timeoutTimeInSeconds * millisecondsMultiplier);
-        }
-
-        checkIsAnyTaskWasChanged();
+        };
+        that.checkIsAnyTaskWasChanged();
     };
 }

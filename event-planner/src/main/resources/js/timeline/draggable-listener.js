@@ -13,6 +13,8 @@ function DraggableListener() {
             delay: 150,
             opacity: 0.7,
             stop: function (event, ui) {
+                timeLine.infoProvider.stopCheckingIsAnyTaskWasChanged();
+
                 var taskGadget, targetColumnId, targetColumnDate;
                 if (that.isSameTargetAndSourceList(event)) {
                     return;
@@ -24,6 +26,8 @@ function DraggableListener() {
 
                 that.changeTaskGadgetColor(taskGadget, targetColumnId, timeLine.shouldDisplayLateTasksColumn());
                 that.changeTaskStatus(taskGadget.id, targetColumnId, targetColumnDate, timeLine);
+
+                timeLine.infoProvider.startCheckingIsAnyTaskWasChanged();
             }
         }).disableSelection();
     };
