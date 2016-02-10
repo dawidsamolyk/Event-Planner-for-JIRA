@@ -11,6 +11,14 @@
         <div class="aui-page-header-main">
             <h1 id="time-line-name"></h1>
         </div>
+        <div class="aui-page-header-actions">
+            <div class="aui-buttons">
+                <a href="#" title="Refresh TimeLine" id="refresh-time-line"><span
+                        class="aui-icon aui-icon-large aui-iconfont-refresh-small">Refresh TimeLine</span></a>
+                <a href="#" title="Show TimeLine Help" id="time-line-help"><span
+                        class="aui-icon aui-icon-large aui-iconfont-help">TimeLine Help</span></a>
+            </div>
+        </div>
     </div>
 </header>
 
@@ -44,6 +52,134 @@
         </section>
     </div>
 </div>
+
+<section id="time-line-help-dialog" role="dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+    <header class="aui-dialog2-header">
+        <h2 class="aui-dialog2-header-main">Help for TimeLine view</h2>
+    </header>
+    <div class="aui-dialog2-content">
+        <h3>1) Tasks states:</h3>
+        <table class="aui">
+            <thead>
+            <tr>
+                <th id="state">State</th>
+                <th id="apperance">Apperance</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td headers="state">TO DO</td>
+                <td headers="apperance">
+                    <li class="gadget color1" style="position: relative; list-style: none; width: 200px;">
+                        <div class="dashboard-item-frame gadget-container">
+                            <div class="dashboard-item-header">
+                    <span class="aui-icon aui-icon-small aui-iconfont-component" title="Components: Example component"
+                          style="-webkit-filter: invert(100%); vertical-align: middle; margin: 2px;"></span>
+                    <span class="aui-icon aui-icon-small aui-iconfont-user" title="Assignee: example user name"
+                          height="16" width="16" style="margin: 2px; vertical-align: middle;">Example user avatar</span>
+                    <span class="dashboard-item-title" title="Task key: EXAMPLE-1"
+                          style="vertical-align: middle; padding: 4px;">EXAMPLE-1</span>
+                            </div>
+                            <div class="dashboard-item-content" style="margin: 1px;">
+                                <a href="#" title="Summary: Example task TO DO summary" style="font-size: 13px;">Example
+                                    task TO
+                                    DO summary</a>
+                            </div>
+                        </div>
+                    </li>
+                </td>
+            </tr>
+            <tr>
+                <td headers="name">IN PROGRESS</td>
+                <td headers="apperance">
+                    <li class="gadget color3" style="position: relative; list-style: none; width: 200px;">
+                        <div class="dashboard-item-frame gadget-container">
+                            <div class="dashboard-item-header">
+                    <span class="aui-icon aui-icon-small aui-iconfont-component" title="Components: Example component"
+                          style="-webkit-filter: invert(100%); vertical-align: middle; margin: 2px;"></span>
+                    <span class="aui-icon aui-icon-small aui-iconfont-user" title="Assignee: example user name"
+                          height="16" width="16" style="margin: 2px; vertical-align: middle;">Example user avatar</span>
+                    <span class="dashboard-item-title" title="Task key: EXAMPLE-2"
+                          style="vertical-align: middle; padding: 4px;">EXAMPLE-2</span>
+                            </div>
+                            <div class="dashboard-item-content" style="margin: 1px;">
+                                <a href="#" title="Summary: Example IN PROGRESS task summary" style="font-size: 13px;">Example
+                                    IN PROGRESS task summary</a>
+                            </div>
+                        </div>
+                    </li>
+                </td>
+            </tr>
+            <tr>
+                <td headers="name">DONE</td>
+                <td headers="apperance">
+                    <li class="gadget color4" style="position: relative; list-style: none; width: 200px;">
+                        <div class="dashboard-item-frame gadget-container">
+                            <div class="dashboard-item-header">
+                    <span class="aui-icon aui-icon-small aui-iconfont-component" title="Components: Example component"
+                          style="-webkit-filter: invert(100%); vertical-align: middle; margin: 2px;"></span>
+                    <span class="aui-icon aui-icon-small aui-iconfont-user" title="Assignee: example user name"
+                          height="16" width="16" style="margin: 2px; vertical-align: middle;">Example user avatar</span>
+                    <span class="dashboard-item-title" title="Task key: EXAMPLE-3"
+                          style="vertical-align: middle; padding: 4px;">EXAMPLE-3</span>
+                            </div>
+                            <div class="dashboard-item-content" style="margin: 1px;">
+                                <a href="#" title="Summary: Example DONE task summary" style="font-size: 13px;">Example
+                                    DONE
+                                    task summary</a>
+                            </div>
+                        </div>
+                    </li>
+                </td>
+            </tr>
+            <tr>
+                <td headers="name">LATE</td>
+                <td headers="apperance">
+                    <li class="gadget color7" style="position: relative; list-style: none; width: 200px;">
+                        <div class="dashboard-item-frame gadget-container">
+                            <div class="dashboard-item-header">
+                    <span class="aui-icon aui-icon-small aui-iconfont-component" title="Components: Example component"
+                          style="-webkit-filter: invert(100%); vertical-align: middle; margin: 2px;"></span>
+                    <span class="aui-icon aui-icon-small aui-iconfont-user" title="Assignee: example user name"
+                          height="16" width="16" style="margin: 2px; vertical-align: middle;">Example user avatar</span>
+                    <span class="dashboard-item-title" title="Task key: EXAMPLE-4"
+                          style="vertical-align: middle; padding: 4px;">EXAMPLE-4</span>
+                            </div>
+                            <div class="dashboard-item-content" style="margin: 1px;">
+                                <a href="#" title="Summary: Example LATE task summary" style="font-size: 13px;">Example
+                                    LATE
+                                    task summary</a>
+                            </div>
+                        </div>
+                    </li>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>2) You can drag and drop any Task to change it state and Due Date.</h3>
+        <h4>a) Drag and drop to another day to change Task Due Date:</h4>
+        <img class="drag-and-drop-image" title="Drag and drop to another day to change Task Due Date"
+             alt="Drag and drop to another day to change Task Due Date"/>
+
+        <h4>b) Drag and drop to bottom of TimeLine to change it state to DONE in selected day:</h4>
+        <img class="drag-and-drop-second-image"
+             title="Drag and drop to bottom to change it state to DONE in selected day"
+             alt="Drag and drop to bottom to change it state to DONE in selected day"/>
+
+        <h4>c) Drag over Previous or Next week button to change TimeLine view to previous/next week and then drop Task to destination day:</h4>
+        <img class="drag-and-drop-third-image"
+             title="Drag over Previous or Next week button to change TimeLine view to previous/next week and then drop Task to destination day"
+             alt="Drag over Previous or Next week button to change TimeLine view to previous/next week and then drop Task to destination day"/>
+    </div>
+
+    <footer class="aui-dialog2-footer">
+        <div class="aui-dialog2-footer-actions">
+            <button class="aui-button aui-button-primary" id="help-dialog-close-button">Close</button>
+        </div>
+    </footer>
+</section>
+
 <script type="text/javascript">
     function getParameterByName(name) {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -51,6 +187,8 @@
                 results = regex.exec(location.search);
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
+
+    var timeLine = new TimeLine();
 
     function loadDataForTimeLine() {
         var rest = new RESTManager();
@@ -67,8 +205,6 @@
         document.getElementById("time-line-name").innerHTML = pageTitle;
     }
 
-    var timeLine = new TimeLine();
-
     AJS.$(document).ready(
             function () {
                 loadDataForTimeLine();
@@ -78,6 +214,21 @@
     buttonsListener.onPreviousWeekChangeWeekView();
     buttonsListener.onNextWeekChangeWeekView();
     buttonsListener.onCurrentWeekChangeWeekView();
+
+    AJS.$('#refresh-time-line').click(function (e) {
+        e.preventDefault();
+        timeLine.refresh();
+    });
+
+    AJS.$('#time-line-help').click(function (e) {
+        e.preventDefault();
+        AJS.dialog2('#time-line-help-dialog').show();
+    });
+
+    AJS.$('#help-dialog-close-button').click(function (e) {
+        e.preventDefault();
+        AJS.dialog2('#time-line-help-dialog').hide();
+    });
 </script>
 </body>
 </html>

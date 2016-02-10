@@ -1,0 +1,17 @@
+.drag-and-drop-image {
+    content: url('images/time-line-drag-and-drop.png');
+    display: block;
+    margin: 0 auto;
+}
+
+.drag-and-drop-second-image {
+    content: url('images/time-line-drag-and-drop2.png');
+    display: block;
+    margin: 0 auto;
+}
+
+.drag-and-drop-third-image {
+    content: url('images/time-line-drag-and-drop3.png');
+    display: block;
+    margin: 0 auto;
+}

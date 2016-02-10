@@ -78,16 +78,16 @@ function TimeLineInfoProvider() {
     };
 
     that.showFlagIfAnyTaskChanged = function (timeLine) {
-        var timeoutTimeInSeconds = 60, millisecondsMultiplier = 1000;
+        var timeoutTimeInSeconds = 30, millisecondsMultiplier = 1000;
 
         function checkIsAnyTaskWasChanged() {
-            var each, tasksKeys = [];
-
-            for (each in timeLine.tasks) {
-                tasksKeys.push(timeLine.tasks[each].key);
-            }
-
             window.setTimeout(function () {
+                var each, tasksKeys = [];
+
+                for (each in timeLine.tasks) {
+                    tasksKeys.push(timeLine.tasks[each].key);
+                }
+
                 jQuery.ajax({
                     url: AJS.contextPath() + "/rest/event-plans/1.0/changes",
                     type: "POST",
@@ -112,6 +112,7 @@ function TimeLineInfoProvider() {
                     },
                     complete: checkIsAnyTaskWasChanged
                 });
+
                 that.lastRequestTime = new Date().getTime();
             }, timeoutTimeInSeconds * millisecondsMultiplier);
         }

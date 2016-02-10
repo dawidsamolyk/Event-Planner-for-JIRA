@@ -161,24 +161,23 @@
         <dependency>com.atlassian.gadgets.dashboard:dashboard</dependency>
         <resource type="velocity" name="view" location="/templates/timeline/time-line.vm"/>
         <resource type="download" name="time-line.js" location="/js/timeline/time-line.js"/>
-        <resource type="download" name="time-line-dates-creator.js"
-                  location="/js/timeline/time-line-dates-creator.js"/>
-        <resource type="download" name="time-line-tasks-creator.js"
-                  location="/js/timeline/time-line-tasks-creator.js"/>
-        <resource type="download" name="task-gadget-creator.js"
-                  location="/js/timeline/task-gadget-creator.js"/>
+        <resource type="download" name="time-line-dates-creator.js" location="/js/timeline/time-line-dates-creator.js"/>
+        <resource type="download" name="time-line-tasks-creator.js" location="/js/timeline/time-line-tasks-creator.js"/>
+        <resource type="download" name="task-gadget-creator.js" location="/js/timeline/task-gadget-creator.js"/>
         <resource type="download" name="date-util.js" location="/js/util/date-util.js"/>
         <resource type="download" name="time-line-buttons-listener.js"
                   location="/js/timeline/time-line-buttons-listener.js"/>
-        <resource type="download" name="time-line-info.js"
-                  location="/js/timeline/time-line-info.js"/>
+        <resource type="download" name="time-line-info.js" location="/js/timeline/time-line-info.js"/>
         <resource type="download" name="weeks-calculator.js" location="/js/util/weeks-calculator.js"/>
         <resource type="download" name="time-line-navigation-buttons.js"
                   location="/js/timeline/time-line-navigation-buttons.js"/>
         <resource type="download" name="draggable-listener.js" location="/js/timeline/draggable-listener.js"/>
         <resource type="download" name="rest-manager.js" location="/js/rest/rest-manager.js"/>
-        <resource type="download" name="time-line-tasks-toggle.js"
-                  location="/js/timeline/time-line-tasks-toggle.js"/>
+        <resource type="download" name="time-line-tasks-toggle.js" location="/js/timeline/time-line-tasks-toggle.js"/>
+        <resource type="download" name="TimeLine.css" location="/style/TimeLine.css"/>
+        <resource type="download" name="images/" location="/images">
+            <param name="content-type" value="image/png; charset=binary"/>
+        </resource>
     </web-resource>
 
     <web-item key="my_links_link" name="Event Organization Time Line" i18n-name-key="event.plan.timeline.menu.name"
