@@ -59,6 +59,7 @@ function TimeLine() {
         that.draggableListener.connect(jQuery.extend(lateCells, cells), that);
 
         that.infoProvider.showFlagsIfRequired(that.deadlineDate, that.tasks);
+        that.infoProvider.showFlagIfAnyTaskChanged(that.refresh);
     };
 
     that.showCurrentDisplayedWeek = function () {

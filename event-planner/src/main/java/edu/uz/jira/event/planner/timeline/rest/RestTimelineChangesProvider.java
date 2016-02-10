@@ -6,9 +6,6 @@ import com.atlassian.jira.issue.changehistory.ChangeHistory;
 import com.atlassian.jira.issue.changehistory.ChangeHistoryManager;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
-import com.atlassian.jira.security.JiraAuthenticationContext;
-import com.atlassian.jira.user.UserHistoryManager;
-import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import edu.uz.jira.event.planner.project.plan.rest.RestManagerHelper;
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +18,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -79,11 +77,12 @@ public class RestTimelineChangesProvider {
             }
         }
 
-        return Response.ok(transactionTemplate.execute(new TransactionCallback<String[]>() {
-            public String[] doInTransaction() {
-                return changedIssuesKeys.toArray(new String[changedIssuesKeys.size()]);
-            }
-        })).build();
+        if(changedIssuesKeys.isEmpty()) {
+            return helper.buildStatus(Response.Status.NO_CONTENT);
+        }
+
+        return Response.ok(new GenericEntity<List<String>>(changedIssuesKeys) {
+        }).build();
     }
 
     public static class TimeLineChangesConfiguration {

@@ -63,7 +63,7 @@
 <section role="dialog" id="event-plan-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
     <form class="aui" id="new-plan-configuration" action="">
         <header class="aui-dialog2-header">
-            <h2 class="aui-dialog2-header-main">Add Event Organization Plan Template</h2>
+            <h2 class="aui-dialog2-header-main"><span class="aui-icon aui-icon-large aui-iconfont-bp-default">Event Plan Template Icon</span> Add Event Organization Plan Template</h2>
         </header>
         <div class="aui-dialog2-content">
             <div class="field-group">

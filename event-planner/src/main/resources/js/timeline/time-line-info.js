@@ -75,4 +75,40 @@ function TimeLineInfoProvider() {
             });
         }
     };
-};
+
+    that.showFlagIfAnyTaskChanged = function (refreshTimeLineFunction) {
+        var lastRequestTime = new Date().getTime();
+
+        (function checkTasksChanges() {
+            jQuery.ajax({
+                url: AJS.contextPath() + "/rest/event-plans/1.0/changes",
+                type: "POST",
+                contentType: "application/json",
+                data: '{ "projectKey": "TEST", "lastRequestTime": ' + lastRequestTime + ' }',
+                dataType: "json",
+                processData: false,
+                success: function (data, textStatus, jqXHR) {
+                    if (jqXHR.statusText === "OK") {
+                        var flag = require('aui/flag')({
+                            type: 'info',
+                            title: 'Tasks ' + data + ' was changed.',
+                            body: '<a href="#" id="refresh-timeLine" style="cursor: hand;">Refresh TimeLine</a>'
+                        });
+
+                        AJS.$('#refresh-timeLine').click(function (e) {
+                            e.preventDefault();
+                            refreshTimeLineFunction();
+                            flag.close();
+                        });
+                    }
+                },
+                complete: function (jqXHR, textStatus) {
+                    lastRequestTime = new Date().getTime();
+
+                    var timeoutTimeInSeconds = 10, millisecondsMultiplier = 1000;
+                    setTimeout(checkTasksChanges, timeoutTimeInSeconds * millisecondsMultiplier);
+                }
+            });
+        }());
+    };
+}
