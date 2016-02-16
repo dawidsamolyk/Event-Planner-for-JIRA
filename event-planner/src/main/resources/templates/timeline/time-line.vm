@@ -3,7 +3,7 @@
 <head>
     <title>Event Organization TimeLine</title>
     <meta name="decorator" content="atl.general">
-    $webResourceManager.requireResource("edu.uz.jira.event.planner.event-planner:event-plan-timeline-resources")
+    $webResourceManager.requireResource("edu.uz.jira.event.planner.event-planner:timeline-resources")
 </head>
 <body>
 <header class="aui-page-header" style="padding: 20px 20px 20px 20px;">

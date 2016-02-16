@@ -42,6 +42,7 @@ public class EventOrganizationProjectHook implements AddProjectHook {
      *
      * @param i18nResolver              Injected {@code I18nResolver} implementation.
      * @param workflowTransitionService Injected {@code WorkflowTransitionService} implementation.
+     * @param activeObjectsService      Injected {@code ActiveObjectsService} implementation.
      * @throws NullArgumentException Thrown when any input argument is null.
      */
     public EventOrganizationProjectHook(@Nonnull final I18nResolver i18nResolver,

@@ -4,22 +4,27 @@
     <meta name="decorator" content="atl.admin">
     <meta name="admin.active.section" content="admin_project_menu/project_section"/>
     <meta name="admin.active.tab" content="event_plans"/>
-    $webResourceManager.requireResource("edu.uz.jira.event.planner.event-planner:event-plans-configuration-resources")
+    $webResourceManager.requireResource("edu.uz.jira.event.planner.event-planner:rest-manager-resources")
 </head>
 <body>
-<section role="dialog" id="plan-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
-    <header class="aui-dialog2-header">
-        <h2 class="aui-dialog2-header-main">Event Plan Template</h2>
-    </header>
-    <div class="aui-dialog2-content">
-
-    </div>
-    <footer class="aui-dialog2-footer">
-        <div class="aui-dialog2-footer-actions">
-            <button id="plan-back-button" class="aui-button">Back</button>
+<header class="aui-page-header">
+    <div class="aui-page-header-inner">
+        <div class="aui-page-header-main">
+            <h2>View Plan Template named <b id="plan-name"></b></h2>
         </div>
-    </footer>
-</section>
+        <div class="aui-page-header-actions">
+            <div class="aui-buttons">
+                <button id="back-button" class="aui-button trigger-dialog">
+                    Back
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<p id="plan-description"></p>
+
+<p id="plan-categories"></p>
 
 <script type="text/javascript">
     function getParameterByName(name) {
@@ -29,9 +34,54 @@
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
-    AJS.dialog2("#plan-dialog").show();
+    function PlanSelector() {
+        "use strict";
+        var that = this;
+        that.plan = undefined;
 
-    AJS.$("#plan-back-button").click(
+        that.setFromJson = function (allPlans) {
+            var eachKey, viewingPlanId = getParameterByName("id");
+
+            for (eachKey in allPlans) {
+                if (String(allPlans[eachKey].id) === viewingPlanId) {
+                    that.plan = allPlans[eachKey];
+                }
+            }
+
+            fillPageFromSelectedPlan(that.plan);
+
+            return true;
+        };
+    }
+
+    function fillPageFromSelectedPlan(plan) {
+        jQuery('#plan-name').append(plan.name);
+
+        if (plan.description && plan.description.length > 0) {
+            var planDescription = jQuery('#plan-description');
+            planDescription.append("Description: ");
+            planDescription.append(plan.description);
+        }
+
+        var planCategories = jQuery('#plan-categories');
+        planCategories.append("Categories: ");
+        for(var each in plan.eventCategory) {
+            var category = plan.eventCategory[each];
+            planCategories.append(category.name + ', ');
+        }
+    }
+
+    var selector = new PlanSelector();
+
+    AJS.$(document).ready(
+            function () {
+                "use strict";
+                var rest = new RESTManager();
+                rest.get('plan', selector);
+            }
+    );
+
+    AJS.$("#back-button").click(
             function (e) {
                 e.preventDefault();
                 window.history.back(-1);

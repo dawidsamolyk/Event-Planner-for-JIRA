@@ -9,8 +9,8 @@
         <name>Dawid Samołyk</name>
         <url>http://weit.uz.zgora.pl/</url>
     </organization>
-    <name>Event Organization Planner</name>
-    <description>Event Organization Planner plugin for Atlassian JIRA.</description>
+    <name>Event Planner</name>
+    <description>Event Planner for JIRA.</description>
     <packaging>atlassian-plugin</packaging>
     <dependencies>
         <dependency>

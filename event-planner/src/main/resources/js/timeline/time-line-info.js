@@ -103,14 +103,14 @@ function TimeLineInfoProvider() {
                     processData: false,
                     success: function (data, textStatus, jqXHR) {
                         if (jqXHR.statusText === "OK" && flag === undefined) {
-                            var task = 'Task ';
+                            var flagTitleBeginnig = 'Task ';
                             if (data.length > 1) {
-                                task = 'Tasks ';
+                                flagTitleBeginnig = 'Tasks ';
                             }
 
                             flag = require('aui/flag')({
                                 type: 'info',
-                                title: task + data + ' was changed.',
+                                title: flagTitleBeginnig + data + ' was changed.',
                                 body: '<a href="#" id="refresh-timeLine" style="cursor: hand;">Refresh TimeLine</a>'
                             });
 
