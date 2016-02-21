@@ -293,6 +293,7 @@ function RESTManager() {
             complete: function () {
                 if (timeLine !== undefined) {
                     timeLine.refresh();
+                    timeLine.infoProvider.startCheckingIsAnyTaskWasChanged(timeLine);
                 }
             }
         });

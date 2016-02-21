@@ -65,7 +65,7 @@
         <header class="aui-dialog2-header">
             <h2 class="aui-dialog2-header-main"><span class="aui-icon aui-icon-large aui-iconfont-bp-default">Event Plan Template Icon</span> Add Event Organization Plan Template</h2>
         </header>
-        <div class="aui-dialog2-content">
+        <div class="aui-dialog2-content" style="overflow: auto; height: 350px;">
             <div class="field-group">
                 <label for="source-project">Source project<span class="aui-icon icon-required">(required)</span></label>
                 <select id="source-project" class="select" name="Source project" title="Source project"

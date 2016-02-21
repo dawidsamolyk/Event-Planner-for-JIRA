@@ -71,9 +71,11 @@ public class RestIssuesModifier {
         }
 
         issue = setDueDate(issue, issueData);
+        updateIssue(issue);
 
         try {
             issue = setStatus(issue, issueData.getStatus());
+            updateIssue(issue);
         } catch (WorkflowNotFoundException e) {
             return helper.buildStatus(Response.Status.FORBIDDEN);
         } catch (WorkflowActionNotFoundException e) {
@@ -82,12 +84,14 @@ public class RestIssuesModifier {
             return helper.buildStatus(Response.Status.FORBIDDEN);
         }
 
-        issueManager.updateIssue(getLoggedInUser(), issue, UpdateIssueRequest.builder().build());
-
         if (issueModified(issueData)) {
             return helper.buildStatus(Response.Status.OK);
         }
         return helper.buildStatus(Response.Status.CONFLICT);
+    }
+
+    private void updateIssue(MutableIssue issue) {
+        issueManager.updateIssue(getLoggedInUser(), issue, UpdateIssueRequest.builder().build());
     }
 
     private boolean issueModified(final IssueData issueData) {

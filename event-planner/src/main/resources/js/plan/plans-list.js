@@ -44,20 +44,19 @@ function PlansList() {
     };
 
     that.insertNameAndDescriptionCell = function (plan, row) {
-        var nameSpan, name, description, nameAndDescriptionCell;
+        var name, description, nameAndDescriptionCell;
 
-        nameSpan = that.createDiv(plan.name, "field-name");
-        name = that.createLink(nameSpan, AJS.contextPath() + "/secure/ViewEventPlanTemplate.jspa?id=".concat(plan.id), "View Event Plan template");
+        name = that.createDiv(plan.name, "field-name");
         description = that.createDiv(plan.description, "description secondary-text");
 
-        nameAndDescriptionCell = that.insertCell(row, 0);
+        nameAndDescriptionCell = that.insertCell(row);
         nameAndDescriptionCell.appendChild(name);
         nameAndDescriptionCell.appendChild(description);
     };
 
     that.insertList = function (array, countTasks, row) {
         var list = that.createListFrom(array, countTasks);
-        that.insertCell(row, row.length).appendChild(list);
+        that.insertCell(row).appendChild(list);
     };
 
     that.insertStatistics = function (plan, row) {
@@ -67,7 +66,7 @@ function PlansList() {
         that.addToList(list, document.createTextNode('The worst: ' + that.getEstimatedTimeToCompleteText(plan.theWorstTimeToComplete)));
         that.addToList(list, document.createTextNode('Time reserve: ' + that.getEstimatedTimeToCompleteText(plan.reserveTimeInDays)));
 
-        that.insertCell(row, row.length).appendChild(list);
+        that.insertCell(row).appendChild(list);
     };
 
     that.getEstimatedTimeToCompleteText = function (numberOfDays) {
@@ -104,7 +103,7 @@ function PlansList() {
         that.addToList(operationsList, exportLink);
         that.addToList(operationsList, deleteLink);
 
-        operationsCell = that.insertCell(row, row.length);
+        operationsCell = that.insertCell(row);
         operationsCell.appendChild(operationsList);
 
         AJS.$('#'.concat(exportLink.id)).click(
@@ -117,7 +116,7 @@ function PlansList() {
     };
 
     that.insertCell = function (row, index) {
-        return row.insertCell(index);
+        return row.insertCell(row.length);
     };
 
     that.createLink = function (element, href, title, id) {

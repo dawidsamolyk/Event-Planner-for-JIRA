@@ -133,10 +133,6 @@
                     alias="DeleteEventPlanTemplate">
                 <view name="input">/templates/webworks/plan/delete.vm</view>
             </action>
-            <action name="edu.uz.jira.event.planner.util.webwork.AlwaysShowInputAction"
-                    alias="ViewEventPlanTemplate">
-                <view name="input">/templates/webworks/plan/view.vm</view>
-            </action>
         </actions>
     </webwork1>
 

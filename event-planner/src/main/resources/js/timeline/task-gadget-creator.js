@@ -61,9 +61,9 @@ function TaskGadgetCreator() {
         var avatarImage, avatarLink;
 
         avatarLink = that.createElement('A');
-        avatarLink.href = "/jira/secure/ViewProfile.jspa?name=" + assigneeName;
+        avatarLink.href = AJS.contextPath() + "/secure/ViewProfile.jspa?name=" + assigneeName;
         avatarImage = that.createElement('IMG');
-        avatarImage.src = "/jira/secure/useravatar?avatarId=" + avatarId + "&amp;s=16";
+        avatarImage.src = AJS.contextPath() + "/secure/useravatar?avatarId=" + avatarId + "&size=16";
         avatarImage.title = 'Assignee: ' + assigneeName;
         avatarImage.height = 16;
         avatarImage.width = 16;
