@@ -35,16 +35,16 @@ public class ProjectCategoryConfiguratorTest {
     public void project_Category_Should_Be_Created_Only_Once() {
         ProjectCategoryConfigurator fixture = new ProjectCategoryConfigurator(mocki18n);
 
-        ProjectCategory projectCategory = fixture.createProjectCategory();
+        ProjectCategory projectCategory = fixture.getProjectCategory();
 
-        assertTrue(fixture.createProjectCategory() == projectCategory);
+        assertTrue(fixture.getProjectCategory() == projectCategory);
     }
 
     @Test
     public void project_Category_Should_Be_Created() {
         ProjectCategoryConfigurator fixture = new ProjectCategoryConfigurator(mocki18n);
 
-        ProjectCategory projectCategory = fixture.createProjectCategory();
+        ProjectCategory projectCategory = fixture.getProjectCategory();
 
         assertNotNull(projectCategory);
     }

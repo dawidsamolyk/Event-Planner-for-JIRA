@@ -36,7 +36,7 @@ function savePlan() {
         }
     );
 
-    rest.postPlan(projectKey, name, description, reserveTime, categories);
+    rest.putPlan(projectKey, name, description, reserveTime, categories);
 }
 
 function addListeners() {

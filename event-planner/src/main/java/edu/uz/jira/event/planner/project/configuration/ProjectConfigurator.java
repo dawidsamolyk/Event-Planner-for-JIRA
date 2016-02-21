@@ -1,10 +1,13 @@
-package edu.uz.jira.event.planner.project.plan;
+package edu.uz.jira.event.planner.project.configuration;
 
 import com.atlassian.jira.JiraException;
 import com.atlassian.jira.bc.issue.IssueService;
 import com.atlassian.jira.bc.project.component.ProjectComponent;
+import com.atlassian.jira.bc.project.component.ProjectComponentManager;
 import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.config.SubTaskManager;
 import com.atlassian.jira.config.properties.APKeys;
+import com.atlassian.jira.config.properties.ApplicationProperties;
 import com.atlassian.jira.exception.CreateException;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.IssueInputParameters;
@@ -12,6 +15,7 @@ import com.atlassian.jira.issue.issuetype.IssueType;
 import com.atlassian.jira.project.AssigneeTypes;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.version.Version;
+import com.atlassian.jira.project.version.VersionManager;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.sal.api.message.I18nResolver;
@@ -34,11 +38,24 @@ public class ProjectConfigurator {
     private final I18nResolver internationalization;
     private final IssueService issueService;
     private final JiraAuthenticationContext authenticationContext;
+    private final ProjectComponentManager projectComponentManager;
+    private final VersionManager versionManager;
+    private final ApplicationProperties applicationProperties;
+    private SubTaskManager subTaskManager;
 
+    /**
+     * Constructor.
+     *
+     * @param i18nResolver Injected {@code I18nResolver} implementation.
+     */
     public ProjectConfigurator(@Nonnull final I18nResolver i18nResolver) {
         internationalization = i18nResolver;
         authenticationContext = ComponentAccessor.getJiraAuthenticationContext();
         issueService = ComponentAccessor.getIssueService();
+        projectComponentManager = ComponentAccessor.getProjectComponentManager();
+        versionManager = ComponentAccessor.getVersionManager();
+        applicationProperties = ComponentAccessor.getApplicationProperties();
+        subTaskManager = ComponentAccessor.getSubTaskManager();
     }
 
     /**
@@ -60,7 +77,7 @@ public class ProjectConfigurator {
         Long projectId = project.getId();
         Long scheduleAfterVersion = null;
 
-        return ComponentAccessor.getVersionManager().createVersion(name, releaseDate, description, projectId, scheduleAfterVersion);
+        return versionManager.createVersion(name, releaseDate, description, projectId, scheduleAfterVersion);
     }
 
     private String getInternationalized(final String key) {
@@ -77,7 +94,7 @@ public class ProjectConfigurator {
     }
 
     /**
-     * Creates Project Components basing on selected Event Organization Plan.
+     * Creates Project Components, Tasks and Sub-Tasks basing on selected Event Organization Plan.
      *
      * @param project   Project.
      * @param version   Project Due Date Version.
@@ -94,7 +111,7 @@ public class ProjectConfigurator {
             Task[] eachComponentTasks = eachComponent.getTasks();
 
             if (eachComponentTasks.length > 0) {
-                ProjectComponent eachCreatedComponent = ComponentAccessor.getProjectComponentManager().create(eachComponent.getName(), eachComponent.getDescription(), project.getLeadUserKey(), AssigneeTypes.PROJECT_DEFAULT, project.getId());
+                ProjectComponent eachCreatedComponent = projectComponentManager.create(eachComponent.getName(), eachComponent.getDescription(), project.getLeadUserKey(), AssigneeTypes.PROJECT_DEFAULT, project.getId());
 
                 List<Issue> createdTasks = createTasks(project, eachComponentTasks, eachCreatedComponent.getId(), version);
                 result.addAll(createdTasks);
@@ -167,7 +184,7 @@ public class ProjectConfigurator {
 
     private void createLinks(@Nonnull final Issue task, @Nonnull final List<Issue> subTasks) throws CreateException {
         for (Issue eachSubTask : subTasks) {
-            ComponentAccessor.getSubTaskManager().createSubTaskIssueLink(task, eachSubTask, getUser().getDirectoryUser());
+            subTaskManager.createSubTaskIssueLink(task, eachSubTask, getUser().getDirectoryUser());
         }
     }
 
@@ -192,7 +209,7 @@ public class ProjectConfigurator {
 
         Date resultDueDate = calendar.getTime();
 
-        String dateFormat = ComponentAccessor.getApplicationProperties().getDefaultBackedString(APKeys.JIRA_LF_DATE_DMY);
+        String dateFormat = applicationProperties.getDefaultBackedString(APKeys.JIRA_LF_DATE_DMY);
         return new SimpleDateFormat(dateFormat).format(resultDueDate);
     }
 

@@ -31,10 +31,11 @@ import com.atlassian.sal.api.message.I18nResolver;
 import com.opensymphony.workflow.loader.ActionDescriptor;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
-import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;
+import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
+import edu.uz.jira.event.planner.database.xml.importer.EventPlansImportExecutor;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.project.EventOrganizationProjectHook;
 import edu.uz.jira.event.planner.util.text.Internationalization;
@@ -120,7 +121,8 @@ public class EventOrganizationProjectHookTest {
 
     @Test
     public void validate_Response_Should_Not_Be_Null() throws NullArgumentException {
-        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService, service);
+        EventPlansImportExecutor importExecutor = new EventPlansImportExecutor(mocki18n, service);
+        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService, importExecutor);
         ValidateData validateData = new ValidateData("EVENT PLAN", "EVENT", mock(ApplicationUser.class));
 
         ValidateResponse result = hook.validate(validateData);
@@ -130,7 +132,8 @@ public class EventOrganizationProjectHookTest {
 
     @Test
     public void configure_Response_Should_Not_Be_Null() throws NullArgumentException {
-        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService, service);
+        EventPlansImportExecutor importExecutor = new EventPlansImportExecutor(mocki18n, service);
+        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService, importExecutor);
         ConfigureData configureData = ConfigureData.create(mock(Project.class), mock(Scheme.class), new HashMap<String, JiraWorkflow>(), mock(FieldConfigScheme.class), new HashMap<String, IssueType>());
 
         ConfigureResponse result = hook.configure(configureData);
@@ -140,7 +143,8 @@ public class EventOrganizationProjectHookTest {
 
     @Test
     public void should_Return_Redirect_Without_Arguments_When_Error_Occurs_During_Project_Configuration() throws NullArgumentException {
-        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService, service);
+        EventPlansImportExecutor importExecutor = new EventPlansImportExecutor(mocki18n, service);
+        EventOrganizationProjectHook hook = new EventOrganizationProjectHook(mocki18n, mockWorkflowTransitionService, importExecutor);
         ConfigureData configureData = ConfigureData.create(mock(Project.class), mock(Scheme.class), MapUtils.EMPTY_MAP, mock(FieldConfigScheme.class), new HashMap<String, IssueType>());
 
         ConfigureResponse response = hook.configure(configureData);

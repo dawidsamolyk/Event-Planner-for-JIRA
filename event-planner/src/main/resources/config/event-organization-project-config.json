@@ -13,7 +13,7 @@
       {
         "key": "sub-task",
         "name": "Sub-Task",
-        "description": "The sub-task of the issue.",
+        "description": "The sub-task of the Task.",
         "sub-task": true,
         "icon": "images/icons/issuetypes/subtask_alternate.png",
         "workflow": "event-organization-workflow"

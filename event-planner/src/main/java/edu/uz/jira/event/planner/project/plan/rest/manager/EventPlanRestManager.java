@@ -45,7 +45,6 @@ public class EventPlanRestManager extends RestManager {
     private final ProjectManager projectManager;
     private final ProjectToTemplateConverter converter;
 
-
     /**
      * Constructor.
      *
@@ -94,7 +93,7 @@ public class EventPlanRestManager extends RestManager {
         }
 
         try {
-            final EventPlanExporter exporter = new EventPlanExporter(activeObjectsService);
+            final EventPlanExporter exporter = new EventPlanExporter();
             final File result = exporter.export(toExport);
 
             return Response.ok(transactionTemplate.execute(new TransactionCallback<File>() {
@@ -117,7 +116,7 @@ public class EventPlanRestManager extends RestManager {
      * @param request       Http Servlet request.
      * @return Response of request.
      */
-    @POST
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response post(NewPlanTemplateConfiguration configuration, @Context final HttpServletRequest request) {
         if (configuration == null || !configuration.isFullfilled()) {

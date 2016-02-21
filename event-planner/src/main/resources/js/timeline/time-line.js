@@ -16,7 +16,7 @@ function TimeLine() {
     that.infoProvider = new TimeLineInfoProvider();
     that.draggableListener = new DraggableListener();
 
-    that.setIssues = function (sourceTasks) {
+    that.setTasks = function (sourceTasks) {
         that.tasks = sourceTasks;
         if (that.deadlineDate !== undefined) {
             that.showCurrentDisplayedWeek();
@@ -57,9 +57,6 @@ function TimeLine() {
         cells = that.createTasksCells(weekToShow);
 
         that.draggableListener.connect(jQuery.extend(lateCells, cells), that);
-
-        that.infoProvider.showFlagsIfRequired(that.deadlineDate, that.tasks);
-        that.infoProvider.startCheckingIsAnyTaskWasChanged(that);
     };
 
     that.showCurrentDisplayedWeek = function () {

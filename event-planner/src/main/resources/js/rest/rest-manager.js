@@ -58,10 +58,10 @@ function RESTManager() {
         });
     };
 
-    that.postPlan = function (projectKey, name, description, reserveTime, categories) {
+    that.putPlan = function (projectKey, name, description, reserveTime, categories) {
         jQuery.ajax({
             url: that.baseUrl + 'plan',
-            type: "POST",
+            type: "PUT",
             contentType: "application/json",
             data: '{ "projectKey": "' + projectKey + '", "name": "' + name + '", "description": "' + description + '", "reserveTime": "' + reserveTime + '", "categories": ' + JSON.stringify(categories) + ' }',
             processData: false,
@@ -136,7 +136,7 @@ function RESTManager() {
         });
     };
 
-    that.getIssues = function (projectKey, timeLine) {
+    that.getTasks = function (projectKey, timeLine) {
         if (!projectKey || 0 === projectKey.length) {
             require('aui/flag')({
                 type: 'error',
@@ -163,7 +163,7 @@ function RESTManager() {
                         title: 'No Tasks for project ' + projectKey + '.'
                     });
                 }
-                timeLine.setIssues(data);
+                timeLine.setTasks(data);
             },
             error: function (request, status, error) {
                 console.error(request.responseText);

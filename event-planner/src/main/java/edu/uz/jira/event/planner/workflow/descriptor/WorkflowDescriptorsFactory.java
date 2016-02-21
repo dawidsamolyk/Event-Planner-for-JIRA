@@ -23,7 +23,7 @@ public class WorkflowDescriptorsFactory {
      * @param statusesToBlock Workflow statuses to block condition.
      * @return Sub-Task Blocking Workflow Condition.
      */
-    public ConditionDescriptor createSubTaskBlockingConditionDescriptor(@Nonnull final List<String> statusesToBlock) {
+    public ConditionDescriptor createSubTaskBlockingCondition(@Nonnull final List<String> statusesToBlock) {
         ConditionDescriptor result = DescriptorFactory.getFactory().createConditionDescriptor();
         result.setType(TYPE_NAME);
 
@@ -37,7 +37,7 @@ public class WorkflowDescriptorsFactory {
     /**
      * @return Issue Due Date Workflow Validator.
      */
-    public ValidatorDescriptor createIssueDueDateValidatorDescriptor() {
+    public ValidatorDescriptor createIssueDueDateValidator() {
         ValidatorDescriptor result = DescriptorFactory.getFactory().createValidatorDescriptor();
         result.setType(TYPE_NAME);
 

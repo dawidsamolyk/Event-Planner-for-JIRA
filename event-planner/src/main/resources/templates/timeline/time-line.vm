@@ -171,12 +171,6 @@
         <img class="drag-and-drop-second-image"
              title="Drag and drop to bottom to change it state to DONE in selected day"
              alt="Drag and drop to bottom to change it state to DONE in selected day"/>
-
-        <h4>c) Drag over Previous or Next week button to change TimeLine view to previous/next week and then drop Task
-            to destination day:</h4>
-        <img class="drag-and-drop-third-image"
-             title="Drag over Previous or Next week button to change TimeLine view to previous/next week and then drop Task to destination day"
-             alt="Drag over Previous or Next week button to change TimeLine view to previous/next week and then drop Task to destination day"/>
     </div>
 
     <footer class="aui-dialog2-footer">
@@ -195,10 +189,11 @@
     }
 
     var timeLine = new TimeLine();
+    timeLine.infoProvider.startCheckingIsAnyTaskWasChanged(timeLine);
 
     function loadDataForTimeLine() {
         var rest = new RESTManager();
-        rest.getIssues(projectKey, timeLine);
+        rest.getTasks(projectKey, timeLine);
         rest.getProjectDeadline(projectKey, timeLine);
     }
 

@@ -9,6 +9,7 @@ import com.atlassian.jira.mock.ofbiz.MockOfBizDelegator;
 import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.jira.project.Project;
 import com.atlassian.sal.api.message.I18nResolver;
+import edu.uz.jira.event.planner.project.EventOrganizationProjectHook;
 import edu.uz.jira.event.planner.project.issue.fields.IssueFieldsConfigurator;
 import edu.uz.jira.event.planner.util.text.Internationalization;
 import org.junit.Before;
@@ -58,7 +59,7 @@ public class IssueFieldsConfigurationTest {
     public void should_Create_Instance_Of_Event_Organization_Field_Layout() {
         IssueFieldsConfigurator fixture = new IssueFieldsConfigurator(mocki18n);
 
-        FieldLayout result = fixture.getEventOrganizationFieldLayout();
+        FieldLayout result = fixture.getFieldLayoutCopyWithRequiredFields(EventOrganizationProjectHook.REQUIRED_TASK_FIELDS_IDS);
 
         assertNotNull(result);
     }
@@ -69,7 +70,7 @@ public class IssueFieldsConfigurationTest {
         Project mockProject = mock(Project.class);
         EditableFieldLayout mockLayout = mock(EditableFieldLayout.class);
 
-        FieldLayoutScheme result = fixture.createFieldConfigurationScheme(mockProject, mockLayout);
+        FieldLayoutScheme result = fixture.createConfigurationScheme(mockProject, mockLayout);
 
         assertNotNull(result);
     }
@@ -80,7 +81,7 @@ public class IssueFieldsConfigurationTest {
         Project mockProject = mock(Project.class);
         EditableFieldLayout mockLayout = mock(EditableFieldLayout.class);
 
-        FieldLayoutScheme result = fixture.createFieldConfigurationScheme(mockProject, mockLayout);
+        FieldLayoutScheme result = fixture.createConfigurationScheme(mockProject, mockLayout);
 
         assertNotNull(result);
     }
@@ -95,7 +96,7 @@ public class IssueFieldsConfigurationTest {
         Mockito.when(mockProject.getIssueTypes()).thenReturn(issueTypes);
         EditableFieldLayout mockLayout = mock(EditableFieldLayout.class);
 
-        FieldLayoutScheme result = fixture.createFieldConfigurationScheme(mockProject, mockLayout);
+        FieldLayoutScheme result = fixture.createConfigurationScheme(mockProject, mockLayout);
 
         assertFalse(result.getEntities().isEmpty());
     }

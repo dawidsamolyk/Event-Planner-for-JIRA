@@ -31,7 +31,7 @@ import com.atlassian.jira.user.MockApplicationUser;
 import com.atlassian.jira.util.ErrorCollection;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService;
-import edu.uz.jira.event.planner.project.plan.ProjectConfigurator;
+import edu.uz.jira.event.planner.project.configuration.ProjectConfigurator;
 import edu.uz.jira.event.planner.database.active.objects.model.*;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToComponentRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCategoryRelation;

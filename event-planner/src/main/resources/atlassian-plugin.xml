@@ -36,11 +36,21 @@
                       name="User Login URI Provider import"/>
     <component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate"
                       name="Transaction template import"/>
+    <component-import key="workflow-transition-service"
+                      interface="com.atlassian.jira.bc.workflow.WorkflowTransitionService"
+                      name="Workflow Transition Service import"/>
 
     <component key="transaction" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor"
                name="Transactional Annotation Processor"/>
     <component key="event-plan-service" class="edu.uz.jira.event.planner.database.active.objects.ActiveObjectsService"
                name="Event Plan Templates Active Objects Service"/>
+    <component key="event-plans-exporter" class="edu.uz.jira.event.planner.database.xml.exporter.EventPlanExporter"
+               name="Exporter of Event Plan Template to XML file"/>
+    <component key="event-plans-importer" class="edu.uz.jira.event.planner.database.xml.importer.EventPlansImporter"
+               name="Importer of Event Plan Templates from XML file"/>
+    <component key="event-plans-importer-executor"
+               class="edu.uz.jira.event.planner.database.xml.importer.EventPlansImportExecutor"
+               name="Executor of automatic import of predefined Event Plan Templates from XML file"/>
 
     <rest key="rest" path="/event-plans" version="1.0" name="REST interface">
         <description>Provides REST resources for the plugin.</description>
@@ -84,18 +94,16 @@
     </web-resource>
 
     <project-blueprint key="event-planner-project" name="Event Organization Project Blueprint" weight="90">
-    <label key="project.name"/>
-    <description key="project.description"/>
-    <longDescription key="project.description.long"/>
-    <icon location="images/icons/projects/event-organization-plan-project-icon.png"/>
-    <infoPage soy-template="edu.uz.jira.event.planner.project.renderEventOrganizationProjectExplanation"/>
-    <add-project>
-        <hook class="edu.uz.jira.event.planner.project.EventOrganizationProjectHook"/>
-        <descriptor file="/config/event-organization-project-config.json"/>
-    </add-project>
-    <component-import key="workflow-transition-service"
-                      interface="com.atlassian.jira.bc.workflow.WorkflowTransitionService"/>
-</project-blueprint>
+        <label key="project.name"/>
+        <description key="project.description"/>
+        <longDescription key="project.description.long"/>
+        <icon location="images/icons/projects/event-organization-plan-project-icon.png"/>
+        <infoPage soy-template="edu.uz.jira.event.planner.project.renderEventOrganizationProjectExplanation"/>
+        <add-project>
+            <hook class="edu.uz.jira.event.planner.project.EventOrganizationProjectHook"/>
+            <descriptor file="/config/event-organization-project-config.json"/>
+        </add-project>
+    </project-blueprint>
 
     <web-panel name="Issue Due Date Indicator" i18n-name-key="due.date.indicator.name" key="due-date-indicator"
                location="atl.jira.view.issue.right.context" weight="1000">
@@ -132,7 +140,8 @@
         </actions>
     </webwork1>
 
-    <web-resource name="Event Organization Plan Project Blueprint configuration Resources" key="project-configuration-resources">
+    <web-resource name="Event Organization Plan Project Blueprint configuration Resources"
+                  key="project-configuration-resources">
         <description key="event.plans.config.resources">Resources for Event Organization Plan Blueprint configuration
         </description>
         <dependency>com.atlassian.auiplugin:ajs</dependency>
@@ -193,7 +202,8 @@
         </resource>
     </web-resource>
 
-    <web-item key="time-line-link" name="TimeLine link in top navigation bar" i18n-name-key="event.plan.timeline.menu.name"
+    <web-item key="time-line-link" name="TimeLine link in top navigation bar"
+              i18n-name-key="event.plan.timeline.menu.name"
               section="system.top.navigation.bar" weight="50">
         <label>TimeLine</label>
         <link linkId="event_organization_time_line">/plugins/servlet/event/plan/time-line?project=$project</link>

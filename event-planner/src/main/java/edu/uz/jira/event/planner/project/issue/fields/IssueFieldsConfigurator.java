@@ -9,6 +9,7 @@ import com.atlassian.jira.issue.issuetype.IssueType;
 import com.atlassian.jira.project.Project;
 import com.atlassian.sal.api.message.I18nResolver;
 import edu.uz.jira.event.planner.util.text.Internationalization;
+import org.ofbiz.core.entity.GenericEntityException;
 
 import javax.annotation.Nonnull;
 
@@ -16,8 +17,6 @@ import javax.annotation.Nonnull;
  * Configurator of Issue Fields Layout.
  */
 public class IssueFieldsConfigurator {
-    private static final String DUE_DATE_FIELD_ID = "duedate";
-    private static final String COMPONENT_FIELD_ID = "components";
     private final FieldLayoutManager fieldLayoutManager;
     private final I18nResolver internationalization;
     private final FieldLayoutBuilder fieldLayoutBuilder;
@@ -34,18 +33,19 @@ public class IssueFieldsConfigurator {
     }
 
     /**
+     * @param requiredTaskFieldsIds Required Task fields IDs.
      * @return Pre-configured Event Organization Plan Field Layout.
      */
-    public EditableFieldLayout getEventOrganizationFieldLayout() {
+    public EditableFieldLayout getFieldLayoutCopyWithRequiredFields(@Nonnull final String[] requiredTaskFieldsIds) {
         EditableFieldLayout defaultFieldLayout = fieldLayoutManager.getEditableDefaultFieldLayout();
-        return fieldLayoutBuilder.copyWithMakeRequired(defaultFieldLayout, DUE_DATE_FIELD_ID, COMPONENT_FIELD_ID);
+        return fieldLayoutBuilder.copyWithMakeRequired(defaultFieldLayout, requiredTaskFieldsIds);
     }
 
     /**
      * @param fieldLayout Pre-configured Event Organization Plan Field Layout which will be stored on JIRA.
      * @return Stored field layout.
      */
-    public EditableFieldLayout storeAndReturnEventOrganizationFieldLayout(@Nonnull final EditableFieldLayout fieldLayout) {
+    public EditableFieldLayout storeAndReturn(@Nonnull final EditableFieldLayout fieldLayout) throws GenericEntityException {
         return fieldLayoutManager.storeAndReturnEditableFieldLayout(fieldLayout);
     }
 
@@ -54,7 +54,7 @@ public class IssueFieldsConfigurator {
      * @param fieldLayout Pre-configured Event Organization Plan Field Layout.
      * @return Field Layout Scheme associated with input project's issues types.
      */
-    public FieldLayoutScheme createFieldConfigurationScheme(@Nonnull final Project project, @Nonnull final EditableFieldLayout fieldLayout) {
+    public FieldLayoutScheme createConfigurationScheme(@Nonnull final Project project, @Nonnull final EditableFieldLayout fieldLayout) {
         String name = getInternationalized(Internationalization.PROJECT_FIELDS_CONFIGURATION_SCHEME_NAME) + " " + project.getName();
         String description = getInternationalized(Internationalization.PROJECT_FIELDS_CONFIGURATION_SCHEME_DESCRIPTION);
         Long fieldLayoutId = fieldLayout.getId();
@@ -81,7 +81,7 @@ public class IssueFieldsConfigurator {
      * @param project           Project.
      * @param fieldLayoutScheme Field Layout Scheme which will be associated with input project.
      */
-    public void storeFieldConfigurationScheme(@Nonnull final Project project, @Nonnull final FieldLayoutScheme fieldLayoutScheme) {
+    public void addSchemeAssociation(@Nonnull final Project project, @Nonnull final FieldLayoutScheme fieldLayoutScheme) {
         fieldLayoutManager.addSchemeAssociation(project, fieldLayoutScheme.getId());
     }
 }

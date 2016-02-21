@@ -36,10 +36,9 @@ public class FieldLayoutBuilder {
      * @param requiredFieldsIds IDs of fields which should be required in result Field Layout.
      * @return Modified Field Layout with required fields (if typed).
      */
-    public EditableFieldLayout copyWithMakeRequired(@Nonnull final FieldLayout toCopy, @Nonnull final String... requiredFieldsIds) {
+    public EditableFieldLayout copyWithMakeRequired(@Nonnull final FieldLayout toCopy, @Nonnull final String[] requiredFieldsIds) {
         String name = getInternationalized(Internationalization.PROJECT_FIELDS_CONFIGURATION_NAME);
         String description = getInternationalized(Internationalization.PROJECT_FIELDS_CONFIGURATION_DESCRIPTION);
-        GenericValue genericValue = getGenericValue(name, description);
 
         List<FieldLayoutItem> toCopyItems = toCopy.getFieldLayoutItems();
         List<FieldLayoutItem> resultFieldLayoutItems = new ArrayList<FieldLayoutItem>(toCopyItems.size());
@@ -50,6 +49,7 @@ public class FieldLayoutBuilder {
             resultFieldLayoutItems.add(item);
         }
 
+        GenericValue genericValue = getGenericValue(name, description);
         EditableFieldLayoutImpl result = new EditableFieldLayoutImpl(genericValue, resultFieldLayoutItems);
         result.setName(name);
         result.setDescription(description);

@@ -8,7 +8,7 @@ import net.java.ao.schema.Table;
 /**
  * Relation between Event Organization Plan and Event Organization Task.
  */
-@Table("PlanToDomain")
+@Table("PlanToCategory")
 public interface PlanToCategoryRelation extends Entity {
     String PLAN = "PLAN";
     String CATEGORY = "CATEGORY";

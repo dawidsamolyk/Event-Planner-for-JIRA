@@ -36,7 +36,7 @@ import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCo
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.project.configuration.webwork.EventPlanConfigurationAction;
-import edu.uz.jira.event.planner.project.plan.ProjectConfigurator;
+import edu.uz.jira.event.planner.project.configuration.ProjectConfigurator;
 import edu.uz.jira.event.planner.util.text.Internationalization;
 import net.java.ao.EntityManager;
 import net.java.ao.test.converters.NameConverters;

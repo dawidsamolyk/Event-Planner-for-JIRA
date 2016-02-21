@@ -14,6 +14,7 @@ import edu.uz.jira.event.planner.database.active.objects.model.relation.PlanToCo
 import edu.uz.jira.event.planner.database.active.objects.model.relation.SubTaskToTaskRelation;
 import edu.uz.jira.event.planner.database.active.objects.model.relation.TaskToComponentRelation;
 import edu.uz.jira.event.planner.database.xml.importer.EventPlansImportExecutor;
+import edu.uz.jira.event.planner.database.xml.importer.EventPlansImportState;
 import edu.uz.jira.event.planner.exception.EventPlansImportException;
 import net.java.ao.EntityManager;
 import net.java.ao.test.converters.NameConverters;
@@ -70,13 +71,13 @@ public class EventPlansImportExecutorTest {
 
     @Test
     public void should_not_import_data_when_it_was_imported_earlier() throws MalformedURLException {
-        mockApplicationProperties.setText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY, EventPlansImportExecutor.IMPORTED);
+        mockApplicationProperties.setText(EventPlansImportState.APPLICATION_PROPERTY_KEY, EventPlansImportState.IMPORTED.getState());
         EventPlansImportExecutor fixture = new TestingEventPlansImportExecutor(mocki18n, service);
 
         fixture.startImport();
 
         assertEquals(0, activeObjects.count(Plan.class));
-        assertEquals(EventPlansImportExecutor.IMPORTED, mockApplicationProperties.getText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY));
+        assertEquals(EventPlansImportState.IMPORTED.getState(), mockApplicationProperties.getText(EventPlansImportState.APPLICATION_PROPERTY_KEY));
     }
 
     @Test
@@ -86,7 +87,7 @@ public class EventPlansImportExecutorTest {
         fixture.startImport();
 
         assertEquals(1, activeObjects.count(Plan.class));
-        assertEquals(EventPlansImportExecutor.IMPORTED, mockApplicationProperties.getText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY));
+        assertEquals(EventPlansImportState.IMPORTED.getState(), mockApplicationProperties.getText(EventPlansImportState.APPLICATION_PROPERTY_KEY));
     }
 
     @Test
@@ -97,7 +98,7 @@ public class EventPlansImportExecutorTest {
         fixture.startImport();
 
         assertEquals(0, activeObjects.count(Plan.class));
-        assertEquals(EventPlansImportExecutor.NOT_IMPORTED, mockApplicationProperties.getText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY));
+        assertEquals(EventPlansImportState.NOT_IMPORTED.getState(), mockApplicationProperties.getText(EventPlansImportState.APPLICATION_PROPERTY_KEY));
     }
 
     @Test
@@ -105,12 +106,12 @@ public class EventPlansImportExecutorTest {
         EventPlansImportExecutor fixture = new TestingEventPlansImportExecutor(mocki18n, service);
 
         fixture.startImport();
-        assertEquals(EventPlansImportExecutor.IMPORTED, mockApplicationProperties.getText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY));
+        assertEquals(EventPlansImportState.IMPORTED.getState(), mockApplicationProperties.getText(EventPlansImportState.APPLICATION_PROPERTY_KEY));
 
         fixture.startImport();
 
         assertEquals(1, activeObjects.count(Plan.class));
-        assertEquals(EventPlansImportExecutor.IMPORTED, mockApplicationProperties.getText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY));
+        assertEquals(EventPlansImportState.IMPORTED.getState(), mockApplicationProperties.getText(EventPlansImportState.APPLICATION_PROPERTY_KEY));
     }
 
     @Test
@@ -118,7 +119,7 @@ public class EventPlansImportExecutorTest {
         EventPlansImportExecutor fixture = new TestingEventPlansImportExecutor(mocki18n, service);
 
         fixture.startImport();
-        assertEquals(EventPlansImportExecutor.IMPORTED, mockApplicationProperties.getText(EventPlansImportExecutor.APPLICATION_PROPERTY_KEY));
+        assertEquals(EventPlansImportState.IMPORTED.getState(), mockApplicationProperties.getText(EventPlansImportState.APPLICATION_PROPERTY_KEY));
 
         Plan plan = activeObjects.find(Plan.class)[0];
         Category category = activeObjects.find(Category.class)[0];

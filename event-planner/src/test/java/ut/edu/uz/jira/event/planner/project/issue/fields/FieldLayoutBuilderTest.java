@@ -48,40 +48,40 @@ public class FieldLayoutBuilderTest {
 
     @Test
     public void should_Copy_Field_Layout_With_Only_One_Required_Field() {
-        String modifieldFieldId = "non-required-field-which-should-be-required";
+        String[] ModifiedFieldId = {"non-required-field-which-should-be-required"};
         FieldLayout toCopy = mock(FieldLayout.class);
         List<FieldLayoutItem> toCopyItems = new ArrayList<FieldLayoutItem>();
         toCopyItems.add(getMockItem("required-field", true));
         toCopyItems.add(getMockItem("non-required-field", false));
-        toCopyItems.add(getMockItem(modifieldFieldId, false));
+        toCopyItems.add(getMockItem(ModifiedFieldId[0], false));
         Mockito.when(toCopy.getFieldLayoutItems()).thenReturn(toCopyItems);
         FieldLayoutBuilder fixture = new FieldLayoutBuilder(mocki18n);
 
-        FieldLayout result = fixture.copyWithMakeRequired(toCopy, modifieldFieldId);
+        FieldLayout result = fixture.copyWithMakeRequired(toCopy, ModifiedFieldId);
 
-        assertTrue(result.getFieldLayoutItem(modifieldFieldId).isRequired());
+        assertTrue(result.getFieldLayoutItem(ModifiedFieldId[0]).isRequired());
     }
 
     @Test
     public void should_Copy_Field_Layout_With_Only_Many_Required_Fields() {
-        String firstModifieldFieldId = "first-non-required-field-which-should-be-required";
-        String secondModifieldFieldId = "second-non-required-field-which-should-be-required";
-        String thirdModifieldFieldId = "second-required-field-which-should-be-still-required";
+        String firstModifiedFieldId = "first-non-required-field-which-should-be-required";
+        String secondModifiedFieldId = "second-non-required-field-which-should-be-required";
+        String thirdModifiedFieldId = "second-required-field-which-should-be-still-required";
         FieldLayout toCopy = mock(FieldLayout.class);
         List<FieldLayoutItem> toCopyItems = new ArrayList<FieldLayoutItem>();
         toCopyItems.add(getMockItem("required-field", true));
-        toCopyItems.add(getMockItem(firstModifieldFieldId, false));
+        toCopyItems.add(getMockItem(firstModifiedFieldId, false));
         toCopyItems.add(getMockItem("non-required-field", false));
-        toCopyItems.add(getMockItem(secondModifieldFieldId, false));
-        toCopyItems.add(getMockItem(thirdModifieldFieldId, true));
+        toCopyItems.add(getMockItem(secondModifiedFieldId, false));
+        toCopyItems.add(getMockItem(thirdModifiedFieldId, true));
         Mockito.when(toCopy.getFieldLayoutItems()).thenReturn(toCopyItems);
         FieldLayoutBuilder fixture = new FieldLayoutBuilder(mocki18n);
 
-        FieldLayout result = fixture.copyWithMakeRequired(toCopy, firstModifieldFieldId, secondModifieldFieldId, thirdModifieldFieldId);
+        FieldLayout result = fixture.copyWithMakeRequired(toCopy, new String[]{firstModifiedFieldId, secondModifiedFieldId, thirdModifiedFieldId});
 
-        assertTrue(result.getFieldLayoutItem(firstModifieldFieldId).isRequired());
-        assertTrue(result.getFieldLayoutItem(secondModifieldFieldId).isRequired());
-        assertTrue(result.getFieldLayoutItem(thirdModifieldFieldId).isRequired());
+        assertTrue(result.getFieldLayoutItem(firstModifiedFieldId).isRequired());
+        assertTrue(result.getFieldLayoutItem(secondModifiedFieldId).isRequired());
+        assertTrue(result.getFieldLayoutItem(thirdModifiedFieldId).isRequired());
     }
 
     @Test
@@ -94,7 +94,7 @@ public class FieldLayoutBuilderTest {
         Mockito.when(toCopy.getFieldLayoutItems()).thenReturn(toCopyItems);
         FieldLayoutBuilder fixture = new FieldLayoutBuilder(mocki18n);
 
-        FieldLayout result = fixture.copyWithMakeRequired(toCopy);
+        FieldLayout result = fixture.copyWithMakeRequired(toCopy, new String[]{"required-field"});
 
         assertEquals(true, result.getFieldLayoutItem("required-field").isRequired());
         assertEquals(false, result.getFieldLayoutItem("non-required-field").isRequired());

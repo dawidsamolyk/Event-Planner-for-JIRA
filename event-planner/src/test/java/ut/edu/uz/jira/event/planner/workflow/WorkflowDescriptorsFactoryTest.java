@@ -22,7 +22,7 @@ public class WorkflowDescriptorsFactoryTest {
         statusesToBlock.add("90");
         statusesToBlock.add("123");
 
-        ConditionDescriptor result = fixture.createSubTaskBlockingConditionDescriptor(statusesToBlock);
+        ConditionDescriptor result = fixture.createSubTaskBlockingCondition(statusesToBlock);
 
         assertEquals(expectedResult, result.getArgs().get("statuses"));
     }
@@ -33,7 +33,7 @@ public class WorkflowDescriptorsFactoryTest {
         String expectedResult = "";
         List<String> statusesToBlock = new ArrayList<String>();
 
-        ConditionDescriptor result = fixture.createSubTaskBlockingConditionDescriptor(statusesToBlock);
+        ConditionDescriptor result = fixture.createSubTaskBlockingCondition(statusesToBlock);
 
         assertEquals(expectedResult, result.getArgs().get("statuses"));
     }
@@ -43,7 +43,7 @@ public class WorkflowDescriptorsFactoryTest {
         WorkflowDescriptorsFactory fixture = new WorkflowDescriptorsFactory();
         String expectedResult = "";
 
-        ConditionDescriptor result = fixture.createSubTaskBlockingConditionDescriptor(null);
+        ConditionDescriptor result = fixture.createSubTaskBlockingCondition(null);
 
         assertEquals(expectedResult, result.getArgs().get("statuses"));
     }
@@ -51,7 +51,7 @@ public class WorkflowDescriptorsFactoryTest {
     @Test
     public void sub_Task_Blocking_Condition_Should_Not_Be_Null() {
         WorkflowDescriptorsFactory fixture = new WorkflowDescriptorsFactory();
-        ConditionDescriptor result = fixture.createSubTaskBlockingConditionDescriptor(null);
+        ConditionDescriptor result = fixture.createSubTaskBlockingCondition(null);
 
         assertNotNull(result);
     }
@@ -59,7 +59,7 @@ public class WorkflowDescriptorsFactoryTest {
     @Test
     public void issue_Due_Date_Validator_Should_Not_Be_Null() {
         WorkflowDescriptorsFactory fixture = new WorkflowDescriptorsFactory();
-        ValidatorDescriptor result = fixture.createIssueDueDateValidatorDescriptor();
+        ValidatorDescriptor result = fixture.createIssueDueDateValidator();
 
         assertNotNull(result);
     }

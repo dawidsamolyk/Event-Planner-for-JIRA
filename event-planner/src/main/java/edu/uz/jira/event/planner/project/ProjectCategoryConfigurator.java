@@ -29,7 +29,7 @@ public class ProjectCategoryConfigurator {
     /**
      * @return Event Organization Project Category.
      */
-    public ProjectCategory createProjectCategory() {
+    public ProjectCategory getProjectCategory() {
         String name = getInternalized(Internationalization.PROJECT_CATEGORY_NAME);
         String description = getInternalized(Internationalization.PROJECT_CATEGORY_DESCRIPTION);
 

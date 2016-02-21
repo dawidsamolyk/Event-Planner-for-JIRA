@@ -1,6 +1,7 @@
 package edu.uz.jira.event.planner.project.configuration.webwork;
 
 import com.atlassian.jira.JiraException;
+import com.atlassian.jira.exception.CreateException;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.version.Version;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
@@ -10,7 +11,7 @@ import edu.uz.jira.event.planner.database.active.objects.model.Plan;
 import edu.uz.jira.event.planner.exception.NullArgumentException;
 import edu.uz.jira.event.planner.project.configuration.EventPlanConfiguration;
 import edu.uz.jira.event.planner.project.configuration.EventPlanConfigurationValidator;
-import edu.uz.jira.event.planner.project.plan.ProjectConfigurator;
+import edu.uz.jira.event.planner.project.configuration.ProjectConfigurator;
 import net.java.ao.Query;
 import webwork.action.Action;
 
@@ -65,16 +66,20 @@ public class EventPlanConfigurationAction extends JiraWebActionSupport {
             return Action.INPUT;
 
         } else if (validator.canConfigureProject(project, eventPlanTemplateName, eventDueDate)) {
-            configureProject(project, eventDueDate, eventPlanTemplateName);
+            Version version = createEventDateVersion(project, eventDueDate);
+            createProjectElements(project, eventPlanTemplateName, version);
             return Action.SUCCESS;
         }
         return Action.ERROR;
     }
 
-    private void configureProject(@Nonnull final Project project, @Nonnull final String eventDueDate, @Nonnull final String eventPlanTemplateName) throws ParseException, JiraException {
-        Version version = projectConfigurator.createVersion(project, eventDueDate);
+    private Version createEventDateVersion(@Nonnull final Project project, @Nonnull final String eventDueDate) throws ParseException, CreateException {
+        return projectConfigurator.createVersion(project, eventDueDate);
+    }
 
+    private void createProjectElements(@Nonnull final Project project, @Nonnull final String eventPlanTemplateName, @Nonnull final Version version) throws ParseException, JiraException {
         List<Plan> eventPlans = activeObjectsService.get(Plan.class, Query.select().where(Plan.NAME + " = ?", eventPlanTemplateName));
+
         if (!eventPlans.isEmpty()) {
             projectConfigurator.configure(project, version, eventPlans.get(0));
         }
