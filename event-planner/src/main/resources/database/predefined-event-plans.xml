@@ -1,7 +1,9 @@
 <event-plans>
-    <event-plan name="Meeting with person" description="" reserveTimeInDays="5">
+    <event-plan name="Meeting with person"
+                description="Meeting with wise person who has to present something to wide audience"
+                reserveTimeInDays="2">
         <eventCategory name="Public Relations"></eventCategory>
-        <component name="Guests" description="">
+        <component name="Guests" description="Issues related with guests">
             <task name="Prepare thanks for person, host etc." description="" neededMonthsBeforeEvent="0"
                   neededDaysBeforeEvent="14"></task>
             <task name="Organize some corporate gadgets for guests" description="" neededMonthsBeforeEvent="0"
@@ -15,9 +17,9 @@
                 <sub-task name="Provide pens or pencils" description=""></sub-task>
             </task>
         </component>
-        <component name="Presentation" description="">
+        <component name="Presentation" description="Set of tasks to do good slideshow for an event">
             <task name="Prepare slideshow agenda and plan" description="" neededMonthsBeforeEvent="0"
-                  neededDaysBeforeEvent="20">
+                  neededDaysBeforeEvent="21">
                 <sub-task name="Consult with person" description=""></sub-task>
             </task>
             <task name="Prepare slideshow introduction" description="" neededMonthsBeforeEvent="0"
@@ -26,14 +28,14 @@
                 <sub-task name="Short about host/us" description=""></sub-task>
             </task>
             <task name="Prepare slideshow content and summary" description="" neededMonthsBeforeEvent="0"
-                  neededDaysBeforeEvent="20">
+                  neededDaysBeforeEvent="19">
                 <sub-task name="Content" description=""></sub-task>
                 <sub-task name="Summary" description=""></sub-task>
             </task>
             <task name="Copy ready slideshow to many independent data storages" description=""
                   neededMonthsBeforeEvent="0"
-                  neededDaysBeforeEvent="20"></task>
-            <task name="Review presentation" neededMonthsBeforeEvent="0" description="" neededDaysBeforeEvent="22">
+                  neededDaysBeforeEvent="7"></task>
+            <task name="Review presentation" neededMonthsBeforeEvent="0" description="" neededDaysBeforeEvent="10">
                 <sub-task name="Design" description=""></sub-task>
                 <sub-task name="Readability from a distance" description=""></sub-task>
                 <sub-task name="Grammar and spelling" description=""></sub-task>
@@ -42,73 +44,75 @@
                 <sub-task name="Legal issues" description=""></sub-task>
             </task>
             <task name="Check whether slideshow works properly" description="" neededMonthsBeforeEvent="0"
-                  neededDaysBeforeEvent="23">
+                  neededDaysBeforeEvent="6">
                 <sub-task name="Check in event room on available hardware and software" description=""></sub-task>
                 <sub-task name="Check on reserve hardware and software" description=""></sub-task>
             </task>
             <task name="Take care of adequate receipt of information" description="" neededMonthsBeforeEvent="0"
-                  neededDaysBeforeEvent="23">
+                  neededDaysBeforeEvent="6">
                 <sub-task name="Check how you heard in event room" description=""></sub-task>
                 <sub-task name="Check whether slideshow is visible in the farthest corner of event room"
                           description=""></sub-task>
             </task>
-            <task name="Presentation pointer" description="" neededMonthsBeforeEvent="0"
-                  neededDaysBeforeEvent="21"></task>
+            <task name="Get presentation pointer" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="5"></task>
             <task name="Take care about neat clothes for the host of the event" neededMonthsBeforeEvent="0"
-                  neededDaysBeforeEvent="29"></task>
-            <task name="Shorted presentation agenda with things to do checklist" neededMonthsBeforeEvent="0"
-                  neededDaysBeforeEvent="28"></task>
+                  neededDaysBeforeEvent="2"></task>
+            <task name="Prepare shorted presentation agenda with things to do (checklist)" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="3"></task>
         </component>
-        <component name="Room">
-            <task name="Select suitable room" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="1">
+        <component name="Room" description="Tasks that would ease organize suitable room for an event">
+            <task name="Select suitable room" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="25">
                 <sub-task name="Prepare room requirements" description=""></sub-task>
                 <sub-task name="Find suitable room" description=""></sub-task>
-                <sub-task name="Book" description=""></sub-task>
-                <sub-task name="Make sure that the room is booked" description=""></sub-task>
+                <sub-task name="Make sure that the room is not booked for your event date" description=""></sub-task>
             </task>
-            <task name="Book room" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="1"></task>
-            <task name="Check technical issues" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="7">
+            <task name="Book room" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="24"></task>
+            <task name="Check technical issues in the room" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="14">
                 <sub-task name="Internet access in event room" description=""></sub-task>
                 <sub-task name="Sufficient number and availability of power outlets" description=""></sub-task>
                 <sub-task name="Ensure that you will have technical assistance" description=""></sub-task>
             </task>
             <task name="Prepare room before event" description="" neededMonthsBeforeEvent="0"
-                  neededDaysBeforeEvent="29"></task>
+                  neededDaysBeforeEvent="1"></task>
             <task name="Prepare checklist of needed things in the event day" description="" neededMonthsBeforeEvent="0"
-                  neededDaysBeforeEvent="28"></task>
+                  neededDaysBeforeEvent="2"></task>
         </component>
-        <component name="Catering" description="">
+        <component name="Catering" description="Take care about drinks and snacks for guests">
             <task name="Choose place for dishes and drinkables" description="" neededMonthsBeforeEvent="0"
-                  neededDaysBeforeEvent="9">
+                  neededDaysBeforeEvent="3">
                 <sub-task name="Book a space" description=""></sub-task>
                 <sub-task name="Prepare tables etc." description=""></sub-task>
             </task>
-            <task name="Choose catering company" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="10">
+            <task name="Choose catering company" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="24">
                 <sub-task name="Determine the budget" description=""></sub-task>
                 <sub-task name="Compare prizes" description=""></sub-task>
                 <sub-task name="Set the menu" description=""></sub-task>
-                <sub-task name="Sign pre agreement" description=""></sub-task>
+                <sub-task name="Sign pre agreement with selected company" description=""></sub-task>
             </task>
-            <task name="Provide separate treat for person and event host" description="" neededMonthsBeforeEvent="0"
+            <task name="Note data for an invoice for catering" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="3"></task>
+            <task name="Provide separate treat for person and event host" description="" neededMonthsBeforeEvent=""
                   neededDaysBeforeEvent="10"></task>
         </component>
-        <component name="Posters" description="">
-            <task name="Prepare posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="1">
+        <component name="Posters" description="Promote your event for a getting bigger audience">
+            <task name="Prepare posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="22">
                 <sub-task name="Prepare design" description=""></sub-task>
                 <sub-task name="Review appearance and look" description=""></sub-task>
             </task>
-            <task name="Print posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="1"></task>
-            <task name="Publish posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="1">
+            <task name="Print posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="21"></task>
+            <task name="Publish posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="20">
                 <sub-task name="Hang" description=""></sub-task>
                 <sub-task name="Take a photos of hanged posters" description=""></sub-task>
                 <sub-task name="Publish on social media" description=""></sub-task>
                 <sub-task name="Publish on our website" description=""></sub-task>
             </task>
         </component>
-        <component name="Invitations" description="">
+        <component name="Invitations" description="Prepare invitations for your  guests">
             <task name="Prepare invitations" description="" neededMonthsBeforeEvent="0"
-                  neededDaysBeforeEvent="3"></task>
-            <task name="Send invitations" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="3">
+                  neededDaysBeforeEvent="23"></task>
+            <task name="Send invitations" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="22">
                 <sub-task name="Person" description=""></sub-task>
                 <sub-task name="Special guest(s)" description=""></sub-task>
                 <sub-task name="Media (TV, radio etc.)" description=""></sub-task>
@@ -116,40 +120,671 @@
                 <sub-task name="Potentially interested persons" description=""></sub-task>
             </task>
         </component>
-        <component name="Promotion" description="">
-            <task name="Contests" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="14">
+        <component name="Promotion" description="Promote your event and make it more sociable">
+            <task name="Prepare contests for guests" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="14">
                 <sub-task name="Prepare regulations" description=""></sub-task>
                 <sub-task name="Print regulations" description=""></sub-task>
                 <sub-task name="Hang regulations prior to the entry of event room" description=""></sub-task>
                 <sub-task name="Prizes" description=""></sub-task>
             </task>
-            <task name="Banners/roll-ups etc." description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="23">
+            <task name="Prepare banners/roll-ups etc." description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="12">
                 <sub-task name="Hang in event room" description=""></sub-task>
                 <sub-task name="Hang prior to the entry of event room" description=""></sub-task>
             </task>
-            <task name="Event agenda" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="2">
+            <task name="Prepare event agenda" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="4">
                 <sub-task name="Prepare design and content" description=""></sub-task>
                 <sub-task name="Review appearance and look" description=""></sub-task>
                 <sub-task name="Print" description=""></sub-task>
                 <sub-task name="Hang prior to the entry of event room" description=""></sub-task>
             </task>
-            <task name="Press release" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="2">
+            <task name="Prepare press release" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="24">
                 <sub-task name="Prepare design and content" description=""></sub-task>
                 <sub-task name="Review look and content" description=""></sub-task>
                 <sub-task name="Send to media (TV, radio etc.)" description=""></sub-task>
                 <sub-task name="Publish on our website" description=""></sub-task>
             </task>
         </component>
-        <component name="Transport" description="">
+        <component name="Transport" description="Provide transport for your special guest">
             <task name="Book car park" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="7"></task>
             <task name="Provide a transport for person" description="" neededMonthsBeforeEvent="0"
                   neededDaysBeforeEvent="8"></task>
         </component>
-        <component name="Photographs" description="">
+        <component name="Photographs" description="Capture a photos of the best moments from an event">
             <task name="Hire a photographer" description="" neededMonthsBeforeEvent="0"
                   neededDaysBeforeEvent="10"></task>
             <task name="Determine the most important moments to photograph" description="" neededMonthsBeforeEvent="0"
-                  neededDaysBeforeEvent="24"></task>
+                  neededDaysBeforeEvent="9"></task>
+        </component>
+    </event-plan>
+
+    <event-plan name="Small meeting with person"
+                description="Meeting with person who has to present some kind of knowledge (eg programming framework)"
+                reserveTimeInDays="1">
+        <eventCategory name="Technical"></eventCategory>
+        <eventCategory name="Public Relations"></eventCategory>
+        <component name="Presentation" description="Set of tasks to do good slideshow for an event">
+            <task name="Prepare slideshow agenda and plan" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="14">
+                <sub-task name="Consult with person" description=""></sub-task>
+            </task>
+            <task name="Prepare slideshow introduction" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="13">
+                <sub-task name="Short about person" description=""></sub-task>
+                <sub-task name="Short about host/us" description=""></sub-task>
+            </task>
+            <task name="Prepare slideshow content and summary" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="12">
+                <sub-task name="Content" description=""></sub-task>
+                <sub-task name="Summary" description=""></sub-task>
+            </task>
+            <task name="Copy ready slideshow to many independent data storages" description=""
+                  neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="7"></task>
+            <task name="Review presentation" neededMonthsBeforeEvent="0" description="" neededDaysBeforeEvent="8">
+                <sub-task name="Design" description=""></sub-task>
+                <sub-task name="Readability from a distance" description=""></sub-task>
+                <sub-task name="Grammar and spelling" description=""></sub-task>
+                <sub-task name="Content" description=""></sub-task>
+                <sub-task name="Photos and graphics" description=""></sub-task>
+                <sub-task name="Legal issues" description=""></sub-task>
+            </task>
+            <task name="Check whether slideshow works properly" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="5">
+                <sub-task name="Check in event room on available hardware and software" description=""></sub-task>
+                <sub-task name="Check on reserve hardware and software" description=""></sub-task>
+            </task>
+            <task name="Take care of adequate receipt of information" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="5">
+                <sub-task name="Check how you heard in event room" description=""></sub-task>
+                <sub-task name="Check whether slideshow is visible in the farthest corner of event room"
+                          description=""></sub-task>
+            </task>
+            <task name="Get presentation pointer" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="4"></task>
+            <task name="Take care about neat clothes for the host of the event" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="2"></task>
+            <task name="Prepare shorted presentation agenda with things to do (checklist)" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="3"></task>
+        </component>
+        <component name="Room" description="Tasks that would ease organize suitable room for an event">
+            <task name="Select suitable room" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="16">
+                <sub-task name="Prepare room requirements" description=""></sub-task>
+                <sub-task name="Find suitable room" description=""></sub-task>
+                <sub-task name="Make sure that the room is not booked for your event date" description=""></sub-task>
+            </task>
+            <task name="Book room" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="15"></task>
+            <task name="Check technical issues" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="10">
+                <sub-task name="Internet access in event room" description=""></sub-task>
+                <sub-task name="Sufficient number and availability of power outlets" description=""></sub-task>
+                <sub-task name="Ensure that you will have technical assistance" description=""></sub-task>
+            </task>
+            <task name="Prepare room before event" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="1"></task>
+            <task name="Prepare checklist of needed things in the event day" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="2"></task>
+        </component>
+        <component name="Invitations" description="Prepare invitations for your  guests">
+            <task name="Prepare invitations" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="15"></task>
+            <task name="Send invitations" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="22">
+                <sub-task name="Person" description=""></sub-task>
+                <sub-task name="Special guest(s)" description=""></sub-task>
+                <sub-task name="Potentially interested persons" description=""></sub-task>
+            </task>
+        </component>
+        <component name="Photographs" description="Capture a photos of the best moments from an event">
+            <task name="Hire a photographer" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="13"></task>
+            <task name="Determine the most important moments to photograph" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="11"></task>
+        </component>
+    </event-plan>
+
+    <event-plan name="Product/technology presentation for wide audience"
+                description="Presentation of technology or product for wide audience" reserveTimeInDays="3">
+        <eventCategory name="Public Relations"></eventCategory>
+        <eventCategory name="Marketing"></eventCategory>
+        <eventCategory name="Technical"></eventCategory>
+        <component name="Guests" description="Issues related with guests">
+            <task name="Organize some corporate gadgets for guests" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="15"></task>
+            <task name="Develop a method for calculating  participants" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="16"></task>
+            <task name="Note number of participants" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="0"></task>
+        </component>
+        <component name="Presentation" description="Set of tasks to do good slideshow for an event">
+            <task name="Prepare slideshow agenda and plan" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="21">
+                <sub-task name="Consult with person" description=""></sub-task>
+            </task>
+            <task name="Prepare slideshow introduction" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="20">
+                <sub-task name="Short about person" description=""></sub-task>
+                <sub-task name="Short about host/us" description=""></sub-task>
+            </task>
+            <task name="Prepare slideshow content and summary" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="19">
+                <sub-task name="Content" description=""></sub-task>
+                <sub-task name="Summary" description=""></sub-task>
+            </task>
+            <task name="Copy ready slideshow to many independent data storages" description=""
+                  neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="7"></task>
+            <task name="Review presentation" neededMonthsBeforeEvent="0" description="" neededDaysBeforeEvent="10">
+                <sub-task name="Design" description=""></sub-task>
+                <sub-task name="Readability from a distance" description=""></sub-task>
+                <sub-task name="Grammar and spelling" description=""></sub-task>
+                <sub-task name="Content" description=""></sub-task>
+                <sub-task name="Photos and graphics" description=""></sub-task>
+                <sub-task name="Legal issues" description=""></sub-task>
+            </task>
+            <task name="Check whether slideshow works properly" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="6">
+                <sub-task name="Check in event room on available hardware and software" description=""></sub-task>
+                <sub-task name="Check on reserve hardware and software" description=""></sub-task>
+            </task>
+            <task name="Take care of adequate receipt of information" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="6">
+                <sub-task name="Check how you heard in event room" description=""></sub-task>
+                <sub-task name="Check whether slideshow is visible in the farthest corner of event room"
+                          description=""></sub-task>
+            </task>
+            <task name="Get presentation pointer" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="5"></task>
+            <task name="Take care about neat clothes for the host of the event" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="2"></task>
+            <task name="Prepare shorted presentation agenda with things to do (checklist)" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="3"></task>
+        </component>
+        <component name="Room or stand" description="Tasks that would ease organize suitable place for an event">
+            <task name="Select suitable room or stand" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="25">
+                <sub-task name="Prepare requirements" description=""></sub-task>
+                <sub-task name="Find suitable place" description=""></sub-task>
+                <sub-task name="Make sure that the place is booked" description=""></sub-task>
+            </task>
+            <task name="Book room" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="24"></task>
+            <task name="Check technical issues in the room" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="14">
+                <sub-task name="Internet access in event room" description=""></sub-task>
+                <sub-task name="Sufficient number and availability of power outlets" description=""></sub-task>
+                <sub-task name="Ensure that you will have technical assistance" description=""></sub-task>
+            </task>
+            <task name="Prepare place before event" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="1"></task>
+            <task name="Prepare checklist of needed things in the event day" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="2"></task>
+        </component>
+        <component name="Catering" description="Take care about drinks and snacks for guests">
+            <task name="Choose place for dishes and drinkables" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="3">
+                <sub-task name="Book a space" description=""></sub-task>
+                <sub-task name="Prepare tables etc." description=""></sub-task>
+            </task>
+            <task name="Choose catering company" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="24">
+                <sub-task name="Determine the budget" description=""></sub-task>
+                <sub-task name="Compare prizes" description=""></sub-task>
+                <sub-task name="Set the menu" description=""></sub-task>
+                <sub-task name="Sign pre agreement with selected company" description=""></sub-task>
+            </task>
+            <task name="Note data for an invoice for catering" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="3"></task>
+        </component>
+        <component name="Posters" description="Promote your event for a getting bigger audience">
+            <task name="Prepare posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="22">
+                <sub-task name="Prepare design" description=""></sub-task>
+                <sub-task name="Review appearance and look" description=""></sub-task>
+            </task>
+            <task name="Print posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="21"></task>
+            <task name="Publish posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="20">
+                <sub-task name="Hang" description=""></sub-task>
+                <sub-task name="Take a photos of hanged posters" description=""></sub-task>
+                <sub-task name="Publish on social media" description=""></sub-task>
+                <sub-task name="Publish on our website" description=""></sub-task>
+            </task>
+        </component>
+        <component name="Invitations" description="Prepare invitations for your  guests">
+            <task name="Prepare invitations" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="23"></task>
+            <task name="Send invitations" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="22">
+                <sub-task name="Special guest(s)" description=""></sub-task>
+                <sub-task name="Media (TV, radio etc.)" description=""></sub-task>
+                <sub-task name="Host" description=""></sub-task>
+                <sub-task name="Potentially interested persons" description=""></sub-task>
+            </task>
+        </component>
+        <component name="Promotion" description="Promote your event and make it more sociable">
+            <task name="Prepare contests for guests" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="14">
+                <sub-task name="Prepare regulations" description=""></sub-task>
+                <sub-task name="Print regulations" description=""></sub-task>
+                <sub-task name="Hang regulations prior to the entry of event room" description=""></sub-task>
+                <sub-task name="Prizes" description=""></sub-task>
+            </task>
+            <task name="Prepare banners/roll-ups etc." description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="12">
+                <sub-task name="Hang in event room" description=""></sub-task>
+                <sub-task name="Hang prior to the entry of event room" description=""></sub-task>
+            </task>
+            <task name="Prepare event agenda" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="4">
+                <sub-task name="Prepare design and content" description=""></sub-task>
+                <sub-task name="Review appearance and look" description=""></sub-task>
+                <sub-task name="Print" description=""></sub-task>
+                <sub-task name="Hang prior to the entry of event room" description=""></sub-task>
+            </task>
+            <task name="Prepare press release" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="24">
+                <sub-task name="Prepare design and content" description=""></sub-task>
+                <sub-task name="Review look and content" description=""></sub-task>
+                <sub-task name="Send to media (TV, radio etc.)" description=""></sub-task>
+                <sub-task name="Publish on our website" description=""></sub-task>
+            </task>
+        </component>
+        <component name="Photographs" description="Capture a photos of the best moments from an event">
+            <task name="Hire a photographer" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="10"></task>
+            <task name="Determine the most important moments to photograph" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="9"></task>
+        </component>
+    </event-plan>
+
+    <event-plan name="Small presentation of product/technology"
+                description="Presentation of technology or product for wide audience" reserveTimeInDays="3">
+        <eventCategory name="Public Relations"></eventCategory>
+        <eventCategory name="Marketing"></eventCategory>
+        <eventCategory name="Technical"></eventCategory>
+        <component name="Guests" description="Issues related with guests">
+            <task name="Develop a method for calculating  participants" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="16"></task>
+            <task name="Note number of participants" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="0"></task>
+        </component>
+        <component name="Presentation" description="Set of tasks to do good slideshow for an event">
+            <task name="Prepare slideshow agenda and plan" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="21">
+                <sub-task name="Consult with person" description=""></sub-task>
+            </task>
+            <task name="Prepare slideshow introduction" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="20">
+                <sub-task name="Short about person" description=""></sub-task>
+                <sub-task name="Short about host/us" description=""></sub-task>
+            </task>
+            <task name="Prepare slideshow content and summary" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="19">
+                <sub-task name="Content" description=""></sub-task>
+                <sub-task name="Summary" description=""></sub-task>
+            </task>
+            <task name="Copy ready slideshow to many independent data storages" description=""
+                  neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="7"></task>
+            <task name="Review presentation" neededMonthsBeforeEvent="0" description="" neededDaysBeforeEvent="10">
+                <sub-task name="Design" description=""></sub-task>
+                <sub-task name="Readability from a distance" description=""></sub-task>
+                <sub-task name="Grammar and spelling" description=""></sub-task>
+                <sub-task name="Content" description=""></sub-task>
+                <sub-task name="Photos and graphics" description=""></sub-task>
+                <sub-task name="Legal issues" description=""></sub-task>
+            </task>
+            <task name="Check whether slideshow works properly" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="6">
+                <sub-task name="Check in event room on available hardware and software" description=""></sub-task>
+                <sub-task name="Check on reserve hardware and software" description=""></sub-task>
+            </task>
+            <task name="Take care of adequate receipt of information" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="6">
+                <sub-task name="Check how you heard in event room" description=""></sub-task>
+                <sub-task name="Check whether slideshow is visible in the farthest corner of event room"
+                          description=""></sub-task>
+            </task>
+            <task name="Get presentation pointer" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="5"></task>
+            <task name="Take care about neat clothes for the host of the event" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="2"></task>
+            <task name="Prepare shorted presentation agenda with things to do (checklist)" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="3"></task>
+        </component>
+        <component name="Room or stand" description="Tasks that would ease organize suitable place for an event">
+            <task name="Select suitable room or stand" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="25">
+                <sub-task name="Prepare requirements" description=""></sub-task>
+                <sub-task name="Find suitable place" description=""></sub-task>
+                <sub-task name="Make sure that the place is booked" description=""></sub-task>
+            </task>
+            <task name="Book room" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="24"></task>
+            <task name="Check technical issues in the room" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="14">
+                <sub-task name="Internet access in event room" description=""></sub-task>
+                <sub-task name="Sufficient number and availability of power outlets" description=""></sub-task>
+                <sub-task name="Ensure that you will have technical assistance" description=""></sub-task>
+            </task>
+            <task name="Prepare place before event" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="1"></task>
+            <task name="Prepare checklist of needed things in the event day" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="2"></task>
+        </component>
+        <component name="Invitations" description="Prepare invitations for your  guests">
+            <task name="Prepare invitations" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="23"></task>
+            <task name="Send invitations" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="22">
+                <sub-task name="Special guest(s)" description=""></sub-task>
+                <sub-task name="Media (TV, radio etc.)" description=""></sub-task>
+                <sub-task name="Host" description=""></sub-task>
+                <sub-task name="Potentially interested persons" description=""></sub-task>
+            </task>
+        </component>
+        <component name="Promotion" description="Promote your event and make it more sociable">
+            <task name="Prepare banners/roll-ups etc." description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="12">
+                <sub-task name="Hang in event room" description=""></sub-task>
+                <sub-task name="Hang prior to the entry of event room" description=""></sub-task>
+            </task>
+            <task name="Prepare event agenda" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="4">
+                <sub-task name="Prepare design and content" description=""></sub-task>
+                <sub-task name="Review appearance and look" description=""></sub-task>
+                <sub-task name="Print" description=""></sub-task>
+                <sub-task name="Hang prior to the entry of event room" description=""></sub-task>
+            </task>
+        </component>
+        <component name="Photographs" description="Capture a photos of the best moments from an event">
+            <task name="Hire a photographer" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="10"></task>
+            <task name="Determine the most important moments to photograph" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="9"></task>
+        </component>
+    </event-plan>
+
+    <event-plan name="Internal meeting"
+                description="Helps with organizing small internal meeting (eg end of Agile sprint)"
+                reserveTimeInDays="0">
+        <eventCategory name="Technical"></eventCategory>
+        <eventCategory name="Software Development"></eventCategory>
+        <eventCategory name="Software Testing"></eventCategory>
+        <component name="Presentation" description="Set of tasks to do good slideshow for an event">
+            <task name="Prepare slideshow agenda and plan" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="4">
+                <sub-task name="Consult with person" description=""></sub-task>
+            </task>
+            <task name="Prepare slideshow introduction" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="4">
+            </task>
+            <task name="Prepare slideshow content and summary" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="3">
+                <sub-task name="Content" description=""></sub-task>
+                <sub-task name="Summary" description=""></sub-task>
+            </task>
+            <task name="Copy ready slideshow to many independent data storages" description=""
+                  neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="2"></task>
+            <task name="Review presentation" neededMonthsBeforeEvent="0" description="" neededDaysBeforeEvent="2">
+                <sub-task name="Design" description=""></sub-task>
+                <sub-task name="Readability from a distance" description=""></sub-task>
+                <sub-task name="Grammar and spelling" description=""></sub-task>
+                <sub-task name="Content" description=""></sub-task>
+                <sub-task name="Photos and graphics" description=""></sub-task>
+                <sub-task name="Legal issues" description=""></sub-task>
+            </task>
+            <task name="Check whether slideshow works properly" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="2">
+                <sub-task name="Check in event room on available hardware and software" description=""></sub-task>
+                <sub-task name="Check on reserve hardware and software" description=""></sub-task>
+            </task>
+            <task name="Take care of adequate receipt of information" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="2">
+                <sub-task name="Check how you heard in event room" description=""></sub-task>
+                <sub-task name="Check whether slideshow is visible in the farthest corner of event room"
+                          description=""></sub-task>
+            </task>
+            <task name="Get presentation pointer" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="1"></task>
+            <task name="Take care about neat clothes for the host of the event" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="1"></task>
+            <task name="Prepare shorted presentation agenda with things to do (checklist)" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="1"></task>
+        </component>
+        <component name="Room" description="Tasks that would ease organize suitable room for an event">
+            <task name="Select suitable room" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="5">
+                <sub-task name="Prepare room requirements" description=""></sub-task>
+                <sub-task name="Find suitable room" description=""></sub-task>
+                <sub-task name="Make sure that the room is not booked for your event date" description=""></sub-task>
+            </task>
+            <task name="Book room" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="5"></task>
+            <task name="Check technical issues" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="5">
+                <sub-task name="Internet access in event room" description=""></sub-task>
+                <sub-task name="Sufficient number and availability of power outlets" description=""></sub-task>
+                <sub-task name="Ensure that you will have technical assistance" description=""></sub-task>
+            </task>
+            <task name="Prepare room before event" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="1"></task>
+            <task name="Prepare checklist of needed things in the event day" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="2"></task>
+        </component>
+        <component name="Invitations" description="Invite your guests to have an early feedback about attendance">
+            <task name="Send short invitations to guests" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="5">
+            </task>
+        </component>
+    </event-plan>
+
+    <event-plan name="Lecture"
+                description="Theoretical presentation for wide audience" reserveTimeInDays="1">
+        <eventCategory name="Technical"></eventCategory>
+        <component name="Presentation" description="Set of tasks to do good slideshow for an event">
+            <task name="Prepare slideshow agenda and plan" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="7">
+                <sub-task name="Consult with person" description=""></sub-task>
+            </task>
+            <task name="Prepare slideshow introduction" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="6">
+                <sub-task name="Short about person" description=""></sub-task>
+                <sub-task name="Short about host/us" description=""></sub-task>
+            </task>
+            <task name="Prepare slideshow content and summary" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="5">
+                <sub-task name="Content" description=""></sub-task>
+                <sub-task name="Summary" description=""></sub-task>
+            </task>
+            <task name="Copy ready slideshow to many independent data storages" description=""
+                  neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="2"></task>
+            <task name="Review presentation" neededMonthsBeforeEvent="0" description="" neededDaysBeforeEvent="4">
+                <sub-task name="Design" description=""></sub-task>
+                <sub-task name="Readability from a distance" description=""></sub-task>
+                <sub-task name="Grammar and spelling" description=""></sub-task>
+                <sub-task name="Content" description=""></sub-task>
+                <sub-task name="Photos and graphics" description=""></sub-task>
+                <sub-task name="Legal issues" description=""></sub-task>
+            </task>
+            <task name="Check whether slideshow works properly" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="3">
+                <sub-task name="Check in event room on available hardware and software" description=""></sub-task>
+                <sub-task name="Check on reserve hardware and software" description=""></sub-task>
+            </task>
+            <task name="Take care of adequate receipt of information" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="3">
+                <sub-task name="Check how you heard in event room" description=""></sub-task>
+                <sub-task name="Check whether slideshow is visible in the farthest corner of event room"
+                          description=""></sub-task>
+            </task>
+            <task name="Get presentation pointer" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="2"></task>
+            <task name="Take care about neat clothes for the host of the event" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="1"></task>
+            <task name="Prepare shorted presentation agenda with things to do (checklist)" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="1"></task>
+        </component>
+        <component name="Room" description="Tasks that would ease organize suitable place for an event">
+            <task name="Select suitable room" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="8">
+                <sub-task name="Prepare requirements" description=""></sub-task>
+                <sub-task name="Find suitable place" description=""></sub-task>
+                <sub-task name="Make sure that the place is booked" description=""></sub-task>
+            </task>
+            <task name="Book room" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="7"></task>
+            <task name="Check technical issues in the room" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="3">
+                <sub-task name="Internet access in event room" description=""></sub-task>
+                <sub-task name="Sufficient number and availability of power outlets" description=""></sub-task>
+                <sub-task name="Ensure that you will have technical assistance" description=""></sub-task>
+            </task>
+            <task name="Prepare place before event" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="1"></task>
+            <task name="Prepare checklist of needed things in the event day" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="2"></task>
+        </component>
+    </event-plan>
+
+    <event-plan name="Online contest"
+                description="Organize online contest to become more popular"
+                reserveTimeInDays="1">
+        <eventCategory name="Marketing"></eventCategory>
+        <eventCategory name="Public Relations"></eventCategory>
+        <component name="Contest website" description="">
+            <task name="Create event about contest on our social media fanpages" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="22">
+            </task>
+            <task name="Order or start creating contest page" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="21">
+            </task>
+            <task name="Test contest page" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="5">
+            </task>
+        </component>
+        <component name="Regulations" description="">
+            <task name="Find the model rules of regulations for reuse" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="18">
+            </task>
+            <task name="Write general information about contest" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="17">
+                <sub-task name="Minimum age of the participants" description=""></sub-task>
+                <sub-task name="Duration of the contest" description=""></sub-task>
+            </task>
+            <task name="Determine victory conditions" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="16">
+                <sub-task name="Maximum number of winners" description=""></sub-task>
+                <sub-task name="Conditions for the assessment of applications" description=""></sub-task>
+            </task>
+            <task name="Write regulations about prizes" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="15">
+                <sub-task name="Principles of awarding prizes" description=""></sub-task>
+                <sub-task name="Accounting for taxes on the prizes" description=""></sub-task>
+            </task>
+        </component>
+        <component name="Prizes" description="">
+            <task name="Organize prizes" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="19">
+            </task>
+            <task name="Organize some corporate gadgets which can be included as prizes" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="18">
+            </task>
+            <task name="Split prizes in packages for each winner" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="10">
+            </task>
+            <task name="Prepare diplomas" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="9">
+            </task>
+        </component>
+        <component name="Promotion" description="Promote your contest for a getting more participants">
+            <task name="Prepare banner" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="22">
+                <sub-task name="Include information about prizes" description=""></sub-task>
+                <sub-task name="Prepare design" description=""></sub-task>
+                <sub-task name="Review appearance and look" description=""></sub-task>
+            </task>
+            <task name="Prepare short description and prizes list" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="22">
+            </task>
+            <task name="Publish banner with description and prizes list" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="20">
+                <sub-task name="On social media" description=""></sub-task>
+                <sub-task name="On our website" description=""></sub-task>
+                <sub-task name="On other pages" description=""></sub-task>
+            </task>
+            <task name="Send newsletter about the contest" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="20">
+            </task>
+        </component>
+    </event-plan>
+
+    <event-plan name="Local contest"
+                description="Organize online contest to become more popular"
+                reserveTimeInDays="1">
+        <eventCategory name="Marketing"></eventCategory>
+        <eventCategory name="Public Relations"></eventCategory>
+        <component name="Posters" description="Promote your event for a getting bigger audience">
+            <task name="Prepare posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="22">
+                <sub-task name="Prepare design" description=""></sub-task>
+                <sub-task name="Review appearance and look" description=""></sub-task>
+            </task>
+            <task name="Print posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="21"></task>
+            <task name="Publish posters" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="20">
+                <sub-task name="Hang" description=""></sub-task>
+                <sub-task name="Take a photos of hanged posters" description=""></sub-task>
+                <sub-task name="Publish on social media" description=""></sub-task>
+                <sub-task name="Publish on our website" description=""></sub-task>
+            </task>
+        </component>
+        <component name="Regulations" description="">
+            <task name="Find the model rules of regulations for reuse" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="18">
+            </task>
+            <task name="Write general information about contest" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="17">
+                <sub-task name="Minimum age of the participants" description=""></sub-task>
+                <sub-task name="Duration of the contest" description=""></sub-task>
+            </task>
+            <task name="Determine victory conditions" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="16">
+                <sub-task name="Maximum number of winners" description=""></sub-task>
+                <sub-task name="Conditions for the assessment of applications" description=""></sub-task>
+            </task>
+            <task name="Write regulations about prizes" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="15">
+                <sub-task name="Principles of awarding prizes" description=""></sub-task>
+                <sub-task name="Accounting for taxes on the prizes" description=""></sub-task>
+            </task>
+            <task name="Print many copies of regulations" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="3">
+            </task>
+            <task name="Hang regulations in easily accessible place" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="1">
+            </task>
+        </component>
+        <component name="Prizes" description="">
+            <task name="Organize prizes" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="19">
+            </task>
+            <task name="Organize some corporate gadgets which can be included as prizes" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="18">
+            </task>
+            <task name="Split prizes in packages for each winner" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="10">
+            </task>
+            <task name="Prepare diplomas" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="9">
+            </task>
+            <task name="Put prizes in visible but not easily accessible place" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="1">
+            </task>
+        </component>
+        <component name="Promotion" description="Promote your contest for a getting more participants">
+            <task name="Prepare banner" description="" neededMonthsBeforeEvent="0" neededDaysBeforeEvent="22">
+                <sub-task name="Include information about prizes" description=""></sub-task>
+                <sub-task name="Prepare design" description=""></sub-task>
+                <sub-task name="Review appearance and look" description=""></sub-task>
+            </task>
+            <task name="Prepare short description and prizes list" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="22">
+            </task>
+            <task name="Publish banner with description and prizes list" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="20">
+                <sub-task name="On social media" description=""></sub-task>
+                <sub-task name="On our website" description=""></sub-task>
+                <sub-task name="On other pages" description=""></sub-task>
+            </task>
+            <task name="Send newsletter about the contest" description="" neededMonthsBeforeEvent="0"
+                  neededDaysBeforeEvent="20">
+            </task>
         </component>
     </event-plan>
 </event-plans>

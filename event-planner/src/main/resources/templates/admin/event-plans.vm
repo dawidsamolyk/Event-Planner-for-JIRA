@@ -39,19 +39,19 @@
 <table id="plans-table" class="aui aui-table-rowhover">
     <thead>
     <tr>
-        <th>
-            Name
+        <th style="width: 20%;">
+            Name and description
         </th>
         <th>
             Estimated time to complete
         </th>
-        <th>
+        <th style="width: 20%;">
             Component Templates
         </th>
         <th>
             Assigned Event Categories
         </th>
-        <th>
+        <th style="width: 100px;">
             Operations
         </th>
     </tr>
